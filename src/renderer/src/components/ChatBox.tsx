@@ -16,11 +16,13 @@ export default function ChatBox() {
           const res = await translator(text)
           setAns(res.content as string)
         }}
-        onMountHandler={(window.api as any).multiCopy(async (ev: IpcRendererEvent, msg: string) => {
-          console.log(ev)
-          const res = await translator(msg)
-          setAns(res.content as string)
-        })}
+        onMountHandler={() =>
+          (window.api as any).multiCopy(async (ev: IpcRendererEvent, msg: string) => {
+            console.log(ev)
+            const res = await translator(msg)
+            setAns(res.content as string)
+          })
+        }
       />
       <Messages />
       <Input
@@ -73,7 +75,7 @@ export function Input({
   const [text, setText] = createSignal('')
   const { clearMsgs } = msgsStore
   onMount(() => {
-    onMountHandler ? onMountHandler : () => {}
+    onMountHandler?.()
   })
   return (
     <div>
