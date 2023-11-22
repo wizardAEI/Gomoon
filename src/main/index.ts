@@ -5,6 +5,12 @@ import icon from '../../resources/icon.png?asset'
 import trayIcon from '../../resources/icon@16.png?asset'
 import { spawn } from 'child_process'
 import { eventHandler } from './eventHandler'
+
+// 隐藏 macOS dock
+if (process.platform === 'darwin') {
+  app.dock.hide()
+}
+
 // tray
 let tray: Tray | null = null
 
@@ -61,11 +67,6 @@ function createWindow(): void {
   tray.on('click', () => {
     mainWindow?.show()
   })
-
-  // macOS
-  if (process.platform === 'darwin') {
-    app.dock.setIcon(icon)
-  }
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
