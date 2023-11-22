@@ -23,7 +23,12 @@ export default function Chat() {
               </div>
             }
           >
-            <div class={(msg.role === 'human' ? 'ml-4 justify-end' : 'mr-4') + ' flex'}>
+            <div
+              class={
+                (msg.role === 'human' ? 'ml-4 justify-end' : 'mr-4') +
+                ' flex max-w-[calc(100%-16px)]'
+              }
+            >
               <Message content={msg.content} type={msg.role} />
             </div>
           </Show>

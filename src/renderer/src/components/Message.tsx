@@ -51,7 +51,7 @@ export default function Message(props: { type: MsgTypes; content: string }) {
       const token = tokens[idx]
       const rawCode = fence(...args)
 
-      return `<div class="relative">
+      return `<div class="relative mt-1 w-full">
       <div data-code=${encodeURIComponent(
         token.content
       )} class="cursor-pointer absolute top-2 right-2 z-10 group copy-btn">
@@ -67,8 +67,10 @@ export default function Message(props: { type: MsgTypes; content: string }) {
     return md.render(props.content)
   }
   return (
-    <div class={style[props.type] + ' m-4 rounded-2xl p-4 '}>
-      <div class={mdStyle[props.type] + ' markdown'} innerHTML={htmlString()} />
+    <div class="max-w-full">
+      <div class={style[props.type] + ' m-4 rounded-2xl p-4'}>
+        <div class={mdStyle[props.type] + ' markdown'} innerHTML={htmlString()} />
+      </div>
     </div>
   )
 }

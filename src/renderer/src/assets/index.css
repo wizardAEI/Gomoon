@@ -28,7 +28,7 @@
 /* 滚动条基础样式 */
 ::-webkit-scrollbar {
   width: 0px;
-  height: auto;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   opacity: 0;
