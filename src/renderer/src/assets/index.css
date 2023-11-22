@@ -48,7 +48,38 @@
 }
 
 /* markdown 专属css */
-.solid-markdown ol,
-.solid-markdown ul {
+.markdown ol,
+.markdown ul {
   margin-left: 16px;
+}
+
+.markdown pre {
+  margin-bottom: 12px;
+}
+
+.markdown table {
+  font-size: 0.8em;
+}
+
+.markdown table thead tr {
+  background-color: #64748b40;
+  text-align: left;
+}
+
+.markdown table th,
+.markdown table td {
+  padding: 0.6rem 1rem;
+}
+
+.markdown table tbody tr:last-of-type {
+  border-bottom: 2px solid #64748b40;
+}
+
+.markdown code:not(.hljs) {
+  background: #74787a;
+  color: rgb(249 250 251);
+  border-radius: 0.4rem;
+  border: 0.1rem solid rgba(0, 0, 0, 0.1);
+  padding: 0 0.1rem;
+  margin: 0 4px;
 }
