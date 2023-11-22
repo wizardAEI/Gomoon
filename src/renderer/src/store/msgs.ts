@@ -1,25 +1,39 @@
 import { Roles } from '@renderer/lib/langchain'
-import { createSignal, createRoot } from 'solid-js'
+import { createStore, produce } from 'solid-js/store'
 
-function createMessages() {
-  const [msgs, setMsgs] = createSignal<
-    Array<{
-      role: Roles
-      content: string
-    }>
-  >([])
-  return {
-    msgs,
-    pushMsg: (msg: { role: Roles; content: string }) => setMsgs((msgs) => msgs.concat(msg)),
-    clearMsgs: () => setMsgs([]),
-    // TODO: 验证是否更新
-    setMsg: (msg: { role: Roles; content: string }, index: number) => {
-      setMsgs((msgs) => {
-        msgs[index] = msg
-        return msgs
-      })
-    }
-  }
+const [msgs, setMsgs] = createStore<
+  Array<{
+    role: Roles
+    content: string
+  }>
+>([])
+
+export function pushMsg(msg: { role: Roles; content: string }) {
+  setMsgs(
+    produce((msgs) => {
+      msgs.push(msg)
+    })
+  )
 }
 
-export default createRoot(createMessages)
+export function clearMsgs() {
+  setMsgs([])
+}
+
+export function editMsg(msg: { role: Roles; content: string }, index: number) {
+  setMsgs(
+    produce((msgs) => {
+      msgs[index] = msg
+    })
+  )
+}
+
+export function editMsgByAdd(content: string, index: number) {
+  setMsgs(
+    produce((msgs) => {
+      msgs[index].content += content
+    })
+  )
+}
+
+export { msgs, setMsgs }

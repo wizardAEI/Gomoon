@@ -23,9 +23,11 @@
   "dependencies": {
     "@electron-toolkit/preload": "^2.0.0",
     "@electron-toolkit/utils": "^2.0.0",
+    "@solidjs/router": "^0.9.1",
     "electron-updater": "^6.1.1",
     "ihook": "^1.0.3",
     "langchain": "^0.0.193",
+    "lodash": "^4.17.21",
     "solid-markdown": "^2.0.0"
   },
   "devDependencies": {

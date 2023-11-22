@@ -15,19 +15,22 @@ function createWindow(): void {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     title: '🤖',
-    width: 900,
-    height: 670,
+    width: 420,
+    height: 650,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
-    }
+    },
+    titleBarStyle: 'hidden'
   })
 
   mainWindow.on('ready-to-show', () => {
     mainWindow!.show()
+    // Open the DevTools.
+    mainWindow!.webContents.openDevTools()
   })
 
   // 点击关闭时隐藏窗口而不是退出
@@ -98,8 +101,6 @@ app.whenReady().then(() => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
-    // Open the DevTools.
-    mainWindow?.webContents.openDevTools()
   })
 
   /**

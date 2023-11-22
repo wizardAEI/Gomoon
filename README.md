@@ -32,3 +32,8 @@ $ yarn build:mac
 # For Linux
 $ yarn build:linux
 ```
+
+### TODO
+
+- 自动滚动功能
+- 更换模型功能
