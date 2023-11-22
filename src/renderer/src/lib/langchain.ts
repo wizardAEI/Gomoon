@@ -75,11 +75,11 @@ export const gptInterface = (config: { modelName: string; baseUrl?: string }) =>
   }
 }
 
-const gpt3 = gptInterface({
+export const gpt3 = gptInterface({
   modelName: 'gpt-3.5-turbo-0613'
 })
 
-const gpt4 = gptInterface({
+export const gpt4 = gptInterface({
   modelName: 'gpt-4-1106-preview'
 })
 
