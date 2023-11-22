@@ -2,7 +2,7 @@ import Input from '@renderer/components/Input'
 import { msgs, pushMsg, editMsgByAdd } from '../store/msgs'
 import { frontendHelper } from '../lib/langchain'
 import Message from '@renderer/components/Message'
-import { For, Index, Show } from 'solid-js'
+import { For, Show } from 'solid-js'
 
 export default function Chat() {
   return (
@@ -23,7 +23,7 @@ export default function Chat() {
               </div>
             }
           >
-            <div class={'flex ' + (msg.role === 'human' ? 'ml-4 justify-end' : 'mr-4')}>
+            <div class={msg.role === 'human' ? 'ml-4 justify-end' : 'mr-4'}>
               <Message content={msg.content} type={msg.role} />
             </div>
           </Show>
