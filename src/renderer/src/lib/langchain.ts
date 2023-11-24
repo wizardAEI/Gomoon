@@ -1,9 +1,8 @@
+import { ChatBaiduWenxin } from 'langchain/chat_models/baiduwenxin'
 import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { ChatPromptTemplate } from 'langchain/prompts'
-import { openAIApiKey, baseURL, baiduApiKey, baiduSecretKey } from './config.json'
-
-import { ChatBaiduWenxin } from 'langchain/chat_models/baiduwenxin'
 import { AIMessage, HumanMessage, SystemMessage } from 'langchain/schema'
+import { openAIApiKey, baseURL, baiduApiKey, baiduSecretKey } from './config.json'
 
 export type Roles = 'human' | 'system' | 'ai'
 
@@ -23,7 +22,8 @@ const createSkills = (chat: ChatBaiduWenxin | ChatOpenAI) => {
           [key: string]: string
         }
       },
-      callback: (content: string) => void
+      callback: (content: string) => void,
+      endCallback?: () => void
     ) {
       const { args, systemTemplate, humanTemplate } = msg
       const prompt = await ChatPromptTemplate.fromMessages([
@@ -35,6 +35,9 @@ const createSkills = (chat: ChatBaiduWenxin | ChatOpenAI) => {
           {
             handleLLMNewToken(token) {
               callback(token)
+            },
+            handleLLMEnd() {
+              endCallback?.()
             },
             handleLLMError(err, runId, parentRunId, tags) {
               console.error('answer error: ', err, runId, parentRunId, tags)
@@ -48,7 +51,8 @@ const createSkills = (chat: ChatBaiduWenxin | ChatOpenAI) => {
         role: Roles
         content: string
       }[],
-      callback: (content: string) => void
+      callback: (content: string) => void,
+      endCallback?: () => void
     ) {
       return chat.call(
         msgs.map((msg) => msgDict[msg.role](msg.content || '...')),
@@ -60,6 +64,9 @@ const createSkills = (chat: ChatBaiduWenxin | ChatOpenAI) => {
               },
               handleLLMError(err, runId, parentRunId, tags) {
                 console.error('chat error: ', err, runId, parentRunId, tags)
+              },
+              handleLLMEnd() {
+                endCallback?.()
               }
             }
           ]
@@ -110,7 +117,8 @@ export const translator = async (
   args: {
     [key: string]: string
   },
-  callback: (content: string) => void
+  callback: (content: string) => void,
+  endCallback?: () => void
 ) =>
   gpt4.answer(
     {
@@ -122,7 +130,8 @@ export const translator = async (
       humanTemplate: '{text}',
       args
     },
-    callback
+    callback,
+    endCallback
   )
 
 // FEAT: 前端大师
@@ -131,7 +140,8 @@ export const frontendHelper = async (
     role: Roles
     content: string
   }[],
-  callback: (content: string) => void
+  callback: (content: string) => void,
+  endCallback?: () => void
 ) =>
   gpt4.chat(
     [
@@ -142,5 +152,6 @@ export const frontendHelper = async (
       },
       ...msgs
     ],
-    callback
+    callback,
+    endCallback
   )

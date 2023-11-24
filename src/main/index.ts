@@ -145,8 +145,10 @@ app.whenReady().then(() => {
 
   // FEAT: 链接跳转，自动打开浏览器
   mainWindow?.webContents.on('will-frame-navigate', (event) => {
+    if (event.url.includes('localhost')) {
+      return
+    }
     event.preventDefault()
-    // @ts-ignore
     shell.openExternal(event.url)
   })
 })

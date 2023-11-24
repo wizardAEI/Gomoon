@@ -1,5 +1,5 @@
 import Input from '@renderer/components/Input'
-import { msgs, pushMsg, editMsgByAdd } from '../store/msgs'
+import { msgs, pushMsg, editMsgByAdd, setGeneratingStatus, msgStatus } from '../store/msgs'
 import { frontendHelper } from '../lib/langchain'
 import Message from '@renderer/components/Message'
 import { For, Show, onMount } from 'solid-js'
@@ -65,15 +65,22 @@ export default function Chat() {
               role: 'human',
               content: text
             })
-            frontendHelper(msgs, (content: string) => {
-              if (msgs.at(-1)?.role === 'human') {
-                pushMsg({
-                  role: 'ai',
-                  content: ''
-                })
+            setGeneratingStatus(true)
+            frontendHelper(
+              msgs,
+              (content: string) => {
+                if (msgs.at(-1)?.role === 'human') {
+                  pushMsg({
+                    role: 'ai',
+                    content: ''
+                  })
+                }
+                editMsgByAdd(content, msgs.length - 1)
+              },
+              () => {
+                setGeneratingStatus(false)
               }
-              editMsgByAdd(content, msgs.length - 1)
-            })
+            )
           }}
           // 自动聚焦
           onMountHandler={(inputDiv: HTMLTextAreaElement) => {
@@ -81,6 +88,7 @@ export default function Chat() {
           }}
           // 显示时自动聚焦
           autoFocusWhenShow
+          isGenerating={msgStatus.isGenerating}
         />
       </div>
     </div>

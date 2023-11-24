@@ -36,4 +36,16 @@ export function editMsgByAdd(content: string, index: number) {
   )
 }
 
-export { msgs, setMsgs }
+const [msgStatus, setMsgStatus] = createStore({
+  isGenerating: false
+})
+
+export function setGeneratingStatus(status: boolean) {
+  setMsgStatus(
+    produce((msgStatus) => {
+      msgStatus.isGenerating = status
+    })
+  )
+}
+
+export { msgs, setMsgs, msgStatus }

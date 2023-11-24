@@ -4,12 +4,7 @@ import { clearMsgs } from '../store/msgs'
 /**
  * FEAT: Input 组件，用于接收用户输入的文本，onMountHandler可以在外部操作 input 元素
  */
-export default function Input({
-  send,
-  onMountHandler,
-  showClearButton = false,
-  autoFocusWhenShow = false
-}: {
+export default function Input(props: {
   send: (msg: string) => void
   onMountHandler?: (textAreaDiv: HTMLTextAreaElement) => void
   showClearButton?: boolean
@@ -20,7 +15,7 @@ export default function Input({
   const [text, setText] = createSignal('')
   let textAreaDiv: HTMLTextAreaElement | undefined
   function submit() {
-    send(text())
+    props.send(text())
     setText('')
     textAreaDiv!.style.height = 'auto'
   }
@@ -30,9 +25,9 @@ export default function Input({
   }
 
   onMount(() => {
-    onMountHandler?.(textAreaDiv!)
+    props.onMountHandler?.(textAreaDiv!)
 
-    if (autoFocusWhenShow) {
+    if (props.autoFocusWhenShow) {
       const removeListener = window.api.showWindow(focus)
       onCleanup(() => {
         removeListener()
@@ -64,12 +59,12 @@ export default function Input({
         }}
         rows={1}
         placeholder="Ctrl/Cmd+Enter 发送"
-        class="focus:border-active max-h-24 flex-1 resize-none rounded-2xl border-2 border-[#ffffff20] bg-transparent px-4 py-2 font-sans text-base duration-300 focus:outline-none"
+        class="font-sans max-h-24 flex-1 resize-none rounded-2xl border-2 border-[#ffffff20] bg-transparent px-4 py-2 text-base duration-300 focus:border-active focus:outline-none"
       />
-      {showClearButton && (
+      {props.showClearButton && !props.isGenerating && (
         <button
           class={
-            'active:animate-click absolute right-3 top-[6px] h-2/3 cursor-pointer overflow-hidden rounded-lg border-0 shadow-md ' +
+            'absolute right-3 top-[6px] h-2/3 cursor-pointer overflow-hidden rounded-lg border-0 shadow-md active:animate-click ' +
             (text().length ? 'w-0 px-0' : 'px-2')
           }
           onClick={() => {

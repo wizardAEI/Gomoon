@@ -1,13 +1,13 @@
 import { SvgProps } from '../type'
 
-export default function ChatGPT(props: SvgProps) {
+export default function ChatGptICon(props: SvgProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       // @ts-ignore
       xmlns:xlink="http://www.w3.org/1999/xlink"
       xml:space="preserve"
-      overflow="hidden"
+      viewBox="0 0 2406 2406"
       width="32"
       height="32"
       {...props}

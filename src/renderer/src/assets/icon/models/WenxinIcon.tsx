@@ -1,6 +1,6 @@
 import { SvgProps } from '../type'
 
-export default function AnswerIcon(props: SvgProps) {
+export default function WenxinIcon(props: SvgProps) {
   return (
     <svg
       version="1.1"

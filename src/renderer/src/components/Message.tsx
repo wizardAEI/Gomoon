@@ -3,14 +3,17 @@ import MarkdownIt from 'markdown-it'
 import mdHighlight from 'markdown-it-highlightjs'
 type MsgTypes = Roles | 'ans' | 'question'
 import { useClipboard, useEventListener } from 'solidjs-use'
-import { createSignal } from 'solid-js'
+import { Show, createEffect, createSignal } from 'solid-js'
 import 'highlight.js/styles/atom-one-dark.css'
+import ChatGptIcon from '@renderer/assets/icon/models/ChatGptIcon'
+import { msgStatus } from '@renderer/store/msgs'
+import { ansStatus } from '@renderer/store/answer'
 
 export default function Message(props: { type: MsgTypes; content: string }) {
   const style: Record<MsgTypes, string> = {
     ai: 'bg-gradient-to-br from-[#4c4d51] to-[#404144]',
     human: 'bg-gradient-to-br from-[#fffffe] to-[#d9d8d5]',
-    system: 'bg-gradient-to-br from-[#62c0da] to-[#53a1b8]',
+    system: 'bg-gradient-to-br from-[#4c4d51] to-[#404144]',
     question: 'bg-gradient-to-br from-[#fffffe] to-[#d9d8d5]',
     ans: 'bg-gradient-to-br from-[#4c4d51] to-[#404144]'
   }
@@ -18,12 +21,11 @@ export default function Message(props: { type: MsgTypes; content: string }) {
     ai: 'text-sm dark-theme',
     ans: 'text-sm dark-theme',
     human: 'text-sm',
-    system: 'select-none text-center text-base',
+    system: 'select-none text-center text-base dark-theme',
     question: 'text-sm'
   }
   const [source] = createSignal('')
   const { copy, copied } = useClipboard({ source, copiedDuring: 1000 })
-
   const htmlString = () => {
     const md = MarkdownIt({
       linkify: true,
@@ -54,22 +56,43 @@ export default function Message(props: { type: MsgTypes; content: string }) {
       return `<div class="relative mt-1 w-full">
       <div data-code=${encodeURIComponent(
         token.content
-      )} class="cursor-pointer absolute top-2 right-2 z-10 group copy-btn">
+      )} class="cursor-pointer absolute top-1 right-1 z-10 group copy-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M28 10v18H10V10h18m0-2H10a2 2 0 0 0-2 2v18a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2Z" /><path fill="currentColor" d="M4 18H2V4a2 2 0 0 1 2-2h14v2H4Z" /></svg>
-          <div class="absolute -right-1 opacity-0 group-hover:opacity-100 duration-300">
+          <div class="absolute -right-1 top-3 opacity-0 group-hover:opacity-100 duration-300">
             ${copied() ? 'Copied' : 'Copy'}
           </div>
       </div>
       ${rawCode}
       </div>`
     }
-
     return md.render(props.content)
   }
+
+  // FEAT: 当最新的消息是生成完成的时候，显示图标
+  const [showIcons, setShowIcons] = createSignal(false)
+  createEffect(() => {
+    if (showIcons()) return
+    if (props.type === 'ai') {
+      if (!msgStatus.isGenerating) {
+        setShowIcons(true)
+      }
+    }
+    if (props.type === 'ans') {
+      if (!ansStatus.isGenerating) {
+        setShowIcons(true)
+      }
+    }
+  })
+
   return (
     <div class="max-w-full">
-      <div class={style[props.type] + ' m-4 rounded-2xl p-4'}>
+      <div class={style[props.type] + ' relative m-4 rounded-2xl p-4'}>
         <div class={mdStyle[props.type] + ' markdown break-words'} innerHTML={htmlString()} />
+        <Show when={showIcons()}>
+          <div class="-mb-2 -mr-1 flex justify-end gap-1">
+            <ChatGptIcon width={16} height={16} class="cursor-pointer overflow-hidden rounded-md" />
+          </div>
+        </Show>
       </div>
     </div>
   )
