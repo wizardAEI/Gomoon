@@ -1,17 +1,26 @@
 import Input from '@renderer/components/Input'
 import Message from '@renderer/components/Message'
 import { genAns, answerStore } from '../store/answer'
-import { Show, onMount } from 'solid-js'
+import { Show, onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
+import { useLocation } from '@solidjs/router'
 
 export default function Answer() {
   onMount(() => {
-    window.api.multiCopy(async (_: IpcRendererEvent, msg: string) => {
+    const query = useLocation().query
+    if (query.q) {
+      genAns(query.q as string)
+    }
+    const removeListener = window.api.multiCopy((_: IpcRendererEvent, msg: string) => {
       genAns(msg)
     })
+    onCleanup(() => {
+      removeListener()
+    })
   })
+
   return (
-    <div class="flex h-screen flex-col gap-4 overflow-auto pb-24 pt-10">
+    <div class="flex h-full flex-col gap-4 overflow-auto pb-24 pt-10">
       <Show
         when={answerStore.question}
         fallback={
@@ -28,10 +37,10 @@ export default function Answer() {
           send={genAns}
           // 自动聚焦
           onMountHandler={(inputDiv: HTMLTextAreaElement) => {
-            window.api.showWindow(() => {
-              inputDiv.focus()
-            })
+            inputDiv.focus()
           }}
+          // onShow自动聚焦
+          autoFocusWhenShow
         />
       </div>
     </div>

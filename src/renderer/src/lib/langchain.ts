@@ -1,6 +1,8 @@
 import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { ChatPromptTemplate } from 'langchain/prompts'
-import { openAIApiKey, baseURL } from './config.json'
+import { openAIApiKey, baseURL, baiduApiKey, baiduSecretKey } from './config.json'
+
+import { ChatBaiduWenxin } from 'langchain/chat_models/baiduwenxin'
 import { AIMessage, HumanMessage, SystemMessage } from 'langchain/schema'
 
 export type Roles = 'human' | 'system' | 'ai'
@@ -11,15 +13,7 @@ const msgDict = {
   ai: (s: string) => new AIMessage(s)
 } as const
 
-export const gptInterface = (config: { modelName: string; baseUrl?: string }) => {
-  const chat = new ChatOpenAI({
-    openAIApiKey,
-    modelName: config.modelName,
-    configuration: {
-      baseURL: config.baseUrl || baseURL
-    },
-    streaming: true
-  })
+const createSkills = (chat: ChatBaiduWenxin | ChatOpenAI) => {
   return {
     async answer(
       msg: {
@@ -34,7 +28,7 @@ export const gptInterface = (config: { modelName: string; baseUrl?: string }) =>
       const { args, systemTemplate, humanTemplate } = msg
       const prompt = await ChatPromptTemplate.fromMessages([
         ['system', systemTemplate],
-        ['human', humanTemplate]
+        ['human', humanTemplate || '...']
       ]).formatMessages(args)
       return chat.call(prompt, {
         callbacks: [
@@ -57,7 +51,7 @@ export const gptInterface = (config: { modelName: string; baseUrl?: string }) =>
       callback: (content: string) => void
     ) {
       return chat.call(
-        msgs.map((msg) => msgDict[msg.role](msg.content)),
+        msgs.map((msg) => msgDict[msg.role](msg.content || '...')),
         {
           callbacks: [
             {
@@ -75,12 +69,38 @@ export const gptInterface = (config: { modelName: string; baseUrl?: string }) =>
   }
 }
 
+export const gptInterface = (config: { modelName: string; baseUrl?: string }) =>
+  createSkills(
+    new ChatOpenAI({
+      openAIApiKey,
+      modelName: config.modelName,
+      configuration: {
+        baseURL: config.baseUrl || baseURL
+      },
+      streaming: true
+    })
+  )
+
+export const wenxinInterface = (config: { modelName: string }) =>
+  createSkills(
+    new ChatBaiduWenxin({
+      streaming: true,
+      modelName: config.modelName,
+      baiduApiKey,
+      baiduSecretKey
+    })
+  )
+
 export const gpt3 = gptInterface({
   modelName: 'gpt-3.5-turbo-0613'
 })
 
 export const gpt4 = gptInterface({
   modelName: 'gpt-4-1106-preview'
+})
+
+export const wenxin = wenxinInterface({
+  modelName: 'ERNIE-Bot'
 })
 
 // TODO: 读取 bot 信息来生成，可以从本地读取，也可以从远程读取

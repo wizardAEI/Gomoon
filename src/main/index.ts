@@ -127,6 +127,28 @@ app.whenReady().then(() => {
       }
     })
   }
+  const filter = {
+    urls: ['https://aip.baidubce.com/*', 'https://api.chatanywhere.com.cn/*'] // Remote API URS for which you are getting CORS error,
+  }
+
+  // FEAT: CORS
+  mainWindow?.webContents.session.webRequest.onHeadersReceived(filter, (details, callback) => {
+    if (details.responseHeaders) {
+      details.responseHeaders['Access-Control-Allow-Origin'] = []
+      details.responseHeaders['access-control-allow-origin'] = ['*']
+      details.responseHeaders['access-control-allow-headers'] = ['*']
+      details.responseHeaders['access-control-allow-methods'] = ['*']
+      details.responseHeaders['access-control-allow-credentials'] = ['true']
+    }
+    callback({ responseHeaders: details.responseHeaders })
+  })
+
+  // FEAT: 链接跳转，自动打开浏览器
+  mainWindow?.webContents.on('will-frame-navigate', (event) => {
+    event.preventDefault()
+    // @ts-ignore
+    shell.openExternal(event.url)
+  })
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common

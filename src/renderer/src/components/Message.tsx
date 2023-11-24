@@ -69,7 +69,7 @@ export default function Message(props: { type: MsgTypes; content: string }) {
   return (
     <div class="max-w-full">
       <div class={style[props.type] + ' m-4 rounded-2xl p-4'}>
-        <div class={mdStyle[props.type] + ' markdown'} innerHTML={htmlString()} />
+        <div class={mdStyle[props.type] + ' markdown break-words'} innerHTML={htmlString()} />
       </div>
     </div>
   )

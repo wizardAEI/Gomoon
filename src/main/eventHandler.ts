@@ -7,7 +7,7 @@ export const eventHandler = {
   },
   'multi-copy': (window: BrowserWindow) => {
     const copyText = clipboard.readText()
-    console.log(copyText)
+    console.info(copyText)
     window.webContents.send('multi-copy', copyText)
     window.webContents.send('show-window')
     window.show()

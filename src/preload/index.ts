@@ -3,10 +3,17 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 export const api = {
-  multiCopy: (callback: (event: IpcRendererEvent, msg: string) => void) =>
-    ipcRenderer.on('multi-copy', callback),
+  multiCopy: (callback: (event: IpcRendererEvent, msg: string) => void) => {
+    ipcRenderer.on('multi-copy', callback)
+    return () => {
+      ipcRenderer.removeListener('multi-copy', callback)
+    }
+  },
   showWindow: (callback: (event: IpcRendererEvent) => void) => {
     ipcRenderer.on('show-window', callback)
+    return () => {
+      ipcRenderer.removeListener('show-window', callback)
+    }
   }
 } as const
 

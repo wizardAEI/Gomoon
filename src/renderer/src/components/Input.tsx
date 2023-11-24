@@ -1,4 +1,4 @@
-import { createSignal, onMount } from 'solid-js'
+import { createSignal, onCleanup, onMount } from 'solid-js'
 import { clearMsgs } from '../store/msgs'
 
 /**
@@ -7,13 +7,15 @@ import { clearMsgs } from '../store/msgs'
 export default function Input({
   send,
   onMountHandler,
-  showClearButton = false
+  showClearButton = false,
+  autoFocusWhenShow = false
 }: {
   send: (msg: string) => void
   onMountHandler?: (textAreaDiv: HTMLTextAreaElement) => void
   showClearButton?: boolean
   disable?: boolean
   isGenerating?: boolean
+  autoFocusWhenShow?: boolean
 }) {
   const [text, setText] = createSignal('')
   let textAreaDiv: HTMLTextAreaElement | undefined
@@ -22,8 +24,21 @@ export default function Input({
     setText('')
     textAreaDiv!.style.height = 'auto'
   }
+
+  function focus() {
+    textAreaDiv?.focus()
+  }
+
   onMount(() => {
     onMountHandler?.(textAreaDiv!)
+
+    if (autoFocusWhenShow) {
+      const removeListener = window.api.showWindow(focus)
+      onCleanup(() => {
+        removeListener()
+      })
+    }
+
     textAreaDiv &&
       textAreaDiv.addEventListener('input', () => {
         textAreaDiv!.style.height = 'auto'
