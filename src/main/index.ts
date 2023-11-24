@@ -63,7 +63,7 @@ function createWindow(): void {
     }
   ])
   tray.setContextMenu(contextMenu)
-  tray.setToolTip('ChatGPT Desktop')
+  tray.setToolTip('BOT')
   tray.on('click', () => {
     mainWindow?.show()
   })

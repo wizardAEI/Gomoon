@@ -12,13 +12,16 @@ module.exports = {
     },
     extend: {
       backgroundImage: {
-        home: 'linear-gradient(to bottom, #525288, #0081c3, #00afc7, #00d489, #a8eb12);'
+        home: 'linear-gradient(to bottom, #525288, #0081c3, #00afc7, #00d489, #a8eb12)', // 首页背景色 渐变色 亮紫色-蓝色-青色-绿色-黄色
+        dark: 'linear-gradient(to bottom right, #4c4d51, #404144)', // 暗黑模式背景色 渐变色 亮紫色-蓝色-青色-绿色-黄色
+        light: 'linear-gradient(to bottom right, #fffffe, #d9d8d5)', // 亮色模式背景色 渐变色 白色-灰色
+        purple: 'linear-gradient(to bottom right, #ae79f1, #9366cb)' // 紫色渐变色
       },
       colors: {
-        bac: '#525288',
-        active: '#A57BEA',
-        'icon-gray': '#a7a8bd',
-        'icon-active': '#A371E1'
+        active: '#A57BEA', // 激活色 亮紫色
+        bac: '#525288', // 暗紫色
+        gray: '#a7a8bd', // 非激活色 淡紫灰色
+        'white/70': '#ffffff70' // 白色透明度70%
       },
       keyframes: {
         click: {

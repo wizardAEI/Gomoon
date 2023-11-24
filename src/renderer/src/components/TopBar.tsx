@@ -4,7 +4,7 @@ import { useNavigate } from '@solidjs/router'
 export default function TopBar() {
   const nav = useNavigate()
   return (
-    <div class="bg-bac flex h-6 w-full text-center text-slate-50">
+    <div class="flex h-6 w-full bg-bac text-center text-slate-50">
       <div
         class="h-full flex-1"
         style={{
@@ -18,11 +18,7 @@ export default function TopBar() {
             nav('/answer')
           }}
         >
-          <AnswerIcon
-            width={16}
-            height={16}
-            class="text-icon-gray hover:text-icon-active duration-100"
-          />
+          <AnswerIcon width={16} height={16} class="text-gray duration-100 hover:text-active" />
         </div>
         <div
           class="translate-y cursor-pointer"
@@ -30,11 +26,7 @@ export default function TopBar() {
             nav('/')
           }}
         >
-          <ChatIcon
-            width={18}
-            height={18}
-            class="text-icon-gray hover:text-icon-active duration-100"
-          />
+          <ChatIcon width={18} height={18} class="text-gray duration-100 hover:text-active" />
         </div>
       </div>
     </div>

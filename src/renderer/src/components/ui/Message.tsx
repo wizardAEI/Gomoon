@@ -8,14 +8,15 @@ import 'highlight.js/styles/atom-one-dark.css'
 import ChatGptIcon from '@renderer/assets/icon/models/ChatGptIcon'
 import { msgStatus } from '@renderer/store/msgs'
 import { ansStatus } from '@renderer/store/answer'
+import CapitalIcon from './CapitalIcon'
 
-export default function Message(props: { type: MsgTypes; content: string }) {
+export default function Message(props: { type: MsgTypes; content: string; botName?: string }) {
   const style: Record<MsgTypes, string> = {
-    ai: 'bg-gradient-to-br from-[#4c4d51] to-[#404144]',
-    human: 'bg-gradient-to-br from-[#fffffe] to-[#d9d8d5]',
-    system: 'bg-gradient-to-br from-[#4c4d51] to-[#404144]',
-    question: 'bg-gradient-to-br from-[#fffffe] to-[#d9d8d5]',
-    ans: 'bg-gradient-to-br from-[#4c4d51] to-[#404144]'
+    ai: 'bg-dark',
+    human: 'bg-light',
+    system: 'bg-dark',
+    question: 'bg-light',
+    ans: 'bg-dark'
   }
   const mdStyle: Record<MsgTypes, string> = {
     ai: 'text-sm dark-theme',
@@ -90,7 +91,11 @@ export default function Message(props: { type: MsgTypes; content: string }) {
         <div class={mdStyle[props.type] + ' markdown break-words'} innerHTML={htmlString()} />
         <Show when={showIcons()}>
           <div class="-mb-2 -mr-1 flex justify-end gap-1">
+            <Show when={props.botName}>
+              <CapitalIcon content={props.botName!} />
+            </Show>
             <ChatGptIcon width={16} height={16} class="cursor-pointer overflow-hidden rounded-md" />
+            {/* <WenxinIcon width={16} height={16} class="cursor-pointer overflow-hidden rounded-md" /> */}
           </div>
         </Show>
       </div>

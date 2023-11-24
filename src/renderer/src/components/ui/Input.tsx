@@ -1,5 +1,5 @@
 import { createSignal, onCleanup, onMount } from 'solid-js'
-import { clearMsgs } from '../store/msgs'
+import { clearMsgs } from '../../store/msgs'
 
 /**
  * FEAT: Input 组件，用于接收用户输入的文本，onMountHandler可以在外部操作 input 元素
@@ -41,7 +41,7 @@ export default function Input(props: {
       })
   })
   return (
-    <div class="relative flex w-full rounded-2xl bg-[#ffffff70] backdrop-blur-md">
+    <div class="relative flex w-full rounded-2xl bg-white/70 backdrop-blur-md">
       <textarea
         ref={textAreaDiv}
         value={text()}

@@ -1,7 +1,7 @@
-import Input from '@renderer/components/Input'
+import Input from '@renderer/components/ui/Input'
 import { msgs, pushMsg, editMsgByAdd, setGeneratingStatus, msgStatus } from '../store/msgs'
 import { frontendHelper } from '../lib/langchain'
-import Message from '@renderer/components/Message'
+import Message from '@renderer/components/ui/Message'
 import { For, Show, onMount } from 'solid-js'
 
 const scrollToBottom = (el: HTMLDivElement, index: number) => {
@@ -41,7 +41,7 @@ export default function Chat() {
                 ref={(el) => scrollToBottom(el, index())}
                 class={'flex ' + (msg.role === 'human' ? 'human ml-4 justify-end' : 'ai mr-4')}
               >
-                <Message content="......" type={msg.role} />
+                <Message content="......" type={msg.role} botName="前端专家" />
               </div>
             }
           >
@@ -52,7 +52,7 @@ export default function Chat() {
                 ' flex max-w-[calc(100%-16px)]'
               }
             >
-              <Message content={msg.content} type={msg.role} />
+              <Message content={msg.content} type={msg.role} botName="前端专家" />
             </div>
           </Show>
         )}
@@ -75,7 +75,9 @@ export default function Chat() {
                     content: ''
                   })
                 }
-                editMsgByAdd(content, msgs.length - 1)
+                // FIXME: 当连续发送消息时，会出现所有新消息加在最后的元素的问题
+                const index = msgs.length - 1
+                editMsgByAdd(content, index)
               },
               () => {
                 setGeneratingStatus(false)
