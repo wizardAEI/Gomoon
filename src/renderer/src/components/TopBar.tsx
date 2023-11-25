@@ -4,7 +4,7 @@ import { useNavigate } from '@solidjs/router'
 export default function TopBar() {
   const nav = useNavigate()
   return (
-    <div class="flex h-6 w-full bg-bac text-center text-slate-50">
+    <div class="flex h-6 w-full text-center text-slate-50">
       <div
         class="h-full flex-1"
         style={{

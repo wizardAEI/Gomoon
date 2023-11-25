@@ -17,9 +17,9 @@ const App = () => {
   })
 
   return (
-    <div class="flex h-screen flex-col overflow-hidden">
+    <div class="flex h-screen flex-col overflow-hidden bg-home">
       <TopBar />
-      <div class="flex-1 overflow-auto bg-home">
+      <div class="flex-1 overflow-auto">
         <Routes>
           <Route path="/" component={Chat} />
           <Route path="/answer" component={Answer} />

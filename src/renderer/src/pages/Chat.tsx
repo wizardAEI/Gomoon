@@ -27,7 +27,7 @@ export default function Chat() {
   return (
     <div class="chat-container flex h-full flex-col overflow-auto pb-24">
       {msgs.length === 0 && (
-        <div class="cursor-pointer pt-10">
+        <div class="mt-10 cursor-pointer">
           <Message content={'前端助手'} type="system" />
         </div>
       )}
