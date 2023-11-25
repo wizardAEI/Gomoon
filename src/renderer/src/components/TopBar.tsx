@@ -1,5 +1,6 @@
 import AnswerIcon from '@renderer/assets/icon/AnswerIcon'
 import ChatIcon from '@renderer/assets/icon/ChatIcon'
+import SettingIcon from '@renderer/assets/icon/base/SettingIcon'
 import { useNavigate } from '@solidjs/router'
 export default function TopBar() {
   const nav = useNavigate()
@@ -27,6 +28,18 @@ export default function TopBar() {
           }}
         >
           <ChatIcon width={18} height={18} class="text-gray duration-100 hover:text-active" />
+        </div>
+        <div
+          class="cursor-pointer"
+          onclick={() => {
+            nav('/setting')
+          }}
+        >
+          <SettingIcon
+            width={18}
+            height={18}
+            class="ml-[-0.0625rem] text-gray duration-100 hover:text-active"
+          />
         </div>
       </div>
     </div>

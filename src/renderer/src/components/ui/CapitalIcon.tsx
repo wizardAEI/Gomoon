@@ -1,6 +1,6 @@
 import { Tooltip } from '@ark-ui/solid'
 import { Portal } from 'solid-js/web'
-export default function CapitalIcon(props: { size?: number; color?: string; content: string }) {
+export default function CapitalIcon(props: { size?: number; content: string }) {
   const firstChat = props.content.charAt(0)
 
   return (

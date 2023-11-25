@@ -4,6 +4,7 @@ import Chat from './pages/Chat'
 import Answer from './pages/Answer'
 import { onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
+import Setting from './pages/Setting'
 
 const App = () => {
   const nav = useNavigate()
@@ -23,6 +24,7 @@ const App = () => {
         <Routes>
           <Route path="/" component={Chat} />
           <Route path="/answer" component={Answer} />
+          <Route path="/setting" component={Setting} />
         </Routes>
       </div>
     </div>

@@ -3,8 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import trayIcon from '../../resources/icon@16.png?asset'
-import { spawn } from 'child_process'
-import { eventHandler } from './eventHandler'
+import mainWindowHandler from './eventHandler'
 
 // 隐藏 macOS dock
 if (process.platform === 'darwin') {
@@ -104,34 +103,13 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 
-  /**
-   * FEAT: 按键监听
-   */
-  globalShortcut.register('CmdOrCtrl+B', () => {
-    eventHandler['show-window'](mainWindow!)
-  })
-  // macos TODO: 测试不同版本的macos
-  if (process.platform === 'darwin') {
-    const eventTracker = spawn(join(__dirname, '../../resources/eventTracker'))
-    eventTracker.stdout.on('data', (data) => {
-      if (`${data}` === 'multi-copy') {
-        eventHandler['multi-copy'](mainWindow!)
-      }
-    })
-  } else {
-    // windows TODO: 未测试
-    const eventTracker = spawn(join(__dirname, '../../resources/eventTracker'))
-    eventTracker.stdout.on('data', (data) => {
-      if (`${data}` === 'multi-copy') {
-        eventHandler['multi-copy'](mainWindow!)
-      }
-    })
-  }
+  // FEAT: 事件监听
+  mainWindowHandler(app, mainWindow!)
+
+  // FEAT: CORS
   const filter = {
     urls: ['https://aip.baidubce.com/*', 'https://api.chatanywhere.com.cn/*'] // Remote API URS for which you are getting CORS error,
   }
-
-  // FEAT: CORS
   mainWindow?.webContents.session.webRequest.onHeadersReceived(filter, (details, callback) => {
     if (details.responseHeaders) {
       details.responseHeaders['Access-Control-Allow-Origin'] = []

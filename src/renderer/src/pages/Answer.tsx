@@ -20,7 +20,7 @@ export default function Answer() {
   })
 
   return (
-    <div class="mt-10 flex h-full flex-col gap-4 overflow-auto pb-24">
+    <div class="flex h-full flex-col gap-4 overflow-auto pb-24 pt-10">
       <Show
         when={answerStore.question}
         fallback={
