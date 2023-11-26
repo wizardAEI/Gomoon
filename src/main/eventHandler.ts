@@ -41,7 +41,7 @@ export default function mainWindowHandler(app: Electron.App, mainWindow: Browser
   /**
    * FEAT: render -> main
    */
-  ipcMain.handle('set-is-on-top', (event, isOnTop: boolean) => {
+  ipcMain.handle('set-is-on-top', (_, isOnTop: boolean) => {
     mainWindow.setAlwaysOnTop(isOnTop, 'status')
     return mainWindow.isAlwaysOnTop()
   })
