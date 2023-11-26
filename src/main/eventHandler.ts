@@ -1,10 +1,14 @@
 import { spawn } from 'child_process'
-import { BrowserWindow, clipboard, globalShortcut } from 'electron'
+import { BrowserWindow, clipboard, globalShortcut, ipcMain } from 'electron'
 import { join } from 'path'
 
 export default function mainWindowHandler(app: Electron.App, mainWindow: BrowserWindow) {
   if (!app.isReady()) {
     console.error('app is not ready')
+    return
+  }
+  if (!mainWindow) {
+    console.error('mainWindow is not ready')
     return
   }
 
@@ -15,7 +19,7 @@ export default function mainWindowHandler(app: Electron.App, mainWindow: Browser
   globalShortcut.register('CmdOrCtrl+B', () => {
     mainWindow?.isVisible() ? events['hide-window']() : events['show-window']()
   })
-  mainWindow?.setAlwaysOnTop(true, 'status')
+
   // macos TODO: 测试不同版本的macos
   if (process.platform === 'darwin') {
     const eventTracker = spawn(join(__dirname, '../../resources/eventTracker'))
@@ -37,6 +41,10 @@ export default function mainWindowHandler(app: Electron.App, mainWindow: Browser
   /**
    * FEAT: render -> main
    */
+  ipcMain.handle('set-is-on-top', (event, isOnTop: boolean) => {
+    mainWindow.setAlwaysOnTop(isOnTop, 'status')
+    return mainWindow.isAlwaysOnTop()
+  })
 }
 export class Events {
   window: BrowserWindow

@@ -27,7 +27,7 @@ export default function QuestionMention(props: {
         <Portal>
           <Tooltip.Positioner>
             <Tooltip.Content>
-              <div class="rounded-md bg-white/70 p-1 text-xs">{props.content}</div>
+              <div class="rounded-md bg-white p-1 text-xs">{props.content}</div>
             </Tooltip.Content>
           </Tooltip.Positioner>
         </Portal>

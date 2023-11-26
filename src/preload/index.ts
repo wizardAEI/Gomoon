@@ -14,7 +14,8 @@ export const api = {
     return () => {
       ipcRenderer.removeListener('show-window', callback)
     }
-  }
+  },
+  setIsOnTop: (isOnTop: boolean) => ipcRenderer.invoke('set-is-on-top', isOnTop)
 } as const
 
 // Use `contextBridge` APIs to expose Electron APIs to
