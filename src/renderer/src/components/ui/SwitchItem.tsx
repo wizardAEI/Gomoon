@@ -11,7 +11,7 @@ export default function SwitchItem(props: {
     <ASwitch.Root
       checked={props.checked}
       onCheckedChange={(v) => props.onCheckedChange(v.checked as boolean)}
-      class="flex items-center justify-between"
+      class="group flex items-center justify-between"
     >
       {(api) => (
         <>
@@ -24,7 +24,7 @@ export default function SwitchItem(props: {
               <div class="relative h-5 w-9">
                 <div
                   class={`bg-gray-300 absolute bottom-0 left-0 right-0 top-0 cursor-pointer rounded-full transition-colors duration-300 ease-in-out ${
-                    api().isChecked ? 'bg-[#A57BEA]' : 'bg-slate-200'
+                    api().isChecked ? 'bg-[#A57BEA]' : 'bg-slate-200 group-hover:bg-slate-100'
                   }`}
                 >
                   <span

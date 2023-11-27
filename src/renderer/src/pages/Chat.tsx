@@ -65,18 +65,17 @@ export default function Chat() {
               role: 'human',
               content: text
             })
+            if (msgs.at(-1)?.role === 'human') {
+              pushMsg({
+                role: 'ai',
+                content: ''
+              })
+            }
+            const index = msgs.length - 1
             setGeneratingStatus(true)
             frontendHelper(
               msgs,
               (content: string) => {
-                if (msgs.at(-1)?.role === 'human') {
-                  pushMsg({
-                    role: 'ai',
-                    content: ''
-                  })
-                }
-                // FIXME: 当连续发送消息时，会出现所有新消息加在最后的元素的问题
-                const index = msgs.length - 1
                 editMsgByAdd(content, index)
               },
               () => {

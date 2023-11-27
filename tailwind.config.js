@@ -18,7 +18,7 @@ module.exports = {
       colors: {
         home: '#475164', // 首页背景色 鲸鱼灰
         gray: '#a7a8bd', // 非激活色 淡紫灰色
-        active: '#A57BEA', // 激活色 亮紫色
+        active: '#a57bea', // 激活色 亮紫色
         dark: '#2d2e36', // 暗色 牛角灰
         light: '#f1f0ed', // 亮色 银白色
         'white/70': '#ffffff70' // 白色透明度70%
@@ -26,7 +26,9 @@ module.exports = {
       keyframes: {
         click: {
           '0%': { transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(0, 0, 0, 0)' },
-          '50%': { transform: 'scale(0.95) translateY(1px)' },
+          '20%': {
+            transform: 'scale(0.95) translateY(1px)'
+          },
           '80%': { transform: 'scale(0.95) translateY(1px)' },
           '100%': { transform: 'scale(1)' }
         }

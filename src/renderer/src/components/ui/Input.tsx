@@ -64,7 +64,7 @@ export default function Input(props: {
       {props.showClearButton && !props.isGenerating && (
         <button
           class={
-            'absolute right-3 top-[6px] h-2/3 cursor-pointer overflow-hidden rounded-lg border-0 shadow-md active:animate-click ' +
+            'absolute right-3 top-[6px] h-2/3 cursor-pointer overflow-hidden rounded-lg border-0 bg-slate-100 shadow-md active:animate-click ' +
             (text().length ? 'w-0 px-0' : 'px-2')
           }
           onClick={() => {
