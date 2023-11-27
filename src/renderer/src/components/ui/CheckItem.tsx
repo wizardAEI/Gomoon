@@ -1,14 +1,19 @@
-import { Checkbox, CheckboxProps } from '@ark-ui/solid'
+import { Checkbox } from '@ark-ui/solid'
 import QuestionMention from './QuestionMention'
 
 export default function CheckItem(props: {
   label: string
   hint?: string
-  checkProps: CheckboxProps
+  checked: boolean
+  onCheckedChange: (checked: boolean) => void
 }) {
   return (
     <div>
-      <Checkbox.Root {...props.checkProps} class="flex items-center justify-between">
+      <Checkbox.Root
+        checked={props.checked}
+        onCheckedChange={(v) => props.onCheckedChange(v.checked as boolean)}
+        class="flex items-center justify-between"
+      >
         {(api) => (
           <>
             <Checkbox.Label asChild>

@@ -1,8 +1,7 @@
 import { createStore } from 'solid-js/store'
-import { CheckedState } from '@ark-ui/solid'
 
 const [settingStore, setSettingStore] = createStore<{
-  isOnTop: CheckedState
+  isOnTop: boolean
 }>({
   isOnTop: false
 })

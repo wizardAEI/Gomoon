@@ -1,6 +1,5 @@
 import { Roles } from '@renderer/lib/langchain'
 import MarkdownIt from 'markdown-it'
-import mdHighlight from 'markdown-it-highlightjs'
 type MsgTypes = Roles | 'ans' | 'question'
 import { useClipboard, useEventListener } from 'solidjs-use'
 import { Show, createEffect, createSignal } from 'solid-js'
@@ -8,8 +7,8 @@ import 'highlight.js/styles/atom-one-dark.css'
 import ChatGptIcon from '@renderer/assets/icon/models/ChatGptIcon'
 import { msgStatus } from '@renderer/store/msgs'
 import { ansStatus } from '@renderer/store/answer'
-import CapitalIcon from './CapitalIcon'
-
+import mdHighlight from 'markdown-it-highlightjs'
+import CapitalIcon from '../CapitalIcon'
 export default function Message(props: { type: MsgTypes; content: string; botName?: string }) {
   const style: Record<MsgTypes, string> = {
     ai: 'bg-dark',

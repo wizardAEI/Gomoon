@@ -5626,7 +5626,7 @@ supports-preserve-symlinks-flag@^1.0.0:
 
 synckit@^0.8.5:
   version "0.8.5"
-  resolved "https://registry.npmjs.org/synckit/-/synckit-0.8.5.tgz"
+  resolved "https://registry.yarnpkg.com/synckit/-/synckit-0.8.5.tgz#b7f4358f9bb559437f9f167eb6bc46b3c9818fa3"
   integrity sha512-L1dapNV6vu2s/4Sputv8xGsCdAVlb5nRDMFU/E27D44l5U6cw1g0dGd45uLc+OXjNMmF4ntiMdCimzcjFKQI8Q==
   dependencies:
     "@pkgr/utils" "^2.3.1"
