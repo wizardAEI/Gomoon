@@ -20,12 +20,15 @@
     "build:linux": "electron-vite build && electron-builder --linux --config"
   },
   "dependencies": {
-    "@ark-ui/solid": "^1.1.0",
     "@electron-toolkit/preload": "^2.0.0",
     "@electron-toolkit/utils": "^2.0.0",
     "@solidjs/router": "^0.9.1",
     "@types/markdown-it": "^13.0.7",
     "@types/prismjs": "^1.26.3",
+    "@zag-js/checkbox": "^0.30.0",
+    "@zag-js/solid": "^0.30.0",
+    "@zag-js/switch": "^0.30.0",
+    "@zag-js/tooltip": "^0.30.0",
     "electron-updater": "^6.1.1",
     "langchain": "^0.0.193",
     "lodash": "^4.17.21",
@@ -33,7 +36,8 @@
     "markdown-it-highlightjs": "^4.0.1",
     "shiki": "^0.14.5",
     "solid-markdown": "^2.0.0",
-    "solidjs-use": "^2.3.0"
+    "solidjs-use": "^2.3.0",
+    "ulid": "^2.3.0"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^1.0.1",

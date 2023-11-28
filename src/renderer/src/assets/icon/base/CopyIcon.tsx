@@ -6,11 +6,11 @@ export default function CopyIcon(props: SvgProps) {
       //@ts-ignore
       t="1700935346185"
       class="icon"
-      viewBox="0 0 1024 1024"
+      viewBox="-120 -120 1250 1250"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
       p-id="30339"
-      width="32x"
+      width="32"
       height="32"
       fill="currentColor"
       {...props}

@@ -3,8 +3,6 @@ import { SvgProps } from '../type'
 export default function HistoryIcon(props: SvgProps) {
   return (
     <svg
-      // @ts-ignore
-      t="1700937100999"
       class="icon"
       viewBox="0 0 1024 1024"
       version="1.1"

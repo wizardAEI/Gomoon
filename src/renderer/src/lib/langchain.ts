@@ -22,8 +22,11 @@ const createSkills = (chat: ChatBaiduWenxin | ChatOpenAI) => {
           [key: string]: string
         }
       },
-      callback: (content: string) => void,
-      endCallback?: () => void
+      callback: {
+        newTokenCallback: (content: string) => void
+        endCallback?: () => void
+        errorCallback?: (err: any) => void
+      }
     ) {
       const { args, systemTemplate, humanTemplate } = msg
       const prompt = await ChatPromptTemplate.fromMessages([
@@ -34,12 +37,13 @@ const createSkills = (chat: ChatBaiduWenxin | ChatOpenAI) => {
         callbacks: [
           {
             handleLLMNewToken(token) {
-              callback(token)
+              callback.newTokenCallback(token)
             },
             handleLLMEnd() {
-              endCallback?.()
+              callback.endCallback?.()
             },
             handleLLMError(err, runId, parentRunId, tags) {
+              callback.errorCallback?.(err)
               console.error('answer error: ', err, runId, parentRunId, tags)
             }
           }
@@ -51,8 +55,11 @@ const createSkills = (chat: ChatBaiduWenxin | ChatOpenAI) => {
         role: Roles
         content: string
       }[],
-      callback: (content: string) => void,
-      endCallback?: () => void
+      callback: {
+        newTokenCallback: (content: string) => void
+        endCallback?: () => void
+        errorCallback?: (err: any) => void
+      }
     ) {
       return chat.call(
         msgs.map((msg) => msgDict[msg.role](msg.content || '...')),
@@ -60,13 +67,14 @@ const createSkills = (chat: ChatBaiduWenxin | ChatOpenAI) => {
           callbacks: [
             {
               handleLLMNewToken(token) {
-                callback(token)
+                callback.newTokenCallback(token)
               },
               handleLLMError(err, runId, parentRunId, tags) {
                 console.error('chat error: ', err, runId, parentRunId, tags)
+                callback.errorCallback?.(err)
               },
               handleLLMEnd() {
-                endCallback?.()
+                callback.endCallback?.()
               }
             }
           ]
@@ -84,7 +92,8 @@ export const gptInterface = (config: { modelName: string; baseUrl?: string }) =>
       configuration: {
         baseURL: config.baseUrl || baseURL
       },
-      streaming: true
+      streaming: true,
+      timeout: 1000 * 10
     })
   )
 
@@ -117,8 +126,11 @@ export const translator = async (
   args: {
     [key: string]: string
   },
-  callback: (content: string) => void,
-  endCallback?: () => void
+  callback: {
+    newTokenCallback: (content: string) => void
+    endCallback?: () => void
+    errorCallback?: (err: any) => void
+  }
 ) =>
   gpt4.answer(
     {
@@ -130,8 +142,7 @@ export const translator = async (
       humanTemplate: '{text}',
       args
     },
-    callback,
-    endCallback
+    callback
   )
 
 // FEAT: 前端大师
@@ -140,8 +151,11 @@ export const frontendHelper = async (
     role: Roles
     content: string
   }[],
-  callback: (content: string) => void,
-  endCallback?: () => void
+  callback: {
+    newTokenCallback: (content: string) => void
+    endCallback?: () => void
+    errorCallback?: (err: any) => void
+  }
 ) =>
   gpt4.chat(
     [
@@ -152,6 +166,5 @@ export const frontendHelper = async (
       },
       ...msgs
     ],
-    callback,
-    endCallback
+    callback
   )

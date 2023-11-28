@@ -1,5 +1,5 @@
 import { createSignal, onCleanup, onMount } from 'solid-js'
-import { clearMsgs } from '../../store/msgs'
+import { clearMsgs } from '../store/msgs'
 
 /**
  * FEAT: Input 组件，用于接收用户输入的文本，onMountHandler可以在外部操作 input 元素
@@ -11,12 +11,14 @@ export default function Input(props: {
   disable?: boolean
   isGenerating?: boolean
   autoFocusWhenShow?: boolean
+  placeholder?: string
+  text: string
+  setText: (text: string) => void
 }) {
-  const [text, setText] = createSignal('')
   let textAreaDiv: HTMLTextAreaElement | undefined
   function submit() {
-    props.send(text())
-    setText('')
+    props.send(props.text)
+    props.setText('')
     textAreaDiv!.style.height = 'auto'
   }
 
@@ -44,7 +46,7 @@ export default function Input(props: {
     <div class="relative flex w-full rounded-2xl bg-white/70 backdrop-blur-md">
       <textarea
         ref={textAreaDiv}
-        value={text()}
+        value={props.text}
         onkeydown={(e) => {
           if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
             submit()
@@ -53,25 +55,25 @@ export default function Input(props: {
           }
         }}
         oninput={(e) => {
-          setText(e.target.value)
+          props.setText(e.target.value)
           e.preventDefault()
           return false
         }}
         rows={1}
-        placeholder="Ctrl/Cmd+Enter 发送"
+        placeholder={props.placeholder || 'Ctrl/Cmd+Enter 发送'}
         class="font-sans max-h-24 flex-1 resize-none rounded-2xl border-2 border-[#ffffff20] bg-transparent px-4 py-2 text-base duration-300 focus:border-active focus:outline-none"
       />
       {props.showClearButton && !props.isGenerating && (
         <button
           class={
             'absolute right-3 top-[6px] h-2/3 cursor-pointer overflow-hidden rounded-lg border-0 bg-slate-100 shadow-md active:animate-click ' +
-            (text().length ? 'w-0 px-0' : 'px-2')
+            (props.text.length ? 'w-0 px-0' : 'px-2')
           }
           onClick={() => {
             clearMsgs()
           }}
         >
-          {!text().length && '清空历史'}
+          {!props.text.length && '清空历史'}
         </button>
       )}
     </div>

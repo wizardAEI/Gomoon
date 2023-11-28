@@ -1,11 +1,13 @@
-import Input from '@renderer/components/ui/Input'
-import Message from '@renderer/components/ui/Message'
+import Input from '@renderer/components/Input'
+import Message from '@renderer/components/Message'
 import { genAns, answerStore } from '../store/answer'
-import { Show, onCleanup, onMount } from 'solid-js'
+import { Show, createSignal, onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
 import { useLocation } from '@solidjs/router'
 
 export default function Answer() {
+  const [text, setText] = createSignal('')
+
   onMount(() => {
     const query = useLocation().query
     if (query.q) {
@@ -32,10 +34,12 @@ export default function Answer() {
         <Message content={answerStore.question} type="question" />
       </Show>
       {answerStore.answer && (
-        <Message content={answerStore.answer} type="ans" botName="翻译/纠错助手" />
+        <Message content={answerStore.answer} id="ans" type="ans" botName="翻译/纠错助手" />
       )}
       <div class="fixed bottom-10 w-full px-8">
         <Input
+          text={text()}
+          setText={setText}
           send={genAns}
           // 自动聚焦
           onMountHandler={(inputDiv: HTMLTextAreaElement) => {

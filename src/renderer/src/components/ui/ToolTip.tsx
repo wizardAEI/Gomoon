@@ -1,21 +1,24 @@
-import QuestionMarkIcon from '@renderer/assets/icon/base/QuestionMarkIcon'
+import { JSXElement } from 'solid-js'
+import { PositioningOptions } from '@zag-js/popper'
 import * as tooltip from '@zag-js/tooltip'
 import { normalizeProps, useMachine } from '@zag-js/solid'
 import { createMemo, createUniqueId, Show } from 'solid-js'
 
-export default function QuestionMention(props: {
+export default function Tooltip(props: {
   size?: number
   color?: string
+  label: string | JSXElement
   content: string
   fill?: string
+  position?: PositioningOptions
 }) {
   const [state, send] = useMachine(
     tooltip.machine({
       id: createUniqueId(),
       openDelay: 200,
       closeDelay: 300,
-      positioning: {
-        placement: 'top'
+      positioning: props.position || {
+        placement: 'right'
       }
     })
   )
@@ -26,24 +29,13 @@ export default function QuestionMention(props: {
     <div class="inline-block">
       <button
         {...api().triggerProps}
-        class="flex h-full cursor-pointer items-center rounded-full border-0"
+        class="flex cursor-pointer items-center border-0 bg-transparent"
       >
-        <QuestionMarkIcon
-          fill={props.fill || '#a7a8bd'}
-          class="scale-[118%]"
-          width={props.size || 14}
-          height={props.size || 14}
-        />
+        {props.label}
       </button>
       <Show when={api().isOpen}>
         <div {...api().positionerProps}>
-          <div
-            {...api().contentProps}
-            style={{
-              color: props.color || '#333333'
-            }}
-            class="rounded-md bg-white p-1 text-xs"
-          >
+          <div {...api().contentProps} class="rounded-md bg-white p-1 text-xs">
             {props.content}
           </div>
         </div>

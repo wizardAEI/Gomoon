@@ -14,11 +14,47 @@ export function genAns(q: string) {
     {
       text: q
     },
-    (content) => {
-      setAnswerStore('answer', (ans) => ans + content)
+    {
+      newTokenCallback(content) {
+        setAnswerStore('answer', (ans) => ans + content)
+      },
+      endCallback() {
+        setGeneratingStatus(false)
+      },
+      errorCallback(err) {
+        if ((err = 'Request timed out.')) {
+          setAnswerStore('answer', (ans) => ans + '\n\n回答超时，请重试')
+        } else {
+          setAnswerStore('answer', (ans) => ans + `\n\n出问题了: ${err}`)
+        }
+        setGeneratingStatus(false)
+      }
+    }
+  )
+}
+
+export function reGenAns() {
+  setAnswerStore('answer', '')
+  setGeneratingStatus(true)
+  translator(
+    {
+      text: answerStore.question
     },
-    () => {
-      setGeneratingStatus(false)
+    {
+      newTokenCallback(content) {
+        setAnswerStore('answer', (ans) => ans + content)
+      },
+      endCallback() {
+        setGeneratingStatus(false)
+      },
+      errorCallback(err) {
+        if ((err = 'Request timed out.')) {
+          setAnswerStore('answer', (ans) => ans + '\n\n回答超时，请重试')
+        } else {
+          setAnswerStore('answer', (ans) => ans + `\n\n出问题了: ${err}`)
+        }
+        setGeneratingStatus(false)
+      }
     }
   )
 }
