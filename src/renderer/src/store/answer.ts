@@ -35,7 +35,7 @@ export function genAns(q: string) {
   )
 }
 export function stopGenAns() {
-  controller.abort('⏹')
+  controller.abort()
   setGeneratingStatus(false)
 }
 export function reGenAns() {

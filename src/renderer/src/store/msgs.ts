@@ -1,3 +1,4 @@
+import { ErrorDict } from '@renderer/lib/constant'
 import { Roles, frontendHelper } from '@renderer/lib/langchain'
 import { createStore, produce } from 'solid-js/store'
 import { ulid } from 'ulid'
@@ -86,11 +87,11 @@ export function genMsg(id: string) {
     endCallback() {
       removeGeneratingStatus(id)
     },
-    errorCallback(err) {
-      if ((err = 'Request timed out.')) {
-        editMsgByAdd('\n\n回答超时，请重试', id)
+    errorCallback(err: Error) {
+      if (ErrorDict[err.message]) {
+        editMsgByAdd(ErrorDict[err.message], id)
       } else {
-        editMsgByAdd('\n\n出问题了: ', err)
+        editMsgByAdd(`\n\n出问题了:${err.name}: ${err.message}`, id)
       }
       removeGeneratingStatus(id)
     },
@@ -100,7 +101,7 @@ export function genMsg(id: string) {
 }
 
 export function stopGenMsg(id: string) {
-  abortMap.get(id)?.('⏹')
+  abortMap.get(id)?.()
   abortMap.delete(id)
   removeGeneratingStatus(id)
 }
