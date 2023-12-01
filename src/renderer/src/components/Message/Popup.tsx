@@ -170,9 +170,15 @@ export function MsgPopupByUser(props: { id: string; content: string; type: MsgTy
   )
 }
 
-export function WithDrawal() {
+export function WithDrawal(props: { type: MsgTypes }) {
   return (
-    <div class="absolute left-5 top-[-10px] z-10 hidden items-center gap-1 rounded-xl bg-dark px-2 group-hover:flex group-hover:h-6">
+    <div
+      class={
+        props.type === 'human'
+          ? 'absolute right-5 top-[-10px] z-10 hidden items-center gap-1 rounded-xl bg-light px-2 group-hover:flex group-hover:h-6'
+          : 'absolute left-5 top-[-10px] z-10 hidden items-center gap-1 rounded-xl bg-dark px-2 group-hover:flex group-hover:h-6'
+      }
+    >
       <ToolTip
         label={
           <WithdrawalIcon

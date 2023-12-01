@@ -1,4 +1,4 @@
-import { onCleanup, onMount } from 'solid-js'
+import { createEffect, onCleanup, onMount } from 'solid-js'
 import { clearMsgs } from '../store/msgs'
 
 /**
@@ -35,13 +35,15 @@ export default function Input(props: {
         removeListener()
       })
     }
-
-    textAreaDiv &&
-      textAreaDiv.addEventListener('input', () => {
-        textAreaDiv!.style.height = 'auto'
-        textAreaDiv!.style.height = `${textAreaDiv!.scrollHeight + 4}px`
-      })
   })
+  createEffect(() => {
+    if (props.text && textAreaDiv) {
+      textAreaDiv.style.height = 'auto'
+      console.log(textAreaDiv.scrollHeight)
+      textAreaDiv.style.height = `${textAreaDiv!.scrollHeight + 4}px`
+    }
+  })
+
   return (
     <div class="relative flex w-full rounded-2xl bg-white/70 backdrop-blur-md">
       <textarea
@@ -61,7 +63,7 @@ export default function Input(props: {
         }}
         rows={1}
         placeholder={props.placeholder || 'Ctrl/Cmd+Enter 发送'}
-        class="font-sans max-h-24 flex-1 resize-none rounded-2xl border-2 border-[#ffffff20] bg-transparent px-4 py-2 text-base duration-300 focus:border-active focus:outline-none"
+        class="font-sans max-h-48 flex-1 resize-none rounded-2xl border-2 border-[#ffffff20] bg-transparent px-4 py-2 text-base duration-300 focus:border-active focus:outline-none"
       />
       {props.showClearButton && !props.isGenerating && (
         <button

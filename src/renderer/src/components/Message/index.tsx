@@ -87,7 +87,7 @@ export default function Message(props: {
         when={!props.isEmpty}
         fallback={
           <Show when={props.id && !msgStatus.generatingList.includes(props.id)}>
-            <WithDrawal />
+            <WithDrawal type={props.type} />
           </Show>
         }
       >
