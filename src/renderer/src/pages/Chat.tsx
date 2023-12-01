@@ -2,14 +2,12 @@ import Input from '@renderer/components/Input'
 import {
   msgs,
   pushMsg,
-  editMsgByAdd,
   pushGeneratingStatus,
-  removeGeneratingStatus,
   msgStatus,
   editMsg,
-  reActiveGeneratingStatus
+  reActiveGeneratingStatus,
+  genMsg
 } from '../store/msgs'
-import { frontendHelper } from '../lib/langchain'
 import Message from '@renderer/components/Message'
 import { For, Show, createSignal, onCleanup, onMount } from 'solid-js'
 import { ulid } from 'ulid'
@@ -28,29 +26,13 @@ const scrollToBottom = (el: HTMLDivElement, index: number) => {
 export default function Chat() {
   const [text, setText] = createSignal('')
   const [editId, setEditId] = createSignal('')
-  const genMsg = (id: string) => {
-    const currentMsgs = msgs.slice(
-      0,
-      msgs.findIndex((msg) => msg.id === id)
-    )
-    console.log(currentMsgs.length)
-    frontendHelper(currentMsgs, {
-      newTokenCallback(content: string) {
-        editMsgByAdd(content, id)
-      },
-      endCallback() {
-        removeGeneratingStatus(id)
-      },
-      errorCallback(err) {
-        if ((err = 'Request timed out.')) {
-          editMsgByAdd('\n\n回答超时，请重试', id)
-        } else {
-          editMsgByAdd('\n\n出问题了: ', err)
-        }
-        removeGeneratingStatus(id)
-      }
-    })
-  }
+
+  // FEAT: 记录用户点击编辑后如果没有发送，则取消编辑
+  const [previousMsg, setPreviousMsg] = createSignal<{
+    content: string
+    id: string
+    state: 'pending' | 'complete'
+  }>({ content: '', id: '', state: 'complete' })
   onMount(() => {
     requestAnimationFrame(() => {
       const chatContainer = document.querySelector('.chat-container')
@@ -65,9 +47,18 @@ export default function Chat() {
     }
     event.on('reGenMsg', reGenMsg)
     const editUserMsg = (c: string, id: string) => {
+      console.log('editUserMsg', c, id)
+      if (previousMsg().state !== 'complete') {
+        editMsg({ content: previousMsg().content }, previousMsg().id)
+      }
       setEditId(id)
+      if (!id) {
+        setText('')
+        return
+      }
       editMsg({ content: '' }, id)
       setText(c)
+      setPreviousMsg({ content: c, id, state: 'pending' })
     }
     event.on('editUserMsg', editUserMsg)
 
@@ -95,7 +86,7 @@ export default function Chat() {
                 id={msg.id}
                 class={'flex ' + (msg.role === 'human' ? 'human ml-4 justify-end' : 'ai mr-4')}
               >
-                <Message content="......" type={msg.role} botName="前端专家" />
+                <Message isEmpty id={msg.id} content="......" type={msg.role} botName="前端专家" />
               </div>
             }
           >
@@ -116,6 +107,11 @@ export default function Chat() {
           setText={setText}
           showClearButton
           send={async (v: string) => {
+            // 将上一条消息设置为完成状态
+            if (previousMsg().state === 'pending') {
+              setPreviousMsg({ ...previousMsg(), state: 'complete' })
+            }
+
             if (editId()) {
               // 重新编辑某一条消息
               editMsg({ content: text() }, editId())
@@ -124,6 +120,7 @@ export default function Chat() {
               }
               const id = msgs[msgs.findIndex((msg) => msg.id === editId()) + 1]?.id
               editMsg({ content: '' }, id)
+              pushGeneratingStatus(id)
               genMsg(id)
               setEditId('')
             } else {

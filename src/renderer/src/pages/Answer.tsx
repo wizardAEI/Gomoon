@@ -31,10 +31,10 @@ export default function Answer() {
           </div>
         }
       >
-        <Message content={answerStore.question} type="question" />
+        <Message content={answerStore.question} id="question" type="question" />
       </Show>
       {answerStore.answer && (
-        <Message content={answerStore.answer} id="ans" type="ans" botName="翻译/纠错助手" />
+        <Message content={answerStore.answer} type="ans" botName="翻译/纠错助手" />
       )}
       <div class="fixed bottom-10 w-full px-8">
         <Input

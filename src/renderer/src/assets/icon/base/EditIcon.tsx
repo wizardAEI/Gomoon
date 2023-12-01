@@ -3,7 +3,6 @@ import { SvgProps } from '../type'
 export default function EditIcon(props: SvgProps) {
   return (
     <svg
-      t="1701178162255"
       class="icon"
       viewBox="0 0 1024 1024"
       version="1.1"

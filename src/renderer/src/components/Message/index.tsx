@@ -7,7 +7,7 @@ import ChatGptIcon from '@renderer/assets/icon/models/ChatGptIcon'
 import { msgStatus } from '@renderer/store/msgs'
 import mdHighlight from 'markdown-it-highlightjs'
 import CapitalIcon from '../ui/CapitalIcon'
-import MsgPopup, { MsgPopupByUser } from './Popup'
+import MsgPopup, { MsgPopupByUser, Pause, WithDrawal } from './Popup'
 import { ansStatus } from '@renderer/store/answer'
 export type MsgTypes = Roles | 'ans' | 'question'
 export default function Message(props: {
@@ -15,6 +15,7 @@ export default function Message(props: {
   id?: string
   content: string
   botName?: string
+  isEmpty?: boolean
 }) {
   const style: Record<MsgTypes, string> = {
     ai: 'bg-dark',
@@ -82,11 +83,28 @@ export default function Message(props: {
   const showCompsByUser = createMemo(() => props.type === 'human')
   return (
     <div class="group relative max-w-full">
-      <Show when={showComps()}>
-        <MsgPopup type={props.type} id={props.id || ''} content={props.content} />
-      </Show>
-      <Show when={showCompsByUser()}>
-        <MsgPopupByUser type={props.type} id={props.id || ''} content={props.content} />
+      <Show
+        when={!props.isEmpty}
+        fallback={
+          <Show when={props.id && !msgStatus.generatingList.includes(props.id)}>
+            <WithDrawal />
+          </Show>
+        }
+      >
+        <Show
+          when={
+            (props.id && msgStatus.generatingList.includes(props.id)) ||
+            (props.type === 'ans' && ansStatus.isGenerating)
+          }
+        >
+          <Pause id={props.id} type={props.type} />
+        </Show>
+        <Show when={showComps()}>
+          <MsgPopup type={props.type} id={props.id || ''} content={props.content} />
+        </Show>
+        <Show when={showCompsByUser()}>
+          <MsgPopupByUser type={props.type} id={props.id || ''} content={props.content} />
+        </Show>
       </Show>
       <div class={style[props.type] + ' relative m-4 rounded-2xl p-4'}>
         <div class={mdStyle[props.type] + ' markdown break-words'} innerHTML={htmlString()} />

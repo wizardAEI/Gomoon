@@ -1,4 +1,4 @@
-import { Roles } from '@renderer/lib/langchain'
+import { Roles, frontendHelper } from '@renderer/lib/langchain'
 import { createStore, produce } from 'solid-js/store'
 import { ulid } from 'ulid'
 
@@ -8,6 +8,8 @@ interface Msg {
   content: string
 }
 const [msgs, setMsgs] = createStore<Array<Msg>>([])
+
+const abortMap = new Map<string, (ans?: string) => void>()
 
 export function pushMsg(msg: Msg) {
   setMsgs(
@@ -45,8 +47,8 @@ const [msgStatus, setMsgStatus] = createStore<{
   generatingList: []
 })
 
-export function pushGeneratingStatus() {
-  const id = ulid()
+export function pushGeneratingStatus(existID?: string) {
+  const id = existID || ulid()
   setMsgStatus(
     produce((msgStatus) => {
       msgStatus.generatingList.push(id)
@@ -69,6 +71,38 @@ export function reActiveGeneratingStatus(id: string) {
       msgStatus.generatingList.push(id)
     })
   )
+}
+
+export function genMsg(id: string) {
+  const currentMsgs = msgs.slice(
+    0,
+    msgs.findIndex((msg) => msg.id === id)
+  )
+  const controller = new AbortController()
+  frontendHelper(currentMsgs, {
+    newTokenCallback(content: string) {
+      editMsgByAdd(content, id)
+    },
+    endCallback() {
+      removeGeneratingStatus(id)
+    },
+    errorCallback(err) {
+      if ((err = 'Request timed out.')) {
+        editMsgByAdd('\n\n回答超时，请重试', id)
+      } else {
+        editMsgByAdd('\n\n出问题了: ', err)
+      }
+      removeGeneratingStatus(id)
+    },
+    pauseSignal: controller.signal
+  })
+  abortMap.set(id, () => controller.abort())
+}
+
+export function stopGenMsg(id: string) {
+  abortMap.get(id)?.('⏹')
+  abortMap.delete(id)
+  removeGeneratingStatus(id)
 }
 
 export { msgs, setMsgs, msgStatus }

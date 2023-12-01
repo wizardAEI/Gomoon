@@ -5,8 +5,9 @@ const [answerStore, setAnswerStore] = createStore({
   answer: '',
   question: ''
 })
-
+let controller: AbortController
 export function genAns(q: string) {
+  controller = new AbortController()
   setAnswerStore('answer', '')
   setAnswerStore('question', q)
   setGeneratingStatus(true)
@@ -28,35 +29,19 @@ export function genAns(q: string) {
           setAnswerStore('answer', (ans) => ans + `\n\n出问题了: ${err}`)
         }
         setGeneratingStatus(false)
-      }
+      },
+      pauseSignal: controller.signal
     }
   )
 }
-
+export function stopGenAns() {
+  controller.abort('⏹')
+  setGeneratingStatus(false)
+}
 export function reGenAns() {
   setAnswerStore('answer', '')
   setGeneratingStatus(true)
-  translator(
-    {
-      text: answerStore.question
-    },
-    {
-      newTokenCallback(content) {
-        setAnswerStore('answer', (ans) => ans + content)
-      },
-      endCallback() {
-        setGeneratingStatus(false)
-      },
-      errorCallback(err) {
-        if ((err = 'Request timed out.')) {
-          setAnswerStore('answer', (ans) => ans + '\n\n回答超时，请重试')
-        } else {
-          setAnswerStore('answer', (ans) => ans + `\n\n出问题了: ${err}`)
-        }
-        setGeneratingStatus(false)
-      }
-    }
-  )
+  genAns(answerStore.question)
 }
 
 const [ansStatus, setAnsStatus] = createStore({

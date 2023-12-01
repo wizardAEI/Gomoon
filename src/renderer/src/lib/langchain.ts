@@ -22,10 +22,11 @@ const createSkills = (chat: ChatBaiduWenxin | ChatOpenAI) => {
           [key: string]: string
         }
       },
-      callback: {
+      option: {
         newTokenCallback: (content: string) => void
         endCallback?: () => void
         errorCallback?: (err: any) => void
+        pauseSignal: AbortSignal
       }
     ) {
       const { args, systemTemplate, humanTemplate } = msg
@@ -37,17 +38,18 @@ const createSkills = (chat: ChatBaiduWenxin | ChatOpenAI) => {
         callbacks: [
           {
             handleLLMNewToken(token) {
-              callback.newTokenCallback(token)
+              option.newTokenCallback(token)
             },
             handleLLMEnd() {
-              callback.endCallback?.()
+              option.endCallback?.()
             },
             handleLLMError(err, runId, parentRunId, tags) {
-              callback.errorCallback?.(err)
+              option.errorCallback?.(err)
               console.error('answer error: ', err, runId, parentRunId, tags)
             }
           }
-        ]
+        ],
+        signal: option.pauseSignal
       })
     },
     async chat(
@@ -55,10 +57,11 @@ const createSkills = (chat: ChatBaiduWenxin | ChatOpenAI) => {
         role: Roles
         content: string
       }[],
-      callback: {
+      option: {
         newTokenCallback: (content: string) => void
         endCallback?: () => void
         errorCallback?: (err: any) => void
+        pauseSignal: AbortSignal
       }
     ) {
       return chat.call(
@@ -67,17 +70,18 @@ const createSkills = (chat: ChatBaiduWenxin | ChatOpenAI) => {
           callbacks: [
             {
               handleLLMNewToken(token) {
-                callback.newTokenCallback(token)
+                option.newTokenCallback(token)
               },
               handleLLMError(err, runId, parentRunId, tags) {
                 console.error('chat error: ', err, runId, parentRunId, tags)
-                callback.errorCallback?.(err)
+                option.errorCallback?.(err)
               },
               handleLLMEnd() {
-                callback.endCallback?.()
+                option.endCallback?.()
               }
             }
-          ]
+          ],
+          signal: option.pauseSignal
         }
       )
     }
@@ -126,13 +130,15 @@ export const translator = async (
   args: {
     [key: string]: string
   },
-  callback: {
+  option: {
     newTokenCallback: (content: string) => void
     endCallback?: () => void
     errorCallback?: (err: any) => void
+    pauseSignal: AbortSignal
   }
-) =>
-  gpt4.answer(
+) => {
+  const controller = new AbortController()
+  return gpt4.answer(
     {
       systemTemplate: `分析我给你的内容，当我给你的是一段句子或者单词时，帮我翻译；当我给你一段代码或终端报错信息时，帮我分析报错。
       当我希望你翻译时遵守：英文句子请翻译成中文；反之则将中文翻译成英文。不要多余的废话。
@@ -142,8 +148,9 @@ export const translator = async (
       humanTemplate: '{text}',
       args
     },
-    callback
+    option
   )
+}
 
 // FEAT: 前端大师
 export const frontendHelper = async (
@@ -151,10 +158,11 @@ export const frontendHelper = async (
     role: Roles
     content: string
   }[],
-  callback: {
+  option: {
     newTokenCallback: (content: string) => void
     endCallback?: () => void
     errorCallback?: (err: any) => void
+    pauseSignal: AbortSignal
   }
 ) =>
   gpt4.chat(
@@ -166,5 +174,5 @@ export const frontendHelper = async (
       },
       ...msgs
     ],
-    callback
+    option
   )

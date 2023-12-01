@@ -4,10 +4,13 @@ import CopyIcon from '@renderer/assets/icon/base/CopyIcon'
 import { useClipboard } from 'solidjs-use'
 import SaveIcon from '@renderer/assets/icon/base/SaveIcon'
 import RetryIcon from '@renderer/assets/icon/base/RetryIcon'
-import { reGenAns } from '@renderer/store/answer'
+import { reGenAns, stopGenAns } from '@renderer/store/answer'
 import { MsgTypes } from '.'
 import EditIcon from '@renderer/assets/icon/base/EditIcon'
 import { event } from '@renderer/lib/util'
+import WithdrawalIcon from '@renderer/assets/icon/base/WithdrawalICon'
+import PauseIcon from '@renderer/assets/icon/base/PauseIcon'
+import { stopGenMsg } from '@renderer/store/msgs'
 
 // FEAT: 让点击可以有反馈
 const compWithTip = (
@@ -38,12 +41,12 @@ const compWithTip = (
     <div class="flex">
       <Show when={tipModal().label}>
         {tipModal().status === 'success' && (
-          <div class="animate-popup absolute top-[-4px] h-1 text-slate-50">
+          <div class="absolute top-[-4px] h-1 animate-popup text-slate-50">
             {tipModal().label || '成功!'}
           </div>
         )}
         {tipModal().status === 'fail' && (
-          <div class="animate-popup absolute top-[-4px] h-1 text-slate-50">
+          <div class="absolute top-[-4px] h-1 animate-popup text-slate-50">
             {tipModal().label || '失败!'}
           </div>
         )}
@@ -85,22 +88,24 @@ export default function MsgPopup(props: { id: string; content: string; type: Msg
         ))}
         content={`${props.type === 'ai' ? '自此' : ''}保存`}
       />
-      <ToolTip
-        label={
-          <EditIcon
-            height={22}
-            width={22}
-            class="cursor-pointer text-gray duration-100 hover:text-active"
-            onClick={() => {
-              event.emit('editUserMsg', props.content, props.id)
-            }}
-          />
-        }
-        content="重新编辑"
-        position={{
-          placement: 'left'
-        }}
-      />
+      <Show when={props.type !== 'ans'}>
+        <ToolTip
+          label={
+            <EditIcon
+              height={22}
+              width={22}
+              class="cursor-pointer text-gray duration-100 hover:text-active"
+              onClick={() => {
+                event.emit('editUserMsg', props.content, props.id)
+              }}
+            />
+          }
+          content="重新编辑"
+          position={{
+            placement: 'left'
+          }}
+        />
+      </Show>
       <ToolTip
         label={
           <RetryIcon
@@ -157,6 +162,56 @@ export function MsgPopupByUser(props: { id: string; content: string; type: MsgTy
           />
         ))}
         content="复制到剪贴板"
+        position={{
+          placement: 'left'
+        }}
+      />
+    </div>
+  )
+}
+
+export function WithDrawal() {
+  return (
+    <div class="absolute left-5 top-[-10px] z-10 hidden items-center gap-1 rounded-xl bg-dark px-2 group-hover:flex group-hover:h-6">
+      <ToolTip
+        label={
+          <WithdrawalIcon
+            height={22}
+            width={22}
+            class="cursor-pointer text-gray duration-100 hover:text-active"
+            onClick={() => {
+              event.emit('editUserMsg', '', '')
+            }}
+          />
+        }
+        content="撤回"
+        position={{
+          placement: 'left'
+        }}
+      />
+    </div>
+  )
+}
+
+export function Pause(props: { id?: string; type: MsgTypes }) {
+  return (
+    <div class="absolute left-5 top-[-10px] z-10 hidden items-center gap-1 rounded-xl bg-dark px-2 group-hover:flex group-hover:h-6">
+      <ToolTip
+        label={
+          <PauseIcon
+            height={22}
+            width={22}
+            class="cursor-pointer text-gray duration-100 hover:text-active"
+            onClick={() => {
+              if (props.id) {
+                stopGenMsg(props.id)
+              } else if (props.type === 'ans') {
+                stopGenAns()
+              }
+            }}
+          />
+        }
+        content="暂停"
         position={{
           placement: 'left'
         }}
