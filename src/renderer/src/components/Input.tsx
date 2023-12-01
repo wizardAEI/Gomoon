@@ -37,10 +37,10 @@ export default function Input(props: {
     }
   })
   createEffect(() => {
-    if (props.text && textAreaDiv) {
+    if (props.text !== undefined && textAreaDiv) {
       textAreaDiv.style.height = 'auto'
-      console.log(textAreaDiv.scrollHeight)
       textAreaDiv.style.height = `${textAreaDiv!.scrollHeight + 4}px`
+      return
     }
   })
 
