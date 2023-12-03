@@ -34,6 +34,7 @@ const App = () => {
           <Route path="/" component={Chat} />
           <Route path="/answer" component={Answer} />
           <Route path="/setting" component={Setting} />
+          <Route path="*" component={Chat} />
         </Routes>
       </div>
     </div>

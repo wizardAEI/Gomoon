@@ -4,7 +4,7 @@ import { useClipboard, useEventListener } from 'solidjs-use'
 import { Show, createMemo, createSignal } from 'solid-js'
 import 'highlight.js/styles/atom-one-dark.css'
 import ChatGptIcon from '@renderer/assets/icon/models/ChatGptIcon'
-import { msgStatus } from '@renderer/store/msgs'
+import { msgStatus, msgs } from '@renderer/store/msgs'
 import mdHighlight from 'markdown-it-highlightjs'
 import CapitalIcon from '../ui/CapitalIcon'
 import MsgPopup, { MsgPopupByUser, Pause, WithDrawal } from './Popup'
@@ -80,7 +80,13 @@ export default function Message(props: {
       (props.type === 'ai' && props.id && !msgStatus.generatingList.includes(props.id)) ||
       (props.type === 'ans' && !ansStatus.isGenerating)
   )
-  const showCompsByUser = createMemo(() => props.type === 'human')
+  const showCompsByUser = createMemo(() => {
+    if (props.id) {
+      const genIndex = msgs.findIndex((msg) => msg.id === props.id) + 1
+      return !msgStatus.generatingList.includes(msgs[genIndex]?.id || '') && props.type === 'human'
+    }
+    return false
+  })
   return (
     <div class="group relative max-w-full">
       <Show

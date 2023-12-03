@@ -14,8 +14,8 @@ export default defineConfig({
       alias: {
         '@renderer': resolve('src/renderer/src')
       }
-      // public 目录下的文件可以直接通过 / 访问
     },
+    // public 目录下的文件可以直接通过 / 访问
     publicDir: resolve('src/renderer/public'),
     plugins: [solid()]
   }
