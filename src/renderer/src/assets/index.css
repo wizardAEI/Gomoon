@@ -7,7 +7,7 @@
 }
 
 .dark-theme * {
-  color: rgb(249 250 251);
+  color: #d8e3e7; /* 云峰白 */
 }
 
 @tailwind base;
@@ -34,6 +34,24 @@
 /* 自定义样式（tailwind无法覆盖的） */
 .scrollbar-hidden::-webkit-scrollbar {
   display: none;
+}
+.cyber-box {
+  position: relative;
+  border-radius: 16px;
+}
+.cyber-box::after {
+  content: '';
+  position: absolute;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  top: -2px;
+  left: -2px;
+  background-image: linear-gradient(to right, #2d535d, #005271, #004c86, #2b3f90, #642388);
+  z-index: -1;
+  border-radius: 18px;
+}
+.cyber-box[data-active]::after {
+  background-image: linear-gradient(to right, #2d6170, #006089, #005aa0, #364cac, #792ba4);
 }
 
 /* markdown 专属css */
@@ -65,10 +83,15 @@
 }
 
 .markdown code:not(.hljs) {
-  background: #74787a;
+  background: #869d9d; /* 虾壳灰 */
   color: rgb(249 250 251);
   border-radius: 0.4rem;
   border: 0.1rem solid rgba(0, 0, 0, 0.1);
   padding: 0 0.1rem;
   margin: 0 4px;
+}
+
+.markdown code {
+  border-radius: 0.4rem;
+  background: #132c33;
 }

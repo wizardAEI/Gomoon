@@ -16,6 +16,7 @@ export default function Input(props: {
   setText: (text: string) => void
 }) {
   let textAreaDiv: HTMLTextAreaElement | undefined
+  let textAreaContainerDiv: HTMLDivElement | undefined
   function submit() {
     props.send(props.text)
     props.setText('')
@@ -35,17 +36,40 @@ export default function Input(props: {
         removeListener()
       })
     }
+
+    // 让input聚焦，box边框变为激活色
+    const addActive = (el: HTMLDivElement) => {
+      el.attributes.setNamedItem(document.createAttribute('data-active'))
+    }
+    const removeActive = (el: HTMLDivElement) => {
+      el.attributes.removeNamedItem('data-active')
+    }
+    textAreaDiv!.addEventListener('focus', () => {
+      console.log('focus')
+      addActive(textAreaContainerDiv!)
+    })
+    textAreaDiv!.addEventListener('blur', () => {
+      console.log('blur')
+      removeActive(textAreaContainerDiv!)
+    })
+    onCleanup(() => {
+      textAreaDiv!.removeEventListener('focus', () => {
+        addActive(textAreaContainerDiv!)
+      })
+      textAreaDiv!.removeEventListener('blur', () => {
+        removeActive(textAreaContainerDiv!)
+      })
+    })
   })
   createEffect(() => {
     if (props.text !== undefined && textAreaDiv) {
       textAreaDiv.style.height = 'auto'
-      textAreaDiv.style.height = `${textAreaDiv!.scrollHeight + 4}px`
-      return
+      textAreaDiv.style.height = `${textAreaDiv!.scrollHeight}px`
     }
   })
 
   return (
-    <div class="relative flex w-full rounded-2xl bg-white/70 backdrop-blur-md">
+    <div ref={textAreaContainerDiv} class="cyber-box relative flex w-full backdrop-blur-md">
       <textarea
         ref={textAreaDiv}
         value={props.text}
@@ -63,12 +87,12 @@ export default function Input(props: {
         }}
         rows={1}
         placeholder={props.placeholder || 'Ctrl/Cmd+Enter 发送'}
-        class="font-sans max-h-48 flex-1 resize-none rounded-2xl border-2 border-[#ffffff20] bg-transparent px-4 py-2 text-base duration-300 focus:border-active focus:outline-none"
+        class="font-sans max-h-48 flex-1 resize-none rounded-2xl border-none bg-dark-pro px-4 py-2 text-base text-text1 caret-text2 transition-none focus:outline-none"
       />
       {props.showClearButton && !props.isGenerating && (
         <button
           class={
-            'absolute right-3 top-[6px] h-2/3 cursor-pointer overflow-hidden rounded-lg border-0 bg-slate-100 shadow-md active:animate-click ' +
+            'absolute right-3 top-[6px] h-2/3 cursor-pointer overflow-hidden rounded-lg border-0 bg-cyber text-text2 shadow-md active:animate-click ' +
             (props.text.length ? 'w-0 px-0' : 'px-2')
           }
           onClick={() => {

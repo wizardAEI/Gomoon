@@ -29,7 +29,7 @@ export default function QuestionMention(props: {
         class="flex h-full cursor-pointer items-center rounded-full border-0"
       >
         <QuestionMarkIcon
-          fill={props.fill || '#a7a8bd'}
+          fill={props.fill || '#869d9d'}
           class="scale-[118%]"
           width={props.size || 14}
           height={props.size || 14}

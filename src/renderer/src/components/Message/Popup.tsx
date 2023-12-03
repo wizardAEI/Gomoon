@@ -61,7 +61,7 @@ export default function MsgPopup(props: { id: string; content: string; type: Msg
   const { copy } = useClipboard({ source })
 
   return (
-    <div class="absolute left-5 top-[-10px] z-10 hidden items-center gap-1 rounded-xl bg-dark px-2 group-hover:flex group-hover:h-6">
+    <div class="absolute left-5 top-[-10px] z-10 hidden items-center gap-1 rounded-[10px] bg-dark px-2 group-hover:flex group-hover:h-6">
       <ToolTip
         label={compWithTip((tip) => (
           <CopyIcon
@@ -133,7 +133,7 @@ export function MsgPopupByUser(props: { id: string; content: string; type: MsgTy
   const [source] = createSignal('')
   const { copy } = useClipboard({ source })
   return (
-    <div class="absolute right-5 top-[-10px] z-10 hidden items-center gap-1 rounded-xl bg-light px-2 group-hover:flex group-hover:h-6">
+    <div class="absolute right-5 top-[-10px] z-10 hidden items-center gap-1 rounded-[10px] bg-light px-2 group-hover:flex group-hover:h-6">
       <ToolTip
         label={
           <EditIcon
@@ -175,8 +175,8 @@ export function WithDrawal(props: { type: MsgTypes }) {
     <div
       class={
         props.type === 'human'
-          ? 'absolute right-5 top-[-10px] z-10 hidden items-center gap-1 rounded-xl bg-light px-2 group-hover:flex group-hover:h-6'
-          : 'absolute left-5 top-[-10px] z-10 hidden items-center gap-1 rounded-xl bg-dark px-2 group-hover:flex group-hover:h-6'
+          ? 'absolute right-5 top-[-10px] z-10 hidden items-center gap-1 rounded-[10px] bg-light px-2 group-hover:flex group-hover:h-6'
+          : 'absolute left-5 top-[-10px] z-10 hidden items-center gap-1 rounded-[10px] bg-dark px-2 group-hover:flex group-hover:h-6'
       }
     >
       <ToolTip
@@ -201,7 +201,7 @@ export function WithDrawal(props: { type: MsgTypes }) {
 
 export function Pause(props: { id?: string; type: MsgTypes }) {
   return (
-    <div class="absolute left-5 top-[-10px] z-10 hidden items-center gap-1 rounded-xl bg-dark px-2 group-hover:flex group-hover:h-6">
+    <div class="absolute left-5 top-[-10px] z-10 hidden items-center gap-1 rounded-[10px] bg-dark px-2 group-hover:flex group-hover:h-6">
       <ToolTip
         label={
           <PauseIcon
