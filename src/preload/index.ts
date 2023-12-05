@@ -1,5 +1,6 @@
 import { IpcRendererEvent, contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import { SettingModel } from '../main/model/model'
 
 // Custom APIs for renderer
 export const api = {
@@ -15,7 +16,12 @@ export const api = {
       ipcRenderer.removeListener('show-window', callback)
     }
   },
-  setIsOnTop: (isOnTop: boolean) => ipcRenderer.invoke('set-is-on-top', isOnTop)
+  setIsOnTop: (isOnTop: boolean) => ipcRenderer.invoke('set-is-on-top', isOnTop),
+
+  // 配置相关
+  loadConfig: () => ipcRenderer.invoke('load-config'),
+  setConfig: () => ipcRenderer.invoke('set-config'),
+  setModels: (models: SettingModel['models']) => ipcRenderer.invoke('set-models', models)
 } as const
 
 // Use `contextBridge` APIs to expose Electron APIs to

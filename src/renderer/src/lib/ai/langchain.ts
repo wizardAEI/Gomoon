@@ -2,7 +2,7 @@ import { ChatBaiduWenxin } from 'langchain/chat_models/baiduwenxin'
 import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { ChatPromptTemplate } from 'langchain/prompts'
 import { AIMessage, HumanMessage, SystemMessage } from 'langchain/schema'
-import { openAIApiKey, baseURL, baiduApiKey, baiduSecretKey } from './config.json'
+import { ModelsType, models } from './models'
 
 export type Roles = 'human' | 'system' | 'ai'
 
@@ -12,7 +12,7 @@ const msgDict = {
   ai: (s: string) => new AIMessage(s)
 } as const
 
-const createSkills = (chat: ChatBaiduWenxin | ChatOpenAI) => {
+const createModel = (chat: ChatBaiduWenxin | ChatOpenAI) => {
   return {
     async answer(
       msg: {
@@ -49,7 +49,8 @@ const createSkills = (chat: ChatBaiduWenxin | ChatOpenAI) => {
             }
           }
         ],
-        signal: option.pauseSignal
+        signal: option.pauseSignal,
+        timeout: 1000 * 10
       })
     },
     async chat(
@@ -88,40 +89,7 @@ const createSkills = (chat: ChatBaiduWenxin | ChatOpenAI) => {
   }
 }
 
-export const gptInterface = (config: { modelName: string; baseUrl?: string }) =>
-  createSkills(
-    new ChatOpenAI({
-      openAIApiKey,
-      modelName: config.modelName,
-      configuration: {
-        baseURL: config.baseUrl || baseURL
-      },
-      streaming: true,
-      timeout: 1000 * 10
-    })
-  )
-
-export const wenxinInterface = (config: { modelName: string }) =>
-  createSkills(
-    new ChatBaiduWenxin({
-      streaming: true,
-      modelName: config.modelName,
-      baiduApiKey,
-      baiduSecretKey
-    })
-  )
-
-export const gpt3 = gptInterface({
-  modelName: 'gpt-3.5-turbo-0613'
-})
-
-export const gpt4 = gptInterface({
-  modelName: 'gpt-4-1106-preview'
-})
-
-export const wenxin = wenxinInterface({
-  modelName: 'ERNIE-Bot'
-})
+let currentModelType: ModelsType = 'GPT4Modal'
 
 // TODO: 读取 bot 信息来生成，可以从本地读取，也可以从远程读取
 
@@ -137,8 +105,7 @@ export const translator = async (
     pauseSignal: AbortSignal
   }
 ) => {
-  const controller = new AbortController()
-  return gpt4.answer(
+  return createModel(models[currentModelType]).answer(
     {
       systemTemplate: `分析我给你的内容，当我给你的是一段句子或者单词时，帮我翻译；当我给你一段代码或终端报错信息时，帮我分析报错。
       当我希望你翻译时遵守：英文句子请翻译成中文；反之则将中文翻译成英文。不要多余的废话。
@@ -165,7 +132,7 @@ export const frontendHelper = async (
     pauseSignal: AbortSignal
   }
 ) =>
-  gpt4.chat(
+  createModel(models[currentModelType]).chat(
     [
       {
         role: 'system',

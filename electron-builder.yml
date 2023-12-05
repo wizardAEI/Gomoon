@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: bot
+productName: Gomoon
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: bot
+  executableName: Gomoon
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

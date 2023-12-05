@@ -1,4 +1,4 @@
-import Input from '@renderer/components/Input'
+import Input from '@renderer/components/MainInput'
 import Message from '@renderer/components/Message'
 import { genAns, answerStore } from '../store/answer'
 import { Show, createSignal, onCleanup, onMount } from 'solid-js'

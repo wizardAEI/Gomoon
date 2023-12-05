@@ -28,7 +28,6 @@ const compWithTip = (
       status,
       label
     })
-    console.log(tipModal())
     setTimeout(() => {
       setTipModal({
         status: '',

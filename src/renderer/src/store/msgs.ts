@@ -1,5 +1,5 @@
 import { ErrorDict } from '@renderer/lib/constant'
-import { Roles, frontendHelper } from '@renderer/lib/langchain'
+import { Roles, frontendHelper } from '@renderer/lib/ai/langchain'
 import { createStore, produce } from 'solid-js/store'
 import { ulid } from 'ulid'
 

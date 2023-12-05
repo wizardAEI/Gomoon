@@ -46,12 +46,12 @@
   height: calc(100% + 4px);
   top: -2px;
   left: -2px;
-  background-image: linear-gradient(to right, #2d535d, #005271, #004c86, #2b3f90, #642388);
+  background-image: radial-gradient(circle, #2d535d, #005271, #004c86, #2b3f90, #642388);
   z-index: -1;
   border-radius: 18px;
 }
 .cyber-box[data-active]::after {
-  background-image: linear-gradient(to right, #2d6170, #006089, #005aa0, #364cac, #792ba4);
+  background-image: radial-gradient(circle, #2d6170, #006089, #005aa0, #364cac, #792ba4);
 }
 
 /* markdown 专属css */

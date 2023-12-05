@@ -23,13 +23,7 @@ export default function Input(props: {
     textAreaDiv!.style.height = 'auto'
   }
 
-  function focus() {
-    textAreaDiv?.focus()
-  }
-
   onMount(() => {
-    props.onMountHandler?.(textAreaDiv!)
-
     if (props.autoFocusWhenShow) {
       const removeListener = window.api.showWindow(focus)
       onCleanup(() => {
@@ -38,27 +32,22 @@ export default function Input(props: {
     }
 
     // 让input聚焦，box边框变为激活色
-    const addActive = (el: HTMLDivElement) => {
-      el.attributes.setNamedItem(document.createAttribute('data-active'))
+    const addActive = () => {
+      textAreaContainerDiv!.attributes.setNamedItem(document.createAttribute('data-active'))
     }
-    const removeActive = (el: HTMLDivElement) => {
-      el.attributes.removeNamedItem('data-active')
+    const removeActive = () => {
+      if (textAreaContainerDiv && textAreaContainerDiv.attributes.getNamedItem('data-active')) {
+        textAreaContainerDiv.attributes.removeNamedItem('data-active')
+      }
     }
-    textAreaDiv!.addEventListener('focus', () => {
-      console.log('focus')
-      addActive(textAreaContainerDiv!)
-    })
-    textAreaDiv!.addEventListener('blur', () => {
-      console.log('blur')
-      removeActive(textAreaContainerDiv!)
-    })
+    textAreaDiv!.addEventListener('focus', addActive)
+    textAreaDiv!.addEventListener('blur', removeActive)
+
+    props.onMountHandler?.(textAreaDiv!)
+
     onCleanup(() => {
-      textAreaDiv!.removeEventListener('focus', () => {
-        addActive(textAreaContainerDiv!)
-      })
-      textAreaDiv!.removeEventListener('blur', () => {
-        removeActive(textAreaContainerDiv!)
-      })
+      textAreaDiv && textAreaDiv.removeEventListener('focus', addActive)
+      textAreaDiv && textAreaDiv.removeEventListener('blur', removeActive)
     })
   })
   createEffect(() => {

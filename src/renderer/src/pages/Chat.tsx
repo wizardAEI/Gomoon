@@ -1,4 +1,4 @@
-import Input from '@renderer/components/Input'
+import Input from '@renderer/components/MainInput'
 import {
   msgs,
   pushMsg,
@@ -47,7 +47,6 @@ export default function Chat() {
     }
     event.on('reGenMsg', reGenMsg)
     const editUserMsg = (c: string, id: string) => {
-      console.log('editUserMsg', c, id)
       if (previousMsg().state !== 'complete') {
         editMsg({ content: previousMsg().content }, previousMsg().id)
       }

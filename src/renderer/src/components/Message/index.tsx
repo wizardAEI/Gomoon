@@ -1,4 +1,4 @@
-import { Roles } from '@renderer/lib/langchain'
+import { Roles } from '@renderer/lib/ai/langchain'
 import MarkdownIt from 'markdown-it'
 import { useClipboard, useEventListener } from 'solidjs-use'
 import { Show, createMemo, createSignal } from 'solid-js'

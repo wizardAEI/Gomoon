@@ -4,7 +4,22 @@ import solid from 'vite-plugin-solid'
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin()]
+    plugins: [
+      externalizeDepsPlugin({
+        exclude: ['lowdb']
+      })
+    ],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('lowdb')) {
+              return 'lowdb'
+            }
+          }
+        }
+      }
+    }
   },
   preload: {
     plugins: [externalizeDepsPlugin()]

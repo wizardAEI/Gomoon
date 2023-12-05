@@ -3,7 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import trayIcon from '../../resources/icon@16.png?asset'
-import mainWindowHandler from './eventHandler'
+import initMainWindowEventsHandler from './eventHandler'
 
 // 隐藏 macOS dock
 if (process.platform === 'darwin') {
@@ -104,7 +104,7 @@ app.whenReady().then(() => {
   })
 
   // FEAT: 事件监听
-  mainWindowHandler(app, mainWindow!)
+  initMainWindowEventsHandler(app, mainWindow!)
 
   // FEAT: CORS
   const filter = {
