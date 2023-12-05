@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, Tray, Menu, globalShortcut } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import trayIcon from '../../resources/icon@16.png?asset'
+import trayIcon from '../../resources/icon@20.png?asset'
 import initMainWindowEventsHandler from './eventHandler'
 
 // 隐藏 macOS dock
