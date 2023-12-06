@@ -14,6 +14,16 @@ export interface SettingModel {
   }
 }
 
+export interface UserData {
+  firstTime: boolean
+}
+
+export function getDefaultUserData(): UserData {
+  return {
+    firstTime: true
+  }
+}
+
 export function getDefaultConfig(): SettingModel {
   return {
     isOnTop: false,

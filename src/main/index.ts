@@ -1,25 +1,25 @@
-import { app, shell, BrowserWindow, Tray, Menu, globalShortcut } from 'electron'
+import { app, shell, BrowserWindow, Tray, Menu, globalShortcut, session } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import trayIcon from '../../resources/icon@20.png?asset'
-import initMainWindowEventsHandler from './eventHandler'
+import { loadUserConfig } from './model'
+import { initAppEventsHandler } from './eventHandler'
 
-// 隐藏 macOS dock
 if (process.platform === 'darwin') {
-  app.dock.hide()
+  app.dock.setIcon(icon)
 }
 
 // tray
 let tray: Tray | null = null
 
 // main window
-let mainWindow: BrowserWindow | null = null
+export let mainWindow: BrowserWindow | null = null
 
 function createWindow(): void {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    title: '🤖',
+    title: 'Gomoon',
     width: 420,
     height: 650,
     show: false,
@@ -35,7 +35,7 @@ function createWindow(): void {
   mainWindow.on('ready-to-show', () => {
     mainWindow!.show()
     // Open the DevTools.
-    mainWindow!.webContents.openDevTools()
+    !app.isPackaged && mainWindow!.webContents.openDevTools()
   })
 
   // 点击关闭时隐藏窗口而不是退出
@@ -81,9 +81,6 @@ function createWindow(): void {
   }
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
@@ -95,16 +92,17 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
+  initAppEventsHandler()
   createWindow()
+
+  // preConfig
+  mainWindow!.setAlwaysOnTop(loadUserConfig().isOnTop, 'status')
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
-
-  // FEAT: 事件监听
-  initMainWindowEventsHandler(app, mainWindow!)
 
   // FEAT: CORS
   const filter = {
@@ -130,7 +128,6 @@ app.whenReady().then(() => {
     shell.openExternal(event.url)
   })
 })
-
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.

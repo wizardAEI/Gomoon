@@ -7,12 +7,27 @@ import { IpcRendererEvent } from 'electron'
 import Setting from './pages/Setting'
 import { loadConfig, settingStore } from './store/setting'
 import Loading from './pages/Loading'
+import { loadUserData, userData, userHasUse } from './store/user'
 
 const App = () => {
   const nav = useNavigate()
   onMount(() => {
+    // FEAT: 事件监听状态
+    window.api.getEventHandlerStatus().then((r) => {
+      console.info('事件监听状态', r)
+    })
+
     // FEAT: 获取配置信息
     loadConfig()
+
+    // FEAT: 获取用户信息
+    loadUserData()
+    if (userData.firstTime) {
+      setTimeout(() => {
+        alert('请允许程序权限后重启，以使用快捷方式功能')
+      })
+      userHasUse()
+    }
 
     // FEAT: 快捷键触发操作
     const removeListener = window.api.multiCopy(async (_: IpcRendererEvent, msg: string) => {

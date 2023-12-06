@@ -1,11 +1,14 @@
 import { app } from 'electron'
 import { JSONSyncPreset } from 'lowdb/node'
-import { SettingModel, getDefaultConfig } from './model'
+import { SettingModel, getDefaultConfig, getDefaultUserData } from './model'
 import { join } from 'path'
 
 const appDataPath = app.getPath('userData')
 const configDB = JSONSyncPreset(join(appDataPath, 'config.json'), getDefaultConfig())
 
+/**
+ * FEAT: 配置相关(特指配置页的信息)
+ */
 export function loadUserConfig() {
   return configDB.data
 }
@@ -35,4 +38,19 @@ export function setModels(models: SettingModel['models']) {
     }
   }
   configDB.write()
+}
+
+/**
+ * FEAT: 用户数据相关
+ */
+const userDataDB = JSONSyncPreset(join(appDataPath, 'user-data.json'), getDefaultUserData())
+export function getUserData() {
+  return userDataDB.data
+}
+export function updateUserData(data: Partial<typeof userDataDB.data>) {
+  userDataDB.data = {
+    ...userDataDB.data,
+    ...data
+  }
+  userDataDB.write()
 }

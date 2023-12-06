@@ -25,7 +25,9 @@ export default function Input(props: {
 
   onMount(() => {
     if (props.autoFocusWhenShow) {
-      const removeListener = window.api.showWindow(focus)
+      const removeListener = window.api.showWindow(() => {
+        textAreaDiv!.focus()
+      })
       onCleanup(() => {
         removeListener()
       })

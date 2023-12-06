@@ -1,6 +1,7 @@
 import { IpcRendererEvent, contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import { SettingModel } from '../main/model/model'
+import { SettingModel, UserData } from '../main/model/model'
+import { handlerStatus } from '../main/eventHandler'
 
 // Custom APIs for renderer
 export const api = {
@@ -21,7 +22,13 @@ export const api = {
   // 配置相关
   loadConfig: () => ipcRenderer.invoke('load-config'),
   setConfig: () => ipcRenderer.invoke('set-config'),
-  setModels: (models: SettingModel['models']) => ipcRenderer.invoke('set-models', models)
+  setModels: (models: SettingModel['models']) => ipcRenderer.invoke('set-models', models),
+  getEventHandlerStatus: (): Promise<typeof handlerStatus> =>
+    ipcRenderer.invoke('get-event-handler-status'),
+
+  // 用户信息相关
+  getUserData: (): Promise<UserData> => ipcRenderer.invoke('get-user-data'),
+  haveUsed: () => ipcRenderer.invoke('have-used')
 } as const
 
 // Use `contextBridge` APIs to expose Electron APIs to

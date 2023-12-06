@@ -1,4 +1,4 @@
-appId: com.electron.app
+appId: com.gomoon.app
 productName: Gomoon
 directories:
   buildResources: build
@@ -19,14 +19,16 @@ nsis:
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always
 mac:
-  entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
     - NSCameraUsageDescription: Application requests access to the device's camera.
     - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
     - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
     - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
+    - NSAppleEventsUsageDescription: Application requests access to AppleEvents.
+    - NSAccessibilityUsageDescription: Application requests access to accessibility features.
   notarize: false
   icon: icons/icon.icns
+  identity: 'Gomoon'
 dmg:
   artifactName: ${name}-${version}.${ext}
 linux:
