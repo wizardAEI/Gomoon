@@ -22,7 +22,7 @@ export default function EditInput(props: {
         when={isEditing()}
         fallback={
           <div
-            class="hover:bg-dark-con relative flex cursor-pointer items-center rounded p-1"
+            class="relative flex cursor-pointer items-center rounded-md p-1 hover:bg-dark-con"
             onClick={() => {
               setIsEditing(true)
               inputRef?.focus()
@@ -38,7 +38,7 @@ export default function EditInput(props: {
           <input
             spellcheck={props.spellcheck || false}
             ref={inputRef}
-            class="bg-gray-200 w-full max-w-[512px] rounded border-none bg-dark-pro px-2 py-1 text-sm focus:outline-none"
+            class="bg-gray-200 w-full max-w-[512px] rounded-md border-none bg-dark-pro py-1 pl-2 pr-8 text-sm focus:outline-none"
             type="text"
             value={value()}
             onInput={(e) => setValue((e.target as HTMLInputElement).value)}

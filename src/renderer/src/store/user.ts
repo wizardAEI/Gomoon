@@ -8,8 +8,8 @@ const [userData, setUserData] = createStore<User>({
   firstTime: true
 })
 
-export function loadUserData() {
-  window.api.getUserData().then((data) => {
+export async function loadUserData() {
+  return window.api.getUserData().then((data) => {
     setUserData('firstTime', data.firstTime)
   })
 }

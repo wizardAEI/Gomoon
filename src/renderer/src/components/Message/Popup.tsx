@@ -14,7 +14,8 @@ import { stopGenMsg } from '@renderer/store/msgs'
 
 // FEAT: 让点击可以有反馈
 const compWithTip = (
-  fn: (tip: (status: 'success' | 'fail', label: string) => void) => JSXElement
+  fn: (tip: (status: 'success' | 'fail', label: string) => void) => JSXElement,
+  position?: 'right' | 'left'
 ): JSXElement => {
   const [tipModal, setTipModal] = createSignal<{
     status: '' | 'success' | 'fail'
@@ -37,7 +38,7 @@ const compWithTip = (
   }
   const Comp = fn(tip)
   return (
-    <div class="flex">
+    <div class={`flex ${position === 'right' ? 'justify-end' : 'justify-start'}`}>
       <Show when={tipModal().label}>
         {tipModal().status === 'success' && (
           <div class="absolute top-[-4px] h-1 animate-popup text-slate-50">
@@ -150,16 +151,19 @@ export function MsgPopupByUser(props: { id: string; content: string; type: MsgTy
         }}
       />
       <ToolTip
-        label={compWithTip((tip) => (
-          <CopyIcon
-            height={22}
-            width={22}
-            class="cursor-pointer text-gray duration-100 hover:text-active"
-            onClick={() => {
-              copy(props.content).then(() => tip('success', '复制成功！'))
-            }}
-          />
-        ))}
+        label={compWithTip(
+          (tip) => (
+            <CopyIcon
+              height={22}
+              width={22}
+              class="cursor-pointer text-gray duration-100 hover:text-active"
+              onClick={() => {
+                copy(props.content).then(() => tip('success', '复制成功！'))
+              }}
+            />
+          ),
+          'right'
+        )}
         content="复制到剪贴板"
         position={{
           placement: 'left'

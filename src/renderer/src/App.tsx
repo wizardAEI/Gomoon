@@ -21,13 +21,12 @@ const App = () => {
     loadConfig()
 
     // FEAT: 获取用户信息
-    loadUserData()
-    if (userData.firstTime) {
-      setTimeout(() => {
+    loadUserData().then(() => {
+      if (userData.firstTime) {
         alert('请允许程序权限后重启，以使用快捷方式功能')
-      })
-      userHasUse()
-    }
+        userHasUse()
+      }
+    })
 
     // FEAT: 快捷键触发操作
     const removeListener = window.api.multiCopy(async (_: IpcRendererEvent, msg: string) => {
