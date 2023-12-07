@@ -1,4 +1,4 @@
-import { Models, settingStore } from '@renderer/store/setting'
+import { Models } from '@renderer/store/setting'
 import { ChatBaiduWenxin } from 'langchain/chat_models/baiduwenxin'
 import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { event } from '../util'

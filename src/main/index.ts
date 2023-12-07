@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, Tray, Menu, globalShortcut, session } from 'electron'
+import { app, shell, BrowserWindow, Tray, Menu, globalShortcut } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -6,15 +6,14 @@ import trayIcon from '../../resources/icon@20.png?asset'
 import { loadUserConfig } from './model'
 import { initAppEventsHandler } from './eventHandler'
 
-if (process.platform === 'darwin') {
-  app.dock.setIcon(icon)
-}
-
 // tray
 let tray: Tray | null = null
 
 // main window
 export let mainWindow: BrowserWindow | null = null
+
+// quit Control
+let willQuitApp = false
 
 function createWindow(): void {
   // Create the browser window.
@@ -35,12 +34,12 @@ function createWindow(): void {
   mainWindow.on('ready-to-show', () => {
     mainWindow!.show()
     // Open the DevTools.
-    !app.isPackaged && mainWindow!.webContents.openDevTools()
+    // !app.isPackaged && mainWindow!.webContents.openDevTools()
   })
 
   // 点击关闭时隐藏窗口而不是退出
   mainWindow.on('close', (event) => {
-    if (mainWindow?.isVisible()) {
+    if (!willQuitApp) {
       mainWindow?.hide()
       event.preventDefault()
     }
@@ -62,7 +61,7 @@ function createWindow(): void {
     }
   ])
   tray.setContextMenu(contextMenu)
-  tray.setToolTip('BOT')
+  tray.setToolTip('Gomoon')
   tray.on('click', () => {
     mainWindow?.show()
   })
@@ -80,6 +79,10 @@ function createWindow(): void {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 }
+
+// dock
+app.dock.setIcon(icon)
+app.dock.setMenu(Menu.buildFromTemplate([]))
 
 app.whenReady().then(() => {
   // Set app user model id for windows
@@ -128,9 +131,13 @@ app.whenReady().then(() => {
     shell.openExternal(event.url)
   })
 })
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
+
+app.on('before-quit', () => {
+  // Unregister all shortcuts.
+  globalShortcut.unregisterAll()
+  willQuitApp = true
+})
+
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
