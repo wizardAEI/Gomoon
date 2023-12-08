@@ -50,13 +50,7 @@ const App = () => {
       <div class="flex-1 overflow-auto">
         <Show when={settingStore.isLoaded} fallback={<Loading />}>
           <Routes>
-            <Route
-              path="/"
-              component={Chat}
-              ref={(div) => {
-                console.log(div)
-              }}
-            />
+            <Route path="/" component={Chat} />
             <Route path="/answer" component={Answer} />
             <Route path="/setting" component={Setting} />
             <Route path="*" component={Chat} />

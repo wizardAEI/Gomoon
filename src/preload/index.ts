@@ -1,6 +1,6 @@
 import { IpcRendererEvent, contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import { SettingModel, UserData } from '../main/model/model'
+import { ModelsType, SettingModel, UserData } from '../main/model/model'
 import { handlerStatus } from '../main/eventHandler'
 
 // Custom APIs for renderer
@@ -28,6 +28,8 @@ export const api = {
 
   // 用户信息相关
   getUserData: (): Promise<UserData> => ipcRenderer.invoke('get-user-data'),
+  setSelectedModel: (selectedModel: ModelsType) =>
+    ipcRenderer.invoke('set-selected-model', selectedModel),
   haveUsed: () => ipcRenderer.invoke('have-used')
 } as const
 

@@ -34,7 +34,7 @@ function createWindow(): void {
   mainWindow.on('ready-to-show', () => {
     mainWindow!.show()
     // Open the DevTools.
-    // !app.isPackaged && mainWindow!.webContents.openDevTools()
+    !app.isPackaged && mainWindow!.webContents.openDevTools()
   })
 
   // 点击关闭时隐藏窗口而不是退出

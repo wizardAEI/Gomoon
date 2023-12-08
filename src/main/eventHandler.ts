@@ -3,6 +3,7 @@ import { BrowserWindow, app, clipboard, globalShortcut, ipcMain } from 'electron
 import { join } from 'path'
 import { getUserData, loadUserConfig, setIsOnTop, setModels, updateUserData } from './model/index'
 import { mainWindow } from '.'
+import { ModelsType } from './model/model'
 export let handlerStatus = {}
 export function initAppEventsHandler() {
   /**
@@ -74,6 +75,11 @@ export function initAppEventsHandler() {
   ipcMain.handle('have-used', () => {
     updateUserData({
       firstTime: false
+    })
+  })
+  ipcMain.handle('set-selected-model', (_, selectedModel: ModelsType) => {
+    updateUserData({
+      selectedModel
     })
   })
   ipcMain.handle('get-user-data', () => {

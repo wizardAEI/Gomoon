@@ -14,13 +14,17 @@ export interface SettingModel {
   }
 }
 
+export type ModelsType = 'ERNIE3' | 'ERNIE4' | 'GPT3' | 'GPT4'
+
 export interface UserData {
   firstTime: boolean
+  selectedModel: ModelsType
 }
 
 export function getDefaultUserData(): UserData {
   return {
-    firstTime: true
+    firstTime: true,
+    selectedModel: 'GPT4'
   }
 }
 

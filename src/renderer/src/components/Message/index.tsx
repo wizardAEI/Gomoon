@@ -9,6 +9,7 @@ import mdHighlight from 'markdown-it-highlightjs'
 import CapitalIcon from '../ui/CapitalIcon'
 import MsgPopup, { MsgPopupByUser, Pause, WithDrawal } from './Popup'
 import { ansStatus } from '@renderer/store/answer'
+import ModelSelect from './ModelSelect'
 export type MsgTypes = Roles | 'ans' | 'question'
 export default function Message(props: {
   type: MsgTypes
@@ -87,6 +88,7 @@ export default function Message(props: {
     }
     return false
   })
+
   return (
     <div class="group relative max-w-full">
       <Show
@@ -119,8 +121,7 @@ export default function Message(props: {
             <Show when={props.botName}>
               <CapitalIcon size={20} content={props.botName!} />
             </Show>
-            <ChatGptIcon width={20} height={20} class="cursor-pointer overflow-hidden rounded-md" />
-            {/* <WenxinIcon width={16} height={16} class="cursor-pointer overflow-hidden rounded-md" /> */}
+            <ModelSelect position={props.content.length < 18 ? 'left-1' : 'right-1'} />
           </div>
         </Show>
       </div>

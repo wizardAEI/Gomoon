@@ -2,6 +2,7 @@ import { app } from 'electron'
 import { JSONSyncPreset } from 'lowdb/node'
 import { SettingModel, getDefaultConfig, getDefaultUserData } from './model'
 import { join } from 'path'
+import { merge } from 'lodash'
 
 const appDataPath = app.getPath('userData')
 const configDB = JSONSyncPreset(join(appDataPath, 'config.json'), getDefaultConfig())
@@ -10,7 +11,7 @@ const configDB = JSONSyncPreset(join(appDataPath, 'config.json'), getDefaultConf
  * FEAT: 配置相关(特指配置页的信息)
  */
 export function loadUserConfig() {
-  return configDB.data
+  return merge(getDefaultConfig(), configDB.data)
 }
 
 export function setUserConfig(config: Partial<SettingModel>) {
@@ -45,7 +46,7 @@ export function setModels(models: SettingModel['models']) {
  */
 const userDataDB = JSONSyncPreset(join(appDataPath, 'user-data.json'), getDefaultUserData())
 export function getUserData() {
-  return userDataDB.data
+  return merge(getDefaultUserData(), userDataDB.data)
 }
 export function updateUserData(data: Partial<typeof userDataDB.data>) {
   userDataDB.data = {

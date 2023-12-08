@@ -2,7 +2,8 @@ import { ChatBaiduWenxin } from 'langchain/chat_models/baiduwenxin'
 import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { ChatPromptTemplate } from 'langchain/prompts'
 import { AIMessage, HumanMessage, SystemMessage } from 'langchain/schema'
-import { ModelsType, models } from './models'
+import { models } from './models'
+import { userData } from '@renderer/store/user'
 
 export type Roles = 'human' | 'system' | 'ai'
 
@@ -89,9 +90,7 @@ const createModel = (chat: ChatBaiduWenxin | ChatOpenAI) => {
   }
 }
 
-let currentModelType: ModelsType = 'GPT4Modal'
-
-// TODO: 读取 bot 信息来生成，可以从本地读取，也可以从远程读取
+// TODO: 读取 assistant 信息来生成，可以从本地读取，也可以从远程读取
 
 // FEAT: 翻译 / 分析报错
 export const translator = async (
@@ -105,7 +104,7 @@ export const translator = async (
     pauseSignal: AbortSignal
   }
 ) => {
-  return createModel(models[currentModelType]).answer(
+  return createModel(models[userData.selectedModel]).answer(
     {
       systemTemplate: `分析我给你的内容，当我给你的是一段句子或者单词时，帮我翻译；当我给你一段代码或终端报错信息时，帮我分析报错。
       当我希望你翻译时遵守：英文句子请翻译成中文；反之则将中文翻译成英文。不要多余的废话。
@@ -132,7 +131,7 @@ export const frontendHelper = async (
     pauseSignal: AbortSignal
   }
 ) =>
-  createModel(models[currentModelType]).chat(
+  createModel(models[userData.selectedModel]).chat(
     [
       {
         role: 'system',
