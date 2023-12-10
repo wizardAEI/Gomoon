@@ -14,6 +14,7 @@ import {
 } from './model/index'
 import { mainWindow } from '.'
 import { CreateAssistantModel, ModelsType, UpdateAssistantModel } from './model/model'
+import { getResourcesPath } from './lib'
 export let handlerStatus = {}
 export function initAppEventsHandler() {
   /**
@@ -29,9 +30,7 @@ export function initAppEventsHandler() {
   })
   // macos TODO: 测试不同版本的macos
   if (process.platform === 'darwin') {
-    const eventTracker = app.isPackaged
-      ? spawn(join(process.resourcesPath, 'app.asar.unpacked/resources/eventTracker'))
-      : spawn(join(__dirname, '../../resources/eventTracker'))
+    const eventTracker = spawn(getResourcesPath('eventTracker'))
     eventTracker.stdout.on('data', (data) => {
       if (`${data}` === 'multi-copy') {
         const copyText = clipboard.readText()
