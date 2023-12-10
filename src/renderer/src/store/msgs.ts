@@ -1,5 +1,5 @@
 import { ErrorDict } from '@renderer/lib/constant'
-import { Roles, frontendHelper } from '@renderer/lib/ai/langchain'
+import { Roles, chatAssistant } from '@renderer/lib/ai/langchain'
 import { createStore, produce } from 'solid-js/store'
 import { ulid } from 'ulid'
 
@@ -80,7 +80,7 @@ export function genMsg(id: string) {
     msgs.findIndex((msg) => msg.id === id)
   )
   const controller = new AbortController()
-  frontendHelper(currentMsgs, {
+  chatAssistant(currentMsgs, {
     newTokenCallback(content: string) {
       editMsgByAdd(content, id)
     },

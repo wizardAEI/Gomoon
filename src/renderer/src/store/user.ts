@@ -3,14 +3,13 @@ import { ModelsType, UserData } from 'src/main/model/model'
 
 const [userData, setUserData] = createStore<UserData>({
   firstTime: true,
-  selectedModel: 'GPT4'
+  selectedModel: 'GPT4',
+  selectedAssistantForAns: '',
+  selectedAssistantForChat: ''
 })
 
 export async function loadUserData() {
-  return window.api.getUserData().then((data) => {
-    setUserData('firstTime', data.firstTime)
-    setUserData('selectedModel', data.selectedModel)
-  })
+  setUserData(await window.api.getUserData())
 }
 
 export function userHasUse() {
@@ -19,8 +18,19 @@ export function userHasUse() {
 
 export function setSelectedModel(model: ModelsType) {
   window.api.setSelectedModel(model).then(() => {
-    console.log(model)
     setUserData('selectedModel', model)
+  })
+}
+
+export function setSelectedAssistantForAns(assistant: string) {
+  window.api.setSelectedAssistantForAns(assistant).then(() => {
+    setUserData('selectedAssistantForAns', assistant)
+  })
+}
+
+export function setSelectedAssistantForChat(assistant: string) {
+  window.api.setSelectedAssistantForChat(assistant).then(() => {
+    setUserData('selectedAssistantForChat', assistant)
   })
 }
 

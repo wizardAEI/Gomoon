@@ -6,7 +6,7 @@
   font-family: -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-.dark-theme * {
+.dark-theme :not(svg, path, g) {
   color: #d8e3e7; /* 云峰白 */
 }
 

@@ -3,13 +3,13 @@ import MarkdownIt from 'markdown-it'
 import { useClipboard, useEventListener } from 'solidjs-use'
 import { Show, createMemo, createSignal } from 'solid-js'
 import 'highlight.js/styles/atom-one-dark.css'
-import ChatGptIcon from '@renderer/assets/icon/models/ChatGptIcon'
 import { msgStatus, msgs } from '@renderer/store/msgs'
 import mdHighlight from 'markdown-it-highlightjs'
 import CapitalIcon from '../ui/CapitalIcon'
 import MsgPopup, { MsgPopupByUser, Pause, WithDrawal } from './Popup'
 import { ansStatus } from '@renderer/store/answer'
 import ModelSelect from './ModelSelect'
+import { useNavigate } from '@solidjs/router'
 export type MsgTypes = Roles | 'ans' | 'question'
 export default function Message(props: {
   type: MsgTypes
@@ -29,7 +29,7 @@ export default function Message(props: {
     ai: 'text-sm dark-theme',
     ans: 'text-sm dark-theme',
     human: 'text-sm',
-    system: 'select-none text-center text-base dark-theme',
+    system: 'select-none text-center text-base dark-theme px-4',
     question: 'text-sm'
   }
   const [source] = createSignal('')
@@ -89,6 +89,8 @@ export default function Message(props: {
     return false
   })
 
+  const nav = useNavigate()
+
   return (
     <div class="group relative max-w-full">
       <Show
@@ -119,9 +121,20 @@ export default function Message(props: {
         <Show when={showComps()}>
           <div class="-mb-2 -mr-1 mt-1 flex justify-end gap-1">
             <Show when={props.botName}>
-              <CapitalIcon size={20} content={props.botName!} />
+              <div
+                onClick={() => {
+                  nav(`/assistants?type=${props.type === 'ai' ? 'chat' : props.type}`)
+                }}
+              >
+                <CapitalIcon size={20} content={props.botName!} />
+              </div>
             </Show>
             <ModelSelect position={props.content.length < 18 ? 'left-1' : 'right-1'} />
+          </div>
+        </Show>
+        <Show when={props.type === 'system'}>
+          <div class="absolute bottom-2 right-3">
+            <ModelSelect position="right-0" />
           </div>
         </Show>
       </div>

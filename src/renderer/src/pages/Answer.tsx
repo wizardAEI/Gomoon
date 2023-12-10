@@ -3,7 +3,8 @@ import Message from '@renderer/components/Message'
 import { genAns, answerStore } from '../store/answer'
 import { Show, createSignal, onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
-import { useLocation } from '@solidjs/router'
+import { useLocation, useNavigate } from '@solidjs/router'
+import { getCurrentAssistantForAnswer } from '@renderer/store/assistants'
 
 export default function Answer() {
   const [text, setText] = createSignal('')
@@ -21,20 +22,35 @@ export default function Answer() {
     })
   })
 
+  const nav = useNavigate()
+
   return (
     <div class="flex h-full flex-col gap-4 overflow-auto pb-48 pt-10">
       <Show
         when={answerStore.question}
         fallback={
-          <div class="cursor-pointer">
-            <Message content={'翻译 / 分析报错'} type="system" />
+          <div
+            class="cursor-pointer"
+            onClick={() => {
+              nav('/assistants?type=ans')
+            }}
+          >
+            <Message
+              botName={getCurrentAssistantForAnswer().name}
+              content={getCurrentAssistantForAnswer().name}
+              type="system"
+            />
           </div>
         }
       >
         <Message content={answerStore.question} id="question" type="question" />
       </Show>
       {answerStore.answer && (
-        <Message content={answerStore.answer} type="ans" botName="翻译/纠错助手" />
+        <Message
+          content={answerStore.answer}
+          type="ans"
+          botName={getCurrentAssistantForAnswer().name}
+        />
       )}
       <div class="fixed bottom-10 w-full px-8">
         <Input

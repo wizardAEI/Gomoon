@@ -1,4 +1,4 @@
-import { translator } from '@renderer/lib/ai/langchain'
+import { ansAssistant } from '@renderer/lib/ai/langchain'
 import { createStore, produce } from 'solid-js/store'
 
 const [answerStore, setAnswerStore] = createStore({
@@ -11,7 +11,7 @@ export function genAns(q: string) {
   setAnswerStore('answer', '')
   setAnswerStore('question', q)
   setGeneratingStatus(true)
-  translator(
+  ansAssistant(
     {
       text: q
     },

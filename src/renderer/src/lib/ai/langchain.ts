@@ -4,6 +4,10 @@ import { ChatPromptTemplate } from 'langchain/prompts'
 import { AIMessage, HumanMessage, SystemMessage } from 'langchain/schema'
 import { models } from './models'
 import { userData } from '@renderer/store/user'
+import {
+  getCurrentAssistantForAnswer,
+  getCurrentAssistantForChat
+} from '@renderer/store/assistants'
 
 export type Roles = 'human' | 'system' | 'ai'
 
@@ -92,8 +96,10 @@ const createModel = (chat: ChatBaiduWenxin | ChatOpenAI) => {
 
 // TODO: 读取 assistant 信息来生成，可以从本地读取，也可以从远程读取
 
-// FEAT: 翻译 / 分析报错
-export const translator = async (
+/**
+ * FEAT: Answer Assistant
+ */
+export const ansAssistant = async (
   args: {
     [key: string]: string
   },
@@ -104,22 +110,24 @@ export const translator = async (
     pauseSignal: AbortSignal
   }
 ) => {
+  const a = getCurrentAssistantForAnswer()
+  const preContent = a.type === 'ans' ? a.preContent ?? '' : ''
+  const postContent = a.type === 'ans' ? a.postContent ?? '' : ''
   return createModel(models[userData.selectedModel]).answer(
     {
-      systemTemplate: `分析我给你的内容，当我给你的是一段句子或者单词时，帮我翻译；当我给你一段代码或终端报错信息时，帮我分析报错。
-      当我希望你翻译时遵守：英文句子请翻译成中文；反之则将中文翻译成英文。不要多余的废话。
-      当我希望你分析报错时，请根据给出的错误报告解释错误信息并分析错误原因。
-      只有当你区分不了我的意图时，才同时进行翻译和分析报错。否则请只做一件事情。
-      `,
-      humanTemplate: '{text}',
+      systemTemplate: a.prompt,
+      // TODO: 拓展问答助手功能，可以自定义模板
+      humanTemplate: `${preContent}{text}${postContent}`,
       args
     },
     option
   )
 }
 
-// FEAT: 前端大师
-export const frontendHelper = async (
+/**
+ * FEAT: Chat Assistant
+ */
+export const chatAssistant = async (
   msgs: {
     role: Roles
     content: string
@@ -135,8 +143,7 @@ export const frontendHelper = async (
     [
       {
         role: 'system',
-        content:
-          '你是一名前端专家，了解前端的方方面面。熟悉 react，vue，solid-js，electron 等前端和跨端框架，并且对 nodejs 的生态和技术也非常熟悉。'
+        content: getCurrentAssistantForChat().prompt
       },
       ...msgs
     ],

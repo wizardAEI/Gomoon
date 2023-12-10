@@ -1,8 +1,12 @@
 import { app } from 'electron'
 import { JSONSyncPreset } from 'lowdb/node'
-import { SettingModel, getDefaultConfig, getDefaultUserData } from './model'
+import { AssistantModel, CreateAssistantModel, SettingModel, UpdateAssistantModel } from './model'
+import { getDefaultUserData } from './default/getDefaultUserData'
+import { getDefaultConfig } from './default/getDefaultConfig'
 import { join } from 'path'
+import { ulid } from 'ulid'
 import { merge } from 'lodash'
+import getDefaultAssistants from './default/assistants'
 
 const appDataPath = app.getPath('userData')
 const configDB = JSONSyncPreset(join(appDataPath, 'config.json'), getDefaultConfig())
@@ -54,4 +58,51 @@ export function updateUserData(data: Partial<typeof userDataDB.data>) {
     ...data
   }
   userDataDB.write()
+}
+
+/**
+ * FEAT: assistants 相关
+ */
+const assistantsDB = JSONSyncPreset(join(appDataPath, 'assistants.json'), getDefaultAssistants())
+export function getAssistants() {
+  return assistantsDB.data || []
+}
+export function updateAssistant(a: UpdateAssistantModel) {
+  const index = assistantsDB.data.findIndex((item) => item.id === a.id)
+  if (index === -1) {
+    assistantsDB.data = [
+      ...assistantsDB.data,
+      {
+        ...a,
+        version: 1,
+        id: ulid()
+      }
+    ]
+  } else {
+    assistantsDB.data[index] = {
+      ...a,
+      version: assistantsDB.data[index].version + 1
+    }
+  }
+  assistantsDB.write()
+}
+
+export function deleteAssistant(id: string) {
+  const index = assistantsDB.data.findIndex((item) => item.id === id)
+  if (index === -1) {
+    return
+  }
+  assistantsDB.data.splice(index, 1)
+  assistantsDB.write()
+}
+
+export function createAssistant(a: CreateAssistantModel): AssistantModel {
+  const newA = {
+    id: ulid(),
+    version: 1,
+    ...a
+  }
+  assistantsDB.data.push(newA)
+  assistantsDB.write()
+  return newA
 }

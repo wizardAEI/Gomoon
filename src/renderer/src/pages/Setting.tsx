@@ -5,7 +5,6 @@ import Expand from '@renderer/components/ui/Expand'
 import EditInput from '@renderer/components/ui/EditInput'
 import { onCleanup, onMount } from 'solid-js'
 import { unwrap } from 'solid-js/store'
-import ModelSelect from '@renderer/components/Message/ModelSelect'
 export default function Setting() {
   onMount(() => {
     onCleanup(() => {

@@ -18,11 +18,16 @@ type SelectProps = {
 const Select: Component<SelectProps> = (props) => {
   // 使用 createSignal 来管理下拉菜单的显示状态
   const [isOpen, setIsOpen] = createSignal(false)
-
+  const options = props.options.map((option) => ({
+    value: option.value,
+    get label() {
+      return option.label
+    }
+  }))
   // 使用 createSignal 来管理选中的值
   const [selectedValue, setSelectedValue] = createSignal<string>(props.defaultValue)
   const label = createMemo(() => {
-    const cmp = props.options.find((opt) => opt.value === selectedValue())?.label
+    const cmp = options.find((opt) => opt.value === selectedValue())?.label
     return (
       <div>
         <div>{cmp ?? 'default value'}</div>
@@ -39,7 +44,7 @@ const Select: Component<SelectProps> = (props) => {
   return (
     <div>
       <div class="cursor-pointer" onClick={() => setIsOpen(!isOpen())}>
-        <div>{label()} ← click and this will disappear</div>
+        <div>{label()}</div>
       </div>
       <Show when={isOpen()}>
         <div>

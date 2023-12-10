@@ -42,11 +42,16 @@ module.exports = {
         popup: {
           '0%': { opacity: 0 },
           '100%': { transform: 'translateY(-12px)', opacity: 1 }
+        },
+        'scale-down-entrance': {
+          '0%': { transform: 'scale(1.1)', opacity: 0.5 },
+          '100%': { transform: 'scale(1)' }
         }
       },
       animation: {
         click: 'click 0.2s ease-in-out',
-        popup: 'popup 0.2s ease-in-out forwards'
+        popup: 'popup 0.2s ease-in-out forwards',
+        'scale-down-entrance': 'scale-down-entrance 0.3s ease-in-out forwards'
       },
       boxShadow: {
         green: '20px 20px 60px #93b58a, -20px -20px 60px #c7f5ba'

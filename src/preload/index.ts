@@ -1,6 +1,13 @@
 import { IpcRendererEvent, contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import { ModelsType, SettingModel, UserData } from '../main/model/model'
+import {
+  AssistantModel,
+  CreateAssistantModel,
+  ModelsType,
+  SettingModel,
+  UpdateAssistantModel,
+  UserData
+} from '../main/model/model'
 import { handlerStatus } from '../main/eventHandler'
 
 // Custom APIs for renderer
@@ -30,7 +37,19 @@ export const api = {
   getUserData: (): Promise<UserData> => ipcRenderer.invoke('get-user-data'),
   setSelectedModel: (selectedModel: ModelsType) =>
     ipcRenderer.invoke('set-selected-model', selectedModel),
-  haveUsed: () => ipcRenderer.invoke('have-used')
+  haveUsed: () => ipcRenderer.invoke('have-used'),
+  setSelectedAssistantForChat: (assistantId: string) =>
+    ipcRenderer.invoke('set-selected-assistant-for-chat', assistantId),
+  setSelectedAssistantForAns: (assistantId: string) =>
+    ipcRenderer.invoke('set-selected-assistant-for-ans', assistantId),
+
+  // assistant 相关
+  getAssistants: (): Promise<AssistantModel[]> => ipcRenderer.invoke('get-assistants'),
+  updateAssistant: (assistant: UpdateAssistantModel) =>
+    ipcRenderer.invoke('update-assistant', assistant),
+  deleteAssistant: (assistantId: string) => ipcRenderer.invoke('delete-assistant', assistantId),
+  createAssistant: (assistant: CreateAssistantModel): Promise<AssistantModel> =>
+    ipcRenderer.invoke('create-assistant', assistant)
 } as const
 
 // Use `contextBridge` APIs to expose Electron APIs to
