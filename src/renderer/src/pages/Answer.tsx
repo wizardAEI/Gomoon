@@ -3,8 +3,9 @@ import Message from '@renderer/components/Message'
 import { genAns, answerStore } from '../store/answer'
 import { Show, createSignal, onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
-import { useLocation, useNavigate } from '@solidjs/router'
+import { useLocation } from '@solidjs/router'
 import { getCurrentAssistantForAnswer } from '@renderer/store/assistants'
+import SystemHeader from '@renderer/components/SystemHeader'
 
 export default function Answer() {
   const [text, setText] = createSignal('')
@@ -22,27 +23,9 @@ export default function Answer() {
     })
   })
 
-  const nav = useNavigate()
-
   return (
-    <div class="flex h-full flex-col gap-4 overflow-auto pb-48 pt-10">
-      <Show
-        when={answerStore.question}
-        fallback={
-          <div
-            class="cursor-pointer"
-            onClick={() => {
-              nav('/assistants?type=ans')
-            }}
-          >
-            <Message
-              botName={getCurrentAssistantForAnswer().name}
-              content={getCurrentAssistantForAnswer().name}
-              type="system"
-            />
-          </div>
-        }
-      >
+    <div class="flex h-full flex-col gap-4 overflow-auto pb-48 pt-6">
+      <Show when={answerStore.question} fallback={<SystemHeader type="ans" />}>
         <Message content={answerStore.question} id="question" type="question" />
       </Show>
       {answerStore.answer && (

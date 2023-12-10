@@ -59,7 +59,7 @@ export default function () {
                   bg={
                     getCurrentAssistantForAnswer()?.id === a.id ||
                     getCurrentAssistantForChat()?.id === a.id
-                      ? 'purple'
+                      ? 'active-gradient'
                       : 'gray'
                   }
                   hiddenTiptop

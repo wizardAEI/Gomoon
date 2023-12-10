@@ -129,12 +129,9 @@ export default function Message(props: {
                 <CapitalIcon size={20} content={props.botName!} />
               </div>
             </Show>
-            <ModelSelect position={props.content.length < 18 ? 'left-1' : 'right-1'} />
-          </div>
-        </Show>
-        <Show when={props.type === 'system'}>
-          <div class="absolute bottom-2 right-3">
-            <ModelSelect position="right-0" />
+            <ModelSelect
+              position={props.content.length > 18 || props.type === 'ans' ? 'right-1' : 'left-1'}
+            />
           </div>
         </Show>
       </div>

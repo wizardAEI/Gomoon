@@ -15,7 +15,7 @@ module.exports = {
       backgroundImage: {
         cyber: 'linear-gradient(to right, #2d535d, #005271, #004c86, #2b3f90, #642388)', // 赛博蓝渐变色
         'cyber-pro': 'linear-gradient(to right, #2d6170, #006089, #005aa0, #364cac, #792ba4);', // 赛博蓝渐变色↑
-        purple: 'linear-gradient(to bottom right, #ae79f1, #9366cb)', // 淡紫色渐变色
+        'active-gradient': 'linear-gradient(to bottom right, #ae79f1, #9366cb)', // 淡紫色渐变色
         home: 'linear-gradient(to top, #040c17, #0d1821, #10212b, #132b35, #16353e)' // 深蓝灰转深蓝绿
       },
       colors: {

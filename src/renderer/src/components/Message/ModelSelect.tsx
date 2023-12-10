@@ -4,44 +4,60 @@ import { setSelectedModel, userData } from '@renderer/store/user'
 import { createMemo, createSignal, For, JSXElement, Show } from 'solid-js'
 import { ModelsType } from 'src/main/model/model'
 
-export default function (props: { position: 'left-1' | 'right-1' | 'right-0' }) {
+export default function (props: { position: string; size?: number }) {
   const options: {
     label: JSXElement
-    icon: JSXElement
+    icon: (size: number) => JSXElement
     value: ModelsType
   }[] = [
     {
       label: <span class="text-base text-current">文心3</span>,
-      get icon() {
+      icon(size: number) {
         return (
-          <WenxinIcon width={20} height={20} class="cursor-pointer overflow-hidden rounded-md" />
+          <WenxinIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
         )
       },
       value: 'ERNIE3'
     },
     {
       label: <span class="text-base text-current">文心4</span>,
-      get icon() {
+      icon(size: number) {
         return (
-          <WenxinIcon width={20} height={20} class="cursor-pointer overflow-hidden rounded-md" />
+          <WenxinIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
         )
       },
       value: 'ERNIE4'
     },
     {
       label: <span class="text-base text-current">GPT3</span>,
-      get icon() {
+      icon(size: number) {
         return (
-          <ChatGptIcon width={20} height={20} class="cursor-pointer overflow-hidden rounded-md" />
+          <ChatGptIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
         )
       },
       value: 'GPT3'
     },
     {
       label: <span class="text-base text-current">GPT4</span>,
-      get icon() {
+      icon(size: number) {
         return (
-          <ChatGptIcon width={20} height={20} class="cursor-pointer overflow-hidden rounded-md" />
+          <ChatGptIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
         )
       },
       value: 'GPT4'
@@ -58,7 +74,9 @@ export default function (props: { position: 'left-1' | 'right-1' | 'right-0' }) 
   const label = createMemo(() => {
     return (
       <span>
-        {options.find((opt) => opt.value === userData.selectedModel)?.icon ?? 'default value'}
+        {options.find((opt) => opt.value === userData.selectedModel)?.icon(props.size || 20) ?? (
+          <ChatGptIcon />
+        )}
       </span>
     )
   })
@@ -84,13 +102,13 @@ export default function (props: { position: 'left-1' | 'right-1' | 'right-0' }) 
             {(option) => (
               <div
                 class={`cursor-pointer break-words rounded-lg p-1 ${
-                  userData.selectedModel === option.value ? 'bg-active' : ''
+                  userData.selectedModel === option.value ? 'bg-active-gradient' : ''
                 } hover:bg-gray
                 `}
                 onClick={() => handleSelect(option)}
               >
                 <div class={`flex select-none items-center gap-1 text-text1`}>
-                  {option.icon}
+                  {option.icon(20)}
                   {option.label}
                 </div>
               </div>
