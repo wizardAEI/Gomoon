@@ -12,25 +12,35 @@ import {
 } from '@renderer/store/assistants'
 import { setSelectedAssistantForAns, setSelectedAssistantForChat } from '@renderer/store/user'
 import { useSearchParams } from '@solidjs/router'
-import { For, createMemo } from 'solid-js'
+import { For, createSignal } from 'solid-js'
 
 const map = {
   ans: '问答',
   chat: '聊天'
 }
+
 export default function () {
   const [{ type }, _] = useSearchParams()
-  const as = createMemo(() => assistants.filter((a) => a.type === type))
+  const [as, setAs] = createSignal(
+    assistants
+      .filter((a) => a.type === type)
+      .map((a) => ({
+        ...a,
+        // 状态 saved editing
+        status: 'saved'
+      }))
+  )
+  console.log(as())
   return (
     <div class="animate-scale-down-entrance mb-5 select-none p-2">
       <div
-        class="relative m-4 flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-dark p-4"
+        class="group/create relative m-4 flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-dark p-4"
         onClick={() => {}}
       >
         <Plus
           height={30}
           width={30}
-          class="cursor-pointer text-gray duration-100 hover:text-active"
+          class="cursor-pointer text-gray duration-100 group-hover/create:text-active"
         />
         <span>创建一个属于你的{map[type]}助手</span>
       </div>

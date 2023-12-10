@@ -8,14 +8,11 @@ import Shift from '@renderer/assets/icon/base/Shift'
 
 export default function (props: { type: 'chat' | 'ans' }) {
   const nav = useNavigate()
-  const a = {
-    ans: getCurrentAssistantForAnswer().name,
-    chat: getCurrentAssistantForChat().name
-  }
+  const a = props.type === 'ans' ? getCurrentAssistantForAnswer : getCurrentAssistantForChat
   return (
     <div class="relative mt-8">
       <div class="relative m-4 flex items-center justify-center gap-2 rounded-2xl bg-dark p-4">
-        <span class="select-none">{a[props.type]}</span>
+        <span class="select-none">{a().name}</span>
         <Shift
           onClick={() => {
             nav('/assistants?type=chat')
