@@ -22,7 +22,7 @@ export default function Switch(props: {
   return (
     <label {...api().rootProps} class="group flex items-center justify-between">
       <input {...api().hiddenInputProps} />
-      <span {...api().labelProps} class="flex items-center gap-1">
+      <span {...api().labelProps} class={'flex items-center gap-1'}>
         {props.label}
         {props.hint && <QuestionMention content={props.hint} />}
       </span>

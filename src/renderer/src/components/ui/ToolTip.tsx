@@ -35,7 +35,13 @@ export default function Tooltip(props: {
       </button>
       <Show when={api().isOpen}>
         <div {...api().positionerProps}>
-          <div {...api().contentProps} class="rounded-md bg-white p-1 text-xs">
+          <div
+            {...api().contentProps}
+            // style={{
+            //   color: 'black'
+            // }}
+            class="text-text-dark rounded-md bg-white/80 p-1 text-xs"
+          >
             {props.content}
           </div>
         </div>

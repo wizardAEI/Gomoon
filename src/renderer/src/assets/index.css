@@ -1,13 +1,10 @@
-*:not(svg, path, g) {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box !important;
-  color: #151b26;
-  font-family: -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
-
-.dark-theme :not(svg, path, g) {
-  color: #d8e3e7; /* 云峰白 */
+@layer base {
+  * :not(svg, path, g) {
+    @apply font-System m-0 box-border p-0;
+  }
+  body {
+    @apply bg-dark text-text1;
+  }
 }
 
 @tailwind base;

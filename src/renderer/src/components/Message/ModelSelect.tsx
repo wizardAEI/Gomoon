@@ -11,47 +11,39 @@ export default function (props: { position: 'left-1' | 'right-1' | 'right-0' }) 
     value: ModelsType
   }[] = [
     {
-      label: (
-        <div class="flex items-center gap-1">
+      label: <span class="text-base text-current">文心3</span>,
+      get icon() {
+        return (
           <WenxinIcon width={20} height={20} class="cursor-pointer overflow-hidden rounded-md" />
-          <span class="text-base text-text1">文心3</span>
-        </div>
-      ),
-      icon: <WenxinIcon width={20} height={20} class="cursor-pointer overflow-hidden rounded-md" />,
+        )
+      },
       value: 'ERNIE3'
     },
     {
-      label: (
-        <div class="flex items-center gap-1">
+      label: <span class="text-base text-current">文心4</span>,
+      get icon() {
+        return (
           <WenxinIcon width={20} height={20} class="cursor-pointer overflow-hidden rounded-md" />
-          <span class="text-base text-text1">文心4</span>
-        </div>
-      ),
-      icon: <WenxinIcon width={20} height={20} class="cursor-pointer overflow-hidden rounded-md" />,
+        )
+      },
       value: 'ERNIE4'
     },
     {
-      label: (
-        <div class="flex items-center gap-1">
+      label: <span class="text-base text-current">GPT3</span>,
+      get icon() {
+        return (
           <ChatGptIcon width={20} height={20} class="cursor-pointer overflow-hidden rounded-md" />
-          <span class="text-base text-text1">GPT3</span>
-        </div>
-      ),
-      icon: (
-        <ChatGptIcon width={20} height={20} class="cursor-pointer overflow-hidden rounded-md" />
-      ),
+        )
+      },
       value: 'GPT3'
     },
     {
-      label: (
-        <div class="flex items-center gap-1">
+      label: <span class="text-base text-current">GPT4</span>,
+      get icon() {
+        return (
           <ChatGptIcon width={20} height={20} class="cursor-pointer overflow-hidden rounded-md" />
-          <span class="text-base text-text1">GPT4</span>
-        </div>
-      ),
-      icon: (
-        <ChatGptIcon width={20} height={20} class="cursor-pointer overflow-hidden rounded-md" />
-      ),
+        )
+      },
       value: 'GPT4'
     }
   ]
@@ -91,10 +83,16 @@ export default function (props: { position: 'left-1' | 'right-1' | 'right-0' }) 
           <For each={options}>
             {(option) => (
               <div
-                class="cursor-pointer break-words rounded-lg p-1 hover:bg-gray"
+                class={`cursor-pointer break-words rounded-lg p-1 ${
+                  userData.selectedModel === option.value ? 'bg-active' : ''
+                } hover:bg-gray
+                `}
                 onClick={() => handleSelect(option)}
               >
-                <div>{option.label}</div>
+                <div class={`flex select-none items-center gap-1 text-text1`}>
+                  {option.icon}
+                  {option.label}
+                </div>
               </div>
             )}
           </For>

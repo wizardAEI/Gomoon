@@ -40,7 +40,7 @@ export default function CapitalIcon(props: {
       </button>
       <Show when={api().isOpen && !props.hiddenTiptop}>
         <div {...api().positionerProps}>
-          <div {...api().contentProps} class="rounded-md bg-white/70 p-1 text-xs">
+          <div {...api().contentProps} class="rounded-md bg-white/80 p-1 text-xs">
             {props.content}
           </div>
         </div>
