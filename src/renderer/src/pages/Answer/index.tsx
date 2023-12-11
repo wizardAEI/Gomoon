@@ -35,7 +35,8 @@ export default function Answer() {
         <SelectAssistantModal
           onConfirm={() => {
             setShowModal(false)
-            genAns(text().slice(0, -1))
+            // FIXME: 修复当1，2，3，4时会自动输入到最后，而空格时不会
+            genAns(text())
             setText('')
           }}
         />
@@ -54,10 +55,11 @@ export default function Answer() {
         <Input
           text={text()}
           setText={setText}
+          disable={showModal()}
           send={genAns}
           // 自动聚焦
-          onMountHandler={(inputDiv: HTMLTextAreaElement) => {
-            inputDiv.focus()
+          onMountHandler={(input: HTMLTextAreaElement) => {
+            input.focus()
           }}
           // onShow自动聚焦
           autoFocusWhenShow

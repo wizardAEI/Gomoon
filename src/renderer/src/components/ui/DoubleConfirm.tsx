@@ -12,25 +12,25 @@ export default function (props: {
       <Show when={show()}>
         <div
           class={
-            'shadow-center absolute flex animate-popup flex-col gap-2 overflow-visible rounded-md bg-dark p-1 ' +
+            'shadow-center absolute flex animate-popup flex-col gap-2 overflow-visible rounded-sm bg-dark p-1 ' +
             props.position
           }
         >
           <div class="text-center text-xs">{props.label}</div>
           <div class="flex w-16 justify-around">
             <button
-              class="rounded-md px-1 py-[1px] text-[10px] duration-300 hover:bg-active"
+              class="rounded-sm px-1 py-[1px] text-[10px] duration-300 hover:bg-active"
               onClick={(e) => {
-                e.stopImmediatePropagation
+                e.stopImmediatePropagation()
                 setShow(false)
               }}
             >
               取消
             </button>
             <button
-              class="rounded-md px-1 py-[1px] text-[10px] duration-300 hover:bg-active"
+              class="rounded-sm px-1 py-[1px] text-[10px] duration-300 hover:bg-active"
               onClick={(e) => {
-                e.stopImmediatePropagation
+                e.stopImmediatePropagation()
                 setShow(false)
                 props.onConfirm?.()
               }}
@@ -41,7 +41,8 @@ export default function (props: {
         </div>
       </Show>
       <div
-        onClick={() => {
+        onClick={(e) => {
+          e.stopImmediatePropagation()
           setShow(true)
         }}
       >

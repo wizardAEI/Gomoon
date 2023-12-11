@@ -1,19 +1,41 @@
+import CrossMark from '@renderer/assets/icon/base/CrossMark'
 import EmptyIcon from '@renderer/assets/icon/base/EmptyIcon'
+import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
 import { setAnswerStore } from '@renderer/store/answer'
-import { histories } from '@renderer/store/history'
+import { histories, removeHistory } from '@renderer/store/history'
 import { Msg, setMsgs } from '@renderer/store/msgs'
 import { useNavigate } from '@solidjs/router'
 import { For, Show } from 'solid-js'
 import { HistoryModel } from 'src/main/model/model'
-
+const map = {
+  human: '我',
+  ai: '助手',
+  question: '问题',
+  ans: '答案'
+}
 export default function () {
+  const nav = useNavigate()
   function sliceArr(arr: HistoryModel['contents']) {
     if (arr.length === 2) return arr
-    return arr.slice(0, 2).concat(arr.slice(-1))
+    return arr
+      .slice(0, 2)
+      .concat([
+        {
+          role: 'human',
+          content: '......  ......'
+        }
+      ])
+      .concat(arr.slice(-1))
   }
-  const nav = useNavigate()
+  function decorateContent(c: string) {
+    if (c.length > 50) {
+      return c.slice(0, 50) + ' ......'
+    }
+    return c
+  }
+
   return (
-    <div class="flex h-full flex-col overflow-auto pb-48 pt-6">
+    <div class="pb-18 flex h-full flex-col overflow-auto pt-8">
       <Show
         when={histories.length}
         fallback={
@@ -38,7 +60,33 @@ export default function () {
                 }
               }}
             >
-              <For each={sliceArr(h.contents)}>{(c) => <span class="">{c.content}</span>}</For>
+              <div class="absolute right-2 top-1 flex items-center gap-3">
+                <DoubleConfirm
+                  label="确认删除"
+                  position="right-[-10px] top-[-42px]"
+                  onConfirm={() => {
+                    removeHistory(h.id)
+                  }}
+                >
+                  <CrossMark
+                    height={20}
+                    width={20}
+                    class="cursor-pointer text-gray duration-100 hover:text-active"
+                  />
+                </DoubleConfirm>
+              </div>
+              <For each={sliceArr(h.contents)}>
+                {(c) => {
+                  return (
+                    <div class="flex flex-col gap-1">
+                      <span>
+                        {map[c.role]}: {decorateContent(c.content)}
+                      </span>
+                      <div class="border-b-0 border-t border-dashed border-gray"></div>
+                    </div>
+                  )
+                }}
+              </For>
             </div>
           )}
         </For>

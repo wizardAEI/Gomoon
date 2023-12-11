@@ -44,23 +44,30 @@ const SelectKey = {
 
 export default function (props: { onConfirm: () => void }) {
   onMount(() => {
-    async function select(e) {
+    async function select(e: KeyboardEvent) {
       const a = assistants.filter((a) => a.type === 'ans')
+      // ctrl 或 ⌘ 键
+      if (e.ctrlKey || e.metaKey) return
       if (e.code === 'Space') {
+        await setSelectedAssistantForAns(a[0].id)
+        props.onConfirm()
       }
       if (e.code === 'Digit1') {
         await setSelectedAssistantForAns(a[1].id)
+        props.onConfirm()
       }
       if (e.code === 'Digit2') {
         await setSelectedAssistantForAns(a[2].id)
+        props.onConfirm()
       }
       if (e.code === 'Digit3') {
         await setSelectedAssistantForAns(a[3].id)
+        props.onConfirm()
       }
       if (e.code === 'Digit4') {
         await setSelectedAssistantForAns(a[4].id)
+        props.onConfirm()
       }
-      props.onConfirm()
     }
     window.addEventListener('keydown', select)
     onCleanup(() => window.removeEventListener('keydown', select))

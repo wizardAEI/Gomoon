@@ -64,17 +64,16 @@ export default function Input(props: {
       <textarea
         ref={textAreaDiv}
         value={props.text}
-        onkeydown={(e) => {
+        disabled={props.disable}
+        onKeyDown={(e) => {
           if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
             submit()
             e.preventDefault()
-            return
           }
         }}
-        oninput={(e) => {
+        onInput={(e) => {
           props.setText(e.target.value)
           e.preventDefault()
-          return false
         }}
         rows={1}
         placeholder={props.placeholder || 'Ctrl/Cmd+Enter 发送'}
