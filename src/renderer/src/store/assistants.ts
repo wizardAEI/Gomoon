@@ -1,5 +1,5 @@
 import { createStore, produce } from 'solid-js/store'
-import { AssistantModel, CreateAssistantModel, UpdateAssistantModel } from 'src/main/model/model'
+import { AssistantModel } from 'src/main/model/model'
 import { userData } from './user'
 import { createMemo } from 'solid-js'
 import { cloneDeep } from 'lodash'
@@ -76,6 +76,11 @@ export async function saveAssistant(a: AssistantModel) {
 
 export async function deleteAssistant(id: string) {
   await window.api.deleteAssistant(id)
+  loadAssistants()
+}
+
+export async function useAssistant(id: string) {
+  await window.api.useAssistant(id)
   loadAssistants()
 }
 

@@ -111,6 +111,7 @@ export const ansAssistant = async (
   }
 ) => {
   const a = getCurrentAssistantForAnswer()
+  console.log(a)
   const preContent = a.type === 'ans' ? a.preContent ?? '' : ''
   const postContent = a.type === 'ans' ? a.postContent ?? '' : ''
   return createModel(models[userData.selectedModel]).answer(

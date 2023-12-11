@@ -10,7 +10,8 @@ import {
   setIsOnTop,
   setModels,
   updateAssistant,
-  updateUserData
+  updateUserData,
+  useAssistant
 } from './model/index'
 import { mainWindow } from '.'
 import { CreateAssistantModel, ModelsType, UpdateAssistantModel } from './model/model'
@@ -54,6 +55,7 @@ export function initAppEventsHandler() {
         mainWindow?.webContents.send('multi-copy', copyText)
         mainWindow?.webContents.send('show-window')
         mainWindow?.show()
+        mainWindow?.focus()
       }
     })
     // 应用程序退出时，关闭子进程
@@ -103,6 +105,7 @@ export function initAppEventsHandler() {
   ipcMain.handle('update-assistant', (_, a: UpdateAssistantModel) => updateAssistant(a))
   ipcMain.handle('delete-assistant', (_, id: string) => deleteAssistant(id))
   ipcMain.handle('create-assistant', (_, a: CreateAssistantModel) => createAssistant(a))
+  ipcMain.handle('use-assistant', (_, id: string) => useAssistant(id))
 
   app.on('browser-window-created', () => {
     mainWindow?.webContents.send('get-event-handler-status', handlerStatus)

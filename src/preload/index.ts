@@ -49,7 +49,8 @@ export const api = {
     ipcRenderer.invoke('update-assistant', assistant),
   deleteAssistant: (assistantId: string) => ipcRenderer.invoke('delete-assistant', assistantId),
   createAssistant: (assistant: CreateAssistantModel): Promise<AssistantModel> =>
-    ipcRenderer.invoke('create-assistant', assistant)
+    ipcRenderer.invoke('create-assistant', assistant),
+  useAssistant: (assistantId: string) => ipcRenderer.invoke('use-assistant', assistantId)
 } as const
 
 // Use `contextBridge` APIs to expose Electron APIs to

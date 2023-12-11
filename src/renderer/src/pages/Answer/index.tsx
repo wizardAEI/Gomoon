@@ -1,22 +1,29 @@
 import Input from '@renderer/components/MainInput'
 import Message from '@renderer/components/Message'
-import { genAns, answerStore } from '../store/answer'
+import { genAns, answerStore } from '../../store/answer'
 import { Show, createSignal, onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
-import { useLocation } from '@solidjs/router'
+import { useSearchParams } from '@solidjs/router'
 import { getCurrentAssistantForAnswer } from '@renderer/store/assistants'
 import SystemHeader from '@renderer/components/SystemHeader'
+import SelectAssistantModal from './SelectAssistantModel'
 
 export default function Answer() {
   const [text, setText] = createSignal('')
-
+  const [showModal, setShowModal] = createSignal(false)
+  const [query, setQuery] = useSearchParams()
+  console.log(query.q)
+  setQuery({
+    q: ''
+  })
   onMount(() => {
-    const query = useLocation().query
     if (query.q) {
-      genAns(query.q as string)
+      setText(query.q as string)
+      setShowModal(true)
     }
     const removeListener = window.api.multiCopy((_: IpcRendererEvent, msg: string) => {
-      genAns(msg)
+      setText(msg)
+      setShowModal(true)
     })
     onCleanup(() => {
       removeListener()
@@ -25,6 +32,15 @@ export default function Answer() {
 
   return (
     <div class="flex h-full flex-col gap-4 overflow-auto pb-48 pt-6">
+      <Show when={showModal()}>
+        <SelectAssistantModal
+          onConfirm={() => {
+            setShowModal(false)
+            genAns(text().slice(0, -1))
+            setText('')
+          }}
+        />
+      </Show>
       <Show when={answerStore.question} fallback={<SystemHeader type="ans" />}>
         <Message content={answerStore.question} id="question" type="question" />
       </Show>

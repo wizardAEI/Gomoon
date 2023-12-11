@@ -106,3 +106,15 @@ export function createAssistant(a: CreateAssistantModel): AssistantModel {
   assistantsDB.write()
   return newA
 }
+
+// 用过一个assistant后将其提到最前面
+export function useAssistant(id: string) {
+  const index = assistantsDB.data.findIndex((item) => item.id === id)
+  if (index === -1) {
+    return
+  }
+  const item = assistantsDB.data[index]
+  assistantsDB.data.splice(index, 1)
+  assistantsDB.data.unshift(item)
+  assistantsDB.write()
+}

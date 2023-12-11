@@ -18,7 +18,7 @@ import {
 } from '@renderer/store/assistants'
 import { setSelectedAssistantForAns, setSelectedAssistantForChat } from '@renderer/store/user'
 import { useSearchParams } from '@solidjs/router'
-import { For, Show } from 'solid-js'
+import { For, Show, onCleanup, onMount } from 'solid-js'
 import EditBox from './EditBox'
 import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
 
@@ -33,6 +33,15 @@ export default function () {
   function createAssistant() {
     createNewAssistant(type === 'chat' ? type : 'ans')
   }
+
+  onMount(() => {
+    onCleanup(() => {
+      // 删除没有创建完的助手，关闭所有未编辑的助手
+      assistants.forEach((a) => {
+        onCancelEditAssistant(a.id)
+      })
+    })
+  })
 
   return (
     <div class="mb-5 animate-scale-down-entrance select-none p-2">
