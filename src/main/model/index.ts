@@ -50,6 +50,8 @@ export function setModels(models: SettingModel['models']) {
  */
 const userDataDB = JSONSyncPreset(join(appDataPath, 'user-data.json'), getDefaultUserData())
 export function getUserData() {
+  console.log(userDataDB.data)
+  console.log(merge(getDefaultUserData(), userDataDB.data))
   return merge(getDefaultUserData(), userDataDB.data)
 }
 export function updateUserData(data: Partial<typeof userDataDB.data>) {

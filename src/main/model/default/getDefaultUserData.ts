@@ -5,8 +5,7 @@ import { getResourcesPath } from '../../lib'
 export function getDefaultUserData(): UserData {
   const a = readFileSync(getResourcesPath('assistants.json'), 'utf-8')
 
-  const { selectedAssistantForAns, selectedAssistantForChat } =
-    JSON.parse(a).selectedAssistantForAns
+  const { selectedAssistantForAns, selectedAssistantForChat } = JSON.parse(a)
   return {
     firstTime: true,
     selectedModel: 'GPT4',
