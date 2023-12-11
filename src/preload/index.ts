@@ -3,6 +3,7 @@ import { electronAPI } from '@electron-toolkit/preload'
 import {
   AssistantModel,
   CreateAssistantModel,
+  HistoryModel,
   ModelsType,
   SettingModel,
   UpdateAssistantModel,
@@ -50,7 +51,12 @@ export const api = {
   deleteAssistant: (assistantId: string) => ipcRenderer.invoke('delete-assistant', assistantId),
   createAssistant: (assistant: CreateAssistantModel): Promise<AssistantModel> =>
     ipcRenderer.invoke('create-assistant', assistant),
-  useAssistant: (assistantId: string) => ipcRenderer.invoke('use-assistant', assistantId)
+  useAssistant: (assistantId: string) => ipcRenderer.invoke('use-assistant', assistantId),
+
+  // history 相关
+  getHistories: (): Promise<HistoryModel[]> => ipcRenderer.invoke('get-histories'),
+  addHistory: (history: HistoryModel) => ipcRenderer.invoke('add-history', history),
+  deleteHistory: (historyId: string) => ipcRenderer.invoke('delete-history', historyId)
 } as const
 
 // Use `contextBridge` APIs to expose Electron APIs to

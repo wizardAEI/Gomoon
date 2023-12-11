@@ -1,6 +1,7 @@
 import { ansAssistant } from '@renderer/lib/ai/langchain'
 import { createStore, produce } from 'solid-js/store'
 import { ulid } from 'ulid'
+import { addHistory } from './history'
 
 const [answerStore, setAnswerStore] = createStore({
   answer: '',
@@ -59,6 +60,23 @@ export function setGeneratingStatus(status: boolean) {
       ansStatus.isGenerating = status
     })
   )
+}
+
+export async function saveAns() {
+  return addHistory({
+    id: ulid(),
+    type: 'ans',
+    contents: [
+      {
+        role: 'question',
+        content: answerStore.question
+      },
+      {
+        role: 'ans',
+        content: answerStore.answer
+      }
+    ]
+  })
 }
 
 export { answerStore, setAnswerStore, ansStatus }

@@ -2,9 +2,12 @@ import { spawn } from 'child_process'
 import { BrowserWindow, app, clipboard, globalShortcut, ipcMain } from 'electron'
 import { join } from 'path'
 import {
+  addHistory,
   createAssistant,
   deleteAssistant,
+  deleteHistory,
   getAssistants,
+  getHistories,
   getUserData,
   loadUserConfig,
   setIsOnTop,
@@ -14,7 +17,7 @@ import {
   useAssistant
 } from './model/index'
 import { mainWindow } from '.'
-import { CreateAssistantModel, ModelsType, UpdateAssistantModel } from './model/model'
+import { CreateAssistantModel, HistoryModel, ModelsType, UpdateAssistantModel } from './model/model'
 import { getResourcesPath } from './lib'
 export let handlerStatus = {}
 export function initAppEventsHandler() {
@@ -106,6 +109,13 @@ export function initAppEventsHandler() {
   ipcMain.handle('delete-assistant', (_, id: string) => deleteAssistant(id))
   ipcMain.handle('create-assistant', (_, a: CreateAssistantModel) => createAssistant(a))
   ipcMain.handle('use-assistant', (_, id: string) => useAssistant(id))
+
+  /**
+   * FEAT: history 相关
+   */
+  ipcMain.handle('get-histories', () => getHistories())
+  ipcMain.handle('add-history', (_, history: HistoryModel) => addHistory(history))
+  ipcMain.handle('delete-history', (_, id: string) => deleteHistory(id))
 
   app.on('browser-window-created', () => {
     mainWindow?.webContents.send('get-event-handler-status', handlerStatus)

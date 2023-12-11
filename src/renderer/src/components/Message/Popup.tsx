@@ -4,13 +4,13 @@ import CopyIcon from '@renderer/assets/icon/base/CopyIcon'
 import { useClipboard } from 'solidjs-use'
 import SaveIcon from '@renderer/assets/icon/base/SaveIcon'
 import RetryIcon from '@renderer/assets/icon/base/RetryIcon'
-import { reGenAns, stopGenAns } from '@renderer/store/answer'
+import { reGenAns, saveAns, stopGenAns } from '@renderer/store/answer'
 import { MsgTypes } from '.'
 import EditIcon from '@renderer/assets/icon/base/EditIcon'
 import { event } from '@renderer/lib/util'
 import WithdrawalIcon from '@renderer/assets/icon/base/WithdrawalICon'
 import PauseIcon from '@renderer/assets/icon/base/PauseIcon'
-import { stopGenMsg } from '@renderer/store/msgs'
+import { saveMsgsBeforeID, stopGenMsg } from '@renderer/store/msgs'
 import { compWithTip } from '../ui/compWithTip'
 
 export default function MsgPopup(props: { id: string; content: string; type: MsgTypes }) {
@@ -26,7 +26,7 @@ export default function MsgPopup(props: { id: string; content: string; type: Msg
             width={22}
             class="cursor-pointer text-gray duration-100 hover:text-active"
             onClick={() => {
-              copy(props.content).then(() => tip('success', '复制成功！'))
+              copy(props.content).then(() => tip('success', '复制成功'))
             }}
           />
         ))}
@@ -38,8 +38,13 @@ export default function MsgPopup(props: { id: string; content: string; type: Msg
             height={22}
             width={22}
             class="cursor-pointer text-gray duration-100 hover:text-active"
-            onClick={() => {
-              tip('fail', '没做捏💦')
+            onClick={async () => {
+              if (props.type === 'ai') {
+                await saveMsgsBeforeID(props.id)
+              } else if (props.type === 'ans') {
+                await saveAns()
+              }
+              tip('success', '保存成功')
             }}
           />
         ))}

@@ -2,8 +2,9 @@ import { ErrorDict } from '@renderer/lib/constant'
 import { Roles, chatAssistant } from '@renderer/lib/ai/langchain'
 import { createStore, produce } from 'solid-js/store'
 import { ulid } from 'ulid'
+import { addHistory } from './history'
 
-interface Msg {
+export interface Msg {
   id: string
   role: Roles
   content: string
@@ -100,6 +101,17 @@ export function stopGenMsg(id: string) {
   abortMap.get(id)?.()
   abortMap.delete(id)
   removeGeneratingStatus(id)
+}
+
+export async function saveMsgsBeforeID(id: string) {
+  const index = msgs.findIndex((msg) => msg.id === id)
+  if (index === -1) return
+  const currentMsgs = msgs.slice(0, index + 1)
+  return addHistory({
+    id: ulid(),
+    type: 'chat',
+    contents: currentMsgs
+  })
 }
 
 export { msgs, setMsgs, msgStatus }

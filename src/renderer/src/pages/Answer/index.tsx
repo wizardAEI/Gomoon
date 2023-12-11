@@ -12,7 +12,6 @@ export default function Answer() {
   const [text, setText] = createSignal('')
   const [showModal, setShowModal] = createSignal(false)
   const [query, setQuery] = useSearchParams()
-  console.log(query.q)
   setQuery({
     q: ''
   })

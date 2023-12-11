@@ -9,7 +9,9 @@ import { loadConfig, settingStore } from './store/setting'
 import Loading from './pages/Loading'
 import { loadUserData, userData, userHasUse } from './store/user'
 import Assistants from './pages/Assistants'
+import History from './pages/History'
 import { loadAssistants } from './store/assistants'
+import { loadHistories } from './store/history'
 
 const App = () => {
   const nav = useNavigate()
@@ -32,6 +34,9 @@ const App = () => {
 
     // FEAT: 助手信息
     loadAssistants()
+
+    // FEAT: 历史信息
+    loadHistories()
 
     // FEAT: 快捷键触发操作
     const removeListener = window.api.multiCopy(async (_: IpcRendererEvent, msg: string) => {
@@ -59,6 +64,7 @@ const App = () => {
             <Route path="/answer" component={Answer} />
             <Route path="/setting" component={Setting} />
             <Route path="/assistants" component={Assistants} />
+            <Route path="/history" component={History} />
             <Route path="*" component={Chat} />
           </Routes>
         </Show>

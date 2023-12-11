@@ -1,5 +1,4 @@
 export function ErrorDict(err: Error): string {
-  console.log(err)
   if (err.message.includes('AbortError') || err.name.includes('AbortError')) {
     return ' ⏹'
   } else if (

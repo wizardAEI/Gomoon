@@ -1,5 +1,6 @@
 import AnswerIcon from '@renderer/assets/icon/AnswerIcon'
 import ChatIcon from '@renderer/assets/icon/ChatIcon'
+import HistoryIcon from '@renderer/assets/icon/base/HistoryIcon'
 import SettingIcon from '@renderer/assets/icon/base/SettingIcon'
 import { useNavigate } from '@solidjs/router'
 export default function TopBar() {
@@ -13,6 +14,14 @@ export default function TopBar() {
         }}
       ></div>
       <div class="flex h-6 gap-2 px-4 pt-[5px]">
+        <div
+          class="cursor-pointer"
+          onclick={() => {
+            nav('/history')
+          }}
+        >
+          <HistoryIcon width={18} height={18} class="text-gray duration-100 hover:text-active" />
+        </div>
         <div
           class="cursor-pointer"
           onclick={() => {

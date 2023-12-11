@@ -47,3 +47,9 @@ export type AssistantModel = (
 
 export type UpdateAssistantModel = Omit<AssistantModel, 'version'>
 export type CreateAssistantModel = Omit<AssistantModel, 'id' | 'version'>
+
+export interface HistoryModel {
+  id: string
+  type: 'chat' | 'ans'
+  contents: { id?: string; role: 'human' | 'system' | 'ai' | 'ans' | 'question'; content: string }[]
+}

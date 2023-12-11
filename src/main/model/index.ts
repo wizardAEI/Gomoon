@@ -1,6 +1,12 @@
 import { app } from 'electron'
 import { JSONSyncPreset } from 'lowdb/node'
-import { AssistantModel, CreateAssistantModel, SettingModel, UpdateAssistantModel } from './model'
+import {
+  AssistantModel,
+  CreateAssistantModel,
+  HistoryModel,
+  SettingModel,
+  UpdateAssistantModel
+} from './model'
 import { getDefaultUserData } from './default/getDefaultUserData'
 import { getDefaultConfig } from './default/getDefaultConfig'
 import { join } from 'path'
@@ -50,8 +56,6 @@ export function setModels(models: SettingModel['models']) {
  */
 const userDataDB = JSONSyncPreset(join(appDataPath, 'user-data.json'), getDefaultUserData())
 export function getUserData() {
-  console.log(userDataDB.data)
-  console.log(merge(getDefaultUserData(), userDataDB.data))
   return merge(getDefaultUserData(), userDataDB.data)
 }
 export function updateUserData(data: Partial<typeof userDataDB.data>) {
@@ -119,4 +123,27 @@ export function useAssistant(id: string) {
   assistantsDB.data.splice(index, 1)
   assistantsDB.data.unshift(item)
   assistantsDB.write()
+}
+
+/**
+ * Histories 相关
+ */
+const historiesDB = JSONSyncPreset<HistoryModel[]>(join(appDataPath, 'histories.json'), [])
+
+export function getHistories() {
+  return historiesDB.data || []
+}
+
+export function addHistory(h: HistoryModel) {
+  historiesDB.data.unshift(h)
+  historiesDB.write()
+}
+
+export function deleteHistory(id: string) {
+  const index = historiesDB.data.findIndex((item) => item.id === id)
+  if (index === -1) {
+    return
+  }
+  historiesDB.data.splice(index, 1)
+  historiesDB.write()
 }
