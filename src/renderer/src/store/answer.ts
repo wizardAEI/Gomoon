@@ -1,28 +1,33 @@
 import { ansAssistant } from '@renderer/lib/ai/langchain'
 import { createStore, produce } from 'solid-js/store'
+import { ulid } from 'ulid'
 
 const [answerStore, setAnswerStore] = createStore({
   answer: '',
   question: ''
 })
 let controller: AbortController
+let ansID: string
 export function genAns(q: string) {
   controller = new AbortController()
   setAnswerStore('answer', '')
   setAnswerStore('question', q)
   setGeneratingStatus(true)
+  const ID = ulid()
+  ansID = ID
   ansAssistant(
     {
       text: q
     },
     {
       newTokenCallback(content) {
-        setAnswerStore('answer', (ans) => ans + content)
+        ID === ansID && setAnswerStore('answer', (ans) => ans + content)
       },
       endCallback() {
-        setGeneratingStatus(false)
+        ID === ansID && setGeneratingStatus(false)
       },
       errorCallback(err) {
+        if (ID !== ansID) return
         if ((err = 'Request timed out.')) {
           setAnswerStore('answer', (ans) => ans + '\n\n回答超时，请重试')
         } else {
