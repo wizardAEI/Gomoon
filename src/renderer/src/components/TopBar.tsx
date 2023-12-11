@@ -2,9 +2,14 @@ import AnswerIcon from '@renderer/assets/icon/AnswerIcon'
 import ChatIcon from '@renderer/assets/icon/ChatIcon'
 import HistoryIcon from '@renderer/assets/icon/base/HistoryIcon'
 import SettingIcon from '@renderer/assets/icon/base/SettingIcon'
-import { useNavigate } from '@solidjs/router'
+import { useLocation, useNavigate } from '@solidjs/router'
+import { createMemo } from 'solid-js'
 export default function TopBar() {
   const nav = useNavigate()
+  const location = useLocation()
+
+  const pathname = createMemo(() => location.pathname)
+
   return (
     <div class="flex h-6 w-full text-center text-slate-50">
       <div
@@ -20,23 +25,44 @@ export default function TopBar() {
             nav('/history')
           }}
         >
-          <HistoryIcon width={18} height={18} class="text-gray duration-100 hover:text-active" />
+          <HistoryIcon
+            width={18}
+            height={18}
+            class={
+              'duration-100 hover:text-active ' +
+              (pathname() === '/history' ? 'text-active' : 'text-gray')
+            }
+          />
         </div>
         <div
           class="cursor-pointer"
           onclick={() => {
-            nav('/answer')
+            nav('/answer?init=true')
           }}
         >
-          <AnswerIcon width={16} height={16} class="text-gray duration-100 hover:text-active" />
+          <AnswerIcon
+            width={16}
+            height={16}
+            class={
+              'duration-100 hover:text-active ' +
+              (pathname() === '/answer' ? 'text-active' : 'text-gray')
+            }
+          />
         </div>
         <div
           class="translate-y cursor-pointer"
           onclick={() => {
-            nav('/')
+            nav('/chat')
           }}
         >
-          <ChatIcon width={18} height={18} class="text-gray duration-100 hover:text-active" />
+          <ChatIcon
+            width={18}
+            height={18}
+            class={
+              'duration-100 hover:text-active ' +
+              (pathname() === '/' || pathname() === '/chat' ? 'text-active' : 'text-gray')
+            }
+          />
         </div>
         <div
           class="cursor-pointer"
@@ -47,7 +73,10 @@ export default function TopBar() {
           <SettingIcon
             width={18}
             height={18}
-            class="ml-[-0.0625rem] text-gray duration-100 hover:text-active"
+            class={
+              'ml-[-0.0625rem] duration-100 hover:text-active ' +
+              (pathname() === '/setting' ? 'text-active' : 'text-gray')
+            }
           />
         </div>
       </div>

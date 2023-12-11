@@ -94,14 +94,14 @@ export default function (props: { position: string; size?: number }) {
       <Show when={isOpen()}>
         <div
           class={
-            'w- absolute z-10 mt-3 grid w-44 grid-cols-2 grid-rows-2 gap-1 rounded-md bg-dark p-2 ' +
+            'absolute z-10 mt-3 grid w-44 grid-cols-2 grid-rows-2 gap-1 rounded-md bg-dark p-2 ' +
             props.position
           }
         >
           <For each={options}>
             {(option) => (
               <div
-                class={`cursor-pointer break-words rounded-lg p-1 ${
+                class={`cursor-pointer break-words rounded-lg py-1 pl-1 pr-0 ${
                   userData.selectedModel === option.value ? 'bg-active-gradient' : ''
                 } hover:bg-gray
                 `}

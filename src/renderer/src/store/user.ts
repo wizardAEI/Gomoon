@@ -30,8 +30,8 @@ export async function setSelectedAssistantForAns(assistantID: string) {
   })
 }
 
-export function setSelectedAssistantForChat(assistantID: string) {
-  window.api.setSelectedAssistantForChat(assistantID).then(() => {
+export async function setSelectedAssistantForChat(assistantID: string) {
+  return window.api.setSelectedAssistantForChat(assistantID).then(() => {
     setUserData('selectedAssistantForChat', assistantID)
   })
 }

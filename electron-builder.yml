@@ -13,6 +13,7 @@ asarUnpack:
   - resources/**
 win:
   executableName: Gomoon
+  icon: icons/icon.ico
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

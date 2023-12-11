@@ -17,7 +17,7 @@ import {
   saveAssistant
 } from '@renderer/store/assistants'
 import { setSelectedAssistantForAns, setSelectedAssistantForChat } from '@renderer/store/user'
-import { useSearchParams } from '@solidjs/router'
+import { useNavigate, useSearchParams } from '@solidjs/router'
 import { For, Show, onCleanup, onMount } from 'solid-js'
 import EditBox from './EditBox'
 import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
@@ -29,7 +29,7 @@ const map = {
 
 export default function () {
   const [{ type }, _] = useSearchParams()
-
+  const nav = useNavigate()
   function createAssistant() {
     createNewAssistant(type === 'chat' ? type : 'ans')
   }
@@ -74,13 +74,15 @@ export default function () {
           >
             <div
               class="relative m-4 flex flex-col gap-2 rounded-2xl border-2 border-solid border-transparent bg-dark p-4 duration-150 hover:border-active"
-              onClick={() => {
+              onClick={async () => {
                 switch (type) {
                   case 'ans':
-                    setSelectedAssistantForAns(a.id)
+                    await setSelectedAssistantForAns(a.id)
+                    nav('/answer')
                     break
                   case 'chat':
-                    setSelectedAssistantForChat(a.id)
+                    await setSelectedAssistantForChat(a.id)
+                    nav('/chat')
                     break
                   default:
                     break

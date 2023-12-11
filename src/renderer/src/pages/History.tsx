@@ -51,8 +51,8 @@ export default function () {
               class="relative m-4 flex cursor-pointer flex-col gap-2 rounded-2xl border-2 border-solid border-transparent bg-dark p-4 duration-150 hover:border-active"
               onClick={() => {
                 if (h.type === 'ans') {
-                  setAnswerStore('answer', h.contents[0].content)
-                  setAnswerStore('question', h.contents[1].content)
+                  setAnswerStore('question', h.contents[0].content)
+                  setAnswerStore('answer', h.contents[1].content)
                   nav('/answer')
                 } else if (h.type === 'chat') {
                   setMsgs(h.contents as Msg[])
