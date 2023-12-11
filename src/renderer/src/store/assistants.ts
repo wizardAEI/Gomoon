@@ -2,29 +2,80 @@ import { createStore, produce } from 'solid-js/store'
 import { AssistantModel, CreateAssistantModel, UpdateAssistantModel } from 'src/main/model/model'
 import { userData } from './user'
 import { createMemo } from 'solid-js'
+import { cloneDeep } from 'lodash'
 
 const [assistants, setAssistants] = createStore<AssistantModel[]>([])
 
+const [assistantsStatus, setAssistantsStatus] = createStore<{
+  [key: string]: 'editing' | 'creating' | 'saved'
+}>({})
+
 export async function loadAssistants() {
   setAssistants(await window.api.getAssistants())
+  setAssistantsStatus(assistants.reduce((a, b) => ({ ...a, [b.id]: 'saved' }), {}))
+  setAssistantsStatus({
+    ...assistantsStatus,
+    creating: 'creating'
+  })
 }
 
-export async function createAssistant(a: CreateAssistantModel) {
-  const newA = await window.api.createAssistant(a)
+export function createNewAssistant(type: 'chat' | 'ans') {
+  if (assistants.findIndex((a) => a.id === 'creating') !== -1) return
+  const newA: AssistantModel = {
+    type,
+    id: 'creating',
+    name: '',
+    version: 1,
+    prompt: ''
+  }
   setAssistants(
     produce((a) => {
-      a.push(newA)
+      a.unshift(newA)
     })
   )
 }
 
-export async function deleteAssistant(id: string) {
-  await window.api.deleteAssistant(id)
+export function onEditAssistant(id: string) {
+  if (id === 'creating') return
+  setAssistantsStatus(
+    produce((a) => {
+      a[id] = 'editing'
+    })
+  )
+}
+
+export function onCancelEditAssistant(id: string) {
+  if (id === 'creating') {
+    setAssistants(
+      produce((a) => {
+        a.shift()
+      })
+    )
+  } else {
+    setAssistantsStatus(
+      produce((a) => {
+        a[id] = 'saved'
+      })
+    )
+  }
+}
+
+export async function saveAssistant(a: AssistantModel) {
+  if (a.id === 'creating') {
+    await window.api.createAssistant(cloneDeep(a))
+    setAssistants(
+      produce((as) => {
+        as.shift()
+      })
+    )
+  } else {
+    await window.api.updateAssistant(a)
+  }
   loadAssistants()
 }
 
-export async function updateAssistant(a: UpdateAssistantModel) {
-  await window.api.updateAssistant(a)
+export async function deleteAssistant(id: string) {
+  await window.api.deleteAssistant(id)
   loadAssistants()
 }
 
@@ -51,4 +102,4 @@ export const getCurrentAssistantForChat = createMemo<AssistantModel>(
     }
 )
 
-export { assistants }
+export { assistants, assistantsStatus }

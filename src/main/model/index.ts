@@ -98,11 +98,11 @@ export function deleteAssistant(id: string) {
 
 export function createAssistant(a: CreateAssistantModel): AssistantModel {
   const newA = {
+    ...a,
     id: ulid(),
-    version: 1,
-    ...a
+    version: 1
   }
-  assistantsDB.data.push(newA)
+  assistantsDB.data.unshift(newA)
   assistantsDB.write()
   return newA
 }

@@ -1,9 +1,18 @@
 @layer base {
   * :not(svg, path, g) {
-    @apply font-System m-0 box-border p-0;
+    @apply m-0 box-border p-0 font-System;
   }
   body {
     @apply bg-dark text-text1;
+  }
+  input {
+    @apply w-full max-w-[512px] rounded-md border-[1px] border-solid border-active bg-dark py-1 pl-2 pr-8 text-sm text-text1 outline-none;
+  }
+  button {
+    @apply cursor-pointer overflow-hidden rounded-md border-0 bg-gray px-3 py-1 text-text1 focus:outline-none active:animate-click;
+  }
+  textarea {
+    @apply flex-1 resize-none rounded-md border-[1px] border-solid border-active bg-dark py-1 pl-2 text-base text-text1 caret-text2 transition-none focus:outline-none;
   }
 }
 

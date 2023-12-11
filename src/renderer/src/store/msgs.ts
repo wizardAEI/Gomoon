@@ -88,11 +88,7 @@ export function genMsg(id: string) {
       removeGeneratingStatus(id)
     },
     errorCallback(err: Error) {
-      if (ErrorDict[err.message]) {
-        editMsgByAdd(ErrorDict[err.message], id)
-      } else {
-        editMsgByAdd(`\n\n出问题了:${err.name}: ${err.message}`, id)
-      }
+      editMsgByAdd(ErrorDict(err), id)
       removeGeneratingStatus(id)
     },
     pauseSignal: controller.signal

@@ -19,7 +19,7 @@ export default function CapitalIcon(props: {
     <div>
       <button
         {...api().triggerProps}
-        class={`flex items-center justify-center rounded-md border-0 text-[12px] font-bold leading-3 ${
+        class={`flex items-center justify-center rounded-md border-0 p-0 text-[12px] font-bold leading-3 ${
           props.bg === 'gray' ? 'bg-gray' : 'bg-active-gradient'
         }`}
         style={{
@@ -40,7 +40,7 @@ export default function CapitalIcon(props: {
       </button>
       <Show when={api().isOpen && !props.hiddenTiptop}>
         <div {...api().positionerProps}>
-          <div {...api().contentProps} class="rounded-md bg-white/80 p-1 text-xs">
+          <div {...api().contentProps} class="rounded-md bg-white/80 p-1 text-xs text-text-dark">
             {props.content}
           </div>
         </div>

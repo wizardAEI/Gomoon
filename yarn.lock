@@ -1059,36 +1059,23 @@
   resolved "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.8.10.tgz"
   integrity sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==
 
-"@zag-js/anatomy@0.30.0":
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/@zag-js/anatomy/-/anatomy-0.30.0.tgz#71db3f93ddd0f312196b82d8d1430c177d04f8ac"
-  integrity sha512-tPtFGw2PO+dUtMXl/5C1wMfWsh6V7lRygENvro58nP02/T6EnMyqH6D1tz6bPGC0RZc0BpXt2/+cMeq9hs4kxQ==
-
 "@zag-js/anatomy@0.31.1":
   version "0.31.1"
   resolved "https://registry.yarnpkg.com/@zag-js/anatomy/-/anatomy-0.31.1.tgz#7ec993e67ad0f774bc1ec27d803958f7b7b444be"
   integrity sha512-k6tS7aSGUFbCpvYnhDUwZ8LqaKR/Yfx5dsPqrLI8IqJ2/H5yt0JDkm2I30eXRrEFNNTIQ04UfHPtTrt02PJROQ==
 
-"@zag-js/checkbox@^0.30.0":
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/@zag-js/checkbox/-/checkbox-0.30.0.tgz#872025394e4936be7599b56397b6435a69ac1ac4"
-  integrity sha512-GZ2/bLgjynjoL0GfKF208oqTBJ6QMNkMTcWiNNu07GGEdRvM224uJzzUtlgnR8pXm/6+U1uxUqyBkXHr0ckjBg==
+"@zag-js/checkbox@^0.31.1":
+  version "0.31.1"
+  resolved "https://registry.yarnpkg.com/@zag-js/checkbox/-/checkbox-0.31.1.tgz#4b54933f370c253aee4a77f650e6b8b87d86ebdf"
+  integrity sha512-Kvayised4CmnpzmdJLNMiqXtJSlXnWBw7rqIrD28RQcA2vbaSdP9zgzE6V2+QK/O8EhftiopuQCmFfAd6DJFcg==
   dependencies:
-    "@zag-js/anatomy" "0.30.0"
-    "@zag-js/core" "0.30.0"
-    "@zag-js/dom-query" "0.30.0"
-    "@zag-js/form-utils" "0.30.0"
-    "@zag-js/types" "0.30.0"
-    "@zag-js/utils" "0.30.0"
-    "@zag-js/visually-hidden" "0.30.0"
-
-"@zag-js/core@0.30.0":
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/@zag-js/core/-/core-0.30.0.tgz#c81ff323b3146fa166e3fa02f28b49d6b152b12a"
-  integrity sha512-z/VFXsRQGCrpHCxcxj8swKO5WHj0e8WGs+jLwU63oEfD8kYRwpem2AfbE9tqIJTlY/StCZFz1KM/rFN+wjEVYw==
-  dependencies:
-    "@zag-js/store" "0.30.0"
-    klona "2.0.6"
+    "@zag-js/anatomy" "0.31.1"
+    "@zag-js/core" "0.31.1"
+    "@zag-js/dom-query" "0.31.1"
+    "@zag-js/form-utils" "0.31.1"
+    "@zag-js/types" "0.31.1"
+    "@zag-js/utils" "0.31.1"
+    "@zag-js/visually-hidden" "0.31.1"
 
 "@zag-js/core@0.31.1":
   version "0.31.1"
@@ -1106,11 +1093,6 @@
     "@zag-js/text-selection" "0.31.1"
     "@zag-js/types" "0.31.1"
 
-"@zag-js/dom-query@0.30.0":
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/@zag-js/dom-query/-/dom-query-0.30.0.tgz#8e60a28b7297d31d82ccc7489060d2eee23f84c4"
-  integrity sha512-cNIxL+ySzy8C13tEoDoo+B/j3rVFON3VCJXwieja1izcl+65yr88sJQmEGbOq/zuNTCWA9hijeimhv4c3zht9Q==
-
 "@zag-js/dom-query@0.31.1":
   version "0.31.1"
   resolved "https://registry.yarnpkg.com/@zag-js/dom-query/-/dom-query-0.31.1.tgz#f40be43d0eb1eabdf51538abeeccad46c5b88ed6"
@@ -1121,24 +1103,12 @@
   resolved "https://registry.yarnpkg.com/@zag-js/element-rect/-/element-rect-0.31.1.tgz#90361017bf6cd1808d218557cf0dc931f5eaa6ff"
   integrity sha512-8XUbJVd4gMaoc/r9k7t3ReLfYgHA4u5g4hcci5hF6kSwBlpsfxFxfBozUnV2XCZAmCe0EAkXY18e+etlSzmYYg==
 
-"@zag-js/form-utils@0.30.0":
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/@zag-js/form-utils/-/form-utils-0.30.0.tgz#661043f110806927408e58e6b89ca69687de8a00"
-  integrity sha512-PSutqjx6kakpIOjo4tyqg9fs9l1Fiy8OQ3qHxY8zBuJnZfwE9CjeMaT9nHKixmIH+ISL14OFnRP8a28x70TIWA==
-  dependencies:
-    "@zag-js/mutation-observer" "0.30.0"
-
 "@zag-js/form-utils@0.31.1":
   version "0.31.1"
   resolved "https://registry.yarnpkg.com/@zag-js/form-utils/-/form-utils-0.31.1.tgz#066c6d0c4f2734af4982240806ce01f005038d04"
   integrity sha512-HIopNFajwIRYKZetr+9w08FE0JhxM+gP1/OJPJiOdcdS4gAppweQCRwwT38l4GzfmtQC8WO1or0s77Ki1tIx8Q==
   dependencies:
     "@zag-js/mutation-observer" "0.31.1"
-
-"@zag-js/mutation-observer@0.30.0":
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/@zag-js/mutation-observer/-/mutation-observer-0.30.0.tgz#3e7e36e2ecfe0afc98ce06d5c8369563cb448462"
-  integrity sha512-E6gH0khXSznei88HdVQ1iRzvL1eldTPbOhfjx3HshaUbhAs+JXvdPglYhG7A9m7VCOGv6Z/ANBPQoabY9ilKmw==
 
 "@zag-js/mutation-observer@0.31.1":
   version "0.31.1"
@@ -1164,13 +1134,6 @@
     "@zag-js/store" "0.31.1"
     "@zag-js/types" "0.31.1"
     hyphenate-style-name "1.0.4"
-
-"@zag-js/store@0.30.0":
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/@zag-js/store/-/store-0.30.0.tgz#80b3e2488759e7da64b15502a514253a0957718a"
-  integrity sha512-AMvsP8WC2UTYiRVtWTfCm3MJzrNa32GfsmgMdjKlxzTGSlVxKAJcfEHwUWY0EJD58UfAvjKFL3KATIJPrYHqtA==
-  dependencies:
-    proxy-compare "2.5.1"
 
 "@zag-js/store@0.31.1":
   version "0.31.1"
@@ -1212,13 +1175,6 @@
     "@zag-js/types" "0.31.1"
     "@zag-js/utils" "0.31.1"
 
-"@zag-js/types@0.30.0":
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/@zag-js/types/-/types-0.30.0.tgz#ced87f1e5d078c118bfcf6ba11b9692cdd69ff74"
-  integrity sha512-e3BNMe1/OvpzDyzKEk6n6iad8ntbFETbKANsjsAO0m7pwXN0MpPA+P9EzwafRuTEFycTCAV05VWc3zaeAkDpPg==
-  dependencies:
-    csstype "3.1.2"
-
 "@zag-js/types@0.31.1":
   version "0.31.1"
   resolved "https://registry.yarnpkg.com/@zag-js/types/-/types-0.31.1.tgz#5b20622b446e4eaad9f5994898080a0447c8a56e"
@@ -1226,20 +1182,10 @@
   dependencies:
     csstype "3.1.2"
 
-"@zag-js/utils@0.30.0":
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/@zag-js/utils/-/utils-0.30.0.tgz#9089016947f7581c00477bb320213be98af2ce4c"
-  integrity sha512-wWBz1qMM2WuRQWrA4zTWlSdRFmTbPsjCHDEu5tI4b/rzX0J2uZ1SDH2xwt89XA+JXmXu/Aol5RhYkUb3wLzjiQ==
-
 "@zag-js/utils@0.31.1":
   version "0.31.1"
   resolved "https://registry.yarnpkg.com/@zag-js/utils/-/utils-0.31.1.tgz#2ebaa8080e72cf73e45699143570e482bc8d7cb9"
   integrity sha512-miBMlWjElJLdqs59X09KFiKTSaMjYSFTi79Nh/Bvmbi1kzgrmhKhZQwng/HjMgSTlJUEfkLKKRHdbyD0o1rzUw==
-
-"@zag-js/visually-hidden@0.30.0":
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/@zag-js/visually-hidden/-/visually-hidden-0.30.0.tgz#b32f2d0364bbdf047fc7e0322d28f1cac9759160"
-  integrity sha512-uyL3g4VQ5IyPWpDQSoVdzHss3Su7GrWpvVZ+2DsuptYmCdwNfHQJM7DJdWHS0Pjc4xx9uWkEhEXqGaTe2pqPvA==
 
 "@zag-js/visually-hidden@0.31.1":
   version "0.31.1"

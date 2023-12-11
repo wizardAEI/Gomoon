@@ -15,7 +15,7 @@ export default function (props: { type: 'chat' | 'ans' }) {
         <span class="select-none">{a().name}</span>
         <Shift
           onClick={() => {
-            nav('/assistants?type=chat')
+            nav('/assistants?type=' + props.type)
           }}
           class="cursor-pointer text-gray hover:text-active"
           height={20}

@@ -38,7 +38,6 @@ export default function EditInput(props: {
           <input
             spellcheck={props.spellcheck || false}
             ref={inputRef}
-            class="bg-gray-200 w-full max-w-[512px] rounded-md border-none bg-dark-pro py-1 pl-2 pr-8 text-sm focus:outline-none"
             type="text"
             value={value()}
             onInput={(e) => setValue((e.target as HTMLInputElement).value)}
@@ -46,7 +45,7 @@ export default function EditInput(props: {
           />
           <SaveIcon
             height={20}
-            class="absolute right-0 top-1 cursor-pointer text-dark-pro"
+            class="absolute right-0 top-1 cursor-pointer text-gray hover:text-active"
             onClick={onSave}
           />
         </div>

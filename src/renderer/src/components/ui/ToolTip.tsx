@@ -29,7 +29,7 @@ export default function Tooltip(props: {
     <div class="inline-block">
       <button
         {...api().triggerProps}
-        class="flex cursor-pointer items-center border-0 bg-transparent"
+        class="flex cursor-pointer items-center border-0 bg-transparent px-0 py-0"
       >
         {props.label}
       </button>
@@ -40,7 +40,7 @@ export default function Tooltip(props: {
             // style={{
             //   color: 'black'
             // }}
-            class="text-text-dark rounded-md bg-white/80 p-1 text-xs"
+            class="rounded-md bg-white/80 p-1 text-xs text-text-dark"
           >
             {props.content}
           </div>
