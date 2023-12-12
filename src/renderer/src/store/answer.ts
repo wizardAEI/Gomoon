@@ -42,6 +42,7 @@ export function genAns(q: string) {
 }
 export function stopGenAns() {
   controller.abort()
+  ansID = ''
   setGeneratingStatus(false)
 }
 export function reGenAns() {
@@ -77,6 +78,12 @@ export async function saveAns() {
       }
     ]
   })
+}
+
+export function clearAns() {
+  stopGenAns()
+  setAnswerStore('answer', '')
+  setAnswerStore('question', '')
 }
 
 export { answerStore, setAnswerStore, ansStatus }

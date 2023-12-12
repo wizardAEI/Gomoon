@@ -1,6 +1,6 @@
 import Input from '@renderer/components/MainInput'
 import Message from '@renderer/components/Message'
-import { genAns, answerStore } from '../../store/answer'
+import { genAns, answerStore, clearAns } from '../../store/answer'
 import { For, Show, createSignal, onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
 import { useNavigate, useSearchParams } from '@solidjs/router'
@@ -40,6 +40,7 @@ export default function Answer() {
       setShowModal(true)
     })
     onCleanup(() => {
+      clearAns()
       removeListener()
     })
   })
