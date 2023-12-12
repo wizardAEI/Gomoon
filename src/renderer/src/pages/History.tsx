@@ -1,6 +1,8 @@
 import CrossMark from '@renderer/assets/icon/base/CrossMark'
 import EmptyIcon from '@renderer/assets/icon/base/EmptyIcon'
+import HistoryIcon from '@renderer/assets/icon/base/HistoryIcon'
 import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
+import QuestionMention from '@renderer/components/ui/QuestionMention'
 import { setAnswerStore } from '@renderer/store/answer'
 import { histories, removeHistory } from '@renderer/store/history'
 import { Msg, setMsgs } from '@renderer/store/msgs'
@@ -45,6 +47,9 @@ export default function () {
           </div>
         }
       >
+        <div class="mx-5 flex select-none items-center gap-1 text-lg  text-text1">
+          <HistoryIcon width={20} height={20} /> <span class="font-medium">对话历史</span>{' '}
+        </div>
         <For each={histories}>
           {(h) => (
             <div

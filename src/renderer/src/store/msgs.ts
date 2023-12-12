@@ -3,6 +3,7 @@ import { Roles, chatAssistant } from '@renderer/lib/ai/langchain'
 import { createStore, produce } from 'solid-js/store'
 import { ulid } from 'ulid'
 import { addHistory } from './history'
+import { cloneDeep } from 'lodash'
 
 export interface Msg {
   id: string
@@ -11,9 +12,12 @@ export interface Msg {
 }
 const [msgs, setMsgs] = createStore<Array<Msg>>([])
 
+let trash: Array<Msg> = []
+
 const abortMap = new Map<string, (ans?: string) => void>()
 
 export function pushMsg(msg: Msg) {
+  trash = []
   setMsgs(
     produce((msgs) => {
       msgs.push(msg)
@@ -22,7 +26,13 @@ export function pushMsg(msg: Msg) {
 }
 
 export function clearMsgs() {
+  trash = cloneDeep(msgs)
   setMsgs([])
+}
+
+export function restoreMsgs() {
+  trash.length && setMsgs(trash)
+  trash = []
 }
 
 export function editMsg(msg: Partial<Msg>, id: string) {

@@ -1,5 +1,8 @@
 import { createEffect, onCleanup, onMount } from 'solid-js'
-import { clearMsgs } from '../store/msgs'
+import { clearMsgs, msgs, restoreMsgs } from '../store/msgs'
+import { useToast } from './ui/Toast'
+import { addEventListener } from 'solid-js/web'
+import { useEventListener } from 'solidjs-use'
 
 /**
  * FEAT: Input 组件，用于接收用户输入的文本，onMountHandler可以在外部操作 input 元素
@@ -17,6 +20,8 @@ export default function Input(props: {
 }) {
   let textAreaDiv: HTMLTextAreaElement | undefined
   let textAreaContainerDiv: HTMLDivElement | undefined
+  let cleanupForRestoreMsgs: (() => void) | undefined
+  const toast = useToast()
   function submit() {
     props.send(props.text)
     props.setText('')
@@ -72,6 +77,7 @@ export default function Input(props: {
           }
         }}
         onInput={(e) => {
+          cleanupForRestoreMsgs?.()
           props.setText(e.target.value)
           e.preventDefault()
         }}
@@ -86,7 +92,18 @@ export default function Input(props: {
             (props.text.length ? 'w-0 px-0' : 'px-2')
           }
           onClick={() => {
+            toast.info('ctrl/cmd + z 撤销', {
+              duration: 1000,
+              position: 'top-3/4'
+            })
+            if (!msgs.length) return
             clearMsgs()
+            cleanupForRestoreMsgs = useEventListener(document, 'keydown', (e) => {
+              if ((e.key === 'z' && e.ctrlKey) || (e.key === 'z' && e.metaKey)) {
+                restoreMsgs()
+                cleanupForRestoreMsgs?.()
+              }
+            })
           }}
         >
           {!props.text.length && '清空历史'}

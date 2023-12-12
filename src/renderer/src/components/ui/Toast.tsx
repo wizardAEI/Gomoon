@@ -9,6 +9,7 @@ export interface ToastType {
   text: string
   type: string
   duration: number
+  position: string
 }
 
 const UIContext = createContext<{
@@ -31,17 +32,17 @@ const Icon = {
 export function ToastsContainer() {
   return (
     <Portal>
-      <div class="fixed left-1/2 top-1/3 z-50 -translate-x-1/2 select-none">
-        <For each={useContext(UIContext)!.toasts()}>
-          {(toast) => (
+      <For each={useContext(UIContext)!.toasts()}>
+        {(toast) => (
+          <div class={'fixed left-1/2 z-50 -translate-x-1/2 select-none ' + toast.position}>
             <div
               class={`shadow-center mb-2 flex animate-popup items-center gap-1 rounded-lg bg-dark-con p-2 text-sm`}
             >
               {Icon[toast.type]} {toast.text}
             </div>
-          )}
-        </For>
-      </div>
+          </div>
+        )}
+      </For>
     </Portal>
   )
 }
@@ -64,17 +65,21 @@ export function ToastProvider(props: { children: JSX.Element }) {
 
 export function useToast() {
   const { setToasts: setShowToast } = useContext(UIContext)!
-  function show(text: string, type: string, duration: number) {
+  function show(text: string, type: string, duration: number, position: string) {
     const id = Date.now()
-    setShowToast((t) => [...t, { id, text, type, duration }])
+    setShowToast((t) => [...t, { id, text, type, duration, position }])
     setTimeout(() => {
       setShowToast((ts) => ts.filter((t) => t.id !== id))
     }, duration)
   }
   return {
-    success: (text: string, conf = { duration: 1000 }) => show(text, 'success', conf.duration),
-    warning: (text: string, conf = { duration: 1000 }) => show(text, 'warning', conf.duration),
-    error: (text: string, conf = { duration: 1000 }) => show(text, 'error', conf.duration),
-    info: (text: string, conf = { duration: 1000 }) => show(text, 'info', conf.duration)
+    success: (text: string, conf = { duration: 1500, position: 'top-1/3' }) =>
+      show(text, 'success', conf.duration, conf.position),
+    warning: (text: string, conf = { duration: 1500, position: 'top-1/3' }) =>
+      show(text, 'warning', conf.duration, conf.position),
+    error: (text: string, conf = { duration: 1500, position: 'top-1/3' }) =>
+      show(text, 'error', conf.duration, conf.position),
+    info: (text: string, conf = { duration: 1500, position: 'top-1/3' }) =>
+      show(text, 'info', conf.duration, conf.position)
   }
 }

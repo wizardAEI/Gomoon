@@ -30,7 +30,7 @@ export default function QuestionMention(props: {
       >
         <QuestionMarkIcon
           fill={props.fill || '#869d9d'}
-          class="scale-[118%]"
+          class="scale-[118%] font-light"
           width={props.size || 14}
           height={props.size || 14}
         />
