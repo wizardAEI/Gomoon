@@ -1,7 +1,7 @@
 import ChatGptIcon from '@renderer/assets/icon/models/ChatGptIcon'
 import WenxinIcon from '@renderer/assets/icon/models/WenxinIcon'
 import { setSelectedModel, userData } from '@renderer/store/user'
-import { createMemo, createSignal, For, JSXElement, Show } from 'solid-js'
+import { createMemo, createSignal, For, JSXElement, onCleanup, onMount, Show } from 'solid-js'
 import { ModelsType } from 'src/main/model/model'
 
 export default function (props: { position: string; size?: number }) {
@@ -69,7 +69,6 @@ export default function (props: { position: string; size?: number }) {
   // 选择选项的处理函数
   const handleSelect = (option) => {
     setSelectedModel(option.value)
-    setIsOpen(false)
   }
   const label = createMemo(() => {
     return (
@@ -83,11 +82,21 @@ export default function (props: { position: string; size?: number }) {
   return (
     <div>
       <div
-        class="cursor-pointer"
-        onClick={(e) => {
-          e.stopPropagation()
-          return setIsOpen(!isOpen())
+        ref={(el) => {
+          const fn = (e) => {
+            if (e.target && el.contains(e.target)) {
+              setIsOpen((i) => !i)
+              e.stopPropagation()
+              return
+            }
+            setIsOpen(false)
+          }
+          document.addEventListener('click', fn)
+          onCleanup(() => {
+            document.removeEventListener('click', fn)
+          })
         }}
+        class="cursor-pointer"
       >
         {label()}
       </div>
