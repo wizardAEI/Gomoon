@@ -5,6 +5,7 @@ export default function (props: {
   children: JSX.Element
   position?: string
   onConfirm: () => void
+  preConfirm?: () => boolean
 }) {
   const [show, setShow] = createSignal(false)
   return (
@@ -12,7 +13,7 @@ export default function (props: {
       <Show when={show()}>
         <div
           class={
-            'shadow-center absolute flex animate-popup flex-col gap-2 overflow-visible rounded-sm bg-dark p-1 ' +
+            'shadow-center absolute flex animate-popup flex-col gap-2 overflow-visible rounded-md bg-dark-con p-1 ' +
             props.position
           }
         >
@@ -43,6 +44,10 @@ export default function (props: {
       <div
         onClick={(e) => {
           e.stopImmediatePropagation()
+          if (props.preConfirm && !props.preConfirm()) {
+            setShow(false)
+            return
+          }
           setShow(true)
         }}
       >

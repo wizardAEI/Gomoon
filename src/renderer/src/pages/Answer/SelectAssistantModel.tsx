@@ -1,3 +1,4 @@
+import EscIcon from '@renderer/assets/icon/EscIcon'
 import { assistants } from '@renderer/store/assistants'
 import { setSelectedAssistantForAns } from '@renderer/store/user'
 import { For, onCleanup, onMount } from 'solid-js'
@@ -42,7 +43,7 @@ const SelectKey = {
   )
 }
 
-export default function (props: { onConfirm: () => void }) {
+export default function (props: { onConfirm: () => void; onCancel: () => void }) {
   onMount(() => {
     async function select(e: KeyboardEvent) {
       const a = assistants.filter((a) => a.type === 'ans')
@@ -68,6 +69,9 @@ export default function (props: { onConfirm: () => void }) {
         await setSelectedAssistantForAns(a[4].id)
         props.onConfirm()
       }
+      if (e.code === 'Escape') {
+        props.onCancel()
+      }
     }
     window.addEventListener('keydown', select)
     onCleanup(() => window.removeEventListener('keydown', select))
@@ -89,6 +93,13 @@ export default function (props: { onConfirm: () => void }) {
             </div>
           )}
         </For>
+        <div
+          onClick={props.onCancel}
+          class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-solid border-transparent bg-dark px-4 py-1 hover:border-active"
+        >
+          <span>退出 (ESC)</span>
+          <EscIcon width={25} height={16} class="text-active" />
+        </div>
       </div>
     </div>
   )

@@ -30,7 +30,10 @@ module.exports = {
         text1: '#d8e3e7', // 云峰白
         text2: '#baccd9', // 云水蓝
         'text-dark': '#151b26', // 深色
-        'white/70': '#ffffff70' // 白色透明度70%
+        'white/70': '#ffffff70', // 白色透明度70%
+        success: '#12c569', // 绿色
+        error: '#DF919C', // 红色
+        warning: '#f59c13' // 黄色
       },
       keyframes: {
         click: {
@@ -57,7 +60,7 @@ module.exports = {
       },
       boxShadow: {
         green: '20px 20px 60px #93b58a, -20px -20px 60px #c7f5ba',
-        center: '2px 8px 37px rgba(0, 0, 0, 0.56)'
+        center: '2px 2px 20px #51939330'
       }
     }
   },

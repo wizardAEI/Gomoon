@@ -12,6 +12,7 @@ import Assistants from './pages/Assistants'
 import History from './pages/History'
 import { loadAssistants } from './store/assistants'
 import { loadHistories } from './store/history'
+import { ToastProvider } from './components/ui/Toast'
 
 const App = () => {
   const nav = useNavigate()
@@ -55,21 +56,24 @@ const App = () => {
   })
 
   return (
-    <div class="flex h-screen flex-col overflow-hidden bg-home">
-      <TopBar />
-      <div class="flex-1 overflow-auto">
-        <Show when={settingStore.isLoaded} fallback={<Loading />}>
-          <Routes>
-            <Route path="/" component={Chat} />
-            <Route path="/answer" component={Answer} />
-            <Route path="/setting" component={Setting} />
-            <Route path="/assistants" component={Assistants} />
-            <Route path="/history" component={History} />
-            <Route path="*" component={Chat} />
-          </Routes>
-        </Show>
+    // FEAT: UIProvider 中存储了全局的 UI 组件，如 Toast
+    <ToastProvider>
+      <div class="flex h-screen flex-col overflow-hidden bg-home">
+        <TopBar />
+        <div class="flex-1 overflow-auto">
+          <Show when={settingStore.isLoaded} fallback={<Loading />}>
+            <Routes>
+              <Route path="/" component={Chat} />
+              <Route path="/answer" component={Answer} />
+              <Route path="/setting" component={Setting} />
+              <Route path="/assistants" component={Assistants} />
+              <Route path="/history" component={History} />
+              <Route path="*" component={Chat} />
+            </Routes>
+          </Show>
+        </div>
       </div>
-    </div>
+    </ToastProvider>
   )
 }
 

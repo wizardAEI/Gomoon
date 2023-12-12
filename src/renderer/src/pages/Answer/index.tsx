@@ -1,17 +1,15 @@
 import Input from '@renderer/components/MainInput'
 import Message from '@renderer/components/Message'
 import { genAns, answerStore, clearAns } from '../../store/answer'
-import { For, Show, createSignal, onCleanup, onMount } from 'solid-js'
+import { Show, createSignal, onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
-import { useNavigate, useSearchParams } from '@solidjs/router'
-import { assistants, getCurrentAssistantForAnswer } from '@renderer/store/assistants'
+import { useSearchParams } from '@solidjs/router'
+import { getCurrentAssistantForAnswer } from '@renderer/store/assistants'
 import SystemHeader from '@renderer/components/SystemHeader'
 import SelectAssistantModal from './SelectAssistantModel'
-import { setSelectedAssistantForAns } from '@renderer/store/user'
 
 export default function Answer() {
   const [text, setText] = createSignal('')
-  const nav = useNavigate()
   const [showModal, setShowModal] = createSignal(false)
   const [introduce, setIntroduce] = createSignal('每')
   const [query, setQuery] = useSearchParams()
@@ -54,6 +52,9 @@ export default function Answer() {
             genAns(text())
             setText('')
           }}
+          onCancel={() => {
+            setShowModal(false)
+          }}
         />
       </Show>
       <div class="flex w-full select-none flex-col items-center justify-center gap-2 px-10 pt-8">
@@ -65,33 +66,6 @@ export default function Answer() {
         fallback={
           <>
             <SystemHeader type="ans" />
-            <div class=" h-screen w-screen select-none">
-              <div class="mt-10 flex flex-wrap justify-center gap-2 px-3">
-                <For each={assistants.filter((a) => a.type === 'ans').slice(0, 5)}>
-                  {(a) => (
-                    <div
-                      onClick={async () => {
-                        await setSelectedAssistantForAns(a.id)
-                      }}
-                      class={
-                        'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-solid bg-dark px-4 py-1 hover:border-active ' +
-                        (a.id === getCurrentAssistantForAnswer().id
-                          ? 'border-active'
-                          : 'border-transparent')
-                      }
-                    >
-                      <span class="text-text1 ">{a.name}</span>
-                    </div>
-                  )}
-                </For>
-                <div
-                  class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-solid border-transparent bg-dark px-4 py-1 hover:border-active "
-                  onClick={() => nav('/assistants?type=ans')}
-                >
-                  <span class="text-text1 ">更多助手...</span>
-                </div>
-              </div>
-            </div>
           </>
         }
       >

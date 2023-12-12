@@ -21,6 +21,7 @@ import { useNavigate, useSearchParams } from '@solidjs/router'
 import { For, Show, onCleanup, onMount } from 'solid-js'
 import EditBox from './EditBox'
 import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
+import { useToast } from '@renderer/components/ui/Toast'
 
 const map = {
   ans: '问答',
@@ -29,6 +30,7 @@ const map = {
 
 export default function () {
   const [{ type }, _] = useSearchParams()
+  const toast = useToast()
   const nav = useNavigate()
   function createAssistant() {
     createNewAssistant(type === 'chat' ? type : 'ans')
@@ -135,6 +137,15 @@ export default function () {
                     label="确认删除"
                     position="right-[-10px] top-[-42px]"
                     onConfirm={() => deleteAssistant(a.id)}
+                    preConfirm={() => {
+                      const canDel =
+                        a.id !== getCurrentAssistantForAnswer()?.id &&
+                        a.id !== getCurrentAssistantForChat()?.id
+                      if (!canDel) {
+                        toast.error('无法删除正在使用中的助手')
+                      }
+                      return canDel
+                    }}
                   >
                     <CrossMark
                       height={20}

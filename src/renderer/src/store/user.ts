@@ -33,6 +33,7 @@ export async function setSelectedAssistantForAns(assistantID: string) {
 export async function setSelectedAssistantForChat(assistantID: string) {
   return window.api.setSelectedAssistantForChat(assistantID).then(() => {
     setUserData('selectedAssistantForChat', assistantID)
+    useAssistant(assistantID)
   })
 }
 
