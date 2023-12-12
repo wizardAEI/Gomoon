@@ -51,6 +51,30 @@ export function setModels(models: SettingModel['models']) {
   configDB.write()
 }
 
+export function setCanMultiCopy(canMultiCopy: SettingModel['canMultiCopy']) {
+  configDB.data = {
+    ...configDB.data,
+    canMultiCopy
+  }
+  configDB.write()
+}
+
+export function setCanQuicklyWakeUp(canQuicklyWakeUp: SettingModel['canQuicklyWakeUp']) {
+  configDB.data = {
+    ...configDB.data,
+    canQuicklyWakeUp
+  }
+  configDB.write()
+}
+
+export function setSendWithCmdOrCtrl(sendWithCmdOrCtrl: SettingModel['sendWithCmdOrCtrl']) {
+  configDB.data = {
+    ...configDB.data,
+    sendWithCmdOrCtrl
+  }
+  configDB.write()
+}
+
 /**
  * FEAT: 用户数据相关
  */

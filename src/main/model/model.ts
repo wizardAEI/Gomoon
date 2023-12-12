@@ -1,7 +1,8 @@
 export interface SettingModel {
   isOnTop: boolean
   canMultiCopy: boolean
-  canQuickWakeUp: boolean
+  canQuicklyWakeUp: string
+  sendWithCmdOrCtrl: boolean
   models: {
     OpenAI: {
       apiKey: string

@@ -33,6 +33,9 @@ export const api = {
   setModels: (models: SettingModel['models']) => ipcRenderer.invoke('set-models', models),
   getEventHandlerStatus: (): Promise<typeof handlerStatus> =>
     ipcRenderer.invoke('get-event-handler-status'),
+  setCanMultiCopy: () => ipcRenderer.invoke('set-can-multi-copy'),
+  setCanQuicklyWakeUp: () => ipcRenderer.invoke('set-can-quickly-wake-up'),
+  setSendWithCmdOrCtrl: () => ipcRenderer.invoke('set-send-with-cmd-or-ctrl'),
 
   // 用户信息相关
   getUserData: (): Promise<UserData> => ipcRenderer.invoke('get-user-data'),

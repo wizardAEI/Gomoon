@@ -10,8 +10,11 @@ import {
   getHistories,
   getUserData,
   loadUserConfig,
+  setCanMultiCopy,
+  setCanQuicklyWakeUp,
   setIsOnTop,
   setModels,
+  setSendWithCmdOrCtrl,
   updateAssistant,
   updateUserData,
   useAssistant
@@ -24,7 +27,7 @@ export function initAppEventsHandler() {
   /**
    * FEAT: 按键监听
    */
-  globalShortcut.register('CmdOrCtrl+B', () => {
+  globalShortcut.register('CmdOrCtrl+G', () => {
     if (mainWindow?.isVisible()) {
       mainWindow?.hide()
       return
@@ -81,6 +84,9 @@ export function initAppEventsHandler() {
   })
   ipcMain.handle('set-models', (_, models: any) => setModels(models))
   ipcMain.handle('get-event-handler-status', () => handlerStatus)
+  ipcMain.handle('set-can-multi-copy', (_, canMultiCopy: boolean) => setCanMultiCopy(canMultiCopy))
+  ipcMain.handle('set-can-quickly-wake-up', (_, keys: string) => setCanQuicklyWakeUp(keys))
+  ipcMain.handle('set-send-with-cmd-or-ctrl', (_, b: boolean) => setSendWithCmdOrCtrl(b))
 
   /**
    * FEAT: 用户相关

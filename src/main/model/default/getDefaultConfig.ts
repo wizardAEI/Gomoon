@@ -14,6 +14,9 @@ export function getDefaultConfig(): SettingModel {
         secretKey: '',
         temperature: 0.7
       }
-    }
+    },
+    canMultiCopy: true,
+    canQuicklyWakeUp: 'CmdOrCtrl+G',
+    sendWithCmdOrCtrl: true
   }
 }

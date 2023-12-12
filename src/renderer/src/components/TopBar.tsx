@@ -37,7 +37,7 @@ export default function TopBar() {
         <div
           class="cursor-pointer"
           onclick={() => {
-            nav('/answer?init=true')
+            nav('/answer')
           }}
         >
           <AnswerIcon

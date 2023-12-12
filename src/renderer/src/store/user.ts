@@ -24,17 +24,15 @@ export function setSelectedModel(model: ModelsType) {
 }
 
 export async function setSelectedAssistantForAns(assistantID: string) {
-  return window.api.setSelectedAssistantForAns(assistantID).then(() => {
-    setUserData('selectedAssistantForAns', assistantID)
-    useAssistant(assistantID)
-  })
+  setUserData('selectedAssistantForAns', assistantID)
+  await useAssistant(assistantID)
+  return window.api.setSelectedAssistantForAns(assistantID)
 }
 
 export async function setSelectedAssistantForChat(assistantID: string) {
-  return window.api.setSelectedAssistantForChat(assistantID).then(() => {
-    setUserData('selectedAssistantForChat', assistantID)
-    useAssistant(assistantID)
-  })
+  setUserData('selectedAssistantForChat', assistantID)
+  await useAssistant(assistantID)
+  return window.api.setSelectedAssistantForChat(assistantID)
 }
 
 export { userData }

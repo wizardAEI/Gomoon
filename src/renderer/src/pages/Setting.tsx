@@ -56,10 +56,26 @@ export default function Setting() {
         </Expand>
       </Card>
       <Card title="应用设置">
-        <div>
+        <div class="flex flex-col gap-2">
           <Switch
             label="是否将应用置顶"
-            hint="将应用置顶后也可以通过 cmd/ctrl + d 快速隐藏和唤起"
+            hint="置顶后也可以通过唤起快捷键隐藏和唤起"
+            checked={settingStore.isOnTop}
+            onCheckedChange={(checked) => setIsOnTop(checked)}
+          />
+          <Switch
+            label="双击复制进行问答"
+            hint="通过快速连按复制唤起 Gomoon 并问答（更改后重启生效）"
+            checked={settingStore.isOnTop}
+            onCheckedChange={(checked) => setIsOnTop(checked)}
+          />
+          <div class="item-center flex justify-between gap-3">
+            <span>唤起应用快捷键</span>
+            <input class="max-w-[100px] px-2 py-[1px] text-center" value="cmd + b" />
+          </div>
+          <Switch
+            label="使用 Cmd/Ctrl+Enter 发起对话"
+            hint="关闭后使用 Enter 发起对话"
             checked={settingStore.isOnTop}
             onCheckedChange={(checked) => setIsOnTop(checked)}
           />

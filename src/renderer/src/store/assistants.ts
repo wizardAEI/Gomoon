@@ -81,7 +81,7 @@ export async function deleteAssistant(id: string) {
 
 export async function useAssistant(id: string) {
   await window.api.useAssistant(id)
-  loadAssistants()
+  await loadAssistants()
 }
 
 export const getCurrentAssistantForAnswer = createMemo<AssistantModel>(() => {

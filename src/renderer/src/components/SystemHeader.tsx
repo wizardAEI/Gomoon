@@ -5,14 +5,22 @@ import {
   getCurrentAssistantForAnswer,
   getCurrentAssistantForChat
 } from '@renderer/store/assistants'
-import { For } from 'solid-js'
+import { For, createEffect, createMemo, createSignal, on, onCleanup, onMount } from 'solid-js'
 import { setSelectedAssistantForAns, setSelectedAssistantForChat } from '@renderer/store/user'
+import { AssistantModel } from 'src/main/model/model'
 
 export default function (props: { type: 'chat' | 'ans' }) {
   const nav = useNavigate()
   const currentA = props.type === 'ans' ? getCurrentAssistantForAnswer : getCurrentAssistantForChat
   const setSelected =
     props.type === 'ans' ? setSelectedAssistantForAns : setSelectedAssistantForChat
+  const list = createMemo(() => assistants.filter((a) => a.type === props.type).slice(0, 5))
+  const [freezeList, setFreezeList] = createSignal<AssistantModel[]>([])
+  createEffect(
+    on(list, () => {
+      !freezeList().length && setFreezeList([...list()])
+    })
+  )
   return (
     <div class={'relative ' + (props.type === 'ans' ? 'mt-4' : 'mt-8')}>
       <div class="relative m-4 flex items-center justify-center gap-2 rounded-2xl bg-dark p-4">
@@ -22,7 +30,7 @@ export default function (props: { type: 'chat' | 'ans' }) {
         </div>
       </div>
       <div class="mt-10 flex flex-wrap justify-center gap-2 px-3">
-        <For each={assistants.filter((a) => a.type === props.type).slice(0, 5)}>
+        <For each={freezeList()}>
           {(a) => (
             <div
               onClick={async () => {
