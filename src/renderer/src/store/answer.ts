@@ -2,6 +2,7 @@ import { ansAssistant } from '@renderer/lib/ai/langchain'
 import { createStore, produce } from 'solid-js/store'
 import { ulid } from 'ulid'
 import { addHistory } from './history'
+import { ErrorDict } from '@renderer/lib/constant'
 
 const [answerStore, setAnswerStore] = createStore({
   answer: '',
@@ -29,11 +30,7 @@ export function genAns(q: string) {
       },
       errorCallback(err) {
         if (ID !== ansID) return
-        if ((err = 'Request timed out.')) {
-          setAnswerStore('answer', (ans) => ans + '\n\n回答超时，请重试')
-        } else {
-          setAnswerStore('answer', (ans) => ans + `\n\n出问题了: ${err}`)
-        }
+        setAnswerStore('answer', (ans) => ans + ErrorDict(err))
         setGeneratingStatus(false)
       },
       pauseSignal: controller.signal
