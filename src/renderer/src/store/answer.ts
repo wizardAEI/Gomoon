@@ -17,25 +17,21 @@ export function genAns(q: string) {
   setGeneratingStatus(true)
   const ID = ulid()
   ansID = ID
-  ansAssistant(
-    {
-      text: q
+  ansAssistant({
+    question: q,
+    newTokenCallback(content) {
+      ID === ansID && setAnswerStore('answer', (ans) => ans + content)
     },
-    {
-      newTokenCallback(content) {
-        ID === ansID && setAnswerStore('answer', (ans) => ans + content)
-      },
-      endCallback() {
-        ID === ansID && setGeneratingStatus(false)
-      },
-      errorCallback(err) {
-        if (ID !== ansID) return
-        setAnswerStore('answer', (ans) => ans + ErrorDict(err))
-        setGeneratingStatus(false)
-      },
-      pauseSignal: controller.signal
-    }
-  )
+    endCallback() {
+      ID === ansID && setGeneratingStatus(false)
+    },
+    errorCallback(err) {
+      if (ID !== ansID) return
+      setAnswerStore('answer', (ans) => ans + ErrorDict(err))
+      setGeneratingStatus(false)
+    },
+    pauseSignal: controller.signal
+  })
 }
 export function stopGenAns() {
   controller?.abort()

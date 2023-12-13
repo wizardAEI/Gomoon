@@ -3,6 +3,7 @@ import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { ChatPromptTemplate } from 'langchain/prompts'
 import { AIMessage, HumanMessage, SystemMessage } from 'langchain/schema'
 import { models } from './models'
+import { LLMChain } from 'langchain/chains'
 import { userData } from '@renderer/store/user'
 import {
   getCurrentAssistantForAnswer,
@@ -23,9 +24,6 @@ const createModel = (chat: ChatBaiduWenxin | ChatOpenAI) => {
       msg: {
         systemTemplate: string
         humanTemplate: string
-        args: {
-          [key: string]: string
-        }
       },
       option: {
         newTokenCallback: (content: string) => void
@@ -34,29 +32,37 @@ const createModel = (chat: ChatBaiduWenxin | ChatOpenAI) => {
         pauseSignal: AbortSignal
       }
     ) {
-      const { args, systemTemplate, humanTemplate } = msg
-      const prompt = await ChatPromptTemplate.fromMessages([
-        ['system', systemTemplate],
-        ['human', humanTemplate || '...']
-      ]).formatMessages(args)
-      return chat.call(prompt, {
-        callbacks: [
-          {
-            handleLLMNewToken(token) {
-              option.newTokenCallback(token)
-            },
-            handleLLMEnd() {
-              option.endCallback?.()
-            },
-            handleLLMError(err, runId, parentRunId, tags) {
-              option.errorCallback?.(err)
-              console.error('answer error: ', err, runId, parentRunId, tags)
-            }
-          }
-        ],
-        signal: option.pauseSignal,
-        timeout: 1000 * 10
+      const { systemTemplate, humanTemplate } = msg
+      const prompt = ChatPromptTemplate.fromMessages([
+        new SystemMessage(systemTemplate),
+        new HumanMessage(humanTemplate)
+      ])
+      const chain = new LLMChain({
+        llm: chat,
+        prompt
       })
+      return chain.call(
+        {
+          signal: option.pauseSignal,
+          timeout: 1000 * 60
+        },
+        {
+          callbacks: [
+            {
+              handleLLMNewToken(token) {
+                option.newTokenCallback(token)
+              },
+              handleLLMEnd() {
+                option.endCallback?.()
+              },
+              handleLLMError(err, runId, parentRunId, tags) {
+                option.errorCallback?.(err)
+                console.error('answer error: ', err, runId, parentRunId, tags)
+              }
+            }
+          ]
+        }
+      )
     },
     async chat(
       msgs: {
@@ -99,26 +105,20 @@ const createModel = (chat: ChatBaiduWenxin | ChatOpenAI) => {
 /**
  * FEAT: Answer Assistant
  */
-export const ansAssistant = async (
-  args: {
-    [key: string]: string
-  },
-  option: {
-    newTokenCallback: (content: string) => void
-    endCallback?: () => void
-    errorCallback?: (err: any) => void
-    pauseSignal: AbortSignal
-  }
-) => {
+export const ansAssistant = async (option: {
+  question: string
+  newTokenCallback: (content: string) => void
+  endCallback?: () => void
+  errorCallback?: (err: any) => void
+  pauseSignal: AbortSignal
+}) => {
   const a = getCurrentAssistantForAnswer()
   const preContent = a.type === 'ans' ? a.preContent ?? '' : ''
   const postContent = a.type === 'ans' ? a.postContent ?? '' : ''
   return createModel(models[userData.selectedModel]).answer(
     {
       systemTemplate: a.prompt,
-      // TODO: 拓展问答助手功能，可以自定义模板
-      humanTemplate: `${preContent}{text}${postContent}`,
-      args
+      humanTemplate: `${preContent}${option.question}${postContent}`
     },
     option
   )
