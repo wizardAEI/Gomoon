@@ -78,7 +78,7 @@ export default function Setting() {
             onCheckedChange={setCanMultiCopy}
           />
           <div class="item-center flex justify-between gap-3">
-            <span>唤起应用快捷键</span>
+            <span class="h-6">唤起应用快捷键</span>
             <input
               class="max-w-[112px] px-2 py-[1px] text-center"
               value={settingStore.quicklyWakeUpKeys}
