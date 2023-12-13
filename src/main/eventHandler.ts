@@ -1,6 +1,4 @@
-import { spawn } from 'child_process'
-import { BrowserWindow, app, clipboard, globalShortcut, ipcMain } from 'electron'
-import { join } from 'path'
+import { BrowserWindow, app, ipcMain } from 'electron'
 import {
   addHistory,
   createAssistant,
@@ -11,7 +9,7 @@ import {
   getUserData,
   loadUserConfig,
   setCanMultiCopy,
-  setCanQuicklyWakeUp,
+  setQuicklyWakeUpKeys,
   setIsOnTop,
   setModels,
   setSendWithCmdOrCtrl,
@@ -19,57 +17,10 @@ import {
   updateUserData,
   useAssistant
 } from './model/index'
-import { mainWindow } from '.'
 import { CreateAssistantModel, HistoryModel, ModelsType, UpdateAssistantModel } from './model/model'
-import { getResourcesPath } from './lib'
-export let handlerStatus = {}
-export function initAppEventsHandler() {
-  /**
-   * FEAT: 按键监听
-   */
-  globalShortcut.register('CmdOrCtrl+G', () => {
-    if (mainWindow?.isVisible()) {
-      mainWindow?.hide()
-      return
-    }
-    mainWindow?.webContents.send('show-window')
-    mainWindow?.show()
-  })
-  // macos TODO: 测试不同版本的macos
-  if (process.platform === 'darwin') {
-    const eventTracker = spawn(getResourcesPath('eventTracker'))
-    eventTracker.stdout.on('data', (data) => {
-      if (`${data}` === 'multi-copy') {
-        const copyText = clipboard.readText()
-        mainWindow?.webContents.send('multi-copy', copyText)
-        mainWindow?.webContents.send('show-window')
-        mainWindow?.show()
-      }
-      // 应用程序退出时，关闭子进程
-      app.on('will-quit', () => {
-        eventTracker.kill()
-      })
-    })
-  } else {
-    // windows TODO: 未测试
-    const eventTracker = app.isPackaged
-      ? spawn(join(process.resourcesPath, 'app.asar.unpacked/resources/eventTracker'))
-      : spawn(join(__dirname, '../../resources/eventTracker'))
-    eventTracker.stdout.on('data', (data) => {
-      if (`${data}` === 'multi-copy') {
-        const copyText = clipboard.readText()
-        mainWindow?.webContents.send('multi-copy', copyText)
-        mainWindow?.webContents.send('show-window')
-        mainWindow?.show()
-        mainWindow?.focus()
-      }
-    })
-    // 应用程序退出时，关闭子进程
-    app.on('will-quit', () => {
-      eventTracker.kill()
-    })
-  }
+import { setQuicklyWakeUp } from './window'
 
+export function initAppEventsHandler() {
   /**
    * FEAT: 配置相关(特指配置页的信息)
    */
@@ -83,9 +34,16 @@ export function initAppEventsHandler() {
     return mainWindow!.isAlwaysOnTop()
   })
   ipcMain.handle('set-models', (_, models: any) => setModels(models))
-  ipcMain.handle('get-event-handler-status', () => handlerStatus)
-  ipcMain.handle('set-can-multi-copy', (_, canMultiCopy: boolean) => setCanMultiCopy(canMultiCopy))
-  ipcMain.handle('set-can-quickly-wake-up', (_, keys: string) => setCanQuicklyWakeUp(keys))
+  ipcMain.handle('set-can-multi-copy', (_, canMultiCopy: boolean) => {
+    console.log('set-can-multi-copy', canMultiCopy)
+    setCanMultiCopy(canMultiCopy)
+  })
+
+  ipcMain.handle('set-quickly-wake-up-keys', (_, keys: string) => {
+    console.log('set-quickly-wake-up-keys', keys)
+    setQuicklyWakeUpKeys(keys)
+    setQuicklyWakeUp(keys)
+  })
   ipcMain.handle('set-send-with-cmd-or-ctrl', (_, b: boolean) => setSendWithCmdOrCtrl(b))
 
   /**
@@ -123,7 +81,5 @@ export function initAppEventsHandler() {
   ipcMain.handle('add-history', (_, history: HistoryModel) => addHistory(history))
   ipcMain.handle('delete-history', (_, id: string) => deleteHistory(id))
 
-  app.on('browser-window-created', () => {
-    mainWindow?.webContents.send('get-event-handler-status', handlerStatus)
-  })
+  app.on('browser-window-created', () => {})
 }

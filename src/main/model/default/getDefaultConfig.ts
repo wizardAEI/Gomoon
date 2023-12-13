@@ -16,7 +16,7 @@ export function getDefaultConfig(): SettingModel {
       }
     },
     canMultiCopy: true,
-    canQuicklyWakeUp: 'CmdOrCtrl+G',
+    quicklyWakeUpKeys: 'CmdOrCtrl+G',
     sendWithCmdOrCtrl: true
   }
 }

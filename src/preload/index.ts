@@ -9,7 +9,6 @@ import {
   UpdateAssistantModel,
   UserData
 } from '../main/model/model'
-import { handlerStatus } from '../main/eventHandler'
 
 // Custom APIs for renderer
 export const api = {
@@ -31,11 +30,9 @@ export const api = {
   loadConfig: () => ipcRenderer.invoke('load-config'),
   setConfig: () => ipcRenderer.invoke('set-config'),
   setModels: (models: SettingModel['models']) => ipcRenderer.invoke('set-models', models),
-  getEventHandlerStatus: (): Promise<typeof handlerStatus> =>
-    ipcRenderer.invoke('get-event-handler-status'),
-  setCanMultiCopy: () => ipcRenderer.invoke('set-can-multi-copy'),
-  setCanQuicklyWakeUp: () => ipcRenderer.invoke('set-can-quickly-wake-up'),
-  setSendWithCmdOrCtrl: () => ipcRenderer.invoke('set-send-with-cmd-or-ctrl'),
+  setCanMultiCopy: (b: boolean) => ipcRenderer.invoke('set-can-multi-copy', b),
+  setQuicklyWakeUpKeys: (keys: string) => ipcRenderer.invoke('set-quickly-wake-up-keys', keys),
+  setSendWithCmdOrCtrl: (b: boolean) => ipcRenderer.invoke('set-send-with-cmd-or-ctrl', b),
 
   // 用户信息相关
   getUserData: (): Promise<UserData> => ipcRenderer.invoke('get-user-data'),

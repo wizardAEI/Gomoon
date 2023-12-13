@@ -2,7 +2,7 @@ import { Route, Routes, useNavigate } from '@solidjs/router'
 import TopBar from './components/TopBar'
 import Chat from './pages/Chat'
 import Answer from './pages/Answer'
-import { ErrorBoundary, Show, onCleanup, onMount } from 'solid-js'
+import { Show, onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
 import Setting from './pages/Setting'
 import { loadConfig, settingStore } from './store/setting'
@@ -17,11 +17,6 @@ import { ToastProvider } from './components/ui/Toast'
 const App = () => {
   const nav = useNavigate()
   onMount(() => {
-    // FEAT: 事件监听状态
-    window.api.getEventHandlerStatus().then((r) => {
-      console.info('事件监听状态', r)
-    })
-
     // FEAT: 获取配置信息
     loadConfig()
 

@@ -59,10 +59,10 @@ export function setCanMultiCopy(canMultiCopy: SettingModel['canMultiCopy']) {
   configDB.write()
 }
 
-export function setCanQuicklyWakeUp(canQuicklyWakeUp: SettingModel['canQuicklyWakeUp']) {
+export function setQuicklyWakeUpKeys(quicklyWakeUpKeys: SettingModel['quicklyWakeUpKeys']) {
   configDB.data = {
     ...configDB.data,
-    canQuicklyWakeUp
+    quicklyWakeUpKeys
   }
   configDB.write()
 }
