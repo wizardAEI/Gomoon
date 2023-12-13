@@ -6,8 +6,8 @@ import { createWindow } from './window'
 import { quitApp } from './lib'
 
 // dock
-app.dock.setIcon(icon)
-app.dock.setMenu(Menu.buildFromTemplate([]))
+app.dock?.setIcon(icon)
+app.dock?.setMenu(Menu.buildFromTemplate([]))
 
 app.whenReady().then(() => {
   // Set app user model id for windows

@@ -29,8 +29,8 @@ const newERNIEModal = (
   new ChatBaiduWenxin({
     streaming: true,
     modelName,
-    baiduApiKey: config.apiKey,
-    baiduSecretKey: config.secretKey,
+    baiduApiKey: config.apiKey || 'api-key',
+    baiduSecretKey: config.secretKey || 'secret-key',
     temperature: config.temperature
   })
 
@@ -41,7 +41,7 @@ const newGPTModal = (
   new ChatOpenAI({
     streaming: true,
     modelName,
-    openAIApiKey: config.apiKey,
+    openAIApiKey: config.apiKey || 'api-key',
     temperature: config.temperature,
     configuration: {
       baseURL: config.baseURL

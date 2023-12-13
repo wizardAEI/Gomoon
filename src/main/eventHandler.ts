@@ -23,7 +23,7 @@ import {
   UpdateAssistantModel,
   UserDataModel
 } from './model/model'
-import { setQuicklyWakeUp } from './window'
+import { hideWindow, setQuicklyWakeUp } from './window'
 
 export function initAppEventsHandler() {
   /**
@@ -73,5 +73,8 @@ export function initAppEventsHandler() {
   ipcMain.handle('add-history', (_, history: HistoryModel) => addHistory(history))
   ipcMain.handle('delete-history', (_, id: string) => deleteHistory(id))
 
+  // 其他
   app.on('browser-window-created', () => {})
+  ipcMain.handle('hide-window', () => hideWindow())
+
 }

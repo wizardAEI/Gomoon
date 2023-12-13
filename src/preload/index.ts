@@ -4,7 +4,6 @@ import {
   AssistantModel,
   CreateAssistantModel,
   HistoryModel,
-  ModelsType,
   SettingModel,
   UpdateAssistantModel,
   UserDataModel
@@ -24,6 +23,7 @@ export const api = {
       ipcRenderer.removeListener('show-window', callback)
     }
   },
+  hideWindow: () => ipcRenderer.invoke('hide-window'),
   setIsOnTop: (isOnTop: boolean) => ipcRenderer.invoke('set-is-on-top', isOnTop),
 
   // 配置相关
