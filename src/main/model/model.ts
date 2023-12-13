@@ -19,11 +19,15 @@ export interface SettingModel {
 
 export type ModelsType = 'ERNIE3' | 'ERNIE4' | 'GPT3' | 'GPT4'
 
-export interface UserData {
+export interface UserDataModel {
   firstTime: boolean
   selectedModel: ModelsType
   selectedAssistantForChat: string
   selectedAssistantForAns: string
+  firstTimeFor: {
+    modelSelect?: boolean
+    assistantSelect?: boolean
+  }
 }
 
 export type AssistantType = 'chat' | 'answer'

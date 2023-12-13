@@ -17,7 +17,12 @@ import {
   updateUserData,
   useAssistant
 } from './model/index'
-import { CreateAssistantModel, HistoryModel, ModelsType, UpdateAssistantModel } from './model/model'
+import {
+  CreateAssistantModel,
+  HistoryModel,
+  UpdateAssistantModel,
+  UserDataModel
+} from './model/model'
 import { setQuicklyWakeUp } from './window'
 
 export function initAppEventsHandler() {
@@ -49,20 +54,7 @@ export function initAppEventsHandler() {
   /**
    * FEAT: 用户相关
    */
-  ipcMain.handle('have-used', () => updateUserData({ firstTime: false }))
-  ipcMain.handle('set-selected-model', (_, selectedModel: ModelsType) =>
-    updateUserData({ selectedModel })
-  )
-  ipcMain.handle('set-selected-assistant-for-chat', (_, id: string) =>
-    updateUserData({
-      selectedAssistantForChat: id
-    })
-  )
-  ipcMain.handle('set-selected-assistant-for-ans', (_, id: string) =>
-    updateUserData({
-      selectedAssistantForAns: id
-    })
-  )
+  ipcMain.handle('set-user-data', (e, data: Partial<UserDataModel>) => updateUserData(data))
   ipcMain.handle('get-user-data', () => getUserData())
 
   /**

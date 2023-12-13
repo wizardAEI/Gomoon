@@ -1,8 +1,8 @@
-import { UserData } from '../model'
+import { UserDataModel } from '../model'
 import { readFileSync } from 'fs'
 import { getResourcesPath } from '../../lib'
 
-export function getDefaultUserData(): UserData {
+export function getDefaultUserData(): UserDataModel {
   const a = readFileSync(getResourcesPath('assistants.json'), 'utf-8')
 
   const { selectedAssistantForAns, selectedAssistantForChat } = JSON.parse(a)
@@ -10,6 +10,10 @@ export function getDefaultUserData(): UserData {
     firstTime: true,
     selectedModel: 'GPT4',
     selectedAssistantForAns,
-    selectedAssistantForChat
+    selectedAssistantForChat,
+    firstTimeFor: {
+      modelSelect: true,
+      assistantSelect: true
+    }
   }
 }

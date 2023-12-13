@@ -10,6 +10,7 @@ import MsgPopup, { MsgPopupByUser, Pause, WithDrawal } from './Popup'
 import { ansStatus } from '@renderer/store/answer'
 import ModelSelect from './ModelSelect'
 import { useNavigate } from '@solidjs/router'
+import { hasFirstTimeFor, userData } from '@renderer/store/user'
 export type MsgTypes = Roles | 'ans' | 'question'
 export default function Message(props: {
   type: MsgTypes
@@ -119,19 +120,24 @@ export default function Message(props: {
       <div class={style[props.type] + ' relative m-4 rounded-2xl p-4'}>
         <div class={mdStyle[props.type] + ' markdown break-words'} innerHTML={htmlString()} />
         <Show when={showComps()}>
-          <div class="-mb-2 -mr-1 mt-1 flex justify-end gap-1">
+          <div class="-mb-2 -mr-1 mt-1 flex justify-end gap-1 pl-32">
+            <Show when={userData.firstTimeFor.assistantSelect}>
+              <div class="absolute bottom-[10px] right-[60px] animate-bounce select-none text-[12px]">
+                点击图标可以切换助手 👉
+              </div>
+            </Show>
+
             <Show when={props.botName}>
               <div
                 onClick={() => {
+                  userData.firstTimeFor.assistantSelect && hasFirstTimeFor('assistantSelect')
                   nav(`/assistants?type=${props.type === 'ai' ? 'chat' : props.type}`)
                 }}
               >
                 <CapitalIcon size={20} content={props.botName!} />
               </div>
             </Show>
-            <ModelSelect
-              position={props.content.length > 18 || props.type === 'ans' ? 'right-1' : 'left-1'}
-            />
+            <ModelSelect position="right-1" />
           </div>
         </Show>
       </div>

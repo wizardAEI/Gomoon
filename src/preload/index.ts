@@ -7,7 +7,7 @@ import {
   ModelsType,
   SettingModel,
   UpdateAssistantModel,
-  UserData
+  UserDataModel
 } from '../main/model/model'
 
 // Custom APIs for renderer
@@ -35,14 +35,8 @@ export const api = {
   setSendWithCmdOrCtrl: (b: boolean) => ipcRenderer.invoke('set-send-with-cmd-or-ctrl', b),
 
   // 用户信息相关
-  getUserData: (): Promise<UserData> => ipcRenderer.invoke('get-user-data'),
-  setSelectedModel: (selectedModel: ModelsType) =>
-    ipcRenderer.invoke('set-selected-model', selectedModel),
-  haveUsed: () => ipcRenderer.invoke('have-used'),
-  setSelectedAssistantForChat: (assistantId: string) =>
-    ipcRenderer.invoke('set-selected-assistant-for-chat', assistantId),
-  setSelectedAssistantForAns: (assistantId: string) =>
-    ipcRenderer.invoke('set-selected-assistant-for-ans', assistantId),
+  getUserData: (): Promise<UserDataModel> => ipcRenderer.invoke('get-user-data'),
+  setUserData: (userData: Partial<UserDataModel>) => ipcRenderer.invoke('set-user-data', userData),
 
   // assistant 相关
   getAssistants: (): Promise<AssistantModel[]> => ipcRenderer.invoke('get-assistants'),

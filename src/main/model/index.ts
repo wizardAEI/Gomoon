@@ -19,6 +19,8 @@ const configDB = JSONSyncPreset(join(appDataPath, 'config.json'), getDefaultConf
 
 /**
  * FEAT: 配置相关(特指配置页的信息)
+ * 因为后续配置页的设置可能会在用户有感的情况下加载一些其他第三方或者更加底层的配置，所以这里单独抽出来，且每一个配置项都单独写一个函数
+ * 后续较轻的配置项，可以合并一个函数
  */
 export function loadUserConfig() {
   return merge(getDefaultConfig(), configDB.data)
@@ -83,10 +85,7 @@ export function getUserData() {
   return merge(getDefaultUserData(), userDataDB.data)
 }
 export function updateUserData(data: Partial<typeof userDataDB.data>) {
-  userDataDB.data = {
-    ...userDataDB.data,
-    ...data
-  }
+  userDataDB.data = merge(userDataDB.data, data)
   userDataDB.write()
 }
 

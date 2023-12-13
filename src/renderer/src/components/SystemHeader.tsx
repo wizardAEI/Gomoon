@@ -5,8 +5,13 @@ import {
   getCurrentAssistantForAnswer,
   getCurrentAssistantForChat
 } from '@renderer/store/assistants'
-import { For, createEffect, createMemo, createSignal, on, onCleanup, onMount } from 'solid-js'
-import { setSelectedAssistantForAns, setSelectedAssistantForChat } from '@renderer/store/user'
+import { For, Show, createEffect, createMemo, createSignal, on } from 'solid-js'
+import {
+  hasFirstTimeFor,
+  setSelectedAssistantForAns,
+  setSelectedAssistantForChat,
+  userData
+} from '@renderer/store/user'
 import { AssistantModel } from 'src/main/model/model'
 
 export default function (props: { type: 'chat' | 'ans' }) {
@@ -25,11 +30,22 @@ export default function (props: { type: 'chat' | 'ans' }) {
     <div class={'relative ' + (props.type === 'ans' ? 'mt-4' : 'mt-8')}>
       <div class="relative m-4 flex items-center justify-center gap-2 rounded-2xl bg-dark p-4">
         <span class="select-none">{currentA().name}</span>
-        <div class="absolute bottom-1 right-2">
+        <Show when={userData.firstTimeFor.modelSelect}>
+          <div class="absolute bottom-[6px] right-8 animate-bounce select-none text-[12px]">
+            点击图标可以切换模型 👉
+          </div>
+        </Show>
+
+        <div
+          class="absolute bottom-1 right-2"
+          onClick={() => {
+            hasFirstTimeFor('modelSelect')
+          }}
+        >
           <ModelSelect size={20} position="right-0" />
         </div>
       </div>
-      <div class="mt-10 flex flex-wrap justify-center gap-2 px-3">
+      <div class="mt-10 flex select-none flex-wrap justify-center gap-2 px-3">
         <For each={freezeList()}>
           {(a) => (
             <div
@@ -37,7 +53,7 @@ export default function (props: { type: 'chat' | 'ans' }) {
                 setSelected(a.id)
               }}
               class={
-                'flex cursor-pointer select-none flex-col items-center justify-center gap-2 rounded-md border-solid bg-dark px-4 py-1 hover:border-active ' +
+                'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-solid bg-dark px-4 py-1 hover:border-active ' +
                 (a.id === currentA().id ? 'border-active' : 'border-transparent')
               }
             >
