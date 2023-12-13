@@ -12,6 +12,8 @@ import Message from '@renderer/components/Message'
 import { For, Show, createSignal, onCleanup, onMount } from 'solid-js'
 import { ulid } from 'ulid'
 import { event } from '@renderer/lib/util'
+import { getCurrentAssistantForChat } from '@renderer/store/assistants'
+import SystemHeader from '@renderer/components/SystemHeader'
 const scrollToBottom = (el: HTMLDivElement, index: number) => {
   if (index === msgs.length - 1) {
     requestAnimationFrame(() => {
@@ -26,7 +28,6 @@ const scrollToBottom = (el: HTMLDivElement, index: number) => {
 export default function Chat() {
   const [text, setText] = createSignal('')
   const [editId, setEditId] = createSignal('')
-
   // FEAT: 记录用户点击编辑后如果没有发送，则取消编辑
   const [previousMsg, setPreviousMsg] = createSignal<{
     content: string
@@ -68,12 +69,8 @@ export default function Chat() {
   })
 
   return (
-    <div class="chat-container flex h-full flex-col overflow-auto pb-24 pt-6">
-      {msgs.length === 0 && (
-        <div class="mt-4 cursor-pointer">
-          <Message content={'前端助手'} type="system" />
-        </div>
-      )}
+    <div class="chat-container flex h-full flex-col overflow-auto pb-48 pt-6">
+      {msgs.length === 0 && <SystemHeader type="chat" />}
       <For each={msgs}>
         {(msg, index) => (
           // 这里使用三元表达式来显示消息时会有渲染不及时的问题
@@ -85,7 +82,13 @@ export default function Chat() {
                 id={msg.id}
                 class={'flex ' + (msg.role === 'human' ? 'human ml-4 justify-end' : 'ai mr-4')}
               >
-                <Message isEmpty id={msg.id} content="......" type={msg.role} botName="前端专家" />
+                <Message
+                  isEmpty
+                  id={msg.id}
+                  content="......"
+                  type={msg.role}
+                  botName={getCurrentAssistantForChat().name}
+                />
               </div>
             }
           >
@@ -95,7 +98,12 @@ export default function Chat() {
                 msg.role === 'human' ? 'human ml-4 justify-end' : 'ai mr-4'
               }`}
             >
-              <Message id={msg.id} content={msg.content} type={msg.role} botName="前端专家" />
+              <Message
+                id={msg.id}
+                content={msg.content}
+                type={msg.role}
+                botName={getCurrentAssistantForChat().name}
+              />
             </div>
           </Show>
         )}

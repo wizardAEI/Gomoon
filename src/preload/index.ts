@@ -1,7 +1,14 @@
 import { IpcRendererEvent, contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import { SettingModel, UserData } from '../main/model/model'
-import { handlerStatus } from '../main/eventHandler'
+import {
+  AssistantModel,
+  CreateAssistantModel,
+  HistoryModel,
+  ModelsType,
+  SettingModel,
+  UpdateAssistantModel,
+  UserDataModel
+} from '../main/model/model'
 
 // Custom APIs for renderer
 export const api = {
@@ -23,12 +30,27 @@ export const api = {
   loadConfig: () => ipcRenderer.invoke('load-config'),
   setConfig: () => ipcRenderer.invoke('set-config'),
   setModels: (models: SettingModel['models']) => ipcRenderer.invoke('set-models', models),
-  getEventHandlerStatus: (): Promise<typeof handlerStatus> =>
-    ipcRenderer.invoke('get-event-handler-status'),
+  setCanMultiCopy: (b: boolean) => ipcRenderer.invoke('set-can-multi-copy', b),
+  setQuicklyWakeUpKeys: (keys: string) => ipcRenderer.invoke('set-quickly-wake-up-keys', keys),
+  setSendWithCmdOrCtrl: (b: boolean) => ipcRenderer.invoke('set-send-with-cmd-or-ctrl', b),
 
   // 用户信息相关
-  getUserData: (): Promise<UserData> => ipcRenderer.invoke('get-user-data'),
-  haveUsed: () => ipcRenderer.invoke('have-used')
+  getUserData: (): Promise<UserDataModel> => ipcRenderer.invoke('get-user-data'),
+  setUserData: (userData: Partial<UserDataModel>) => ipcRenderer.invoke('set-user-data', userData),
+
+  // assistant 相关
+  getAssistants: (): Promise<AssistantModel[]> => ipcRenderer.invoke('get-assistants'),
+  updateAssistant: (assistant: UpdateAssistantModel) =>
+    ipcRenderer.invoke('update-assistant', assistant),
+  deleteAssistant: (assistantId: string) => ipcRenderer.invoke('delete-assistant', assistantId),
+  createAssistant: (assistant: CreateAssistantModel): Promise<AssistantModel> =>
+    ipcRenderer.invoke('create-assistant', assistant),
+  useAssistant: (assistantId: string) => ipcRenderer.invoke('use-assistant', assistantId),
+
+  // history 相关
+  getHistories: (): Promise<HistoryModel[]> => ipcRenderer.invoke('get-histories'),
+  addHistory: (history: HistoryModel) => ipcRenderer.invoke('add-history', history),
+  deleteHistory: (historyId: string) => ipcRenderer.invoke('delete-history', historyId)
 } as const
 
 // Use `contextBridge` APIs to expose Electron APIs to

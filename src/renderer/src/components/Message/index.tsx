@@ -3,12 +3,14 @@ import MarkdownIt from 'markdown-it'
 import { useClipboard, useEventListener } from 'solidjs-use'
 import { Show, createMemo, createSignal } from 'solid-js'
 import 'highlight.js/styles/atom-one-dark.css'
-import ChatGptIcon from '@renderer/assets/icon/models/ChatGptIcon'
 import { msgStatus, msgs } from '@renderer/store/msgs'
 import mdHighlight from 'markdown-it-highlightjs'
 import CapitalIcon from '../ui/CapitalIcon'
 import MsgPopup, { MsgPopupByUser, Pause, WithDrawal } from './Popup'
 import { ansStatus } from '@renderer/store/answer'
+import ModelSelect from './ModelSelect'
+import { useNavigate } from '@solidjs/router'
+import { hasFirstTimeFor, userData } from '@renderer/store/user'
 export type MsgTypes = Roles | 'ans' | 'question'
 export default function Message(props: {
   type: MsgTypes
@@ -25,11 +27,11 @@ export default function Message(props: {
     ans: 'bg-dark'
   }
   const mdStyle: Record<MsgTypes, string> = {
-    ai: 'text-sm dark-theme',
-    ans: 'text-sm dark-theme',
-    human: 'text-sm',
-    system: 'select-none text-center text-base dark-theme',
-    question: 'text-sm'
+    ai: 'text-sm',
+    ans: 'text-sm',
+    human: 'text-sm text-text-dark',
+    system: 'select-none text-center text-base dark-theme px-4',
+    question: 'text-sm text-text-dark'
   }
   const [source] = createSignal('')
   const { copy, copied } = useClipboard({ source, copiedDuring: 1000 })
@@ -60,12 +62,12 @@ export default function Message(props: {
       const token = tokens[idx]
       const rawCode = fence(...args)
 
-      return `<div class="relative mt-1 w-full">
+      return `<div class="relative mt-1 w-full text-text1">
       <div data-code=${encodeURIComponent(
         token.content
       )} class="cursor-pointer absolute top-1 right-1 z-10 hover:h-3 group/copy copy-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M28 10v18H10V10h18m0-2H10a2 2 0 0 0-2 2v18a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2Z" /><path fill="currentColor" d="M4 18H2V4a2 2 0 0 1 2-2h14v2H4Z" /></svg>
-          <div class="absolute -right-1 top-3 opacity-0 group-hover/copy:opacity-100 duration-300">
+          <div class="absolute -right-1 top-3 opacity-0 group-hover/copy:opacity-100 duration-300 text-text1">
             ${copied() ? 'Copied' : 'Copy'}
           </div>
       </div>
@@ -87,6 +89,9 @@ export default function Message(props: {
     }
     return false
   })
+
+  const nav = useNavigate()
+
   return (
     <div class="group relative max-w-full">
       <Show
@@ -115,12 +120,24 @@ export default function Message(props: {
       <div class={style[props.type] + ' relative m-4 rounded-2xl p-4'}>
         <div class={mdStyle[props.type] + ' markdown break-words'} innerHTML={htmlString()} />
         <Show when={showComps()}>
-          <div class="-mb-2 -mr-1 mt-1 flex justify-end gap-1">
-            <Show when={props.botName}>
-              <CapitalIcon size={20} content={props.botName!} />
+          <div class="-mb-2 -mr-1 mt-1 flex justify-end gap-1 pl-32">
+            <Show when={userData.firstTimeFor.assistantSelect}>
+              <div class="absolute bottom-[10px] right-[60px] animate-bounce select-none text-[12px]">
+                点击图标可以切换助手 👉
+              </div>
             </Show>
-            <ChatGptIcon width={20} height={20} class="cursor-pointer overflow-hidden rounded-md" />
-            {/* <WenxinIcon width={16} height={16} class="cursor-pointer overflow-hidden rounded-md" /> */}
+
+            <Show when={props.botName}>
+              <div
+                onClick={() => {
+                  userData.firstTimeFor.assistantSelect && hasFirstTimeFor('assistantSelect')
+                  nav(`/assistants?type=${props.type === 'ai' ? 'chat' : props.type}`)
+                }}
+              >
+                <CapitalIcon size={20} content={props.botName!} />
+              </div>
+            </Show>
+            <ModelSelect position="right-1" />
           </div>
         </Show>
       </div>

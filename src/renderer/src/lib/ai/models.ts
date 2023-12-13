@@ -1,9 +1,8 @@
-import { Models, settingStore } from '@renderer/store/setting'
+import { Models } from '@renderer/store/setting'
 import { ChatBaiduWenxin } from 'langchain/chat_models/baiduwenxin'
 import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { event } from '../util'
-
-export type ModelsType = 'ERNIEModal' | 'GPT3Modal' | 'GPT4Modal'
+import { ModelsType } from 'src/main/model/model'
 
 export const defaultModels = () =>
   new Object({
@@ -19,19 +18,29 @@ export const defaultModels = () =>
     }
   }) as Models
 
-const updateERNIEModal = (config: { apiKey: string; secretKey: string; temperature: number }) =>
+const newERNIEModal = (
+  config: {
+    apiKey: string
+    secretKey: string
+    temperature: number
+  },
+  modelName: string
+) =>
   new ChatBaiduWenxin({
     streaming: true,
-    modelName: 'ERNIE-Bot',
+    modelName,
     baiduApiKey: config.apiKey,
     baiduSecretKey: config.secretKey,
     temperature: config.temperature
   })
 
-const updateGPT3Modal = (config: { apiKey: string; baseURL: string; temperature: number }) =>
+const newGPTModal = (
+  config: { apiKey: string; baseURL: string; temperature: number },
+  modelName: string
+) =>
   new ChatOpenAI({
     streaming: true,
-    modelName: 'gpt-3.5-turbo-0613',
+    modelName,
     openAIApiKey: config.apiKey,
     temperature: config.temperature,
     configuration: {
@@ -39,21 +48,15 @@ const updateGPT3Modal = (config: { apiKey: string; baseURL: string; temperature:
     }
   })
 
-const updateGPT4Modal = (config: { apiKey: string; baseURL: string; temperature: number }) =>
-  new ChatOpenAI({
-    streaming: true,
-    modelName: 'gpt-4-1106-preview',
-    openAIApiKey: config.apiKey,
-    temperature: config.temperature,
-    configuration: {
-      baseURL: config.baseURL
-    }
-  })
-
-const updateModels = (model: Models) => ({
-  ERNIEModal: updateERNIEModal(model.BaiduWenxin),
-  GPT3Modal: updateGPT3Modal(model.OpenAI),
-  GPT4Modal: updateGPT4Modal(model.OpenAI)
+const updateModels = (
+  model: Models
+): {
+  [key in ModelsType]: ChatBaiduWenxin | ChatOpenAI
+} => ({
+  ERNIE3: newERNIEModal(model.BaiduWenxin, 'ERNIE-Bot'),
+  ERNIE4: newERNIEModal(model.BaiduWenxin, 'ERNIE-Bot-4'),
+  GPT3: newGPTModal(model.OpenAI, 'gpt-3.5-turbo-0613'),
+  GPT4: newGPTModal(model.OpenAI, 'gpt-4-1106-preview')
 })
 
 export const models = {

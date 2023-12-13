@@ -20,16 +20,37 @@ const [settingStore, setSettingStore] = createStore<{
   isLoaded: boolean
   models: Models
   oldModels: Models
+  canMultiCopy: boolean
+  quicklyWakeUpKeys: string
+  sendWithCmdOrCtrl: boolean
 }>({
   isOnTop: false,
   isLoaded: false,
   models: defaultModels(),
-  oldModels: defaultModels()
+  oldModels: defaultModels(),
+  canMultiCopy: false,
+  quicklyWakeUpKeys: '',
+  sendWithCmdOrCtrl: false
 })
 
 export function setIsOnTop(v: boolean) {
   setSettingStore('isOnTop', v)
   return window.api.setIsOnTop(v as boolean)
+}
+
+export function setCanMultiCopy(v: boolean) {
+  setSettingStore('canMultiCopy', v)
+  return window.api.setCanMultiCopy(v)
+}
+
+export function setQuicklyWakeUpKeys(v: string) {
+  setSettingStore('quicklyWakeUpKeys', v)
+  return window.api.setQuicklyWakeUpKeys(v)
+}
+
+export function setSendWithCmdOrCtrl(v: boolean) {
+  setSettingStore('sendWithCmdOrCtrl', v)
+  return window.api.setSendWithCmdOrCtrl(v)
 }
 
 export async function loadConfig() {
@@ -38,6 +59,9 @@ export async function loadConfig() {
   setSettingStore('isOnTop', config.isOnTop)
   setSettingStore('models', config.models)
   setSettingStore('oldModels', cloneDeep(config.models))
+  setSettingStore('canMultiCopy', config.canMultiCopy)
+  setSettingStore('quicklyWakeUpKeys', config.quicklyWakeUpKeys)
+  setSettingStore('sendWithCmdOrCtrl', config.sendWithCmdOrCtrl)
   setSettingStore('isLoaded', true)
   event.emit('updateModels', config.models)
 }
@@ -49,7 +73,6 @@ export async function setModels(models: Models) {
 export async function updateModelsToFile() {
   const config = unwrap(settingStore)
   if (isEqual(config.models, config.oldModels)) return
-  console.log('updateModelsToFile', config.models)
   await window.api.setModels(config.models)
   event.emit('updateModels', config.models)
 }

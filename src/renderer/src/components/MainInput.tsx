@@ -1,5 +1,9 @@
 import { createEffect, onCleanup, onMount } from 'solid-js'
-import { clearMsgs } from '../store/msgs'
+import { clearMsgs, msgs, restoreMsgs } from '../store/msgs'
+import { useToast } from './ui/Toast'
+import { addEventListener } from 'solid-js/web'
+import { useEventListener } from 'solidjs-use'
+import { settingStore } from '@renderer/store/setting'
 
 /**
  * FEAT: Input 组件，用于接收用户输入的文本，onMountHandler可以在外部操作 input 元素
@@ -17,6 +21,8 @@ export default function Input(props: {
 }) {
   let textAreaDiv: HTMLTextAreaElement | undefined
   let textAreaContainerDiv: HTMLDivElement | undefined
+  let cleanupForRestoreMsgs: (() => void) | undefined
+  const toast = useToast()
   function submit() {
     props.send(props.text)
     props.setText('')
@@ -64,20 +70,30 @@ export default function Input(props: {
       <textarea
         ref={textAreaDiv}
         value={props.text}
-        onkeydown={(e) => {
-          if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-            submit()
-            e.preventDefault()
-            return
+        disabled={props.disable}
+        onKeyDown={(e) => {
+          if (settingStore.sendWithCmdOrCtrl) {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+              submit()
+              e.preventDefault()
+            }
+          } else {
+            if (e.key === 'Enter' && !(e.ctrlKey || e.metaKey || e.shiftKey)) {
+              submit()
+              e.preventDefault()
+            }
           }
         }}
-        oninput={(e) => {
+        onInput={(e) => {
+          cleanupForRestoreMsgs?.()
           props.setText(e.target.value)
           e.preventDefault()
-          return false
         }}
         rows={1}
-        placeholder={props.placeholder || 'Ctrl/Cmd+Enter 发送'}
+        placeholder={
+          props.placeholder ||
+          (settingStore.sendWithCmdOrCtrl ? 'Ctrl/Cmd+Enter 发送' : 'Enter shift+Enter 发送')
+        }
         class="font-sans max-h-48 flex-1 resize-none rounded-2xl border-none bg-dark-pro px-4 py-2 text-base text-text1 caret-text2 transition-none focus:outline-none"
       />
       {props.showClearButton && !props.isGenerating && (
@@ -87,7 +103,18 @@ export default function Input(props: {
             (props.text.length ? 'w-0 px-0' : 'px-2')
           }
           onClick={() => {
+            toast.info('ctrl/cmd + z 撤销', {
+              duration: 1000,
+              position: 'top-3/4'
+            })
+            if (!msgs.length) return
             clearMsgs()
+            cleanupForRestoreMsgs = useEventListener(document, 'keydown', (e) => {
+              if ((e.key === 'z' && e.ctrlKey) || (e.key === 'z' && e.metaKey)) {
+                restoreMsgs()
+                cleanupForRestoreMsgs?.()
+              }
+            })
           }}
         >
           {!props.text.length && '清空历史'}

@@ -22,7 +22,7 @@ export default function Switch(props: {
   return (
     <label {...api().rootProps} class="group flex items-center justify-between">
       <input {...api().hiddenInputProps} />
-      <span {...api().labelProps} class="flex items-center gap-1">
+      <span {...api().labelProps} class={'flex items-center gap-1'}>
         {props.label}
         {props.hint && <QuestionMention content={props.hint} />}
       </span>
@@ -31,7 +31,7 @@ export default function Switch(props: {
           <div class="relative h-5 w-9">
             <div
               class={`bg-gray-300 absolute bottom-0 left-0 right-0 top-0 cursor-pointer rounded-full transition-colors duration-300 ease-in-out ${
-                api().isChecked ? 'bg-[#A57BEA]' : 'bg-slate-200 group-hover:bg-slate-100'
+                api().isChecked ? 'bg-[#A57BEA]' : 'group-hover:bg-gray-pro bg-gray'
               }`}
             >
               <span

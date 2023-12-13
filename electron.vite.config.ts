@@ -16,6 +16,7 @@ export default defineConfig({
             if (id.includes('lowdb')) {
               return 'lowdb'
             }
+            return undefined // let rollup handle all other node_modules
           }
         }
       }

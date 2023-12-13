@@ -10,7 +10,7 @@ export default function Expand(props: { title: string; children: JSXElement }) {
         onClick={() => setExpanded(!expanded())}
         class={` ${
           expanded() ? '' : 'hover:bg-dark-con'
-        } group/expand mx-2 my-1 flex cursor-pointer justify-between rounded-lg bg-dark px-2 py-1 duration-200`}
+        } group/expand mx-2 my-1 flex cursor-pointer justify-between rounded-lg bg-dark px-2 py-1 text-sm duration-200`}
       >
         <div>{props.title}</div>
         <Show

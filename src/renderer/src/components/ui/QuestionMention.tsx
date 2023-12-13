@@ -26,11 +26,11 @@ export default function QuestionMention(props: {
     <div class="inline-block">
       <button
         {...api().triggerProps}
-        class="flex h-full cursor-pointer items-center rounded-full border-0"
+        class="flex h-full cursor-pointer items-center rounded-full border-0 bg-transparent px-0 py-0"
       >
         <QuestionMarkIcon
           fill={props.fill || '#869d9d'}
-          class="scale-[118%]"
+          class="scale-[118%] font-light"
           width={props.size || 14}
           height={props.size || 14}
         />

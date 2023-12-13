@@ -29,13 +29,19 @@ export default function Tooltip(props: {
     <div class="inline-block">
       <button
         {...api().triggerProps}
-        class="flex cursor-pointer items-center border-0 bg-transparent"
+        class="flex cursor-pointer items-center border-0 bg-transparent px-0 py-0"
       >
         {props.label}
       </button>
       <Show when={api().isOpen}>
         <div {...api().positionerProps}>
-          <div {...api().contentProps} class="rounded-md bg-white p-1 text-xs">
+          <div
+            {...api().contentProps}
+            // style={{
+            //   color: 'black'
+            // }}
+            class="rounded-md bg-white/80 p-1 text-xs text-text-dark"
+          >
             {props.content}
           </div>
         </div>
