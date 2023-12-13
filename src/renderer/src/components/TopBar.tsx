@@ -12,12 +12,12 @@ export default function TopBar() {
   const pathname = createMemo(() => location.pathname)
 
   return (
-    <div class="flex h-6 w-full text-center text-slate-50">
+    <div class={"flex w-full text-center text-slate-50 "+ (navigator.userAgent.includes('Win') ? 'h-7 pt-1' :'h-6')}>
       <Show
      // win
      when={navigator.userAgent.includes('Win')}
      >
-     <div class="flex h-6 gap-2 px-4 pt-[5px] items-center">
+     <div class="flex gap-2 px-4 pt-[5px] items-center">
           <HistoryIcon
             width={18}
             height={18}
@@ -54,13 +54,13 @@ export default function TopBar() {
           }
         />
           <SettingIcon
-            width={18}
-            height={18}
+            width={18.5}
+            height={18.5}
             onClick={() => {
               nav('/setting')
             }}
             class={
-              'cursor-pointer ml-[-0.0625rem] duration-100 hover:text-active ' +
+              'cursor-pointer translate-y-[-0.5px] ml-[-0.0625rem] duration-100 hover:text-active ' +
               (pathname() === '/setting' ? 'text-active' : 'text-gray')
             }
           />
