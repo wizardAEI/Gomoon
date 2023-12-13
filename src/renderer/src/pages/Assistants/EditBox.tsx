@@ -26,12 +26,14 @@ export default function (props: {
         type="text"
         value={a().introduce ?? ''}
         onChange={(e) => setField('introduce', e.currentTarget.value)}
+        placeholder="可不填"
       />
       <span>助手prompt（提示）</span>
       <textarea
         rows={4}
         value={a().prompt}
         onChange={(e) => setField('prompt', e.currentTarget.value)}
+        placeholder="告诉助手要做什么吧"
       />
       <div class="flex justify-around">
         <button
