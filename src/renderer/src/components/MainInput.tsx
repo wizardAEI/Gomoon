@@ -3,6 +3,7 @@ import { clearMsgs, msgs, restoreMsgs } from '../store/msgs'
 import { useToast } from './ui/Toast'
 import { addEventListener } from 'solid-js/web'
 import { useEventListener } from 'solidjs-use'
+import { settingStore } from '@renderer/store/setting'
 
 /**
  * FEAT: Input 组件，用于接收用户输入的文本，onMountHandler可以在外部操作 input 元素
@@ -71,9 +72,16 @@ export default function Input(props: {
         value={props.text}
         disabled={props.disable}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-            submit()
-            e.preventDefault()
+          if (settingStore.sendWithCmdOrCtrl) {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+              submit()
+              e.preventDefault()
+            }
+          } else {
+            if (e.key === 'Enter' && !(e.ctrlKey || e.metaKey || e.shiftKey)) {
+              submit()
+              e.preventDefault()
+            }
           }
         }}
         onInput={(e) => {
@@ -82,7 +90,10 @@ export default function Input(props: {
           e.preventDefault()
         }}
         rows={1}
-        placeholder={props.placeholder || 'Ctrl/Cmd+Enter 发送'}
+        placeholder={
+          props.placeholder ||
+          (settingStore.sendWithCmdOrCtrl ? 'Ctrl/Cmd+Enter 发送' : 'Enter shift+Enter 发送')
+        }
         class="font-sans max-h-48 flex-1 resize-none rounded-2xl border-none bg-dark-pro px-4 py-2 text-base text-text1 caret-text2 transition-none focus:outline-none"
       />
       {props.showClearButton && !props.isGenerating && (
