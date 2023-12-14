@@ -31,7 +31,6 @@ export function hideWindow() {
   mainWindow?.hide()
 }
 
-
 export function createWindow(): void {
   const userConfig = loadUserConfig()
 
@@ -78,7 +77,7 @@ export function createWindow(): void {
 
   // FEAT: 双击复制回答
   // macos TODO: 测试不同版本的macos
- if (loadUserConfig().canMultiCopy) {
+  if (loadUserConfig().canMultiCopy) {
     // windows TODO: 未测试
     const eventTracker = app.isPackaged
       ? spawn(join(process.resourcesPath, 'app.asar.unpacked/resources/eventTracker'))

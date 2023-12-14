@@ -12,12 +12,17 @@ export default function TopBar() {
   const pathname = createMemo(() => location.pathname)
 
   return (
-    <div class={"flex w-full text-center text-slate-50 "+ (navigator.userAgent.includes('Win') ? 'h-7 pt-1' :'h-6')}>
+    <div
+      class={
+        'flex w-full text-center text-slate-50 ' +
+        (navigator.userAgent.includes('Win') ? 'h-7 pt-1' : 'h-6')
+      }
+    >
       <Show
-     // win
-     when={navigator.userAgent.includes('Win')}
-     >
-     <div class="flex gap-2 px-4 pt-[5px] items-center">
+        // win
+        when={navigator.userAgent.includes('Win')}
+      >
+        <div class="flex items-center gap-2 px-4 pt-[5px]">
           <HistoryIcon
             width={18}
             height={18}
@@ -40,19 +45,17 @@ export default function TopBar() {
               (pathname() === '/answer' ? 'text-active' : 'text-gray')
             }
           />
-        <ChatIcon
-          width={18}
-          height={18}
-          onClick={
-            () => {
+          <ChatIcon
+            width={18}
+            height={18}
+            onClick={() => {
               nav('/chat')
+            }}
+            class={
+              'cursor-pointer duration-100 hover:text-active ' +
+              (pathname() === '/' || pathname() === '/chat' ? 'text-active' : 'text-gray')
             }
-          }
-          class={
-            'cursor-pointer duration-100 hover:text-active ' +
-            (pathname() === '/' || pathname() === '/chat' ? 'text-active' : 'text-gray')
-          }
-        />
+          />
           <SettingIcon
             width={18.5}
             height={18.5}
@@ -60,23 +63,23 @@ export default function TopBar() {
               nav('/setting')
             }}
             class={
-              'cursor-pointer translate-y-[-0.5px] ml-[-0.0625rem] duration-100 hover:text-active ' +
+              'ml-[-0.0625rem] translate-y-[-0.5px] cursor-pointer duration-100 hover:text-active ' +
               (pathname() === '/setting' ? 'text-active' : 'text-gray')
             }
           />
-      </div>
-     </Show>
+        </div>
+      </Show>
       <div
         class="h-full flex-1"
         style={{
           '-webkit-app-region': 'drag'
         }}
       ></div>
-     <Show
-     // mac
-     when={navigator.userAgent.includes('Mac')}
-     >
-     <div class="flex h-6 gap-2 px-4 pt-[5px] items-center">
+      <Show
+        // mac
+        when={navigator.userAgent.includes('Mac')}
+      >
+        <div class="flex h-6 items-center gap-2 px-4 pt-[5px]">
           <HistoryIcon
             width={18}
             height={18}
@@ -99,19 +102,17 @@ export default function TopBar() {
               (pathname() === '/answer' ? 'text-active' : 'text-gray')
             }
           />
-        <ChatIcon
-          width={18}
-          height={18}
-          onClick={
-            () => {
+          <ChatIcon
+            width={18}
+            height={18}
+            onClick={() => {
               nav('/chat')
+            }}
+            class={
+              'cursor-pointer duration-100 hover:text-active ' +
+              (pathname() === '/' || pathname() === '/chat' ? 'text-active' : 'text-gray')
             }
-          }
-          class={
-            'cursor-pointer duration-100 hover:text-active ' +
-            (pathname() === '/' || pathname() === '/chat' ? 'text-active' : 'text-gray')
-          }
-        />
+          />
           <SettingIcon
             width={18}
             height={18}
@@ -119,25 +120,23 @@ export default function TopBar() {
               nav('/setting')
             }}
             class={
-              'cursor-pointer ml-[-0.0625rem] duration-100 hover:text-active ' +
+              'ml-[-0.0625rem] cursor-pointer duration-100 hover:text-active ' +
               (pathname() === '/setting' ? 'text-active' : 'text-gray')
             }
           />
-      </div>
-     </Show>
-     {/* win 关闭按钮 */}
-     <Show
-     when={navigator.userAgent.includes('Win')}
-     >
-      <CrossIcon
-      class= 'pt-[7px] pr-4 cursor-pointer text-gray duration-100 hover:text-active '
-      height={13}
-      width={13}
-      onClick={() => {
-        window.api.hideWindow()
-      }}
-      />
-     </Show>
+        </div>
+      </Show>
+      {/* win 关闭按钮 */}
+      <Show when={navigator.userAgent.includes('Win')}>
+        <CrossIcon
+          class="cursor-pointer pr-4 pt-[7px] text-gray duration-100 hover:text-active "
+          height={13}
+          width={13}
+          onClick={() => {
+            window.api.hideWindow()
+          }}
+        />
+      </Show>
     </div>
   )
 }
