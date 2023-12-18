@@ -90,7 +90,7 @@ export default function Input(props: {
                 }
               })
             }}
-            class="group/refresh ml-1 h-7 w-7 rounded-full p-[5px] hover:bg-active-bac"
+            class="group/refresh ml-1 h-8 w-8 rounded-full p-[7px] hover:bg-active-bac"
           >
             <RefreshIcon
               width={18}
@@ -142,7 +142,7 @@ export default function Input(props: {
                 : 'Ctrl + Enter 发送'
               : 'Enter 发送，Shift+Enter 换行')
           }
-          class="font-sans max-h-48 flex-1 resize-none rounded-2xl border-none bg-dark-pro px-3 py-1 text-sm text-text1 caret-text2 transition-none focus:outline-none"
+          class="font-sans max-h-48 flex-1 resize-none rounded-2xl border-none bg-dark-pro px-4 py-[6px] text-sm text-text1 caret-text2 transition-none focus:outline-none"
         />
         {/* <button class="absolute bottom-1 right-1 h-8 w-8 cursor-pointer overflow-hidden rounded-full bg-cyber px-0 py-1">
           <ChatIcon class="duration-150 hover:text-active" width={24} height={24} />

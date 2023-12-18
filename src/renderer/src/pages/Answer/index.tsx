@@ -85,7 +85,7 @@ export default function Answer() {
         />
       </Show>
 
-      <div class="fixed bottom-10 w-full px-8">
+      <div class="fixed bottom-10 w-full px-4">
         <Input
           text={text()}
           setText={setText}
