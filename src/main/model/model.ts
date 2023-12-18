@@ -60,3 +60,8 @@ export interface HistoryModel {
   type: 'chat' | 'ans'
   contents: { id?: string; role: 'human' | 'system' | 'ai' | 'ans' | 'question'; content: string }[]
 }
+
+export interface Line {
+  content: string
+  from: string
+}

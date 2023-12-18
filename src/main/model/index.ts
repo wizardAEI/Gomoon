@@ -12,7 +12,8 @@ import { getDefaultConfig } from './default/getDefaultConfig'
 import { join } from 'path'
 import { ulid } from 'ulid'
 import { merge } from 'lodash'
-import getDefaultAssistants from './default/assistants'
+import getDefaultAssistants from './default/getDefaultAssistants'
+import getDefaultLines from './default/getDefaultLines'
 
 const appDataPath = app.getPath('userData')
 const configDB = JSONSyncPreset(join(appDataPath, 'config.json'), getDefaultConfig())
@@ -149,7 +150,7 @@ export function useAssistant(id: string) {
 }
 
 /**
- * Histories 相关
+ * FEAT: Histories 相关
  */
 const historiesDB = JSONSyncPreset<HistoryModel[]>(join(appDataPath, 'histories.json'), [])
 
@@ -169,4 +170,11 @@ export function deleteHistory(id: string) {
   }
   historiesDB.data.splice(index, 1)
   historiesDB.write()
+}
+
+/**
+ * FEAT: 首页显示的文字 Lines
+ */
+export function getLines() {
+  return getDefaultLines()
 }

@@ -15,7 +15,8 @@ import {
   setSendWithCmdOrCtrl,
   updateAssistant,
   updateUserData,
-  useAssistant
+  useAssistant,
+  getLines
 } from './model/index'
 import {
   CreateAssistantModel,
@@ -54,7 +55,7 @@ export function initAppEventsHandler() {
   /**
    * FEAT: 用户相关
    */
-  ipcMain.handle('set-user-data', (e, data: Partial<UserDataModel>) => updateUserData(data))
+  ipcMain.handle('set-user-data', (_, data: Partial<UserDataModel>) => updateUserData(data))
   ipcMain.handle('get-user-data', () => getUserData())
 
   /**
@@ -76,5 +77,5 @@ export function initAppEventsHandler() {
   // 其他
   app.on('browser-window-created', () => {})
   ipcMain.handle('hide-window', () => hideWindow())
-
+  ipcMain.handle('get-lines', () => getLines())
 }

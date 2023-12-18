@@ -2,6 +2,7 @@ import { createStore, unwrap } from 'solid-js/store'
 import { isEqual, merge, cloneDeep } from 'lodash'
 import { event } from '@renderer/lib/util'
 import { defaultModels } from '@renderer/lib/ai/models'
+import { Line } from 'src/main/model/model'
 export interface Models {
   OpenAI: {
     apiKey: string
@@ -62,6 +63,7 @@ export async function loadConfig() {
   setSettingStore('canMultiCopy', config.canMultiCopy)
   setSettingStore('quicklyWakeUpKeys', config.quicklyWakeUpKeys)
   setSettingStore('sendWithCmdOrCtrl', config.sendWithCmdOrCtrl)
+  await loadLines()
   setSettingStore('isLoaded', true)
   event.emit('updateModels', config.models)
 }
@@ -77,4 +79,14 @@ export async function updateModelsToFile() {
   event.emit('updateModels', config.models)
 }
 
-export { settingStore, setSettingStore }
+/**
+ * FEAT: Lines
+ */
+const [lines, setLines] = createStore<Line[]>([])
+
+export async function loadLines() {
+  const l = await window.api.getLines()
+  setLines(l)
+}
+
+export { settingStore, setSettingStore, lines }

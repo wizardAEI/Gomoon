@@ -16,7 +16,7 @@ import { ToastProvider } from './components/ui/Toast'
 
 const App = () => {
   const nav = useNavigate()
-  onMount(() => {
+  onMount(async () => {
     // FEAT: 获取配置信息
     loadConfig()
 

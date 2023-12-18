@@ -4,6 +4,7 @@ import {
   AssistantModel,
   CreateAssistantModel,
   HistoryModel,
+  Line,
   SettingModel,
   UpdateAssistantModel,
   UserDataModel
@@ -50,7 +51,10 @@ export const api = {
   // history 相关
   getHistories: (): Promise<HistoryModel[]> => ipcRenderer.invoke('get-histories'),
   addHistory: (history: HistoryModel) => ipcRenderer.invoke('add-history', history),
-  deleteHistory: (historyId: string) => ipcRenderer.invoke('delete-history', historyId)
+  deleteHistory: (historyId: string) => ipcRenderer.invoke('delete-history', historyId),
+
+  // 其他
+  getLines: (): Promise<Line[]> => ipcRenderer.invoke('get-lines')
 } as const
 
 // Use `contextBridge` APIs to expose Electron APIs to
