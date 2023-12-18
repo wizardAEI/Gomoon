@@ -3,6 +3,7 @@ import { createStore, produce } from 'solid-js/store'
 import { ulid } from 'ulid'
 import { addHistory } from './history'
 import { ErrorDict } from '@renderer/lib/constant'
+import { getCurrentAssistantForAnswer } from './assistants'
 
 const [answerStore, setAnswerStore] = createStore({
   answer: '',
@@ -60,6 +61,7 @@ export async function saveAns() {
   return addHistory({
     id: ulid(),
     type: 'ans',
+    assistantId: getCurrentAssistantForAnswer()?.id,
     contents: [
       {
         role: 'question',

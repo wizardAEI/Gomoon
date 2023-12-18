@@ -4,6 +4,7 @@ import { createStore, produce } from 'solid-js/store'
 import { ulid } from 'ulid'
 import { addHistory } from './history'
 import { cloneDeep } from 'lodash'
+import { getCurrentAssistantForChat } from './assistants'
 
 export interface Msg {
   id: string
@@ -119,6 +120,7 @@ export async function saveMsgsBeforeID(id: string) {
   const currentMsgs = msgs.slice(0, index + 1)
   return addHistory({
     id: ulid(),
+    assistantId: getCurrentAssistantForChat()?.id,
     type: 'chat',
     contents: currentMsgs
   })

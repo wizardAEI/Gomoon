@@ -5,6 +5,7 @@ import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
 import { setAnswerStore } from '@renderer/store/answer'
 import { histories, removeHistory } from '@renderer/store/history'
 import { Msg, setMsgs } from '@renderer/store/msgs'
+import { setSelectedAssistantForAns, setSelectedAssistantForChat } from '@renderer/store/user'
 import { useNavigate } from '@solidjs/router'
 import { For, Show } from 'solid-js'
 import { HistoryModel } from 'src/main/model/model'
@@ -60,9 +61,11 @@ export default function () {
                 if (h.type === 'ans') {
                   setAnswerStore('question', h.contents[0].content)
                   setAnswerStore('answer', h.contents[1].content)
+                  h.assistantId && setSelectedAssistantForAns(h.assistantId)
                   nav('/answer')
                 } else if (h.type === 'chat') {
                   setMsgs(h.contents as Msg[])
+                  h.assistantId && setSelectedAssistantForChat(h.assistantId)
                   nav('/chat')
                 }
               }}

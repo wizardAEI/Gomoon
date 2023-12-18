@@ -118,7 +118,7 @@ export default function TopBar() {
   return (
     <div
       class={
-        'flex w-full text-center text-slate-50 ' +
+        'relative z-50 flex w-full text-center text-slate-50 ' +
         (navigator.userAgent.includes('Mac') ? ' h-6' : 'h-7 pt-1')
       }
     >

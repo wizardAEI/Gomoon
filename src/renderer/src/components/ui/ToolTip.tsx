@@ -34,13 +34,7 @@ export default function (props: {
       </button>
       <Show when={api().isOpen}>
         <div {...api().positionerProps}>
-          <div
-            {...api().contentProps}
-            // style={{
-            //   color: 'black'
-            // }}
-            class="rounded-md bg-white/80 p-1 text-xs text-text-dark"
-          >
+          <div {...api().contentProps} class="rounded-md bg-white/80 p-1 text-xs text-text-dark">
             {props.content}
           </div>
         </div>
