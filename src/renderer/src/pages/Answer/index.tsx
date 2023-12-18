@@ -73,15 +73,18 @@ export default function Answer() {
         }
       >
         <Capsule type="ans" botName={getCurrentAssistantForAnswer().name} />
-        <Message content={answerStore.question} id="question" type="question" />
+        <div class="mt-8">
+          <Message content={answerStore.question} id="question" type="question" />
+        </div>
       </Show>
-      {answerStore.answer && (
+      <Show when={answerStore.answer}>
         <Message
           content={answerStore.answer}
           type="ans"
           botName={getCurrentAssistantForAnswer().name}
         />
-      )}
+      </Show>
+
       <div class="fixed bottom-10 w-full px-8">
         <Input
           text={text()}

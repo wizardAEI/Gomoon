@@ -62,7 +62,7 @@ module.exports = {
         click: 'click 0.2s ease-in-out',
         popup: 'popup 0.2s ease-in-out forwards',
         'scale-down-entrance': 'scale-down-entrance 0.3s ease-in-out forwards',
-        'rotate-180': 'rotate-180 0.5s ease-in-out forwards'
+        'rotate-180': 'rotate-180 0.3s ease-in-out forwards'
       },
       boxShadow: {
         green: '20px 20px 60px #93b58a, -20px -20px 60px #c7f5ba',

@@ -6,7 +6,7 @@ export default function AnswerIcon(props: SvgProps) {
       // @ts-ignore
       t="1700569105768"
       class="icon"
-      viewBox="0 0 1024 1024"
+      viewBox="0 -50 1120 1120"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
       p-id="8968"

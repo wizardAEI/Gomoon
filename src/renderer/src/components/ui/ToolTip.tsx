@@ -4,7 +4,7 @@ import * as tooltip from '@zag-js/tooltip'
 import { normalizeProps, useMachine } from '@zag-js/solid'
 import { createMemo, createUniqueId, Show } from 'solid-js'
 
-export default function Tooltip(props: {
+export default function (props: {
   size?: number
   color?: string
   label: string | JSXElement
@@ -24,7 +24,6 @@ export default function Tooltip(props: {
   )
 
   const api = createMemo(() => tooltip.connect(state, send, normalizeProps))
-
   return (
     <div class="inline-block">
       <button
