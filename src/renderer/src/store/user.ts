@@ -15,7 +15,6 @@ const [userData, setUserData] = createStore<UserDataModel>({
 
 export async function loadUserData() {
   setUserData(await window.api.getUserData())
-  console.log(userData.firstTimeFor)
 }
 
 export function userHasUse() {

@@ -1,9 +1,9 @@
-import { createEffect, onCleanup, onMount } from 'solid-js'
+import { Show, createEffect, createSignal, onCleanup, onMount } from 'solid-js'
 import { clearMsgs, msgs, restoreMsgs } from '../store/msgs'
 import { useToast } from './ui/Toast'
-import { addEventListener } from 'solid-js/web'
 import { useEventListener } from 'solidjs-use'
 import { settingStore } from '@renderer/store/setting'
+import RefreshIcon from '@renderer/assets/icon/base/RefreshIcon'
 
 /**
  * FEAT: Input 组件，用于接收用户输入的文本，onMountHandler可以在外部操作 input 元素
@@ -22,6 +22,8 @@ export default function Input(props: {
   let textAreaDiv: HTMLTextAreaElement | undefined
   let textAreaContainerDiv: HTMLDivElement | undefined
   let cleanupForRestoreMsgs: (() => void) | undefined
+  let [refreshing, setRefreshing] = createSignal<boolean>(false)
+  let isCompositing = false
   const toast = useToast()
   function submit() {
     props.send(props.text)
@@ -66,60 +68,86 @@ export default function Input(props: {
   })
 
   return (
-    <div ref={textAreaContainerDiv} class="cyber-box relative flex w-full backdrop-blur-md">
-      <textarea
-        ref={textAreaDiv}
-        value={props.text}
-        disabled={props.disable}
-        onKeyDown={(e) => {
-          if (settingStore.sendWithCmdOrCtrl) {
-            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-              submit()
-              e.preventDefault()
-            }
-          } else {
-            if (e.key === 'Enter' && !(e.ctrlKey || e.metaKey || e.shiftKey)) {
-              submit()
-              e.preventDefault()
-            }
-          }
-        }}
-        onInput={(e) => {
-          cleanupForRestoreMsgs?.()
-          props.setText(e.target.value)
-          e.preventDefault()
-        }}
-        rows={1}
-        placeholder={
-          props.placeholder ||
-          (settingStore.sendWithCmdOrCtrl ? 'Ctrl/Cmd+Enter 发送' : 'Enter shift+Enter 发送')
-        }
-        class="font-sans max-h-48 flex-1 resize-none rounded-2xl border-none bg-dark-pro px-4 py-2 text-base text-text1 caret-text2 transition-none focus:outline-none"
-      />
-      {props.showClearButton && !props.isGenerating && (
-        <button
-          class={
-            'absolute right-3 top-[6px] h-2/3 cursor-pointer overflow-hidden rounded-lg border-0 bg-cyber text-text2 shadow-md active:animate-click ' +
-            (props.text.length ? 'w-0 px-0' : 'px-2')
-          }
-          onClick={() => {
-            toast.info('ctrl/cmd + z 撤销', {
-              duration: 1000,
-              position: 'top-3/4'
-            })
-            if (!msgs.length) return
-            clearMsgs()
-            cleanupForRestoreMsgs = useEventListener(document, 'keydown', (e) => {
-              if ((e.key === 'z' && e.ctrlKey) || (e.key === 'z' && e.metaKey)) {
-                restoreMsgs()
-                cleanupForRestoreMsgs?.()
+    <div class="over relative flex w-full gap-1">
+      <Show when={props.showClearButton && !props.text.length && !props.isGenerating}>
+        <div class="-ml-3 mr-[2px] flex cursor-pointer flex-col justify-center">
+          <div
+            onClick={() => {
+              setRefreshing(true)
+              setTimeout(() => {
+                setRefreshing(false)
+              }, 600)
+              toast.info('ctrl/cmd + z 撤销', {
+                duration: 1000,
+                position: 'top-3/4'
+              })
+              if (!msgs.length) return
+              clearMsgs()
+              cleanupForRestoreMsgs = useEventListener(document, 'keydown', (e) => {
+                if ((e.key === 'z' && e.ctrlKey) || (e.key === 'z' && e.metaKey)) {
+                  restoreMsgs()
+                  cleanupForRestoreMsgs?.()
+                }
+              })
+            }}
+            class="group/refresh hover:bg-active-bac h-10 w-10 rounded-full p-2"
+          >
+            <RefreshIcon
+              width={24}
+              height={24}
+              class={
+                'rotate-45 cursor-pointer text-gray group-hover/refresh:text-active' +
+                (refreshing() ? ' animate-rotate-180' : '')
               }
-            })
+            />
+          </div>
+        </div>
+      </Show>
+      <div ref={textAreaContainerDiv} class="cyber-box relative flex flex-1 backdrop-blur-md">
+        <textarea
+          ref={textAreaDiv}
+          value={props.text}
+          disabled={props.disable}
+          onCompositionStart={() => {
+            isCompositing = true
           }}
-        >
-          {!props.text.length && '清空历史'}
-        </button>
-      )}
+          onCompositionEnd={() => {
+            isCompositing = false
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && isCompositing) return
+            if (settingStore.sendWithCmdOrCtrl) {
+              if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                submit()
+                e.preventDefault()
+              }
+            } else {
+              if (e.key === 'Enter' && !(e.ctrlKey || e.metaKey || e.shiftKey)) {
+                submit()
+                e.preventDefault()
+              }
+            }
+          }}
+          onInput={(e) => {
+            cleanupForRestoreMsgs?.()
+            props.setText(e.target.value)
+            e.preventDefault()
+          }}
+          rows={1}
+          placeholder={
+            props.placeholder ||
+            (settingStore.sendWithCmdOrCtrl
+              ? navigator.userAgent.includes('Mac')
+                ? 'Command + Enter 发送'
+                : 'Ctrl + Enter 发送'
+              : 'Enter 发送，Shift+Enter 换行')
+          }
+          class="font-sans max-h-48 flex-1 resize-none rounded-2xl border-none bg-dark-pro px-4 py-2 text-base text-text1 caret-text2 transition-none focus:outline-none"
+        />
+        {/* <button class="absolute bottom-1 right-1 h-8 w-8 cursor-pointer overflow-hidden rounded-full bg-cyber px-0 py-1">
+          <ChatIcon class="duration-150 hover:text-active" width={24} height={24} />
+        </button> */}
+      </div>
     </div>
   )
 }

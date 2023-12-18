@@ -21,6 +21,7 @@ module.exports = {
       colors: {
         active: '#a57bea', // 激活色 亮紫色
         'active-pro': '#c08eaf', // 激活色↑ 罗兰紫
+        'active-bac': '#253241', // 激活色的背景色 深灰蓝
         gray: '#869d9d', // 非激活色 淡紫灰色
         'gray-pro': '#93a5a6', // 非激活色↑ 浅紫灰色
         'dark-con': '#436565', // 暗色稍微亮一点
@@ -51,12 +52,17 @@ module.exports = {
         'scale-down-entrance': {
           '0%': { transform: 'scale(1.1)', opacity: 0.5 },
           '100%': { transform: 'scale(1)' }
+        },
+        'rotate-180': {
+          '0%': { transform: 'rotate(45deg)' },
+          '100%': { transform: 'rotate(225deg)' }
         }
       },
       animation: {
         click: 'click 0.2s ease-in-out',
         popup: 'popup 0.2s ease-in-out forwards',
-        'scale-down-entrance': 'scale-down-entrance 0.3s ease-in-out forwards'
+        'scale-down-entrance': 'scale-down-entrance 0.3s ease-in-out forwards',
+        'rotate-180': 'rotate-180 0.5s ease-in-out forwards'
       },
       boxShadow: {
         green: '20px 20px 60px #93b58a, -20px -20px 60px #c7f5ba',

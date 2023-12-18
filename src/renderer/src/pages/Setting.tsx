@@ -84,17 +84,6 @@ export default function Setting() {
               value={settingStore.quicklyWakeUpKeys}
               onKeyDown={(e) => {
                 e.preventDefault()
-                console.log(
-                  'key ',
-                  e.key,
-                  '\n altKey:',
-                  e.altKey,
-                  ' shiftKey:',
-                  e.shiftKey,
-                  ' metaKey:',
-                  e.metaKey,
-                  e.ctrlKey
-                )
                 // 如果没有按下 Shift, Meta, Alt, Control 等特殊键, 则返回
                 if (!e.altKey && !e.shiftKey && !e.metaKey && !e.ctrlKey) {
                   return false
@@ -135,7 +124,11 @@ export default function Setting() {
             />
           </div>
           <Switch
-            label="使用 Cmd/Ctrl+Enter 发起对话"
+            label={
+              navigator.userAgent.includes('Mac')
+                ? '使用 Command+Enter 发送信息'
+                : '使用 Ctrl+Enter 发送信息'
+            }
             hint="关闭后使用 Enter 发起对话"
             checked={settingStore.sendWithCmdOrCtrl}
             onCheckedChange={setSendWithCmdOrCtrl}

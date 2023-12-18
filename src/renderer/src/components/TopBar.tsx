@@ -98,7 +98,7 @@ export default function TopBar() {
               nav('/answer')
             }}
             class={
-              'cursor-pointer duration-100 hover:text-active ' +
+              'translate-y-[-1px] cursor-pointer duration-100 hover:text-active ' +
               (pathname() === '/answer' ? 'text-active' : 'text-gray')
             }
           />

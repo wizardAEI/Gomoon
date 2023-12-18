@@ -41,9 +41,12 @@ export default function () {
       <Show
         when={histories.length}
         fallback={
-          <div class="relative m-4 flex h-40 flex-col items-center justify-center gap-3 rounded-2xl border-2 border-solid border-transparent bg-dark p-4 duration-150">
+          <div class="relative m-4 flex h-40 select-none flex-col items-center justify-center gap-3 rounded-2xl border-2 border-solid border-transparent bg-dark p-4 duration-150">
             <EmptyIcon height={50} class="text-gray" />
-            <span class="text-gray">暂无历史</span>
+            <span class="text-sm text-gray">暂无历史</span>
+            <span class="text-[12px] text-gray">
+              &lt; 在每段回答下点击保存，即可将对话历史保存至此 &gt;
+            </span>
           </div>
         }
       >
