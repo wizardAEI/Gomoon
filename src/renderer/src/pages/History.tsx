@@ -2,7 +2,6 @@ import CrossMark from '@renderer/assets/icon/base/CrossMark'
 import EmptyIcon from '@renderer/assets/icon/base/EmptyIcon'
 import HistoryIcon from '@renderer/assets/icon/base/HistoryIcon'
 import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
-import QuestionMention from '@renderer/components/ui/QuestionMention'
 import { setAnswerStore } from '@renderer/store/answer'
 import { histories, removeHistory } from '@renderer/store/history'
 import { Msg, setMsgs } from '@renderer/store/msgs'
@@ -37,7 +36,7 @@ export default function () {
   }
 
   return (
-    <div class="pb-18 flex h-full flex-col overflow-auto pt-8">
+    <div class="flex h-full select-none flex-col gap-3 p-5">
       <Show
         when={histories.length}
         fallback={
@@ -50,13 +49,13 @@ export default function () {
           </div>
         }
       >
-        <div class="mx-5 flex select-none items-center gap-1 text-lg  text-text1">
+        <div class="flex select-none items-center gap-1 text-lg  text-text1">
           <HistoryIcon width={20} height={20} /> <span class="font-medium">对话历史</span>{' '}
         </div>
         <For each={histories}>
           {(h) => (
             <div
-              class="relative m-4 flex cursor-pointer flex-col gap-2 rounded-2xl border-2 border-solid border-transparent bg-dark p-4 duration-150 hover:border-active"
+              class="relative flex cursor-pointer flex-col gap-2 rounded-2xl border-2 border-solid border-transparent bg-dark p-4 duration-150 hover:border-active"
               onClick={() => {
                 if (h.type === 'ans') {
                   setAnswerStore('question', h.contents[0].content)
@@ -86,7 +85,7 @@ export default function () {
               <For each={sliceArr(h.contents)}>
                 {(c) => {
                   return (
-                    <div class="flex flex-col gap-1">
+                    <div class="flex flex-col gap-1 text-sm">
                       <span>
                         {map[c.role]}: {decorateContent(c.content)}
                       </span>

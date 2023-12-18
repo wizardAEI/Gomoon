@@ -1,10 +1,10 @@
 import ChatGptIcon from '@renderer/assets/icon/models/ChatGptIcon'
 import WenxinIcon from '@renderer/assets/icon/models/WenxinIcon'
 import { setSelectedModel, userData } from '@renderer/store/user'
-import { createMemo, createSignal, For, JSXElement, onCleanup, onMount, Show } from 'solid-js'
+import { createMemo, createSignal, For, JSXElement, onCleanup, Show } from 'solid-js'
 import { ModelsType } from 'src/main/model/model'
 
-export default function (props: { position: string; size?: number }) {
+export default function (props: { position: string; size?: number; translate?: string }) {
   const options: {
     label: JSXElement
     icon: (size: number) => JSXElement
@@ -72,15 +72,13 @@ export default function (props: { position: string; size?: number }) {
   }
   const label = createMemo(() => {
     return (
-      <span>
-        {options.find((opt) => opt.value === userData.selectedModel)?.icon(props.size || 20) ?? (
-          <ChatGptIcon />
-        )}
-      </span>
+      options.find((opt) => opt.value === userData.selectedModel)?.icon(props.size || 20) ?? (
+        <ChatGptIcon />
+      )
     )
   })
   return (
-    <div>
+    <>
       <div
         ref={(el) => {
           const fn = (e) => {
@@ -96,16 +94,15 @@ export default function (props: { position: string; size?: number }) {
             document.removeEventListener('click', fn)
           })
         }}
-        class="cursor-pointer"
+        class="flex cursor-pointer"
       >
         {label()}
       </div>
       <Show when={isOpen()}>
         <div
-          class={
-            'absolute z-10 mt-3 grid w-44 grid-cols-2 grid-rows-2 gap-1 rounded-md bg-dark p-2 ' +
+          class={`absolute z-10 mt-3 grid w-44 grid-cols-2 grid-rows-2 gap-1 rounded-md bg-dark p-2 ${
             props.position
-          }
+          } ${props.translate || ''}`}
         >
           <For each={options}>
             {(option) => (
@@ -125,6 +122,6 @@ export default function (props: { position: string; size?: number }) {
           </For>
         </div>
       </Show>
-    </div>
+    </>
   )
 }

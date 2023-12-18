@@ -13,6 +13,7 @@ import Expand from '@renderer/components/ui/Expand'
 import EditInput from '@renderer/components/ui/EditInput'
 import { onCleanup, onMount } from 'solid-js'
 import { unwrap } from 'solid-js/store'
+import SettingIcon from '@renderer/assets/icon/base/SettingIcon'
 export default function Setting() {
   onMount(() => {
     onCleanup(() => {
@@ -20,7 +21,10 @@ export default function Setting() {
     })
   })
   return (
-    <div class="flex h-full select-none flex-col gap-3 p-4">
+    <div class="flex h-full select-none flex-col gap-3 p-5">
+      <div class="flex select-none items-center gap-1 text-lg  text-text1">
+        <SettingIcon width={20} height={20} /> <span class="font-medium">应用设置</span>{' '}
+      </div>
       <Card title="模型引擎配置" noPadding>
         <Expand title="ChatGPT系列">
           <EditInput

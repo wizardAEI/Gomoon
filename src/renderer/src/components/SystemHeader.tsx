@@ -1,5 +1,5 @@
 import { useNavigate } from '@solidjs/router'
-import ModelSelect from './Message/ModelSelect'
+import ModelSelect from './ModelSelect'
 import {
   assistants,
   getCurrentAssistantForAnswer,
@@ -37,7 +37,7 @@ export default function (props: { type: 'chat' | 'ans' }) {
         </Show>
 
         <div
-          class="absolute bottom-1 right-2"
+          class="absolute bottom-2 right-2"
           onClick={() => {
             hasFirstTimeFor('modelSelect')
           }}

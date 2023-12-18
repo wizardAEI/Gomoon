@@ -8,9 +8,8 @@ import mdHighlight from 'markdown-it-highlightjs'
 import CapitalIcon from '../ui/CapitalIcon'
 import MsgPopup, { MsgPopupByUser, Pause, WithDrawal } from './Popup'
 import { ansStatus } from '@renderer/store/answer'
-import ModelSelect from './ModelSelect'
 import { useNavigate } from '@solidjs/router'
-import { hasFirstTimeFor, userData } from '@renderer/store/user'
+import { userData } from '@renderer/store/user'
 export type MsgTypes = Roles | 'ans' | 'question'
 export default function Message(props: {
   type: MsgTypes
@@ -127,7 +126,7 @@ export default function Message(props: {
               </div>
             </Show>
 
-            <Show when={props.botName}>
+            {/* <Show when={props.botName}>
               <div
                 onClick={() => {
                   userData.firstTimeFor.assistantSelect && hasFirstTimeFor('assistantSelect')
@@ -137,7 +136,7 @@ export default function Message(props: {
                 <CapitalIcon size={20} content={props.botName!} />
               </div>
             </Show>
-            <ModelSelect position="right-1" />
+            <ModelSelect position="right-1" /> */}
           </div>
         </Show>
       </div>

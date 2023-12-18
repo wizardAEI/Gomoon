@@ -7,6 +7,7 @@ import { useSearchParams } from '@solidjs/router'
 import { getCurrentAssistantForAnswer } from '@renderer/store/assistants'
 import SystemHeader from '@renderer/components/SystemHeader'
 import SelectAssistantModal from './SelectAssistantModel'
+import Capsule from '@renderer/components/Capsule'
 
 export default function Answer() {
   const [text, setText] = createSignal('')
@@ -44,7 +45,7 @@ export default function Answer() {
   })
 
   return (
-    <div class="flex h-full flex-col gap-4 overflow-auto pb-48 pt-6">
+    <div class="flex h-full flex-col gap-4 overflow-auto pb-48 pt-10">
       <Show when={showModal()}>
         <SelectAssistantModal
           onConfirm={() => {
@@ -57,18 +58,21 @@ export default function Answer() {
           }}
         />
       </Show>
-      <div class="flex w-full select-none flex-col items-center justify-center gap-2 px-10 pt-8">
-        <span class="text-sm text-gray">问答助手</span>
-        <span class="whitespace-nowrap text-[12px] text-gray">&lt;{introduce()}&gt;</span>
-      </div>
       <Show
         when={answerStore.question}
         fallback={
           <>
+            {
+              <div class="flex w-full select-none flex-col items-center justify-center gap-2 px-10 pt-8">
+                <span class="text-sm text-gray">问答助手</span>
+                <span class="whitespace-nowrap text-[12px] text-gray">&lt;{introduce()}&gt;</span>
+              </div>
+            }
             <SystemHeader type="ans" />
           </>
         }
       >
+        <Capsule type="ans" botName={getCurrentAssistantForAnswer().name} />
         <Message content={answerStore.question} id="question" type="question" />
       </Show>
       {answerStore.answer && (

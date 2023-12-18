@@ -15,7 +15,7 @@ export default function TopBar() {
     <div
       class={
         'flex w-full text-center text-slate-50 ' +
-        (navigator.userAgent.includes('Win') ? 'h-7 pt-1' : 'h-6')
+        (navigator.userAgent.includes('Mac') ? 'h-6' : 'h-7 pt-1')
       }
     >
       <Show

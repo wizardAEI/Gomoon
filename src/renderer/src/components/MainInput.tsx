@@ -77,7 +77,7 @@ export default function Input(props: {
               setTimeout(() => {
                 setRefreshing(false)
               }, 600)
-              toast.info('ctrl/cmd + z 撤销', {
+              toast.info(`${navigator.userAgent.includes('Mac') ? 'command' : 'ctrl'} + z 撤销`, {
                 duration: 1000,
                 position: 'top-3/4'
               })
@@ -90,7 +90,7 @@ export default function Input(props: {
                 }
               })
             }}
-            class="group/refresh hover:bg-active-bac h-10 w-10 rounded-full p-2"
+            class="group/refresh h-10 w-10 rounded-full p-2 hover:bg-active-bac"
           >
             <RefreshIcon
               width={24}
