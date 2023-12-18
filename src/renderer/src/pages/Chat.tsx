@@ -99,7 +99,7 @@ export default function Chat() {
                 <span class="text-sm text-gray">Gomoon</span>
                 <span class="text-center text-[12px] text-gray">
                   {linesContent()}
-                  <em>{linesFrom()}</em>
+                  <em class="text-[12px]">{linesFrom()}</em>
                 </span>
               </div>
             }

@@ -5,7 +5,6 @@ import { Show, createMemo, createSignal } from 'solid-js'
 import 'highlight.js/styles/atom-one-dark.css'
 import { msgStatus, msgs } from '@renderer/store/msgs'
 import mdHighlight from 'markdown-it-highlightjs'
-import CapitalIcon from '../ui/CapitalIcon'
 import MsgPopup, { MsgPopupByUser, Pause, WithDrawal } from './Popup'
 import { ansStatus } from '@renderer/store/answer'
 import { useNavigate } from '@solidjs/router'
@@ -29,7 +28,7 @@ export default function Message(props: {
     ai: 'text-sm',
     ans: 'text-sm',
     human: 'text-sm text-text-dark',
-    system: 'select-none text-center text-base dark-theme px-4',
+    system: 'text-base select-none text-center text-base dark-theme px-4',
     question: 'text-sm text-text-dark'
   }
   const [source] = createSignal('')

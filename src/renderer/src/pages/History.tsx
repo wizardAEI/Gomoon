@@ -51,7 +51,7 @@ export default function () {
         }
       >
         <div class="flex select-none items-center gap-1 text-lg  text-text1">
-          <HistoryIcon width={20} height={20} /> <span class="font-medium">对话历史</span>{' '}
+          <HistoryIcon width={20} height={20} /> <span class="text-base font-medium">对话历史</span>{' '}
         </div>
         <For each={histories}>
           {(h) => (

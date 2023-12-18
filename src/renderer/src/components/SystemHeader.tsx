@@ -29,7 +29,7 @@ export default function (props: { type: 'chat' | 'ans' }) {
   return (
     <div class={'relative ' + (props.type === 'ans' ? 'mt-4' : 'mt-8')}>
       <div class="relative m-4 flex items-center justify-center gap-2 rounded-2xl bg-dark p-4">
-        <span class="select-none">{currentA().name}</span>
+        <span class="select-none text-base">{currentA().name}</span>
         <Show when={userData.firstTimeFor.modelSelect}>
           <div class="absolute bottom-[6px] right-8 animate-bounce select-none text-[12px]">
             点击图标可以切换模型 👉
