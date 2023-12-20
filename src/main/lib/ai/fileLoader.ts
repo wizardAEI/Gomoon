@@ -5,6 +5,7 @@ import { PPTXLoader } from 'langchain/document_loaders/fs/pptx'
 import { Document } from 'langchain/document'
 // import { OpenAIWhisperAudio } from 'langchain/document_loaders/fs/openai_whisper_audio'
 import { readFile } from 'fs/promises'
+import { blob } from 'stream/consumers'
 
 function processText(text: string) {
   // 多个换行变成一个换行
@@ -83,6 +84,10 @@ export default async function parseFile(
   if (b.type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
     return parsePPTXFile(b)
   }
+
+  console.log(blob.name)
+  // 存储在本地
+
   // .mp3,.mp4,.wav,.m4a,.webm,.mpga,.mpeg
   // if (
   //   b.type === 'audio/wav' ||

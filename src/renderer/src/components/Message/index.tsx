@@ -7,6 +7,8 @@ import { msgStatus, msgs } from '@renderer/store/msgs'
 import mdHighlight from 'markdown-it-highlightjs'
 import MsgPopup, { MsgPopupByUser, Pause, WithDrawal } from './Popup'
 import { ansStatus } from '@renderer/store/answer'
+import { parseMeta } from '@renderer/lib/ai/parseString'
+import SpecialTypeContent from './SpecialTypeContent'
 export type MsgTypes = Roles | 'ans' | 'question'
 export default function Message(props: {
   type: MsgTypes
@@ -31,6 +33,7 @@ export default function Message(props: {
   }
   const [source] = createSignal('')
   const { copy, copied } = useClipboard({ source, copiedDuring: 1000 })
+  const meta = parseMeta(props.content)
   const htmlString = () => {
     const md = MarkdownIt({
       linkify: true,
@@ -81,7 +84,11 @@ export default function Message(props: {
   const showCompsByUser = createMemo(() => {
     if (props.id) {
       const genIndex = msgs.findIndex((msg) => msg.id === props.id) + 1
-      return !msgStatus.generatingList.includes(msgs[genIndex]?.id || '') && props.type === 'human'
+      return (
+        !msgStatus.generatingList.includes(msgs[genIndex]?.id || '') &&
+        props.type === 'human' &&
+        meta.type === 'text'
+      )
     }
     return false
   })
@@ -112,7 +119,10 @@ export default function Message(props: {
         </Show>
       </Show>
       <div class={style[props.type] + ' relative m-4 rounded-2xl p-3'}>
-        <div class={mdStyle[props.type] + ' markdown break-words'} innerHTML={htmlString()} />
+        <Show when={meta.type === 'text'} fallback={SpecialTypeContent(meta)}>
+          <div class={mdStyle[props.type] + ' markdown break-words'} innerHTML={htmlString()} />
+        </Show>
+        {/* 交互问题，取消使用右下角的小组件，后续可能重新使用 */}
         {/* <Show when={showComps()}>
           <div class="-mb-2 -mr-1 mt-1 flex justify-end gap-1 pl-32">
             <Show when={userData.firstTimeFor.assistantSelect}>

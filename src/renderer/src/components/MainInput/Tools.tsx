@@ -1,3 +1,4 @@
+import { parseFile } from '@renderer/lib/ai/file'
 import { useToast } from '../ui/Toast'
 
 export default function (props: { onSubmit: (content: string) => void }) {
@@ -20,37 +21,29 @@ export default function (props: { onSubmit: (content: string) => void }) {
             const file = e.target.files![0]
             e.target.value = ''
             if (file) {
-              // .doc
-              if (file.type === 'application/msword') {
-                toast.error('请将 doc 文件转换成 docx 格式后重新发送', {
+              const res = await parseFile(file)
+              if (!res.suc) {
+                toast.error(res.content, {
                   duration: 3000,
                   position: 'top-1/3'
                 })
                 return
               }
-              const str = await window.api.parseFile([
-                {
-                  path: file.path,
-                  type: file.type || 'text/plain'
-                }
-              ])
-              console.log(str)
-              if (str.length > 2000) {
-                const res = await toast.confirm(
+              if (res.content.length > 2000) {
+                const confirm = await toast.confirm(
                   <>
                     <div class="whitespace-nowrap py-1 text-base">
                       文件已超过2000字，确认发送吗？
                     </div>
-                    <div>{`文件过大可能会导致资源浪费和回答出错。(当前字数：${str.length})`}</div>
+                    <div>{`文件过大可能会导致资源浪费和回答出错。(当前字数：${
+                      res.length ?? 0
+                    })`}</div>
                   </>
                 )
-                res &&
-                  props.onSubmit(
-                    `<gomoon-file src="${file.path}"/>帮我总结一下当前文件内容：\n` + str
-                  )
+                confirm && props.onSubmit(res.content)
                 return
               }
-              props.onSubmit(str)
+              props.onSubmit(res.content)
             }
           }}
         />
