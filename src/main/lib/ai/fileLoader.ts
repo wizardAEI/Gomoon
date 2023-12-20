@@ -85,7 +85,6 @@ export default async function parseFile(
     return parsePPTXFile(b)
   }
 
-  console.log(blob.name)
   // 存储在本地
 
   // .mp3,.mp4,.wav,.m4a,.webm,.mpga,.mpeg

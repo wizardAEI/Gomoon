@@ -2,6 +2,7 @@ import CrossMark from '@renderer/assets/icon/base/CrossMark'
 import EmptyIcon from '@renderer/assets/icon/base/EmptyIcon'
 import HistoryIcon from '@renderer/assets/icon/base/HistoryIcon'
 import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
+import { parseMeta } from '@renderer/lib/ai/parseString'
 import { setAnswerStore } from '@renderer/store/answer'
 import { histories, removeHistory } from '@renderer/store/history'
 import { Msg, setMsgs } from '@renderer/store/msgs'
@@ -9,6 +10,7 @@ import { setSelectedAssistantForAns, setSelectedAssistantForChat } from '@render
 import { useNavigate } from '@solidjs/router'
 import { For, Show } from 'solid-js'
 import { HistoryModel } from 'src/main/model/model'
+import SpecialTypeContent from './SpecialTypeContent'
 const map = {
   human: '我',
   ai: '助手',
@@ -86,14 +88,17 @@ export default function () {
                 </DoubleConfirm>
               </div>
               <For each={sliceArr(h.contents)}>
-                {(c) => {
+                {(c, index) => {
+                  const meta = parseMeta(c.content)
                   return (
-                    <div class="flex flex-col gap-1 text-sm">
-                      <span>
-                        {map[c.role]}: {decorateContent(c.content)}
-                      </span>
-                      <div class="border-b-0 border-t border-dashed border-gray"></div>
-                    </div>
+                    <Show when={meta.type === 'text'} fallback={SpecialTypeContent(meta)}>
+                      <div class={`flex flex-col gap-1 text-sm ${index() === 0 ? 'pr-3' : ''}`}>
+                        <span>
+                          {map[c.role]}: {decorateContent(c.content)}
+                        </span>
+                        <div class="border-b-0 border-t border-dashed border-gray"></div>
+                      </div>
+                    </Show>
                   )
                 }}
               </For>
