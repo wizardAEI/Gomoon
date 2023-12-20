@@ -107,7 +107,9 @@ export default function Chat() {
           </>
         }
       >
-        <Capsule type="chat" botName={getCurrentAssistantForChat().name} />
+        <Show when={msgStatus.generatingList.length === 0}>
+          <Capsule type="chat" botName={getCurrentAssistantForChat().name} />
+        </Show>
         <For each={msgs}>
           {(msg, index) => (
             // 这里使用三元表达式来显示消息时会有渲染不及时的问题
@@ -146,7 +148,7 @@ export default function Chat() {
           )}
         </For>
       </Show>
-      <div class="fixed bottom-10 z-50 w-full px-4">
+      <div class="fixed bottom-10 w-full px-4">
         <Input
           text={text()}
           setText={setText}

@@ -1,6 +1,6 @@
 import Input from '@renderer/components/MainInput'
 import Message from '@renderer/components/Message'
-import { genAns, answerStore, clearAns } from '../../store/answer'
+import { genAns, answerStore, clearAns, ansStatus } from '../../store/answer'
 import { Show, createSignal, onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
 import { useSearchParams } from '@solidjs/router'
@@ -72,12 +72,14 @@ export default function Answer() {
           </>
         }
       >
-        <Capsule type="ans" botName={getCurrentAssistantForAnswer().name} />
-        <div class="mt-8">
+        <div class="mt-6">
           <Message content={answerStore.question} id="question" type="question" />
         </div>
       </Show>
       <Show when={answerStore.answer}>
+        <Show when={!ansStatus.isGenerating}>
+          <Capsule type="ans" botName={getCurrentAssistantForAnswer().name} />
+        </Show>
         <Message
           content={answerStore.answer}
           type="ans"

@@ -25,6 +25,7 @@ import {
   UserDataModel
 } from './model/model'
 import { hideWindow, setQuicklyWakeUp } from './window'
+import parseFile from './lib/ai/fileLoader'
 
 export function initAppEventsHandler() {
   /**
@@ -78,4 +79,5 @@ export function initAppEventsHandler() {
   app.on('browser-window-created', () => {})
   ipcMain.handle('hide-window', () => hideWindow())
   ipcMain.handle('get-lines', () => getLines())
+  ipcMain.handle('parse-file', (_, files) => parseFile(files))
 }

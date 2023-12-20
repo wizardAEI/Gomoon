@@ -54,7 +54,13 @@ export const api = {
   deleteHistory: (historyId: string) => ipcRenderer.invoke('delete-history', historyId),
 
   // 其他
-  getLines: (): Promise<Line[]> => ipcRenderer.invoke('get-lines')
+  getLines: (): Promise<Line[]> => ipcRenderer.invoke('get-lines'),
+  parseFile: (
+    files: {
+      path: string
+      type: string
+    }[]
+  ): Promise<string> => ipcRenderer.invoke('parse-file', files)
 } as const
 
 // Use `contextBridge` APIs to expose Electron APIs to

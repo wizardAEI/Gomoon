@@ -44,7 +44,7 @@ const createModel = (chat: ChatBaiduWenxin | ChatOpenAI) => {
       return chain.call(
         {
           signal: option.pauseSignal,
-          timeout: 1000 * 60
+          timeout: 1000 * 20
         },
         {
           callbacks: [
@@ -93,7 +93,8 @@ const createModel = (chat: ChatBaiduWenxin | ChatOpenAI) => {
               }
             }
           ],
-          signal: option.pauseSignal
+          signal: option.pauseSignal,
+          timeout: 1000 * 20
         }
       )
     }

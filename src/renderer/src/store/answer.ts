@@ -4,6 +4,7 @@ import { ulid } from 'ulid'
 import { addHistory } from './history'
 import { ErrorDict } from '@renderer/lib/constant'
 import { getCurrentAssistantForAnswer } from './assistants'
+import { removeMeta } from '@renderer/lib/ai/parseString'
 
 const [answerStore, setAnswerStore] = createStore({
   answer: '',
@@ -19,7 +20,7 @@ export function genAns(q: string) {
   const ID = ulid()
   ansID = ID
   ansAssistant({
-    question: q,
+    question: removeMeta(q),
     newTokenCallback(content) {
       ID === ansID && setAnswerStore('answer', (ans) => ans + content)
     },

@@ -7,8 +7,6 @@ import { msgStatus, msgs } from '@renderer/store/msgs'
 import mdHighlight from 'markdown-it-highlightjs'
 import MsgPopup, { MsgPopupByUser, Pause, WithDrawal } from './Popup'
 import { ansStatus } from '@renderer/store/answer'
-import { useNavigate } from '@solidjs/router'
-import { userData } from '@renderer/store/user'
 export type MsgTypes = Roles | 'ans' | 'question'
 export default function Message(props: {
   type: MsgTypes
@@ -88,10 +86,16 @@ export default function Message(props: {
     return false
   })
 
-  const nav = useNavigate()
-
   return (
     <div class="group relative max-w-full">
+      <Show
+        when={
+          (props.id && msgStatus.generatingList.includes(props.id)) ||
+          (props.type === 'ans' && ansStatus.isGenerating)
+        }
+      >
+        <Pause id={props.id} type={props.type} />
+      </Show>
       <Show
         when={!props.isEmpty}
         fallback={
@@ -100,14 +104,6 @@ export default function Message(props: {
           </Show>
         }
       >
-        <Show
-          when={
-            (props.id && msgStatus.generatingList.includes(props.id)) ||
-            (props.type === 'ans' && ansStatus.isGenerating)
-          }
-        >
-          <Pause id={props.id} type={props.type} />
-        </Show>
         <Show when={showComps()}>
           <MsgPopup type={props.type} id={props.id || ''} content={props.content} />
         </Show>
@@ -115,9 +111,9 @@ export default function Message(props: {
           <MsgPopupByUser type={props.type} id={props.id || ''} content={props.content} />
         </Show>
       </Show>
-      <div class={style[props.type] + ' relative m-4 rounded-2xl p-4'}>
+      <div class={style[props.type] + ' relative m-4 rounded-2xl p-3'}>
         <div class={mdStyle[props.type] + ' markdown break-words'} innerHTML={htmlString()} />
-        <Show when={showComps()}>
+        {/* <Show when={showComps()}>
           <div class="-mb-2 -mr-1 mt-1 flex justify-end gap-1 pl-32">
             <Show when={userData.firstTimeFor.assistantSelect}>
               <div class="absolute bottom-[10px] right-[60px] animate-bounce select-none text-[12px]">
@@ -125,7 +121,7 @@ export default function Message(props: {
               </div>
             </Show>
 
-            {/* <Show when={props.botName}>
+            <Show when={props.botName}>
               <div
                 onClick={() => {
                   userData.firstTimeFor.assistantSelect && hasFirstTimeFor('assistantSelect')
@@ -135,9 +131,9 @@ export default function Message(props: {
                 <CapitalIcon size={20} content={props.botName!} />
               </div>
             </Show>
-            <ModelSelect position="right-1" /> */}
+            <ModelSelect position="right-1" />
           </div>
-        </Show>
+        </Show> */}
       </div>
     </div>
   )

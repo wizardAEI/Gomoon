@@ -5,7 +5,7 @@ import CapitalIcon from '../ui/CapitalIcon'
 export default function (props: { type: 'chat' | 'ans'; botName: string }) {
   const nav = useNavigate()
   return (
-    <div class="group/capsule fixed left-1/2 top-12 z-50 flex -translate-x-1/2 select-none items-center rounded-xl bg-dark-pro">
+    <div class="group/capsule fixed left-1/2 top-10 z-20 flex -translate-x-1/2 select-none items-center rounded-xl bg-dark-pro">
       <div
         onClick={() => {
           nav('/assistants?type=' + props.type)

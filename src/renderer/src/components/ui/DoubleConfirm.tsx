@@ -1,4 +1,4 @@
-import { JSX, Show, createSignal } from 'solid-js'
+import { JSX, Show, createSignal, onCleanup } from 'solid-js'
 
 export default function (props: {
   label: string
@@ -9,29 +9,44 @@ export default function (props: {
 }) {
   const [show, setShow] = createSignal(false)
   return (
-    <div class="relative">
+    <div
+      class="relative"
+      onClick={(e) => e.stopPropagation()}
+      ref={(el) => {
+        const fn = (e) => {
+          if (e.currentTarget && el.contains(e.currentTarget)) {
+            return
+          }
+          setShow(false)
+        }
+        document.addEventListener('click', fn)
+        onCleanup(() => {
+          document.removeEventListener('click', fn)
+        })
+      }}
+    >
       <Show when={show()}>
         <div
           class={
-            'shadow-center absolute flex animate-popup flex-col gap-2 overflow-visible rounded-md bg-dark-con p-1 ' +
+            'absolute flex animate-popup flex-col gap-2 overflow-visible rounded-md bg-dark-con px-2 py-1 shadow-center ' +
             props.position
           }
         >
-          <div class="text-center text-xs">{props.label}</div>
-          <div class="flex w-16 justify-around">
+          <div class="text-center text-sm">{props.label}</div>
+          <div class="flex justify-around">
             <button
-              class="rounded-sm px-1 py-[1px] text-[10px] duration-300 hover:bg-active"
+              class="mr-1 w-9 rounded-sm px-1 py-[1px] text-[12px] leading-4 duration-300 hover:bg-active"
               onClick={(e) => {
-                e.stopImmediatePropagation()
+                e.stopPropagation()
                 setShow(false)
               }}
             >
               取消
             </button>
             <button
-              class="rounded-sm px-1 py-[1px] text-[10px] duration-300 hover:bg-active"
+              class="w-9 rounded-sm px-1 py-[1px] text-[12px] leading-4 duration-300 hover:bg-active"
               onClick={(e) => {
-                e.stopImmediatePropagation()
+                e.stopPropagation()
                 setShow(false)
                 props.onConfirm?.()
               }}
@@ -43,7 +58,7 @@ export default function (props: {
       </Show>
       <div
         onClick={(e) => {
-          e.stopImmediatePropagation()
+          e.stopPropagation()
           if (props.preConfirm && !props.preConfirm()) {
             setShow(false)
             return

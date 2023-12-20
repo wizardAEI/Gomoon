@@ -135,14 +135,14 @@ export default function () {
                   />
                   <DoubleConfirm
                     label="确认删除"
-                    position="right-[-10px] top-[-42px]"
+                    position="right-[-10px] top-[-46px]"
                     onConfirm={() => deleteAssistant(a.id)}
                     preConfirm={() => {
                       const canDel =
                         a.id !== getCurrentAssistantForAnswer()?.id &&
                         a.id !== getCurrentAssistantForChat()?.id
                       if (!canDel) {
-                        toast.error('无法删除正在使用中的助手')
+                        toast.error('无法删除使用中的助手')
                       }
                       return canDel
                     }}

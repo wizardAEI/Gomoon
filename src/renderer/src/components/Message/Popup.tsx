@@ -48,7 +48,7 @@ export default function MsgPopup(props: { id: string; content: string; type: Msg
             }}
           />
         ))}
-        content={`${props.type === 'ai' ? '自此' : ''}保存`}
+        content={`${props.type === 'ai' ? '保存此前内容' : '保存'}`}
       />
       <Show when={props.type !== 'ans'}>
         <ToolTip
