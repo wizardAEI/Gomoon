@@ -195,6 +195,7 @@ export default function Chat() {
           // 显示时自动聚焦
           autoFocusWhenShow
           isGenerating={msgStatus.generatingList.length > 0}
+          type="chat"
         />
       </div>
     </div>

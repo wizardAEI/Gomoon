@@ -1,4 +1,4 @@
-import { BrowserWindow, app, ipcMain, shell } from 'electron'
+import { BrowserWindow, app, dialog, ipcMain, shell } from 'electron'
 import {
   addHistory,
   createAssistant,
@@ -18,14 +18,10 @@ import {
   useAssistant,
   getLines
 } from './model/index'
-import {
-  CreateAssistantModel,
-  HistoryModel,
-  UpdateAssistantModel,
-  UserDataModel
-} from './model/model'
+import { AssistantModel, CreateAssistantModel, HistoryModel, UserDataModel } from './model/model'
 import { hideWindow, setQuicklyWakeUp } from './window'
 import parseFile from './lib/ai/fileLoader'
+import { writeFile } from 'fs'
 
 export function initAppEventsHandler() {
   /**
@@ -61,7 +57,7 @@ export function initAppEventsHandler() {
    * FEAT: assistant 相关
    */
   ipcMain.handle('get-assistants', () => getAssistants())
-  ipcMain.handle('update-assistant', (_, a: UpdateAssistantModel) => updateAssistant(a))
+  ipcMain.handle('update-assistant', (_, a: AssistantModel) => updateAssistant(a))
   ipcMain.handle('delete-assistant', (_, id: string) => deleteAssistant(id))
   ipcMain.handle('create-assistant', (_, a: CreateAssistantModel) => createAssistant(a))
   ipcMain.handle('use-assistant', (_, id: string) => useAssistant(id))
@@ -77,6 +73,22 @@ export function initAppEventsHandler() {
   ipcMain.handle('parse-file', (_, files) => parseFile(files))
   ipcMain.handle('open-path', (_, path: string) => {
     shell.openPath(path)
+  })
+  ipcMain.handle('save-file', async (_, fileName: string, content: string) => {
+    const res = await dialog.showSaveDialog({
+      title: '保存文件',
+      buttonLabel: '保存',
+      defaultPath: fileName,
+      filters: [
+        {
+          name: 'All Files',
+          extensions: ['*']
+        }
+      ]
+    })
+    if (res.filePath) {
+      writeFile(res.filePath, content, () => {})
+    }
   })
 
   // 其他

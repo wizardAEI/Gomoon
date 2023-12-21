@@ -1,11 +1,9 @@
-import Tesseract from 'tesseract.js'
-
 let worker: Tesseract.Worker | undefined
 
 export const init = async () => {
   worker = await Tesseract.createWorker('eng+chi_sim', undefined, {
-    logger: (m) => {
-      console.log(m)
+    logger: (_m) => {
+      //   console.log(_m)
     }
   })
 }
@@ -16,7 +14,7 @@ export const recognizeText = async (
 ) => {
   if (worker) {
     logger({
-      status: '解析图片中'
+      status: '正在识别图片中的文字'
     })
     const result = await worker?.recognize(img)
     return result.data.text

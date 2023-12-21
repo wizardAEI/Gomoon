@@ -62,6 +62,8 @@ export const api = {
     }[]
   ): Promise<FileLoaderRes> => ipcRenderer.invoke('parse-file', files),
   openPath: (path: string) => ipcRenderer.invoke('open-path', path),
+  saveFile: (fileName: string, content: string) =>
+    ipcRenderer.invoke('save-file', fileName, content),
 
   // 其他
   getLines: (): Promise<Partial<Line>[]> => ipcRenderer.invoke('get-lines')

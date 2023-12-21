@@ -99,6 +99,7 @@ export default function Answer() {
           }}
           // onShow自动聚焦
           autoFocusWhenShow
+          type="ans"
         />
       </div>
     </div>

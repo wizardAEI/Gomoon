@@ -5,6 +5,8 @@ import LeftArrow from '@renderer/assets/icon/base/arrow/LeftArrow'
 import RightArrow from '@renderer/assets/icon/base/arrow/RightArrow'
 import { recognizeText } from '@renderer/lib/ai/ocr'
 import { useLoading } from '../ui/DynamicLoading'
+import text2md from '@renderer/lib/md/text2md'
+import { exportAssistants, importAssistants } from '@renderer/store/assistants'
 
 function ToolWrap(props: { children: JSX.Element; onClick?: () => void }) {
   return (
@@ -20,6 +22,7 @@ function ToolWrap(props: { children: JSX.Element; onClick?: () => void }) {
 export default function (props: {
   onSubmit: (content: string) => void
   onInput: (content: string) => void
+  type: 'chat' | 'ans'
 }) {
   const toast = useToast()
   let toolsDiv: HTMLDivElement | undefined
@@ -128,11 +131,36 @@ export default function (props: {
         </ToolWrap>
         <ToolWrap>解析链接</ToolWrap>
         <ToolWrap>联网查询</ToolWrap>
-        <ToolWrap>下载对话记录</ToolWrap>
-        <ToolWrap>导出助手</ToolWrap>
-        <ToolWrap>导入助手</ToolWrap>
+        <ToolWrap onClick={() => text2md(props.type)}>下载对话记录</ToolWrap>
+        <ToolWrap onClick={exportAssistants}>导出助手</ToolWrap>
+        <ToolWrap>
+          <label for="import-assistants" style={{ cursor: 'pointer' }}>
+            <span class="text-[12px]">导入助手</span>
+            <input
+              id="import-assistants"
+              type="file"
+              class="hidden"
+              accept=".json"
+              multiple={false}
+              onChange={async (e) => {
+                const file = e.target.files![0]
+                e.target.value = ''
+                if (file) {
+                  const reader = new FileReader()
+                  reader.readAsText(file)
+                  reader.onload = async (e) => {
+                    const content = e.target?.result
+                    ;(await importAssistants(content as string))
+                      ? toast.success('导入成功')
+                      : toast.error('导入失败')
+                  }
+                }
+              }}
+            />
+          </label>
+        </ToolWrap>
         <ToolWrap>Terminal执行 (开发者选项)</ToolWrap>
-        <ToolWrap>代码开发 (开发者选项)</ToolWrap>
+        <ToolWrap onClick={() => toast.warning('还没做捏💦')}>代码开发 (开发者选项)</ToolWrap>
         <ToolWrap onClick={() => toast.warning('还没做捏💦')}>图表制作</ToolWrap>
       </div>
       <RightArrow

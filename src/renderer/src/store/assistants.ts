@@ -107,4 +107,34 @@ export const getCurrentAssistantForChat = createMemo<AssistantModel>(
     }
 )
 
+export const exportAssistants = async () => {
+  const json = JSON.stringify(assistants)
+  await window.api.saveFile('assistants.json', json)
+}
+
+export const importAssistants = async (content: string) => {
+  try {
+    const importA = JSON.parse(content)
+    if (!Array.isArray(importA)) return false
+    importA.forEach(async (a: AssistantModel) => {
+      if (
+        typeof a.id === 'string' &&
+        typeof a.name === 'string' &&
+        typeof a.prompt === 'string' &&
+        (a.type === 'ans' || a.type === 'chat') &&
+        typeof a.version === 'number'
+      ) {
+        const curA = assistants.find((as) => as.id === a.id)
+        if (curA && curA.version >= a.version) return
+        await saveAssistant(a)
+      } else {
+        throw new Error('invalid assistant')
+      }
+    })
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
 export { assistants, assistantsStatus }

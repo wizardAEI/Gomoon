@@ -7,4 +7,5 @@ declare global {
     electron: ElectronAPI
     api: typeof Api
   }
+  type Tesseract = typeof import('tesseract.js')
 }

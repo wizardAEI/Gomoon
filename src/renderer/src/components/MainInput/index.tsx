@@ -12,6 +12,7 @@ import Tools from './Tools'
 export default function Input(props: {
   send: (msg: string) => void
   onMountHandler?: (textAreaDiv: HTMLTextAreaElement) => void
+  type: 'chat' | 'ans'
   showClearButton?: boolean
   disable?: boolean
   isGenerating?: boolean
@@ -70,7 +71,7 @@ export default function Input(props: {
 
   return (
     <div class="flex flex-col gap-2">
-      <Tools onSubmit={submit} onInput={(c) => props.setText(c)} />
+      <Tools onSubmit={submit} onInput={(c) => props.setText(c)} type={props.type} />
       <div class="over relative flex w-full gap-1">
         <Show when={props.showClearButton && !props.text.length && !props.isGenerating}>
           <div class="-ml-3 mr-[2px] flex cursor-pointer flex-col items-center justify-center">

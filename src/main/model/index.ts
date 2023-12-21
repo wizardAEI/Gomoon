@@ -1,12 +1,6 @@
 import { app } from 'electron'
 import { JSONSyncPreset } from 'lowdb/node'
-import {
-  AssistantModel,
-  CreateAssistantModel,
-  HistoryModel,
-  SettingModel,
-  UpdateAssistantModel
-} from './model'
+import { AssistantModel, CreateAssistantModel, HistoryModel, SettingModel } from './model'
 import { getDefaultUserData } from './default/getDefaultUserData'
 import { getDefaultConfig } from './default/getDefaultConfig'
 import { join } from 'path'
@@ -97,7 +91,7 @@ const assistantsDB = JSONSyncPreset(join(appDataPath, 'assistants.json'), getDef
 export function getAssistants() {
   return assistantsDB.data || []
 }
-export function updateAssistant(a: UpdateAssistantModel) {
+export function updateAssistant(a: AssistantModel) {
   const index = assistantsDB.data.findIndex((item) => item.id === a.id)
   if (index === -1) {
     assistantsDB.data = [
@@ -111,7 +105,10 @@ export function updateAssistant(a: UpdateAssistantModel) {
   } else {
     assistantsDB.data[index] = {
       ...a,
-      version: assistantsDB.data[index].version + 1
+      version:
+        assistantsDB.data[index].version < a.version
+          ? a.version
+          : assistantsDB.data[index].version + 1
     }
   }
   assistantsDB.write()

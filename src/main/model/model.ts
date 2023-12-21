@@ -52,7 +52,6 @@ export type AssistantModel = (
   tools?: ToolEnum[]
 }
 
-export type UpdateAssistantModel = Omit<AssistantModel, 'version'>
 export type CreateAssistantModel = Omit<AssistantModel, 'id' | 'version'>
 
 export interface HistoryModel {
