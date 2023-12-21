@@ -16,6 +16,7 @@ export type ContentMetaData =
   | {
       type: 'file'
       src: string
+      filename: string
     }
   | {
       type: 'url'
@@ -30,7 +31,8 @@ export function parseMeta(str: string): ContentMetaData {
   if (str.match(regForFile)) {
     return {
       type: 'file',
-      src: str.match(regForFile)![0].replace(/^<gomoon-file src="(.+?)".*?\/>$/, '$1')
+      src: str.match(regForFile)![0].replace(/^<gomoon-file .*?src="(.+?)".*?\/>$/, '$1'),
+      filename: str.match(regForFile)![0].replace(/^<gomoon-file .*?filename="(.+?)".*?\/>$/, '$1')
     }
   }
   if (str.match(regForUrl)) {

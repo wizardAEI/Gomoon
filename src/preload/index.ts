@@ -9,6 +9,7 @@ import {
   UpdateAssistantModel,
   UserDataModel
 } from '../main/model/model'
+import { FileLoaderRes } from '../main/lib/ai/fileLoader'
 
 // Custom APIs for renderer
 export const api = {
@@ -53,14 +54,17 @@ export const api = {
   addHistory: (history: HistoryModel) => ipcRenderer.invoke('add-history', history),
   deleteHistory: (historyId: string) => ipcRenderer.invoke('delete-history', historyId),
 
-  // 其他
-  getLines: (): Promise<Line[]> => ipcRenderer.invoke('get-lines'),
+  // 文件相关
   parseFile: (
     files: {
       path: string
       type: string
     }[]
-  ): Promise<string> => ipcRenderer.invoke('parse-file', files)
+  ): Promise<FileLoaderRes> => ipcRenderer.invoke('parse-file', files),
+  openPath: (path: string) => ipcRenderer.invoke('open-path', path),
+
+  // 其他
+  getLines: (): Promise<Partial<Line>[]> => ipcRenderer.invoke('get-lines')
 } as const
 
 // Use `contextBridge` APIs to expose Electron APIs to

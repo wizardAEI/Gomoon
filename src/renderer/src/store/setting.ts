@@ -86,7 +86,9 @@ const [lines, setLines] = createStore<Line[]>([])
 
 export async function loadLines() {
   const l = await window.api.getLines()
-  setLines(l)
+  setLines(
+    l.map((line) => ({ from: 'Gomoon', content: '快速双击复制，可以直接进入问答模式', ...line }))
+  )
 }
 
 export { settingStore, setSettingStore, lines }

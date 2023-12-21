@@ -26,11 +26,13 @@ module.exports = {
         'gray-pro': '#93a5a6', // 非激活色↑ 浅紫灰色
         'dark-con': '#436565', // 暗色稍微亮一点
         dark: '#254852', // 暗色 深蓝绿
+        'dark-plus': '#1f3d48', // 暗色稍微深一点
         'dark-pro': '#152431', // 暗色↑
         light: '#e2e1e4', // 亮色 芡食白
         text1: '#d8e3e7', // 云峰白
         text2: '#baccd9', // 云水蓝
         'text-dark': '#151b26', // 深色
+        'text-dark2': '#276b84', // 深蓝绿
         'white/70': '#ffffff70', // 白色透明度70%
         success: '#12c569', // 绿色
         error: '#DF919C', // 红色

@@ -2,10 +2,24 @@ import { TextLoader } from 'langchain/document_loaders/fs/text'
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf'
 import { DocxLoader } from 'langchain/document_loaders/fs/docx'
 import { PPTXLoader } from 'langchain/document_loaders/fs/pptx'
+import { CSVLoader } from 'langchain/document_loaders/fs/csv'
+import xlsx from 'xlsx'
 import { Document } from 'langchain/document'
 // import { OpenAIWhisperAudio } from 'langchain/document_loaders/fs/openai_whisper_audio'
 import { readFile } from 'fs/promises'
-import { blob } from 'stream/consumers'
+import { app } from 'electron'
+import { join } from 'path'
+import { copyFileSync, mkdirSync } from 'fs'
+import moment from 'moment'
+
+export interface FileLoaderRes {
+  content: string
+  path: string
+  filename: string
+}
+
+const appDataPath = app.getPath('userData')
+const filesPath = join(appDataPath, 'file')
 
 function processText(text: string) {
   // 多个换行变成一个换行
@@ -49,6 +63,29 @@ async function parsePPTXFile(b: Blob) {
   return processDocs(docs)
 }
 
+async function parseXLSXFile(b: Buffer) {
+  // 转化成arrayBuffer
+  const arrayBuffer = new Uint8Array(b).buffer
+  const workbook = xlsx.read(arrayBuffer, { type: 'array' })
+  let content = ''
+  workbook.SheetNames.forEach((sheetName) => {
+    const worksheet = workbook.Sheets[sheetName]
+    content += xlsx.utils.sheet_to_csv(worksheet)
+  })
+  return processText(content)
+}
+
+async function parseJSONFile(b: Buffer) {
+  const json = b.toString()
+  return processText(json)
+}
+
+async function parseCSVFile(b: Blob) {
+  const loader = new CSVLoader(b)
+  const docs = await loader.load()
+  return processDocs(docs)
+}
+
 // async function parseAudioFile(b: Blob) {
 //   const loader = new OpenAIWhisperAudio(b, {
 //     clientOptions: {
@@ -61,31 +98,45 @@ async function parsePPTXFile(b: Blob) {
 // }
 
 export default async function parseFile(
-  paths: {
+  files: {
     path: string
     type: string
   }[]
-) {
-  const file = await readFile(paths[0].path)
+): Promise<FileLoaderRes> {
+  const today = moment().format('YYYY-MM-DD')
+  const targetPath = join(filesPath, `/${today}`)
+  const targetFile = join(targetPath, files[0].path.split('/').pop()!)
+  mkdirSync(targetPath, { recursive: true })
+  copyFileSync(files[0].path, targetFile)
+  const file = await readFile(targetFile)
 
-  const b = new Blob([file], { type: paths[0].type })
-
-  console.log(b.type)
+  const b = new Blob([file], { type: files[0].type })
+  let content = ''
 
   if (b.type === 'text/plain' || b.type === 'application/msword') {
-    return parseTextFile(b)
+    content = await parseTextFile(b)
   }
   if (b.type === 'application/pdf') {
-    return parsePDFFile(b)
+    content = await parsePDFFile(b)
   }
   if (b.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-    return parseDocxFile(b)
+    content = await parseDocxFile(b)
   }
   if (b.type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
-    return parsePPTXFile(b)
+    content = await parsePPTXFile(b)
   }
-
-  // 存储在本地
+  if (b.type === 'application/json') {
+    content = await parseJSONFile(file)
+  }
+  if (b.type === 'text/csv') {
+    content = await parseCSVFile(b)
+  }
+  if (
+    b.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+    b.type === 'application/vnd.ms-excel'
+  ) {
+    content = await parseXLSXFile(file)
+  }
 
   // .mp3,.mp4,.wav,.m4a,.webm,.mpga,.mpeg
   // if (
@@ -98,5 +149,16 @@ export default async function parseFile(
   // ) {
   //   return parseAudioFile(b)
   // }
-  return '<null>'
+  return {
+    content,
+    path: targetPath,
+    filename: files[0].path.split('/').pop()!
+  }
 }
+
+parseFile([
+  {
+    path: '/Users/wangdejiang/Desktop/story.json',
+    type: 'application/json'
+  }
+])

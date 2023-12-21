@@ -30,6 +30,9 @@
     "@zag-js/solid": "^0.31.1",
     "@zag-js/switch": "^0.31.1",
     "@zag-js/tooltip": "^0.31.1",
+    "axios": "^1.6.2",
+    "cheerio": "^1.0.0-rc.12",
+    "d3-dsv": "2",
     "electron-updater": "^6.1.1",
     "jszip": "^3.10.1",
     "langchain": "0.0.209",
@@ -39,11 +42,13 @@
     "mammoth": "^1.6.0",
     "markdown-it": "^13.0.2",
     "markdown-it-highlightjs": "^4.0.1",
+    "moment": "^2.29.4",
     "officeparser": "^4.0.5",
     "pdf-parse": "^1.1.1",
     "shiki": "^0.14.5",
     "solidjs-use": "^2.3.0",
-    "ulid": "^2.3.0"
+    "ulid": "^2.3.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^1.0.1",

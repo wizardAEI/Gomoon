@@ -1,4 +1,4 @@
-import { BrowserWindow, app, ipcMain } from 'electron'
+import { BrowserWindow, app, ipcMain, shell } from 'electron'
 import {
   addHistory,
   createAssistant,
@@ -42,12 +42,10 @@ export function initAppEventsHandler() {
   })
   ipcMain.handle('set-models', (_, models: any) => setModels(models))
   ipcMain.handle('set-can-multi-copy', (_, canMultiCopy: boolean) => {
-    console.log('set-can-multi-copy', canMultiCopy)
     setCanMultiCopy(canMultiCopy)
   })
 
   ipcMain.handle('set-quickly-wake-up-keys', (_, keys: string) => {
-    console.log('set-quickly-wake-up-keys', keys)
     setQuicklyWakeUpKeys(keys)
     setQuicklyWakeUp(keys)
   })
@@ -75,9 +73,14 @@ export function initAppEventsHandler() {
   ipcMain.handle('add-history', (_, history: HistoryModel) => addHistory(history))
   ipcMain.handle('delete-history', (_, id: string) => deleteHistory(id))
 
+  // 文件相关
+  ipcMain.handle('parse-file', (_, files) => parseFile(files))
+  ipcMain.handle('open-path', (_, path: string) => {
+    shell.openPath(path)
+  })
+
   // 其他
   app.on('browser-window-created', () => {})
   ipcMain.handle('hide-window', () => hideWindow())
   ipcMain.handle('get-lines', () => getLines())
-  ipcMain.handle('parse-file', (_, files) => parseFile(files))
 }

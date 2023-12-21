@@ -10,16 +10,18 @@ export async function parseFile(file: File): Promise<{
       content: '请将 doc 文件转换成 docx 格式后重新发送'
     }
   }
-  const str = await window.api.parseFile([
+  const fileLoader = await window.api.parseFile([
     {
       path: file.path,
       type: file.type || 'text/plain'
     }
   ])
-  console.log(str, str.length)
+  const type = fileLoader.filename.split('.').pop() ?? '文本'
   return {
     suc: true,
-    content: `<gomoon-file src="${file.path}"/>帮我总结一下当前文件内容：\n` + str,
-    length: str.length
+    content:
+      `<gomoon-file src="${fileLoader.path}" filename="${fileLoader.filename}"/>接下来我会把一个${type}文件的全部文本内容发送给你，请你总结一下：\n` +
+      fileLoader.content,
+    length: fileLoader.content.length
   }
 }

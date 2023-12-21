@@ -3,11 +3,15 @@ import { ContentMetaData } from '@renderer/lib/ai/parseString'
 
 export default function (meta: ContentMetaData) {
   if (meta.type === 'file') {
-    const filename = meta.src.split('/').pop()!
     return (
-      <div class="flex cursor-pointer items-center gap-1 text-text-dark duration-150 hover:text-active">
+      <div
+        onClick={() => {
+          window.api.openPath(meta.src)
+        }}
+        class="text-text-dark2 flex cursor-pointer items-center gap-1 duration-150 hover:text-active"
+      >
         <BaseFileIcon width={20} height={20} />
-        <span>{filename}</span>
+        <span>{meta.filename}</span>
       </div>
     )
   }
