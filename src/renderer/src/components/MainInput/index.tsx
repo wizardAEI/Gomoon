@@ -70,7 +70,7 @@ export default function Input(props: {
 
   return (
     <div class="flex flex-col gap-2">
-      <Tools onSubmit={submit} />
+      <Tools onSubmit={submit} onInput={(c) => props.setText(c)} />
       <div class="over relative flex w-full gap-1">
         <Show when={props.showClearButton && !props.text.length && !props.isGenerating}>
           <div class="-ml-3 mr-[2px] flex cursor-pointer flex-col items-center justify-center">

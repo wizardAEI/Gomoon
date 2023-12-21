@@ -13,6 +13,8 @@ import History from './pages/History'
 import { loadAssistants } from './store/assistants'
 import { loadHistories } from './store/history'
 import { ToastProvider } from './components/ui/Toast'
+import { LoadingProvider } from './components/ui/DynamicLoading'
+import { init as OCRInit } from './lib/ai/ocr'
 
 const App = () => {
   const nav = useNavigate()
@@ -40,6 +42,9 @@ const App = () => {
     })
     onCleanup(() => removeListener())
 
+    // FEAT: OCR
+    OCRInit()
+
     // 避免 ctrl + r 刷新页面 (生产环境)
     if (process.env.NODE_ENV === 'production') {
       window.addEventListener('keydown', (e) => {
@@ -53,21 +58,23 @@ const App = () => {
   return (
     // FEAT: UIProvider 中存储了全局的 UI 组件，如 Toast
     <ToastProvider>
-      <div class="flex h-screen flex-col overflow-hidden bg-home">
-        <TopBar />
-        <div class="flex-1 overflow-auto">
-          <Show when={settingStore.isLoaded} fallback={<Loading />}>
-            <Routes>
-              <Route path="/" component={Chat} />
-              <Route path="/answer" component={Answer} />
-              <Route path="/setting" component={Setting} />
-              <Route path="/assistants" component={Assistants} />
-              <Route path="/history" component={History} />
-              <Route path="*" component={Chat} />
-            </Routes>
-          </Show>
+      <LoadingProvider>
+        <div class="flex h-screen flex-col overflow-hidden bg-home">
+          <TopBar />
+          <div class="flex-1 overflow-auto">
+            <Show when={settingStore.isLoaded} fallback={<Loading />}>
+              <Routes>
+                <Route path="/" component={Chat} />
+                <Route path="/answer" component={Answer} />
+                <Route path="/setting" component={Setting} />
+                <Route path="/assistants" component={Assistants} />
+                <Route path="/history" component={History} />
+                <Route path="*" component={Chat} />
+              </Routes>
+            </Show>
+          </div>
         </div>
-      </div>
+      </LoadingProvider>
     </ToastProvider>
   )
 }

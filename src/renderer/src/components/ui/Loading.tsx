@@ -3,8 +3,8 @@ export default function Loading() {
   return (
     <svg
       class="spinner"
-      width="65px"
-      height="65px"
+      width="40px"
+      height="40px"
       viewBox="0 0 66 66"
       xmlns="http://www.w3.org/2000/svg"
     >

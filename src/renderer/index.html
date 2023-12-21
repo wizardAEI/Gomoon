@@ -6,7 +6,7 @@
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://api.openai.com https://api.chatanywhere.com.cn https://tiktoken.pages.dev https://aip.baidubce.com; img-src data: 'self';"
+      content="default-src 'self'; script-src https://cdn.jsdelivr.net 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://api.openai.com https://api.chatanywhere.com.cn https://tiktoken.pages.dev https://aip.baidubce.com https://cdn.jsdelivr.net data:; img-src data: 'self'; worker-src 'self' blob:;"
     />
   </head>
 

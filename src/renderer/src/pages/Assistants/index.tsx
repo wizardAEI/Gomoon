@@ -124,7 +124,7 @@ export default function () {
                         class="cursor-pointer text-gray duration-100 hover:text-active"
                         onClick={(e) => {
                           e.stopPropagation()
-                          tip('fail', '没做捏💦')
+                          tip('fail', '还没做捏💦')
                         }}
                       />
                     ))}
