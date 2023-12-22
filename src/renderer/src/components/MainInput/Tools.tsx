@@ -5,7 +5,7 @@ import LeftArrow from '@renderer/assets/icon/base/arrow/LeftArrow'
 import RightArrow from '@renderer/assets/icon/base/arrow/RightArrow'
 import { recognizeText } from '@renderer/lib/ai/ocr'
 import { useLoading } from '../ui/DynamicLoading'
-import text2md from '@renderer/lib/md/text2md'
+import exportRecord from '@renderer/lib/md/exportRecord'
 import { exportAssistants, importAssistants } from '@renderer/store/assistants'
 
 function ToolWrap(props: { children: JSX.Element; onClick?: () => void }) {
@@ -131,7 +131,13 @@ export default function (props: {
         </ToolWrap>
         <ToolWrap>解析链接</ToolWrap>
         <ToolWrap>联网查询</ToolWrap>
-        <ToolWrap onClick={() => text2md(props.type)}>下载对话记录</ToolWrap>
+        <ToolWrap
+          onClick={() => {
+            exportRecord(props.type).result === 'NoRecord' && toast.error('无对话记录')
+          }}
+        >
+          下载对话记录
+        </ToolWrap>
         <ToolWrap onClick={exportAssistants}>导出助手</ToolWrap>
         <ToolWrap>
           <label for="import-assistants" style={{ cursor: 'pointer' }}>
