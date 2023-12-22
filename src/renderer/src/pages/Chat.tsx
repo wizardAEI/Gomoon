@@ -14,6 +14,8 @@ import { ulid } from 'ulid'
 import { event } from '@renderer/lib/util'
 import { getCurrentAssistantForChat } from '@renderer/store/assistants'
 import SystemHeader from '@renderer/components/SystemHeader'
+import Capsule from '@renderer/components/Capsule'
+import { lines } from '@renderer/store/setting'
 const scrollToBottom = (el: HTMLDivElement, index: number) => {
   if (index === msgs.length - 1) {
     requestAnimationFrame(() => {
@@ -28,6 +30,8 @@ const scrollToBottom = (el: HTMLDivElement, index: number) => {
 export default function Chat() {
   const [text, setText] = createSignal('')
   const [editId, setEditId] = createSignal('')
+  const [linesContent, setLinesContent] = createSignal('')
+  const [linesFrom, setLinesFrom] = createSignal('')
   // FEAT: 记录用户点击编辑后如果没有发送，则取消编辑
   const [previousMsg, setPreviousMsg] = createSignal<{
     content: string
@@ -35,6 +39,22 @@ export default function Chat() {
     state: 'pending' | 'complete'
   }>({ content: '', id: '', state: 'complete' })
   onMount(() => {
+    // 随机取一个介绍语
+    const index = Math.floor(Math.random() * lines.length)
+    const linesFull = lines[index].content + ' — '
+    setLinesContent(linesFull.slice(0, 1))
+    // 打字机效果,逐渐显示introduce
+    const timer = setInterval(() => {
+      if (linesFull.length === linesContent().length) {
+        clearInterval(timer)
+        setLinesFrom(lines[index].from)
+      } else {
+        setLinesContent((i) => {
+          return i + linesFull[i.length]
+        })
+      }
+    }, 70)
+
     requestAnimationFrame(() => {
       const chatContainer = document.querySelector('.chat-container')
       if (chatContainer) {
@@ -69,46 +89,66 @@ export default function Chat() {
   })
 
   return (
-    <div class="chat-container flex h-full flex-col overflow-auto pb-48 pt-6">
-      {msgs.length === 0 && <SystemHeader type="chat" />}
-      <For each={msgs}>
-        {(msg, index) => (
-          // 这里使用三元表达式来显示消息时会有渲染不及时的问题
-          <Show
-            when={msg.content}
-            fallback={
+    <div class="chat-container flex h-full flex-col overflow-auto pb-48 pt-10">
+      <Show
+        when={msgs.length}
+        fallback={
+          <>
+            {
+              <div class="flex w-full select-none flex-col items-center justify-center gap-2 px-10 pt-8">
+                <span class="text-sm text-gray">Gomoon</span>
+                <span class="text-center text-[12px] text-gray">
+                  {linesContent()}
+                  <em class="text-[12px]">{linesFrom()}</em>
+                </span>
+              </div>
+            }
+            <SystemHeader type="chat" />
+          </>
+        }
+      >
+        <Show when={msgStatus.generatingList.length === 0}>
+          <Capsule type="chat" botName={getCurrentAssistantForChat().name} />
+        </Show>
+        <For each={msgs}>
+          {(msg, index) => (
+            // 这里使用三元表达式来显示消息时会有渲染不及时的问题
+            <Show
+              when={msg.content}
+              fallback={
+                <div
+                  ref={(el) => scrollToBottom(el, index())}
+                  id={msg.id}
+                  class={'flex ' + (msg.role === 'human' ? 'human ml-4 justify-end' : 'ai mr-4')}
+                >
+                  <Message
+                    isEmpty
+                    id={msg.id}
+                    content="......"
+                    type={msg.role}
+                    botName={getCurrentAssistantForChat().name}
+                  />
+                </div>
+              }
+            >
               <div
                 ref={(el) => scrollToBottom(el, index())}
-                id={msg.id}
-                class={'flex ' + (msg.role === 'human' ? 'human ml-4 justify-end' : 'ai mr-4')}
+                class={`relative flex max-w-[calc(100%-16px)] ${
+                  msg.role === 'human' ? 'human ml-4 justify-end' : 'ai mr-4'
+                }`}
               >
                 <Message
-                  isEmpty
                   id={msg.id}
-                  content="......"
+                  content={msg.content}
                   type={msg.role}
                   botName={getCurrentAssistantForChat().name}
                 />
               </div>
-            }
-          >
-            <div
-              ref={(el) => scrollToBottom(el, index())}
-              class={`relative flex max-w-[calc(100%-16px)] ${
-                msg.role === 'human' ? 'human ml-4 justify-end' : 'ai mr-4'
-              }`}
-            >
-              <Message
-                id={msg.id}
-                content={msg.content}
-                type={msg.role}
-                botName={getCurrentAssistantForChat().name}
-              />
-            </div>
-          </Show>
-        )}
-      </For>
-      <div class="fixed bottom-10 z-50 w-full px-4">
+            </Show>
+          )}
+        </For>
+      </Show>
+      <div class="fixed bottom-10 w-full px-4">
         <Input
           text={text()}
           setText={setText}
@@ -155,6 +195,7 @@ export default function Chat() {
           // 显示时自动聚焦
           autoFocusWhenShow
           isGenerating={msgStatus.generatingList.length > 0}
+          type="chat"
         />
       </div>
     </div>

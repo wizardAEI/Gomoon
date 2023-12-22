@@ -31,7 +31,7 @@ export default function Switch(props: {
           <div class="relative h-5 w-9">
             <div
               class={`bg-gray-300 absolute bottom-0 left-0 right-0 top-0 cursor-pointer rounded-full transition-colors duration-300 ease-in-out ${
-                api().isChecked ? 'bg-[#A57BEA]' : 'group-hover:bg-gray-pro bg-gray'
+                api().isChecked ? 'bg-active' : 'bg-gray group-hover:bg-gray-pro'
               }`}
             >
               <span

@@ -1,4 +1,4 @@
-import { BrowserWindow, app, ipcMain } from 'electron'
+import { BrowserWindow, app, dialog, ipcMain, shell } from 'electron'
 import {
   addHistory,
   createAssistant,
@@ -15,15 +15,14 @@ import {
   setSendWithCmdOrCtrl,
   updateAssistant,
   updateUserData,
-  useAssistant
+  useAssistant,
+  getLines
 } from './model/index'
-import {
-  CreateAssistantModel,
-  HistoryModel,
-  UpdateAssistantModel,
-  UserDataModel
-} from './model/model'
+import { AssistantModel, CreateAssistantModel, HistoryModel, UserDataModel } from './model/model'
 import { hideWindow, setQuicklyWakeUp } from './window'
+import parseFile from './lib/ai/fileLoader'
+import { writeFile } from 'fs'
+import { parseURL2Str } from './lib/ai/parseURL'
 
 export function initAppEventsHandler() {
   /**
@@ -40,12 +39,10 @@ export function initAppEventsHandler() {
   })
   ipcMain.handle('set-models', (_, models: any) => setModels(models))
   ipcMain.handle('set-can-multi-copy', (_, canMultiCopy: boolean) => {
-    console.log('set-can-multi-copy', canMultiCopy)
     setCanMultiCopy(canMultiCopy)
   })
 
   ipcMain.handle('set-quickly-wake-up-keys', (_, keys: string) => {
-    console.log('set-quickly-wake-up-keys', keys)
     setQuicklyWakeUpKeys(keys)
     setQuicklyWakeUp(keys)
   })
@@ -54,14 +51,14 @@ export function initAppEventsHandler() {
   /**
    * FEAT: 用户相关
    */
-  ipcMain.handle('set-user-data', (e, data: Partial<UserDataModel>) => updateUserData(data))
+  ipcMain.handle('set-user-data', (_, data: Partial<UserDataModel>) => updateUserData(data))
   ipcMain.handle('get-user-data', () => getUserData())
 
   /**
    * FEAT: assistant 相关
    */
   ipcMain.handle('get-assistants', () => getAssistants())
-  ipcMain.handle('update-assistant', (_, a: UpdateAssistantModel) => updateAssistant(a))
+  ipcMain.handle('update-assistant', (_, a: AssistantModel) => updateAssistant(a))
   ipcMain.handle('delete-assistant', (_, id: string) => deleteAssistant(id))
   ipcMain.handle('create-assistant', (_, a: CreateAssistantModel) => createAssistant(a))
   ipcMain.handle('use-assistant', (_, id: string) => useAssistant(id))
@@ -73,8 +70,31 @@ export function initAppEventsHandler() {
   ipcMain.handle('add-history', (_, history: HistoryModel) => addHistory(history))
   ipcMain.handle('delete-history', (_, id: string) => deleteHistory(id))
 
+  // 文件相关
+  ipcMain.handle('parse-file', (_, files) => parseFile(files))
+  ipcMain.handle('open-path', (_, path: string) => {
+    shell.openPath(path)
+  })
+  ipcMain.handle('save-file', async (_, fileName: string, content: string) => {
+    const res = await dialog.showSaveDialog({
+      title: '保存文件',
+      buttonLabel: '保存',
+      defaultPath: fileName,
+      filters: [
+        {
+          name: 'All Files',
+          extensions: ['*']
+        }
+      ]
+    })
+    if (res.filePath) {
+      writeFile(res.filePath, content, () => {})
+    }
+  })
+
   // 其他
   app.on('browser-window-created', () => {})
   ipcMain.handle('hide-window', () => hideWindow())
-
+  ipcMain.handle('get-lines', () => getLines())
+  ipcMain.handle('parse-page-to-string', (_, url: string) => parseURL2Str(url))
 }

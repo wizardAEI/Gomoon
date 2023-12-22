@@ -4,7 +4,7 @@ import { is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import trayIcon from '../../resources/icon@20.png?asset'
 import { loadUserConfig } from './model'
-import { quitApp } from './lib'
+import { getResourcesPath, quitApp } from './lib'
 import { spawn } from 'child_process'
 
 let mainWindow: BrowserWindow | null = null
@@ -53,7 +53,11 @@ export function createWindow(): void {
   mainWindow!.setAlwaysOnTop(userConfig.isOnTop, 'status')
   // FEAT: CORS
   const filter = {
-    urls: ['https://aip.baidubce.com/*', 'https://api.chatanywhere.com.cn/*'] // Remote API URS for which you are getting CORS error,
+    urls: [
+      'https://aip.baidubce.com/*',
+      'https://api.chatanywhere.com.cn/*',
+      'http://www.baidu.com/*'
+    ] // Remote API URS for which you are getting CORS error,
   }
   mainWindow.webContents.session.webRequest.onHeadersReceived(filter, (details, callback) => {
     if (details.responseHeaders) {
@@ -77,11 +81,8 @@ export function createWindow(): void {
 
   // FEAT: 双击复制回答
   // macos TODO: 测试不同版本的macos
-  if (loadUserConfig().canMultiCopy) {
-    // windows TODO: 未测试
-    const eventTracker = app.isPackaged
-      ? spawn(join(process.resourcesPath, 'app.asar.unpacked/resources/eventTracker'))
-      : spawn(join(__dirname, '../../resources/eventTracker'))
+  if (process.platform === 'darwin' && userConfig.canMultiCopy) {
+    const eventTracker = spawn(getResourcesPath('eventTracker'))
     eventTracker.stdout.on('data', (data) => {
       if (`${data}` === 'multi-copy') {
         const copyText = clipboard.readText()
@@ -90,10 +91,10 @@ export function createWindow(): void {
         mainWindow?.show()
         mainWindow?.focus()
       }
-    })
-    // 应用程序退出时，关闭子进程
-    app.on('will-quit', () => {
-      eventTracker.kill()
+      // 应用程序退出时，关闭子进程
+      app.on('will-quit', () => {
+        eventTracker.kill()
+      })
     })
   }
 

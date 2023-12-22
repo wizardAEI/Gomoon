@@ -4,6 +4,8 @@ import { createStore, produce } from 'solid-js/store'
 import { ulid } from 'ulid'
 import { addHistory } from './history'
 import { cloneDeep } from 'lodash'
+import { getCurrentAssistantForChat } from './assistants'
+import { removeMeta } from '@renderer/lib/ai/parseString'
 
 export interface Msg {
   id: string
@@ -91,19 +93,25 @@ export function genMsg(id: string) {
     msgs.findIndex((msg) => msg.id === id)
   )
   const controller = new AbortController()
-  chatAssistant(currentMsgs, {
-    newTokenCallback(content: string) {
-      editMsgByAdd(content, id)
-    },
-    endCallback() {
-      removeGeneratingStatus(id)
-    },
-    errorCallback(err: Error) {
-      editMsgByAdd(ErrorDict(err), id)
-      removeGeneratingStatus(id)
-    },
-    pauseSignal: controller.signal
-  })
+  chatAssistant(
+    currentMsgs.map((m) => ({
+      ...m,
+      content: removeMeta(m.content)
+    })),
+    {
+      newTokenCallback(content: string) {
+        editMsgByAdd(content, id)
+      },
+      endCallback() {
+        removeGeneratingStatus(id)
+      },
+      errorCallback(err: Error) {
+        editMsgByAdd(ErrorDict(err), id)
+        removeGeneratingStatus(id)
+      },
+      pauseSignal: controller.signal
+    }
+  )
   abortMap.set(id, () => controller.abort())
 }
 
@@ -119,6 +127,7 @@ export async function saveMsgsBeforeID(id: string) {
   const currentMsgs = msgs.slice(0, index + 1)
   return addHistory({
     id: ulid(),
+    assistantId: getCurrentAssistantForChat()?.id,
     type: 'chat',
     contents: currentMsgs
   })

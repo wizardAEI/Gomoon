@@ -4,7 +4,7 @@ import * as tooltip from '@zag-js/tooltip'
 import { normalizeProps, useMachine } from '@zag-js/solid'
 import { createMemo, createUniqueId, Show } from 'solid-js'
 
-export default function Tooltip(props: {
+export default function (props: {
   size?: number
   color?: string
   label: string | JSXElement
@@ -24,12 +24,11 @@ export default function Tooltip(props: {
   )
 
   const api = createMemo(() => tooltip.connect(state, send, normalizeProps))
-
   return (
     <div class="inline-block">
       <button
         {...api().triggerProps}
-        class="flex cursor-pointer items-center border-0 bg-transparent px-0 py-0"
+        class="flex cursor-pointer items-center overflow-visible border-0 bg-transparent px-0 py-0"
       >
         {props.label}
       </button>
@@ -37,10 +36,7 @@ export default function Tooltip(props: {
         <div {...api().positionerProps}>
           <div
             {...api().contentProps}
-            // style={{
-            //   color: 'black'
-            // }}
-            class="rounded-md bg-white/80 p-1 text-xs text-text-dark"
+            class="z-10 rounded-md bg-white/80 p-1 text-xs text-text-dark"
           >
             {props.content}
           </div>

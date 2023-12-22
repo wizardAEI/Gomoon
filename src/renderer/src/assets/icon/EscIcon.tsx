@@ -19,7 +19,7 @@ export default function (props: SvgProps) {
         text-anchor="middle"
         fill="currentColor"
         font-family="Arial"
-        font-size="32"
+        class="text-[32px]"
       >
         ESC
       </text>

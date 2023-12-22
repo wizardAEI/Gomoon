@@ -1,12 +1,13 @@
 import Input from '@renderer/components/MainInput'
 import Message from '@renderer/components/Message'
-import { genAns, answerStore, clearAns } from '../../store/answer'
+import { genAns, answerStore, clearAns, ansStatus } from '../../store/answer'
 import { Show, createSignal, onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
 import { useSearchParams } from '@solidjs/router'
 import { getCurrentAssistantForAnswer } from '@renderer/store/assistants'
 import SystemHeader from '@renderer/components/SystemHeader'
 import SelectAssistantModal from './SelectAssistantModel'
+import Capsule from '@renderer/components/Capsule'
 
 export default function Answer() {
   const [text, setText] = createSignal('')
@@ -44,7 +45,7 @@ export default function Answer() {
   })
 
   return (
-    <div class="flex h-full flex-col gap-4 overflow-auto pb-48 pt-6">
+    <div class="flex h-full flex-col gap-4 overflow-auto pb-48 pt-10">
       <Show when={showModal()}>
         <SelectAssistantModal
           onConfirm={() => {
@@ -57,28 +58,36 @@ export default function Answer() {
           }}
         />
       </Show>
-      <div class="flex w-full select-none flex-col items-center justify-center gap-2 px-10 pt-8">
-        <span class="text-sm text-gray">问答助手</span>
-        <span class="whitespace-nowrap text-[12px] text-gray">&lt;{introduce()}&gt;</span>
-      </div>
       <Show
         when={answerStore.question}
         fallback={
           <>
+            {
+              <div class="flex w-full select-none flex-col items-center justify-center gap-2 px-10 pt-8">
+                <span class="text-sm text-gray">问答助手</span>
+                <span class="whitespace-nowrap text-[12px] text-gray">&lt;{introduce()}&gt;</span>
+              </div>
+            }
             <SystemHeader type="ans" />
           </>
         }
       >
-        <Message content={answerStore.question} id="question" type="question" />
+        <div class="mt-6">
+          <Message content={answerStore.question} id="question" type="question" />
+        </div>
       </Show>
-      {answerStore.answer && (
+      <Show when={answerStore.answer}>
+        <Show when={!ansStatus.isGenerating}>
+          <Capsule type="ans" botName={getCurrentAssistantForAnswer().name} />
+        </Show>
         <Message
           content={answerStore.answer}
           type="ans"
           botName={getCurrentAssistantForAnswer().name}
         />
-      )}
-      <div class="fixed bottom-10 w-full px-8">
+      </Show>
+
+      <div class="fixed bottom-10 w-full px-4">
         <Input
           text={text()}
           setText={setText}
@@ -90,6 +99,7 @@ export default function Answer() {
           }}
           // onShow自动聚焦
           autoFocusWhenShow
+          type="ans"
         />
       </div>
     </div>

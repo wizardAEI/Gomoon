@@ -13,6 +13,7 @@ import Expand from '@renderer/components/ui/Expand'
 import EditInput from '@renderer/components/ui/EditInput'
 import { onCleanup, onMount } from 'solid-js'
 import { unwrap } from 'solid-js/store'
+import SettingIcon from '@renderer/assets/icon/base/SettingIcon'
 export default function Setting() {
   onMount(() => {
     onCleanup(() => {
@@ -20,7 +21,10 @@ export default function Setting() {
     })
   })
   return (
-    <div class="flex h-full select-none flex-col gap-3 p-4">
+    <div class="flex h-full select-none flex-col gap-3 p-5">
+      <div class="flex select-none items-center gap-1 text-lg  text-text1">
+        <SettingIcon width={20} height={20} /> <span class="text-base font-medium">应用设置</span>{' '}
+      </div>
       <Card title="模型引擎配置" noPadding>
         <Expand title="ChatGPT系列">
           <EditInput
@@ -84,17 +88,6 @@ export default function Setting() {
               value={settingStore.quicklyWakeUpKeys}
               onKeyDown={(e) => {
                 e.preventDefault()
-                console.log(
-                  'key ',
-                  e.key,
-                  '\n altKey:',
-                  e.altKey,
-                  ' shiftKey:',
-                  e.shiftKey,
-                  ' metaKey:',
-                  e.metaKey,
-                  e.ctrlKey
-                )
                 // 如果没有按下 Shift, Meta, Alt, Control 等特殊键, 则返回
                 if (!e.altKey && !e.shiftKey && !e.metaKey && !e.ctrlKey) {
                   return false
@@ -135,7 +128,11 @@ export default function Setting() {
             />
           </div>
           <Switch
-            label="使用 Cmd/Ctrl+Enter 发起对话"
+            label={
+              navigator.userAgent.includes('Mac')
+                ? '使用 Command+Enter 发送信息'
+                : '使用 Ctrl+Enter 发送信息'
+            }
             hint="关闭后使用 Enter 发起对话"
             checked={settingStore.sendWithCmdOrCtrl}
             onCheckedChange={setSendWithCmdOrCtrl}

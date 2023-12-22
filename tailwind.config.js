@@ -21,15 +21,18 @@ module.exports = {
       colors: {
         active: '#a57bea', // 激活色 亮紫色
         'active-pro': '#c08eaf', // 激活色↑ 罗兰紫
+        'active-bac': '#253241', // 激活色的背景色 深灰蓝
         gray: '#869d9d', // 非激活色 淡紫灰色
         'gray-pro': '#93a5a6', // 非激活色↑ 浅紫灰色
         'dark-con': '#436565', // 暗色稍微亮一点
         dark: '#254852', // 暗色 深蓝绿
+        'dark-plus': '#1f3d48', // 暗色稍微深一点
         'dark-pro': '#152431', // 暗色↑
         light: '#e2e1e4', // 亮色 芡食白
         text1: '#d8e3e7', // 云峰白
         text2: '#baccd9', // 云水蓝
         'text-dark': '#151b26', // 深色
+        'text-dark2': '#276b84', // 深蓝绿
         'white/70': '#ffffff70', // 白色透明度70%
         success: '#12c569', // 绿色
         error: '#DF919C', // 红色
@@ -51,16 +54,21 @@ module.exports = {
         'scale-down-entrance': {
           '0%': { transform: 'scale(1.1)', opacity: 0.5 },
           '100%': { transform: 'scale(1)' }
+        },
+        'rotate-180': {
+          '0%': { transform: 'rotate(45deg)' },
+          '100%': { transform: 'rotate(225deg)' }
         }
       },
       animation: {
         click: 'click 0.2s ease-in-out',
         popup: 'popup 0.2s ease-in-out forwards',
-        'scale-down-entrance': 'scale-down-entrance 0.3s ease-in-out forwards'
+        'scale-down-entrance': 'scale-down-entrance 0.3s ease-in-out forwards',
+        'rotate-180': 'rotate-180 0.3s ease-in-out forwards'
       },
       boxShadow: {
         green: '20px 20px 60px #93b58a, -20px -20px 60px #c7f5ba',
-        center: '2px 2px 20px #51939330'
+        center: '1px 1px 12px #51939330'
       }
     }
   },

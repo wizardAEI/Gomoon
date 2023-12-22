@@ -1,6 +1,6 @@
 import { createStore } from 'solid-js/store'
 import { ModelsType, UserDataModel } from 'src/main/model/model'
-import { useAssistant } from './assistants'
+import { assistants, useAssistant } from './assistants'
 
 const [userData, setUserData] = createStore<UserDataModel>({
   firstTime: true,
@@ -15,7 +15,6 @@ const [userData, setUserData] = createStore<UserDataModel>({
 
 export async function loadUserData() {
   setUserData(await window.api.getUserData())
-  console.log(userData.firstTimeFor)
 }
 
 export function userHasUse() {
@@ -35,6 +34,9 @@ export function setSelectedModel(model: ModelsType) {
 }
 
 export async function setSelectedAssistantForAns(assistantID: string) {
+  if (assistants.findIndex((item) => item.id === assistantID) === -1) {
+    return
+  }
   setUserData('selectedAssistantForAns', assistantID)
   await useAssistant(assistantID)
   return window.api.setUserData({
@@ -43,6 +45,9 @@ export async function setSelectedAssistantForAns(assistantID: string) {
 }
 
 export async function setSelectedAssistantForChat(assistantID: string) {
+  if (assistants.findIndex((item) => item.id === assistantID) === -1) {
+    return
+  }
   setUserData('selectedAssistantForChat', assistantID)
   await useAssistant(assistantID)
   return window.api.setUserData({

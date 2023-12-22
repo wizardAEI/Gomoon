@@ -1,6 +1,6 @@
 @layer base {
   * :not(svg, path, g) {
-    @apply m-0 box-border p-0 font-System;
+    @apply m-0 box-border p-0 font-System text-sm;
   }
   body {
     @apply bg-dark text-text1;
@@ -58,6 +58,9 @@
 }
 .cyber-box[data-active]::after {
   background-image: radial-gradient(circle, #2d6170, #006089, #005aa0, #364cac, #792ba4);
+}
+.no-scroll-bar::-webkit-scrollbar {
+  display: none;
 }
 
 /* markdown 专属css */

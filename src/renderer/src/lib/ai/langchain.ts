@@ -1,7 +1,7 @@
 import { ChatBaiduWenxin } from 'langchain/chat_models/baiduwenxin'
 import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { ChatPromptTemplate } from 'langchain/prompts'
-import { AIMessage, HumanMessage, SystemMessage } from 'langchain/schema'
+import { AIMessage, BaseMessageLike, HumanMessage, SystemMessage } from 'langchain/schema'
 import { models } from './models'
 import { LLMChain } from 'langchain/chains'
 import { userData } from '@renderer/store/user'
@@ -44,7 +44,7 @@ const createModel = (chat: ChatBaiduWenxin | ChatOpenAI) => {
       return chain.call(
         {
           signal: option.pauseSignal,
-          timeout: 1000 * 60
+          timeout: 1000 * 20
         },
         {
           callbacks: [
@@ -93,7 +93,8 @@ const createModel = (chat: ChatBaiduWenxin | ChatOpenAI) => {
               }
             }
           ],
-          signal: option.pauseSignal
+          signal: option.pauseSignal,
+          timeout: 1000 * 20
         }
       )
     }
@@ -113,6 +114,7 @@ export const ansAssistant = async (option: {
   pauseSignal: AbortSignal
 }) => {
   const a = getCurrentAssistantForAnswer()
+  // TODO: 后期拓展，支持 preContent 和 postContent
   const preContent = a.type === 'ans' ? a.preContent ?? '' : ''
   const postContent = a.type === 'ans' ? a.postContent ?? '' : ''
   return createModel(models[userData.selectedModel]).answer(
@@ -149,3 +151,7 @@ export const chatAssistant = async (
     ],
     option
   )
+
+export const nonStreamingAssistant = async (question: string) => {
+  return models[userData.selectedModel].call([msgDict['human'](question)])
+}
