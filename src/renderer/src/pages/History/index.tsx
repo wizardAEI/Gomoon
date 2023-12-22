@@ -34,7 +34,7 @@ export default function () {
   }
 
   return (
-    <div class="flex h-full select-none flex-col gap-3 p-5">
+    <div class="flex h-full select-none flex-col gap-3 overflow-auto p-5">
       <Show
         when={histories.length}
         fallback={
@@ -86,18 +86,16 @@ export default function () {
                 {(c, index) => {
                   const meta = parseMeta(c.content)
                   return (
-                    <Show when={meta.type === 'text'} fallback={SpecialTypeContent(meta)}>
-                      <div
-                        class={`flex flex-col gap-1 break-words text-sm ${
-                          index() === 0 ? 'pr-3' : ''
-                        }`}
-                      >
-                        <span>
-                          {map[c.role]}: {decorateContent(c.content)}
-                        </span>
-                        <div class="border-b-0 border-t border-dashed border-gray"></div>
+                    <div class="flex flex-col gap-1 break-words text-sm">
+                      <div class={index() === 0 ? 'pr-3' : ''}>
+                        <Show when={meta.type === 'text'} fallback={SpecialTypeContent(meta)}>
+                          <span>
+                            {map[c.role]}: {decorateContent(c.content)}
+                          </span>
+                        </Show>
                       </div>
-                    </Show>
+                      <div class="border-b-0 border-t border-dashed border-gray"></div>
+                    </div>
                   )
                 }}
               </For>
