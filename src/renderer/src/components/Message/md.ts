@@ -11,6 +11,17 @@ export function htmlString(content: string) {
     breaks: true
   }).use(mdHighlight)
 
+  // FEAT: 限制图片宽度
+  md.renderer.rules.image = (tokens, idx) => {
+    const token = tokens[idx]
+    const srcIndex = token.attrIndex('src')
+    const src = token.attrs![srcIndex][1]
+    const alt = token.content || ''
+    console.log(tokens)
+    const style = `max-width: 300px; border-radius: 5px;`
+    return `<img src="${src}" alt="${alt}" style="${style}" />`
+  }
+
   // FEAT: 复制功能
   useEventListener('click', (e) => {
     const el = e.target as HTMLElement
@@ -44,5 +55,6 @@ export function htmlString(content: string) {
         ${rawCode}
         </div>`
   }
+
   return md.render(content)
 }

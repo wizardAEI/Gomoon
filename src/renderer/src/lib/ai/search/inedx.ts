@@ -5,7 +5,6 @@ import { parsePageForSearch } from '../url'
 
 async function fetchBaiduResults(keyword) {
   const searchUrl = `http://www.baidu.com/s?wd=${encodeURIComponent(keyword)}`
-  console.log(searchUrl)
   const { data } = await axios.get(searchUrl)
   const $ = load(data)
   const links: string[] = []
@@ -18,8 +17,6 @@ async function fetchBaiduResults(keyword) {
 }
 
 function processQuery(content: string) {
-  // 提取出<>包裹的查询内容, e.g. <大熊猫，存活> -> 大熊猫，存活
-  console.log(content)
   const reg = /<(.+?)>/
   if (content.match(reg)) {
     return {
@@ -54,11 +51,11 @@ export async function searchByBaidu(question: string, logger: (content: string) 
   }
   logger('收集链接中...')
   const links = (await fetchBaiduResults(processedContent.query)).sort(() => Math.random() - 0.5)
-  console.log(links)
-  let content = `<gomoon-search question="${question}"/>接下来我将会给你3个网址下的全部文本内容，这其中可能会包括一些标题，用户信息，备案号，相关推荐，按钮内容等。请你剔除无效信息来理解内容，回答 ${question} 这个问题(回答过程中不用刻意提及自己是从网页内容中获取的信息):\n`
-  for (let i = 0; i < 3; i++) {
-    logger(`解析第${i + 1}个链接中...`)
-    content += await parsePageForSearch(links[i])
-  }
+  let content = `<gomoon-search question="${question}"/>接下来我将会给你3个与\n ${question} \n这个问题有关的实时的信息（回答是从网络上总结的,可能有无效信息）。请理解信息并直接给出最终答案，不要多余的解释。(一定不要说自己不能联网或获取不到实时信息等):\n`
+  logger(`解析链接中...`)
+  const res = await Promise.all(links.slice(0, 3).map((link) => parsePageForSearch(link, question)))
+  res.map((r, i) => {
+    content += `\n\n\n第${i + 1}个信息：${r.content}`
+  })
   return content
 }

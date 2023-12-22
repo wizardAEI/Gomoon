@@ -101,7 +101,7 @@ export function createWindow(): void {
   mainWindow.on('ready-to-show', () => {
     mainWindow!.show()
     // Open the DevTools.
-    mainWindow!.webContents.openDevTools()
+    !app.isPackaged && mainWindow!.webContents.openDevTools()
   })
 
   //FEAT: 快捷键

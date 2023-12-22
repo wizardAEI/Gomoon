@@ -8,7 +8,8 @@ import { useLoading } from '../ui/DynamicLoading'
 import exportRecord from '@renderer/lib/md/exportRecord'
 import { exportAssistants, importAssistants } from '@renderer/store/assistants'
 import { parsePageForUrl } from '@renderer/lib/ai/url'
-import { inputStore, setNetworkingStatus } from '@renderer/store/input'
+import { isNetworking, setNetworkingStatus } from '@renderer/store/input'
+import { userData } from '@renderer/store/user'
 
 function ToolWrap(props: { children: JSXElement; onClick?: () => void; active?: boolean }) {
   return (
@@ -99,7 +100,7 @@ export default function Tools(props: {
                       </>
                     )
                   }
-                  if (inputStore.isNetworking) {
+                  if (isNetworking()) {
                     toast.warning('发送文件将关闭联网查询')
                     setNetworkingStatus(false)
                   }
@@ -159,7 +160,7 @@ export default function Tools(props: {
               dynamicLoading.show('正在解析网页中的链接')
               try {
                 const content = await parsePageForUrl(url())
-                if (inputStore.isNetworking) {
+                if (isNetworking()) {
                   toast.warning('解析链接将关闭联网查询')
                   setNetworkingStatus(false)
                 }
@@ -180,11 +181,15 @@ export default function Tools(props: {
           解析链接
         </ToolWrap>
         <ToolWrap
-          active={inputStore.isNetworking}
+          active={isNetworking()}
           onClick={() => {
-            setNetworkingStatus(!inputStore.isNetworking)
+            if (userData.selectedModel === 'ERNIE3' || userData.selectedModel === 'ERNIE4') {
+              toast.warning('ERNIE3和ERNIE4模型已默认联网查询')
+              return
+            }
+            setNetworkingStatus(!isNetworking())
             toast.clear()
-            inputStore.isNetworking
+            isNetworking()
               ? toast.success('已开启联网查询，此选项可能增加字符消耗', {
                   duration: 2000,
                   position: 'top-1/3'

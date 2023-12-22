@@ -5,7 +5,7 @@ import { useEventListener } from 'solidjs-use'
 import { settingStore } from '@renderer/store/setting'
 import RefreshIcon from '@renderer/assets/icon/base/RefreshIcon'
 import Tools from './Tools'
-import { inputStore } from '@renderer/store/input'
+import { isNetworking } from '@renderer/store/input'
 import { useLoading } from '../ui/DynamicLoading'
 import { searchByBaidu } from '@renderer/lib/ai/search/inedx'
 
@@ -32,11 +32,12 @@ export default function Input(props: {
   const toast = useToast()
   const dynamicLoading = useLoading()
   async function submit(content?: string) {
-    if (inputStore.isNetworking) {
+    if (isNetworking()) {
       dynamicLoading.show('查询中')
       try {
         content = await searchByBaidu(content || props.text, (m) => dynamicLoading.show(m))
-      } catch {
+      } catch (e) {
+        console.log('>>>', e)
         toast.error('查询失败')
       }
       dynamicLoading.hide()
