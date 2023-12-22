@@ -68,7 +68,7 @@ module.exports = {
       },
       boxShadow: {
         green: '20px 20px 60px #93b58a, -20px -20px 60px #c7f5ba',
-        center: '2px 2px 20px #51939330'
+        center: '1px 1px 12px #51939330'
       }
     }
   },

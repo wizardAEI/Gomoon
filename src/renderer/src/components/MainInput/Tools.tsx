@@ -1,6 +1,6 @@
 import { parseFile } from '@renderer/lib/ai/file'
 import { useToast } from '../ui/Toast'
-import { JSXElement, Setter, createSignal } from 'solid-js'
+import { JSXElement, createSignal } from 'solid-js'
 import LeftArrow from '@renderer/assets/icon/base/arrow/LeftArrow'
 import RightArrow from '@renderer/assets/icon/base/arrow/RightArrow'
 import { recognizeText } from '@renderer/lib/ai/ocr'
@@ -86,8 +86,9 @@ export default function Tools(props: {
                     })
                     return
                   }
+                  let confirm = true
                   if (res.content.length > 2000) {
-                    const confirm = await toast.confirm(
+                    confirm = await toast.confirm(
                       <>
                         <div class="whitespace-nowrap py-1 text-base">
                           文件已超过2000字，确认发送吗？
@@ -97,10 +98,12 @@ export default function Tools(props: {
                         })`}</div>
                       </>
                     )
-                    confirm && props.onSubmit(res.content)
-                    return
                   }
-                  props.onSubmit(res.content)
+                  if (inputStore.isNetworking) {
+                    toast.warning('发送文件将关闭联网查询')
+                    setNetworkingStatus(false)
+                  }
+                  confirm && props.onSubmit(res.content)
                 }
               }}
             />
@@ -156,6 +159,10 @@ export default function Tools(props: {
               dynamicLoading.show('正在解析网页中的链接')
               try {
                 const content = await parsePageForUrl(url())
+                if (inputStore.isNetworking) {
+                  toast.warning('解析链接将关闭联网查询')
+                  setNetworkingStatus(false)
+                }
                 props.onSubmit(content)
               } catch (err: any) {
                 if (err.message.includes('timeout of')) {
@@ -221,9 +228,9 @@ export default function Tools(props: {
             />
           </label>
         </ToolWrap>
-        <ToolWrap>Terminal执行 (开发者选项)</ToolWrap>
+        {/* <ToolWrap>Terminal执行 (开发者选项)</ToolWrap>
         <ToolWrap onClick={() => toast.warning('还没做捏💦')}>代码开发 (开发者选项)</ToolWrap>
-        <ToolWrap onClick={() => toast.warning('还没做捏💦')}>图表制作</ToolWrap>
+        <ToolWrap onClick={() => toast.warning('还没做捏💦')}>图表制作</ToolWrap> */}
       </div>
       <RightArrow
         class="absolute right-[-16px] top-1/2 -translate-y-1/2 transform cursor-pointer opacity-0 delay-200 duration-200 hover:text-active group-hover/tools:opacity-100"
