@@ -11,6 +11,7 @@ import { useNavigate } from '@solidjs/router'
 import { For, Show } from 'solid-js'
 import { HistoryModel } from 'src/main/model/model'
 import SpecialTypeContent from './SpecialTypeContent'
+import { decorateContent } from './utils'
 const map = {
   human: '我',
   ai: '助手',
@@ -30,12 +31,6 @@ export default function () {
         }
       ])
       .concat(arr.slice(-1))
-  }
-  function decorateContent(c: string) {
-    if (c.length > 50) {
-      return c.slice(0, 50) + ' ......'
-    }
-    return c
   }
 
   return (
@@ -92,7 +87,11 @@ export default function () {
                   const meta = parseMeta(c.content)
                   return (
                     <Show when={meta.type === 'text'} fallback={SpecialTypeContent(meta)}>
-                      <div class={`flex flex-col gap-1 text-sm ${index() === 0 ? 'pr-3' : ''}`}>
+                      <div
+                        class={`flex flex-col gap-1 break-words text-sm ${
+                          index() === 0 ? 'pr-3' : ''
+                        }`}
+                      >
                         <span>
                           {map[c.role]}: {decorateContent(c.content)}
                         </span>

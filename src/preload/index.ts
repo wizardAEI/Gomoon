@@ -6,7 +6,6 @@ import {
   HistoryModel,
   Line,
   SettingModel,
-  UpdateAssistantModel,
   UserDataModel
 } from '../main/model/model'
 import { FileLoaderRes } from '../main/lib/ai/fileLoader'
@@ -42,8 +41,7 @@ export const api = {
 
   // assistant 相关
   getAssistants: (): Promise<AssistantModel[]> => ipcRenderer.invoke('get-assistants'),
-  updateAssistant: (assistant: UpdateAssistantModel) =>
-    ipcRenderer.invoke('update-assistant', assistant),
+  updateAssistant: (assistant: AssistantModel) => ipcRenderer.invoke('update-assistant', assistant),
   deleteAssistant: (assistantId: string) => ipcRenderer.invoke('delete-assistant', assistantId),
   createAssistant: (assistant: CreateAssistantModel): Promise<AssistantModel> =>
     ipcRenderer.invoke('create-assistant', assistant),
@@ -66,7 +64,9 @@ export const api = {
     ipcRenderer.invoke('save-file', fileName, content),
 
   // 其他
-  getLines: (): Promise<Partial<Line>[]> => ipcRenderer.invoke('get-lines')
+  getLines: (): Promise<Partial<Line>[]> => ipcRenderer.invoke('get-lines'),
+  parsePageToString: (url: string): Promise<string> =>
+    ipcRenderer.invoke('parse-page-to-string', url)
 } as const
 
 // Use `contextBridge` APIs to expose Electron APIs to

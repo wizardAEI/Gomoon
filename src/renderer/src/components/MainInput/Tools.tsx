@@ -1,32 +1,40 @@
 import { parseFile } from '@renderer/lib/ai/file'
 import { useToast } from '../ui/Toast'
-import { JSX } from 'solid-js'
+import { JSXElement, Setter, createSignal } from 'solid-js'
 import LeftArrow from '@renderer/assets/icon/base/arrow/LeftArrow'
 import RightArrow from '@renderer/assets/icon/base/arrow/RightArrow'
 import { recognizeText } from '@renderer/lib/ai/ocr'
 import { useLoading } from '../ui/DynamicLoading'
 import exportRecord from '@renderer/lib/md/exportRecord'
 import { exportAssistants, importAssistants } from '@renderer/store/assistants'
+import { parsePageForUrl } from '@renderer/lib/ai/url'
+import { inputStore, setNetworkingStatus } from '@renderer/store/input'
 
-function ToolWrap(props: { children: JSX.Element; onClick?: () => void }) {
+function ToolWrap(props: { children: JSXElement; onClick?: () => void; active?: boolean }) {
   return (
     <div
       onClick={props.onClick}
-      class="bg-dark-plus flex cursor-pointer select-none rounded-lg border border-solid border-dark-con px-1 py-[1px] text-[12px] hover:border-active hover:text-white"
+      class={
+        'flex cursor-pointer select-none rounded-lg border border-solid  px-1 py-[1px] text-[12px] hover:text-white ' +
+        (props.active
+          ? 'border-dark-plus bg-dark-con text-text1'
+          : 'bg-dark-plus border-dark-con hover:border-active')
+      }
     >
       {props.children}
     </div>
   )
 }
 
-export default function (props: {
+export default function Tools(props: {
   onSubmit: (content: string) => void
   onInput: (content: string) => void
   type: 'chat' | 'ans'
 }) {
   const toast = useToast()
-  let toolsDiv: HTMLDivElement | undefined
   const dynamicLoading = useLoading()
+  let toolsDiv: HTMLDivElement | undefined
+  let [url, setUrl] = createSignal('')
   const scroll = (position: 'left' | 'right') => {
     if (!toolsDiv) return
     const scrollLeft = toolsDiv.scrollLeft
@@ -129,8 +137,56 @@ export default function (props: {
             />
           </label>
         </ToolWrap>
-        <ToolWrap>解析链接</ToolWrap>
-        <ToolWrap>联网查询</ToolWrap>
+        <ToolWrap
+          onClick={async () => {
+            const confirm = await toast.confirm(
+              <div class="flex w-60 flex-col gap-1">
+                <span>输入链接</span>
+                <input
+                  class="pr-2"
+                  type="text"
+                  value={url()}
+                  onInput={(e) => {
+                    setUrl(e.currentTarget.value)
+                  }}
+                />
+              </div>
+            )
+            if (confirm) {
+              dynamicLoading.show('正在解析网页中的链接')
+              try {
+                const content = await parsePageForUrl(url())
+                props.onSubmit(content)
+              } catch (err: any) {
+                if (err.message.includes('timeout of')) {
+                  toast.error('链接连接超时')
+                  return
+                }
+                toast.error('链接解析失败')
+              } finally {
+                setUrl('')
+              }
+              dynamicLoading.hide()
+            }
+          }}
+        >
+          解析链接
+        </ToolWrap>
+        <ToolWrap
+          active={inputStore.isNetworking}
+          onClick={() => {
+            setNetworkingStatus(!inputStore.isNetworking)
+            toast.clear()
+            inputStore.isNetworking
+              ? toast.success('已开启联网查询，此选项可能增加字符消耗', {
+                  duration: 2000,
+                  position: 'top-1/3'
+                })
+              : toast.success('已关闭联网查询')
+          }}
+        >
+          联网查询
+        </ToolWrap>
         <ToolWrap
           onClick={() => {
             exportRecord(props.type).result === 'NoRecord' && toast.error('无对话记录')

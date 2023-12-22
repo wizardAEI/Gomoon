@@ -45,6 +45,7 @@
     "moment": "^2.29.4",
     "officeparser": "^4.0.5",
     "pdf-parse": "^1.1.1",
+    "puppeteer": "^21.6.1",
     "shiki": "^0.14.5",
     "solidjs-use": "^2.3.0",
     "tesseract.js": "^5.0.3",

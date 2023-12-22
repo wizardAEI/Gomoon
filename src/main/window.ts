@@ -53,7 +53,11 @@ export function createWindow(): void {
   mainWindow!.setAlwaysOnTop(userConfig.isOnTop, 'status')
   // FEAT: CORS
   const filter = {
-    urls: ['https://aip.baidubce.com/*', 'https://api.chatanywhere.com.cn/*'] // Remote API URS for which you are getting CORS error,
+    urls: [
+      'https://aip.baidubce.com/*',
+      'https://api.chatanywhere.com.cn/*',
+      'http://www.baidu.com/*'
+    ] // Remote API URS for which you are getting CORS error,
   }
   mainWindow.webContents.session.webRequest.onHeadersReceived(filter, (details, callback) => {
     if (details.responseHeaders) {

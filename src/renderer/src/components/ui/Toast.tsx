@@ -59,7 +59,7 @@ export function ToastsContainer() {
               <Show when={toast.type === 'confirm'}>
                 <div class="mb-2 flex w-full justify-around">
                   <button
-                    class="ml-2 text-white hover:text-opacity-70"
+                    class="py-1 text-white hover:text-opacity-70"
                     onClick={() => {
                       toast.callback!(false)
                     }}
@@ -67,7 +67,7 @@ export function ToastsContainer() {
                     取消
                   </button>
                   <button
-                    class="text-white hover:text-opacity-70"
+                    class="py-1 text-white hover:text-opacity-70"
                     onClick={() => {
                       toast.callback!(true)
                     }}
@@ -142,6 +142,7 @@ export function useToast() {
       show(text, 'error', conf.duration || 1500, conf.position || 'top-1/3'),
     info: (text: string, conf: ToastConf = {}) =>
       show(text, 'info', conf.duration || 1500, conf.position || 'top-1/3'),
+    clear: () => setShowToast([]),
     confirm: (text: string | JSXElement, conf: ToastConf = {}) =>
       showConfirm(text, conf.duration || 1500, conf.position || 'top-1/3')
   }

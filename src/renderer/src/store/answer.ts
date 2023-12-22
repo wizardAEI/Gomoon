@@ -14,15 +14,23 @@ let controller: AbortController
 let ansID: string
 export function genAns(q: string) {
   controller = new AbortController()
-  setAnswerStore('answer', '')
+  setAnswerStore('answer', '......')
   setAnswerStore('question', q)
   setGeneratingStatus(true)
   const ID = ulid()
   ansID = ID
+  let haveAnswer = false
   ansAssistant({
     question: removeMeta(q),
     newTokenCallback(content) {
-      ID === ansID && setAnswerStore('answer', (ans) => ans + content)
+      ID === ansID &&
+        setAnswerStore('answer', (ans) => {
+          if (!haveAnswer) {
+            haveAnswer = true
+            return content
+          }
+          return ans + content
+        })
     },
     endCallback() {
       ID === ansID && setGeneratingStatus(false)

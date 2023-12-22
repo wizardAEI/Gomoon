@@ -5,6 +5,9 @@ import { useEventListener } from 'solidjs-use'
 import { settingStore } from '@renderer/store/setting'
 import RefreshIcon from '@renderer/assets/icon/base/RefreshIcon'
 import Tools from './Tools'
+import { inputStore } from '@renderer/store/input'
+import { useLoading } from '../ui/DynamicLoading'
+import { searchByBaidu } from '@renderer/lib/ai/search/inedx'
 
 /**
  * FEAT: Input 组件，用于接收用户输入的文本，onMountHandler可以在外部操作 input 元素
@@ -24,10 +27,20 @@ export default function Input(props: {
   let textAreaDiv: HTMLTextAreaElement | undefined
   let textAreaContainerDiv: HTMLDivElement | undefined
   let cleanupForRestoreMsgs: (() => void) | undefined
-  let [refreshing, setRefreshing] = createSignal<boolean>(false)
+  let [refreshing, setRefreshing] = createSignal(false)
   let isCompositing = false
   const toast = useToast()
-  function submit(content?: string) {
+  const dynamicLoading = useLoading()
+  async function submit(content?: string) {
+    if (inputStore.isNetworking) {
+      dynamicLoading.show('查询中')
+      try {
+        content = await searchByBaidu(content || props.text, (m) => dynamicLoading.show(m))
+      } catch {
+        toast.error('查询失败')
+      }
+      dynamicLoading.hide()
+    }
     props.send(content || props.text)
     props.setText('')
     textAreaDiv!.style.height = 'auto'
