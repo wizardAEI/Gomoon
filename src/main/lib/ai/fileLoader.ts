@@ -155,10 +155,3 @@ export default async function parseFile(
     filename: files[0].path.split('/').pop()!
   }
 }
-
-parseFile([
-  {
-    path: '/Users/wangdejiang/Desktop/story.json',
-    type: 'application/json'
-  }
-])
