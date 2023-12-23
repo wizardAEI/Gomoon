@@ -94,9 +94,9 @@ export function genMsg(id: string) {
   )
   const controller = new AbortController()
   chatAssistant(
-    currentMsgs.map((m) => ({
+    currentMsgs.map((m, i) => ({
       ...m,
-      content: removeMeta(m.content)
+      content: removeMeta(m.content, i === currentMsgs.length - 1)
     })),
     {
       newTokenCallback(content: string) {

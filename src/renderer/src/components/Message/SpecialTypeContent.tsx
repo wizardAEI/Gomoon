@@ -1,6 +1,7 @@
 import BaseFileIcon from '@renderer/assets/icon/file/baseFileIcon'
 import { ContentMetaData } from '@renderer/lib/ai/parseString'
 import { htmlString } from './md'
+import NetworkIcon from '@renderer/assets/icon/networkIcon'
 
 export default function (meta: ContentMetaData, mdStyle: string) {
   if (meta.type === 'file') {
@@ -29,7 +30,15 @@ export default function (meta: ContentMetaData, mdStyle: string) {
     )
   }
   if (meta.type === 'search') {
-    return <div class={mdStyle + ' markdown break-words'} innerHTML={htmlString(meta.question)} />
+    return (
+      <div class="flex gap-1">
+        <NetworkIcon class="text-text-dark2" width={20} height={20} />
+        <div
+          class={mdStyle + ' markdown text-text-dark2 break-words'}
+          innerHTML={htmlString(meta.question)}
+        />
+      </div>
+    )
   }
   return null
 }
