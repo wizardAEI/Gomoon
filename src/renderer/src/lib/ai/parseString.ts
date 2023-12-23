@@ -6,8 +6,13 @@ function resetReg() {
   ;(regForFile.lastIndex = 0), (regForUrl.lastIndex = 0) // 重置正则
 }
 
-export function removeMeta(str: string) {
+export function removeMeta(str: string, isLastMsg = false) {
   // 剔除 <gomoon-file ... /> <gomoon-url ... /> 等
+  if (!isLastMsg) {
+    if (str.match(regForSearch)) {
+      return str.match(regForSearch)![0].replace(/<gomoon-search question="(.+?)".*?\/>$/, '$1')
+    }
+  }
   const newStr = str.replace(regForFile, '').replace(regForUrl, '').replace(regForSearch, '')
   resetReg()
   return newStr
