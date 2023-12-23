@@ -6,6 +6,7 @@ import CrossIcon from '@renderer/assets/icon/base/win/WinCrossIcon'
 import { useLocation, useNavigate } from '@solidjs/router'
 import { Show, createMemo } from 'solid-js'
 import ToolTip from './ui/ToolTip'
+import MinimizeIcon from '@renderer/assets/icon/base/win/MinimizeIcon'
 
 function Entries() {
   const nav = useNavigate()
@@ -142,10 +143,18 @@ export default function TopBar() {
       </Show>
       {/* win 关闭按钮 */}
       <Show when={navigator.userAgent.includes('Win')}>
+        <MinimizeIcon
+          class="cursor-pointer pr-4 pt-1 text-gray duration-100 hover:text-active "
+          height={18}
+          width={18}
+          onClick={() => {
+            window.api.minimizeWindow()
+          }}
+        />
         <CrossIcon
-          class="cursor-pointer pr-4 pt-[7px] text-gray duration-100 hover:text-active "
-          height={13}
-          width={13}
+          class="cursor-pointer pr-4 pt-1 text-gray duration-100 hover:text-active "
+          height={18}
+          width={18}
           onClick={() => {
             window.api.hideWindow()
           }}
