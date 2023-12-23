@@ -2,14 +2,28 @@ import { app, BrowserWindow, Menu, globalShortcut } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { initAppEventsHandler } from './eventHandler'
-import { createWindow } from './window'
+import { createWindow, showWindow } from './window'
 import { quitApp } from './lib'
 
 // dock
 app.dock?.setIcon(icon)
 app.dock?.setMenu(Menu.buildFromTemplate([]))
 
+// 检测只启动一个app
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+  // 如果获取锁失败，说明已经有一个实例在运行了，可以直接退出
+  app.quit();
+} else {
+  app.on('second-instance', () => {
+    // 当运行第二个实例时，将会聚焦到 myWindow 这个窗口
+    showWindow();
+  });
+}
+
 app.whenReady().then(() => {
+
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 

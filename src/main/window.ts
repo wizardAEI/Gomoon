@@ -35,6 +35,10 @@ export function minimize() {
   mainWindow?.minimize()
 }
 
+export function showWindow() {
+  mainWindow?.show()
+}
+
 export function createWindow(): void {
   const userConfig = loadUserConfig()
 
