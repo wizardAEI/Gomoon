@@ -8,7 +8,7 @@ import { Document } from 'langchain/document'
 // import { OpenAIWhisperAudio } from 'langchain/document_loaders/fs/openai_whisper_audio'
 import { readFile } from 'fs/promises'
 import { app } from 'electron'
-import { join } from 'path'
+import { basename, join } from 'path'
 import { copyFileSync, mkdirSync } from 'fs'
 import moment from 'moment'
 
@@ -105,7 +105,8 @@ export default async function parseFile(
 ): Promise<FileLoaderRes> {
   const today = moment().format('YYYY-MM-DD')
   const targetPath = join(filesPath, `/${today}`)
-  const targetFile = join(targetPath, files[0].path.split('/').pop()!)
+  // 适配win端
+  const targetFile = join(targetPath,  basename(files[0].path))
   mkdirSync(targetPath, { recursive: true })
   copyFileSync(files[0].path, targetFile)
   const file = await readFile(targetFile)
@@ -152,13 +153,6 @@ export default async function parseFile(
   return {
     content,
     path: targetPath,
-    filename: files[0].path.split('/').pop()!
+    filename: basename(files[0].path)
   }
 }
-
-parseFile([
-  {
-    path: '/Users/wangdejiang/Desktop/story.json',
-    type: 'application/json'
-  }
-])

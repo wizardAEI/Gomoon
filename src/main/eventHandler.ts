@@ -19,7 +19,7 @@ import {
   getLines
 } from './model/index'
 import { AssistantModel, CreateAssistantModel, HistoryModel, UserDataModel } from './model/model'
-import { hideWindow, setQuicklyWakeUp } from './window'
+import { hideWindow, minimize, setQuicklyWakeUp } from './window'
 import parseFile from './lib/ai/fileLoader'
 import { writeFile } from 'fs'
 import { parseURL2Str } from './lib/ai/parseURL'
@@ -95,6 +95,7 @@ export function initAppEventsHandler() {
   // 其他
   app.on('browser-window-created', () => {})
   ipcMain.handle('hide-window', () => hideWindow())
+  ipcMain.handle('minimize-window', () => minimize())
   ipcMain.handle('get-lines', () => getLines())
   ipcMain.handle('parse-page-to-string', (_, url: string) => parseURL2Str(url))
 }

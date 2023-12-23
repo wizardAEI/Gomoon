@@ -1,4 +1,4 @@
-import { nonStreamingAssistant } from '../langchain'
+// import { nonStreamingAssistant } from '../langchain'
 
 export async function parsePageToString(url: string): Promise<string> {
   return window.api.parsePageToString(url)

@@ -31,6 +31,14 @@ export function hideWindow() {
   mainWindow?.hide()
 }
 
+export function minimize() {
+  mainWindow?.minimize()
+}
+
+export function showWindow() {
+  mainWindow?.show()
+}
+
 export function createWindow(): void {
   const userConfig = loadUserConfig()
 
@@ -80,8 +88,7 @@ export function createWindow(): void {
   })
 
   // FEAT: 双击复制回答
-  // macos TODO: 测试不同版本的macos
-  if (process.platform === 'darwin' && userConfig.canMultiCopy) {
+  if (userConfig.canMultiCopy) {
     const eventTracker = spawn(getResourcesPath('eventTracker'))
     eventTracker.stdout.on('data', (data) => {
       if (`${data}` === 'multi-copy') {
