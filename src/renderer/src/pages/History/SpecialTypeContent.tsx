@@ -6,9 +6,9 @@ import NetworkIcon from '@renderer/assets/icon/networkIcon'
 export default function (meta: ContentMetaData) {
   if (meta.type === 'file') {
     return (
-      <div class="flex cursor-pointer items-center gap-1 overflow-hidden">
-        我:
-        <BaseFileIcon class="text-text2" width={18} height={18} />
+      <div class="flex cursor-pointer items-center overflow-hidden">
+       <span class='mr-1'>我:</span> 
+        <BaseFileIcon class="text-text2 grow-0 shrink-0" width={18} height={18} />
         <span class="break-words text-text2">{decorateContent(meta.filename)}</span>
       </div>
     )
@@ -26,9 +26,10 @@ export default function (meta: ContentMetaData) {
   if (meta.type === 'search') {
     return (
       <div>
-        <span class="flex items-center gap-1 break-words">
-          我:
-          <NetworkIcon class="text-text2" width={18} height={18} />
+        <span class="flex items-start break-words">
+         <span class='mr-1'>我:</span> 
+          <NetworkIcon
+          class="text-text2 grow-0 shrink-0 translate-y-[1px]" width={18} height={18} />
           <span class="text-text2">{decorateContent(meta.question)}</span>
         </span>
       </div>
