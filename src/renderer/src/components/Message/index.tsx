@@ -6,7 +6,7 @@ import MsgPopup, { MsgPopupByUser, Pause, WithDrawal } from './Popup'
 import { ansStatus } from '@renderer/store/answer'
 import { parseMeta } from '@renderer/lib/ai/parseString'
 import SpecialTypeContent from './SpecialTypeContent'
-import { htmlString } from './md'
+import Md from './Md'
 export type MsgTypes = Roles | 'ans' | 'question'
 export const style: Record<MsgTypes, string> = {
   ai: 'bg-dark',
@@ -75,10 +75,7 @@ export default function Message(props: {
       </Show>
       <div class={style[props.type] + ' relative m-4 rounded-2xl p-3'}>
         <Show when={meta.type === 'text'} fallback={SpecialTypeContent(meta, mdStyle[props.type])}>
-          <div
-            class={mdStyle[props.type] + ' markdown break-words'}
-            innerHTML={htmlString(props.content)}
-          />
+          <Md class={mdStyle[props.type] + ' markdown break-words'} content={props.content} />
         </Show>
         {/* 交互问题，取消使用右下角的小组件，后续可能重新使用 */}
         {/* <Show when={showComps()}>
