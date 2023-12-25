@@ -53,7 +53,7 @@ export default function (props: { type: 'chat' | 'ans' }) {
                 setSelected(a.id)
               }}
               class={
-                'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-solid bg-dark px-4 py-1 hover:border-active ' +
+                'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-2 border-solid bg-dark px-4 py-1 hover:border-active ' +
                 (a.id === currentA().id ? 'border-active' : 'border-transparent')
               }
             >
@@ -62,7 +62,7 @@ export default function (props: { type: 'chat' | 'ans' }) {
           )}
         </For>
         <div
-          class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-solid border-transparent bg-dark px-4 py-1 hover:border-active "
+          class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-2 border-solid border-transparent bg-dark px-4 py-1 hover:border-active "
           onClick={() => {
             nav('/assistants?type=' + props.type)
           }}
