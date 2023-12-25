@@ -76,7 +76,6 @@ export default function Input(props: {
 
   createEffect(() => {
     if (inputText() !== undefined && textAreaDiv) {
-      console.log(textAreaDiv!.scrollHeight)
       textAreaDiv!.style.height = 'auto'
       textAreaDiv!.style.height = `${textAreaDiv!.scrollHeight}px`
     }
