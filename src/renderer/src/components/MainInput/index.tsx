@@ -5,7 +5,7 @@ import { useEventListener } from 'solidjs-use'
 import { settingStore } from '@renderer/store/setting'
 import RefreshIcon from '@renderer/assets/icon/base/RefreshIcon'
 import Tools from './Tools'
-import { isNetworking } from '@renderer/store/input'
+import { inputText, isNetworking, setInputText } from '@renderer/store/input'
 import { useLoading } from '../ui/DynamicLoading'
 import { searchByBaidu } from '@renderer/lib/ai/search/inedx'
 
@@ -87,7 +87,14 @@ export default function Input(props: {
     <div class="flex flex-col gap-2">
       <Tools onSubmit={submit} onInput={(c) => props.setText(c)} type={props.type} />
       <div class="over relative flex w-full gap-1">
-        <Show when={props.showClearButton && !props.text.length && !props.isGenerating}>
+        <Show
+          when={
+            props.showClearButton &&
+            !props.text.length &&
+            !props.isGenerating &&
+            !inputText()?.length
+          }
+        >
           <div class="-ml-3 mr-[2px] flex cursor-pointer flex-col items-center justify-center">
             <div
               onClick={() => {
@@ -124,7 +131,7 @@ export default function Input(props: {
         <div ref={textAreaContainerDiv} class="cyber-box relative flex flex-1 backdrop-blur-md">
           <textarea
             ref={textAreaDiv}
-            value={props.text}
+            value={inputText() || props.text}
             disabled={props.disable}
             onCompositionStart={() => {
               isCompositing = true
@@ -149,6 +156,7 @@ export default function Input(props: {
             onInput={(e) => {
               cleanupForRestoreMsgs?.()
               props.setText(e.target.value)
+              setInputText(e.target.value)
               e.preventDefault()
             }}
             rows={1}

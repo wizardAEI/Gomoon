@@ -4,10 +4,12 @@ import { userData } from './user'
 
 interface InputStore {
   isNetworking: boolean
+  inputText?: string
 }
 
 const [inputStore, setInputStore] = createStore<InputStore>({
-  isNetworking: false
+  isNetworking: false,
+  inputText: ''
 })
 
 export function setNetworkingStatus(status: boolean) {
@@ -19,4 +21,12 @@ export const isNetworking = createMemo(() => {
     return false
   }
   return inputStore.isNetworking
+})
+
+export function setInputText(text: string) {
+  setInputStore('inputText', text)
+}
+
+export const inputText = createMemo(() => {
+  return inputStore.inputText
 })
