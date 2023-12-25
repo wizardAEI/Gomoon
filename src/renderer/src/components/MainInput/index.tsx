@@ -73,14 +73,19 @@ export default function Input(props: {
       textAreaDiv && textAreaDiv.removeEventListener('blur', removeActive)
     })
   })
+
+  createEffect(() => {
+    if (inputText() !== undefined && textAreaDiv) {
+      console.log(textAreaDiv!.scrollHeight)
+      textAreaDiv!.style.height = 'auto'
+      textAreaDiv!.style.height = `${textAreaDiv!.scrollHeight}px`
+    }
+  })
+
   function onInput(e) {
     cleanupForRestoreMsgs?.()
     setInputText(e.target.value)
     e.preventDefault()
-    if (textAreaDiv) {
-      textAreaDiv.style.height = 'auto'
-      textAreaDiv.style.height = `${textAreaDiv!.scrollHeight}px`
-    }
   }
 
   return (
