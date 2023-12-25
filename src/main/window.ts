@@ -9,6 +9,7 @@ import { spawn } from 'child_process'
 
 let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
+const osArch = process.arch
 
 let preKeys = ''
 export function setQuicklyWakeUp(keys: string) {
@@ -89,7 +90,9 @@ export function createWindow(): void {
 
   // FEAT: 双击复制回答
   if (userConfig.canMultiCopy) {
-    const eventTracker = spawn(getResourcesPath('eventTracker'))
+    const eventTracker = spawn(
+      osArch === 'x64' ? getResourcesPath('eventTracker_x64') : getResourcesPath('eventTracker')
+    )
     eventTracker.stdout.on('data', (data) => {
       if (`${data}` === 'multi-copy') {
         const copyText = clipboard.readText()

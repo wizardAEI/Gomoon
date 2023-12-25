@@ -7,7 +7,7 @@ import RefreshIcon from '@renderer/assets/icon/base/RefreshIcon'
 import Tools from './Tools'
 import { inputText, isNetworking, setInputText } from '@renderer/store/input'
 import { useLoading } from '../ui/DynamicLoading'
-import { searchByBaidu } from '@renderer/lib/ai/search/inedx'
+import { searchByBaidu } from '@renderer/lib/ai/search'
 
 /**
  * FEAT: Input 组件，用于接收用户输入的文本，onMountHandler可以在外部操作 input 元素
@@ -21,8 +21,6 @@ export default function Input(props: {
   isGenerating?: boolean
   autoFocusWhenShow?: boolean
   placeholder?: string
-  text: string
-  setText: (text: string) => void
 }) {
   let textAreaDiv: HTMLTextAreaElement | undefined
   let textAreaContainerDiv: HTMLDivElement | undefined
@@ -35,15 +33,14 @@ export default function Input(props: {
     if (isNetworking()) {
       dynamicLoading.show('查询中')
       try {
-        content = await searchByBaidu(content || props.text, (m) => dynamicLoading.show(m))
+        content = await searchByBaidu(content || inputText(), (m) => dynamicLoading.show(m))
       } catch (e) {
-        console.log('>>>', e)
         toast.error('查询失败')
       }
       dynamicLoading.hide()
     }
-    props.send(content || props.text)
-    props.setText('')
+    props.send(content || (inputText() ?? ''))
+    setInputText('')
     textAreaDiv!.style.height = 'auto'
   }
 
@@ -76,25 +73,21 @@ export default function Input(props: {
       textAreaDiv && textAreaDiv.removeEventListener('blur', removeActive)
     })
   })
-  createEffect(() => {
-    if (props.text !== undefined && textAreaDiv) {
+  function onInput(e) {
+    cleanupForRestoreMsgs?.()
+    setInputText(e.target.value)
+    e.preventDefault()
+    if (textAreaDiv) {
       textAreaDiv.style.height = 'auto'
       textAreaDiv.style.height = `${textAreaDiv!.scrollHeight}px`
     }
-  })
+  }
 
   return (
     <div class="flex flex-col gap-2">
-      <Tools onSubmit={submit} onInput={(c) => props.setText(c)} type={props.type} />
+      <Tools onSubmit={submit} onInput={(c) => setInputText(c)} type={props.type} />
       <div class="over relative flex w-full gap-1">
-        <Show
-          when={
-            props.showClearButton &&
-            !props.text.length &&
-            !props.isGenerating &&
-            !inputText()?.length
-          }
-        >
+        <Show when={props.showClearButton && !props.isGenerating && !inputText()?.length}>
           <div class="-ml-3 mr-[2px] flex cursor-pointer flex-col items-center justify-center">
             <div
               onClick={() => {
@@ -131,7 +124,7 @@ export default function Input(props: {
         <div ref={textAreaContainerDiv} class="cyber-box relative flex flex-1 backdrop-blur-md">
           <textarea
             ref={textAreaDiv}
-            value={inputText() || props.text}
+            value={inputText()}
             disabled={props.disable}
             onCompositionStart={() => {
               isCompositing = true
@@ -153,12 +146,7 @@ export default function Input(props: {
                 }
               }
             }}
-            onInput={(e) => {
-              cleanupForRestoreMsgs?.()
-              props.setText(e.target.value)
-              setInputText(e.target.value)
-              e.preventDefault()
-            }}
+            onInput={onInput}
             rows={1}
             placeholder={
               props.placeholder ||

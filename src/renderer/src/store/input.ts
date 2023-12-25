@@ -28,5 +28,5 @@ export function setInputText(text: string) {
 }
 
 export const inputText = createMemo(() => {
-  return inputStore.inputText
+  return inputStore.inputText ?? ''
 })

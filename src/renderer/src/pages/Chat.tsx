@@ -16,6 +16,7 @@ import { getCurrentAssistantForChat } from '@renderer/store/assistants'
 import SystemHeader from '@renderer/components/SystemHeader'
 import Capsule from '@renderer/components/Capsule'
 import { lines } from '@renderer/store/setting'
+import { inputText, setInputText } from '@renderer/store/input'
 const scrollToBottom = (el: HTMLDivElement, index: number) => {
   if (index === msgs.length - 1) {
     requestAnimationFrame(() => {
@@ -28,7 +29,6 @@ const scrollToBottom = (el: HTMLDivElement, index: number) => {
 }
 
 export default function Chat() {
-  const [text, setText] = createSignal('')
   const [editId, setEditId] = createSignal('')
   const [linesContent, setLinesContent] = createSignal('')
   const [linesFrom, setLinesFrom] = createSignal('')
@@ -73,16 +73,19 @@ export default function Chat() {
       }
       setEditId(id)
       if (!id) {
-        setText('')
+        setInputText('')
         return
       }
       editMsg({ content: '' }, id)
-      setText(c)
+      setInputText(c)
       setPreviousMsg({ content: c, id, state: 'pending' })
     }
     event.on('editUserMsg', editUserMsg)
 
     onCleanup(() => {
+      if (previousMsg().state !== 'complete') {
+        editMsg({ content: previousMsg().content }, previousMsg().id)
+      }
       event.off('reGenMsg', reGenMsg)
       event.off('editUserMsg', editUserMsg)
     })
@@ -150,8 +153,6 @@ export default function Chat() {
       </Show>
       <div class="fixed bottom-10 w-full px-4">
         <Input
-          text={text()}
-          setText={setText}
           showClearButton
           send={async (v: string) => {
             // 将上一条消息设置为完成状态
@@ -161,7 +162,7 @@ export default function Chat() {
 
             if (editId()) {
               // 重新编辑某一条消息
-              editMsg({ content: text() }, editId())
+              editMsg({ content: inputText() }, editId())
               if (msgs.find((msg) => msg.id === editId())?.role === 'ai') {
                 return
               }
