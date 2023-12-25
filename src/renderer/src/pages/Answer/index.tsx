@@ -8,9 +8,9 @@ import { getCurrentAssistantForAnswer } from '@renderer/store/assistants'
 import SystemHeader from '@renderer/components/SystemHeader'
 import SelectAssistantModal from './SelectAssistantModel'
 import Capsule from '@renderer/components/Capsule'
+import { inputText, setInputText } from '@renderer/store/input'
 
 export default function Answer() {
-  const [text, setText] = createSignal('')
   const [showModal, setShowModal] = createSignal(false)
   const [introduce, setIntroduce] = createSignal('每')
   const [query, setQuery] = useSearchParams()
@@ -31,11 +31,11 @@ export default function Answer() {
     }, 70)
 
     if (query.q) {
-      setText(query.q as string)
+      setInputText(query.q)
       setShowModal(true)
     }
     const removeListener = window.api.multiCopy((_: IpcRendererEvent, msg: string) => {
-      setText(msg)
+      setInputText(msg)
       setShowModal(true)
     })
     onCleanup(() => {
@@ -50,8 +50,8 @@ export default function Answer() {
         <SelectAssistantModal
           onConfirm={() => {
             setShowModal(false)
-            genAns(text())
-            setText('')
+            genAns(inputText())
+            setInputText('')
           }}
           onCancel={() => {
             setShowModal(false)
@@ -89,8 +89,6 @@ export default function Answer() {
 
       <div class="fixed bottom-10 w-full px-4">
         <Input
-          text={text()}
-          setText={setText}
           disable={showModal()}
           send={genAns}
           // 自动聚焦
