@@ -64,16 +64,17 @@ export function createWindow(): void {
       'https://aip.baidubce.com/*',
       'https://api.chatanywhere.com.cn/*',
       'http://www.baidu.com/*',
-      'https://dashscope.aliyuncs.com/*'
+      'https://dashscope.aliyuncs.com/*',
+      'https://api.chatanywhere.tech/*'
     ] // Remote API URS for which you are getting CORS error,
   }
   mainWindow.webContents.session.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
     const { origin, host } = new URL(details.url)
 
-    details.requestHeaders['Origin'] = origin;
-    details.requestHeaders['Host'] = host;
+    details.requestHeaders['Origin'] = origin
+    details.requestHeaders['Host'] = host
 
-    callback({ requestHeaders: details.requestHeaders})
+    callback({ requestHeaders: details.requestHeaders })
   })
 
   mainWindow.webContents.session.webRequest.onHeadersReceived(filter, (details, callback) => {
@@ -114,10 +115,11 @@ export function createWindow(): void {
         mainWindow?.show()
         mainWindow?.focus()
       }
-      // 应用程序退出时，关闭子进程
-      app.on('will-quit', () => {
-        eventTracker.kill()
-      })
+    })
+    // 应用程序退出时，关闭子进程
+    app.on('will-quit', () => {
+      // 查看子进程是否已经退出
+      !eventTracker.killed && eventTracker.kill()
     })
   }
 

@@ -38,12 +38,12 @@ export default function (props: { position: string; size?: number; translate?: s
       value: 'ERNIE4'
     },
     {
-      label: <span class="text-base text-current">千问 Turbo</span>,
+      label: <span class="text-sm leading-6 text-current">千问Turbo</span>,
       icon(size: number) {
         return (
           <QWenIcon
-            width={size}
-            height={size}
+            width={size - 2}
+            height={size - 2}
             class="cursor-pointer overflow-hidden rounded-md"
           />
         )
@@ -51,12 +51,12 @@ export default function (props: { position: string; size?: number; translate?: s
       value: 'QWenTurbo'
     },
     {
-      label: <span class="text-base text-current">千问 Plus</span>,
+      label: <span class="text-sm leading-6 text-current">千问Plus</span>,
       icon(size: number) {
         return (
           <QWenIcon
-            width={size}
-            height={size}
+            width={size - 2}
+            height={size - 2}
             class="cursor-pointer overflow-hidden rounded-md"
           />
         )
@@ -64,12 +64,12 @@ export default function (props: { position: string; size?: number; translate?: s
       value: 'QWenPlus'
     },
     {
-      label: <span class="text-base text-current">千问 Max</span>,
+      label: <span class="text-sm leading-6 text-current">千问Max</span>,
       icon(size: number) {
         return (
           <QWenIcon
-            width={size}
-            height={size}
+            width={size - 2}
+            height={size - 2}
             class="cursor-pointer overflow-hidden rounded-md"
           />
         )
@@ -77,7 +77,7 @@ export default function (props: { position: string; size?: number; translate?: s
       value: 'QWenMax'
     },
     {
-      label: <span class="text-base text-current">GPT3</span>,
+      label: <span class="text-base text-current">GPT3.5</span>,
       icon(size: number) {
         return (
           <ChatGptIcon
@@ -140,7 +140,7 @@ export default function (props: { position: string; size?: number; translate?: s
       </div>
       <Show when={isOpen()}>
         <div
-          class={`absolute z-10 mt-3 grid w-44 grid-cols-2 grid-rows-2 gap-1 rounded-md bg-dark p-2 ${
+          class={`absolute z-10 mt-3 grid w-80 grid-cols-3 grid-rows-3 gap-1 rounded-md bg-dark p-2 shadow-center ${
             props.position
           } ${props.translate || ''}`}
         >

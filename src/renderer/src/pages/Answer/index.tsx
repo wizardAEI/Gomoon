@@ -55,6 +55,7 @@ export default function Answer() {
           }}
           onCancel={() => {
             setShowModal(false)
+            setInputText('')
           }}
         />
       </Show>
