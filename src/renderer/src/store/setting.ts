@@ -14,6 +14,10 @@ export interface Models {
     secretKey: string
     temperature: number
   }
+  AliQWen: {
+    apiKey: string
+    temperature: number
+  }
 }
 
 const [settingStore, setSettingStore] = createStore<{

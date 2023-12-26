@@ -1,5 +1,6 @@
 import ChatGptIcon from '@renderer/assets/icon/models/ChatGptIcon'
 import WenxinIcon from '@renderer/assets/icon/models/WenxinIcon'
+import QWenIcon from '@renderer/assets/icon/models/QWenIcon'
 import { setSelectedModel, userData } from '@renderer/store/user'
 import { createMemo, createSignal, For, JSXElement, onCleanup, Show } from 'solid-js'
 import { ModelsType } from 'src/main/model/model'
@@ -35,6 +36,45 @@ export default function (props: { position: string; size?: number; translate?: s
         )
       },
       value: 'ERNIE4'
+    },
+    {
+      label: <span class="text-base text-current">千问 Turbo</span>,
+      icon(size: number) {
+        return (
+          <QWenIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'QWenTurbo'
+    },
+    {
+      label: <span class="text-base text-current">千问 Plus</span>,
+      icon(size: number) {
+        return (
+          <QWenIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'QWenPlus'
+    },
+    {
+      label: <span class="text-base text-current">千问 Max</span>,
+      icon(size: number) {
+        return (
+          <QWenIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'QWenMax'
     },
     {
       label: <span class="text-base text-current">GPT3</span>,
