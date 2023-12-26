@@ -308,7 +308,7 @@ export class ChatAliQWen extends BaseChatModel implements AliQWenChatInput {
               // when that's supported there
               // eslint-disable-next-line no-void
               void runManager?.handleLLMNewToken(text ?? '')
-              if (finish_reason) {
+              if (finish_reason && finish_reason !== 'null') {
                 if (resolved || rejected) {
                   return
                 }
