@@ -1,4 +1,14 @@
-import { app, shell, BrowserWindow, Tray, Menu, clipboard, globalShortcut } from 'electron'
+import {
+  app,
+  shell,
+  BrowserWindow,
+  Tray,
+  Menu,
+  clipboard,
+  globalShortcut,
+  OnBeforeSendHeadersListenerDetails,
+  BeforeSendResponse
+} from 'electron'
 import { join } from 'path'
 import { is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -7,9 +17,33 @@ import { loadUserConfig } from './model'
 import { getResourcesPath, quitApp } from './lib'
 import { spawn } from 'child_process'
 
+const cors: {
+  defaultURLs: string[]
+  handler:
+    | ((
+        details: OnBeforeSendHeadersListenerDetails,
+        callback: (beforeSendResponse: BeforeSendResponse) => void
+      ) => void)
+    | null
+} = {
+  defaultURLs: [
+    'http://www.baidu.com/*',
+    'https://dashscope.aliyuncs.com/*',
+    'https://aip.baidubce.com/*',
+    'https://api.openai.com/*'
+  ],
+  handler: (details, callback) => {
+    const { origin, host } = new URL(details.url)
+    details.requestHeaders['Origin'] = origin
+    details.requestHeaders['Host'] = host
+    callback({ requestHeaders: details.requestHeaders })
+  }
+}
+
 let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
 let preKeys = ''
+
 export function setQuicklyWakeUp(keys: string) {
   /**
    * FEAT: 按键监听
@@ -38,6 +72,16 @@ export function showWindow() {
   mainWindow?.show()
 }
 
+export function updateCors(urls: string[]) {
+  mainWindow?.webContents.session.webRequest.onBeforeSendHeaders(null)
+  mainWindow?.webContents.session.webRequest.onBeforeSendHeaders(
+    {
+      urls: cors.defaultURLs.concat(urls.map((url) => (url.endsWith('/*') ? url : url + '/*')))
+    },
+    cors.handler
+  )
+}
+
 export function createWindow(): void {
   const userConfig = loadUserConfig()
 
@@ -60,22 +104,9 @@ export function createWindow(): void {
   mainWindow!.setAlwaysOnTop(userConfig.isOnTop, 'status')
   // FEAT: CORS
   const filter = {
-    urls: [
-      'https://aip.baidubce.com/*',
-      'https://api.chatanywhere.com.cn/*',
-      'http://www.baidu.com/*',
-      'https://dashscope.aliyuncs.com/*',
-      'https://api.chatanywhere.tech/*'
-    ] // Remote API URS for which you are getting CORS error,
+    urls: cors.defaultURLs // Remote API URS for which you are getting CORS error,
   }
-  mainWindow.webContents.session.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
-    const { origin, host } = new URL(details.url)
-
-    details.requestHeaders['Origin'] = origin
-    details.requestHeaders['Host'] = host
-
-    callback({ requestHeaders: details.requestHeaders })
-  })
+  mainWindow.webContents.session.webRequest.onBeforeSendHeaders(filter, cors.handler)
 
   mainWindow.webContents.session.webRequest.onHeadersReceived(filter, (details, callback) => {
     if (details.responseHeaders) {
@@ -84,8 +115,19 @@ export function createWindow(): void {
       details.responseHeaders['access-control-allow-headers'] = ['*']
       details.responseHeaders['access-control-allow-methods'] = ['*']
       details.responseHeaders['access-control-allow-credentials'] = ['true']
+      details.responseHeaders['Content-Security-Policy'] = []
     }
     callback({ responseHeaders: details.responseHeaders })
+  })
+
+  mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy':
+          "default-src 'self'; script-src https://cdn.jsdelivr.net 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://dashscope.aliyuncs.com https://api.openai.com https://api.chatanywhere.com.cn https://api.chatanywhere.tech  https://tiktoken.pages.dev https://aip.baidubce.com https://cdn.jsdelivr.net http://www.baidu.com data:; img-src https: http: data: 'self'; worker-src 'self' blob:;"
+      }
+    })
   })
 
   // FEAT: 链接跳转，自动打开浏览器
