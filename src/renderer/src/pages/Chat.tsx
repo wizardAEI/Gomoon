@@ -151,7 +151,7 @@ export default function Chat() {
           )}
         </For>
       </Show>
-      <div class="fixed bottom-10 w-full px-4">
+      <div class="fixed bottom-10 z-20 w-full px-4">
         <Input
           showClearButton
           send={async (v: string) => {
