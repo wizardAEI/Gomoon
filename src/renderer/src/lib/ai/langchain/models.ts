@@ -1,10 +1,12 @@
 import { Models } from '@renderer/store/setting'
 import { ChatBaiduWenxin } from 'langchain/chat_models/baiduwenxin'
 import { ChatOpenAI } from 'langchain/chat_models/openai'
-import { ChatAliQWen } from '../langchain/qwen'
+import { ChatAliQWen } from './qwen'
 
-import { event } from '../util'
+import { event } from '../../util'
 import { ModelsType } from 'src/main/model/model'
+
+export type ModelInterfaceType = ChatBaiduWenxin | ChatOpenAI | ChatAliQWen
 
 export const defaultModels = () =>
   ({
@@ -69,7 +71,7 @@ const newQWenModel = (
 const updateModels = (
   model: Models
 ): {
-  [key in ModelsType]: ChatBaiduWenxin | ChatOpenAI | ChatAliQWen
+  [key in ModelsType]: ModelInterfaceType
 } => ({
   ERNIE3: newERNIEModal(model.BaiduWenxin, 'ERNIE-Bot'),
   ERNIE4: newERNIEModal(model.BaiduWenxin, 'ERNIE-Bot-4'),

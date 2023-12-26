@@ -1,7 +1,7 @@
 import { createStore, unwrap } from 'solid-js/store'
 import { isEqual, merge, cloneDeep } from 'lodash'
 import { event } from '@renderer/lib/util'
-import { defaultModels } from '@renderer/lib/ai/models'
+import { defaultModels } from '@renderer/lib/ai/langchain/models'
 import { Line } from 'src/main/model/model'
 export interface Models {
   OpenAI: {
