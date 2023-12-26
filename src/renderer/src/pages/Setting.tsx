@@ -66,6 +66,17 @@ export default function Setting() {
             }}
           />
         </Expand>
+        <Expand title="千问系列">
+          <EditInput
+            label="apiKey"
+            value={settingStore.models.AliQWen.apiKey}
+            onSave={(v) => {
+              const m = unwrap(settingStore.models)
+              m.AliQWen.apiKey = v
+              setModels(m)
+            }}
+          />
+        </Expand>
       </Card>
       <Card title="应用设置">
         <div class="flex flex-col gap-2">
@@ -86,6 +97,7 @@ export default function Setting() {
             <input
               class="max-w-[112px] px-2 py-[1px] text-center"
               value={settingStore.quicklyWakeUpKeys}
+              placeholder="唤起应用快捷键"
               onKeyDown={(e) => {
                 e.preventDefault()
                 // 如果没有按下 Shift, Meta, Alt, Control 等特殊键, 则返回

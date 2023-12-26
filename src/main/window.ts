@@ -63,9 +63,19 @@ export function createWindow(): void {
     urls: [
       'https://aip.baidubce.com/*',
       'https://api.chatanywhere.com.cn/*',
-      'http://www.baidu.com/*'
+      'http://www.baidu.com/*',
+      'https://dashscope.aliyuncs.com/*'
     ] // Remote API URS for which you are getting CORS error,
   }
+  mainWindow.webContents.session.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+    const { origin, host } = new URL(details.url)
+
+    details.requestHeaders['Origin'] = origin;
+    details.requestHeaders['Host'] = host;
+
+    callback({ requestHeaders: details.requestHeaders})
+  })
+
   mainWindow.webContents.session.webRequest.onHeadersReceived(filter, (details, callback) => {
     if (details.responseHeaders) {
       details.responseHeaders['Access-Control-Allow-Origin'] = []

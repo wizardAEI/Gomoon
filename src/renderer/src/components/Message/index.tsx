@@ -29,7 +29,9 @@ export default function Message(props: {
   botName?: string
   isEmpty?: boolean
 }) {
-  const meta = parseMeta(props.content)
+  const meta = createMemo(() => {
+    return parseMeta(props.content)
+  })
   // FEAT: 是否显示小组件
   const showComps = createMemo(
     () =>
@@ -42,7 +44,7 @@ export default function Message(props: {
       return (
         !msgStatus.generatingList.includes(msgs[genIndex]?.id || '') &&
         props.type === 'human' &&
-        meta.type === 'text'
+        meta().type === 'text'
       )
     }
     return false
@@ -74,7 +76,10 @@ export default function Message(props: {
         </Show>
       </Show>
       <div class={style[props.type] + ' relative m-4 rounded-2xl p-3'}>
-        <Show when={meta.type === 'text'} fallback={SpecialTypeContent(meta, mdStyle[props.type])}>
+        <Show
+          when={meta().type === 'text'}
+          fallback={SpecialTypeContent(meta(), mdStyle[props.type])}
+        >
           <Md class={mdStyle[props.type] + ' markdown break-words'} content={props.content} />
         </Show>
         {/* 交互问题，取消使用右下角的小组件，后续可能重新使用 */}
