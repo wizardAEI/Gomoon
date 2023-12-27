@@ -37,6 +37,7 @@ export default function Setting() {
             }}
           />
           <EditInput
+            optional
             label="baseURL"
             value={settingStore.models.OpenAI.baseURL}
             onSave={(v) => {

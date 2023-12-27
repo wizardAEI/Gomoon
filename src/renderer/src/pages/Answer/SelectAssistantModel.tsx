@@ -22,22 +22,22 @@ const SelectKey = {
     </svg>
   ),
   1: (
-    <div class="h-4 w-4 rounded-sm border-solid border-active text-center text-sm leading-3 text-active">
+    <div class="h-4 w-4 rounded-sm border-2 border-solid border-active text-center text-sm leading-3 text-active">
       1
     </div>
   ),
   2: (
-    <div class="h-4 w-4 rounded-sm border-solid border-active text-center text-sm leading-3 text-active">
+    <div class="h-4 w-4 rounded-sm border-2 border-solid border-active text-center text-sm leading-3 text-active">
       2
     </div>
   ),
   3: (
-    <div class="h-4 w-4 rounded-sm border-solid border-active text-center text-sm leading-3 text-active">
+    <div class="h-4 w-4 rounded-sm border-2 border-solid border-active text-center text-sm leading-3 text-active">
       3
     </div>
   ),
   4: (
-    <div class="h-4 w-4 rounded-sm border-solid border-active text-center text-sm leading-3 text-active">
+    <div class="h-4 w-4 rounded-sm border-2 border-solid border-active text-center text-sm leading-3 text-active">
       4
     </div>
   )
