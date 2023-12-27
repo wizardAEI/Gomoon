@@ -104,3 +104,11 @@
   border-radius: 0.4rem;
   background: #132c33;
 }
+
+.markdown a {
+  color: #2382c6;
+}
+
+.markdown a:hover {
+  color: #a57bea;
+}

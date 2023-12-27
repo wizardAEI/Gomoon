@@ -1,5 +1,6 @@
 import ChatGptIcon from '@renderer/assets/icon/models/ChatGptIcon'
 import WenxinIcon from '@renderer/assets/icon/models/WenxinIcon'
+import QWenIcon from '@renderer/assets/icon/models/QWenIcon'
 import { setSelectedModel, userData } from '@renderer/store/user'
 import { createMemo, createSignal, For, JSXElement, onCleanup, Show } from 'solid-js'
 import { ModelsType } from 'src/main/model/model'
@@ -37,7 +38,46 @@ export default function (props: { position: string; size?: number; translate?: s
       value: 'ERNIE4'
     },
     {
-      label: <span class="text-base text-current">GPT3</span>,
+      label: <span class="text-sm leading-6 text-current">千问Turbo</span>,
+      icon(size: number) {
+        return (
+          <QWenIcon
+            width={size - 2}
+            height={size - 2}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'QWenTurbo'
+    },
+    {
+      label: <span class="text-sm leading-6 text-current">千问Plus</span>,
+      icon(size: number) {
+        return (
+          <QWenIcon
+            width={size - 2}
+            height={size - 2}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'QWenPlus'
+    },
+    {
+      label: <span class="text-sm leading-6 text-current">千问Max</span>,
+      icon(size: number) {
+        return (
+          <QWenIcon
+            width={size - 2}
+            height={size - 2}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'QWenMax'
+    },
+    {
+      label: <span class="text-base text-current">GPT3.5</span>,
       icon(size: number) {
         return (
           <ChatGptIcon
@@ -100,7 +140,7 @@ export default function (props: { position: string; size?: number; translate?: s
       </div>
       <Show when={isOpen()}>
         <div
-          class={`absolute z-10 mt-3 grid w-44 grid-cols-2 grid-rows-2 gap-1 rounded-md bg-dark p-2 ${
+          class={`absolute z-10 mt-3 grid w-80 grid-cols-3 grid-rows-3 gap-1 rounded-md bg-dark p-2 shadow-center ${
             props.position
           } ${props.translate || ''}`}
         >

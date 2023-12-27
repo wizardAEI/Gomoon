@@ -27,9 +27,9 @@
 
 点击 release 后下载安装包：
 
-- **windows** 用户请选择：gomoon-1.0.3-setup.exe
-- m系列芯片（arm架构） **mac** 用户请选择：gomoon-1.0.3-arm64.dmg
-- x86_64 架构 **mac** 用户请选择：gomoon-1.0.3-x64.dmg
+- **windows** 用户请选择：gomoon-版本号-setup.exe
+- m系列芯片（arm架构） **mac** 用户请选择：gomoon-版本号-arm64.dmg
+- x86_64 架构 **mac** 用户请选择：gomoon-版本号-x64.dmg
 
 **Tips:**mac 用户由于没有上架 mac 应用市场，需要在『**访达**→应用』中找到 Gomoon 右键打开并二次确认才可以使用。『Command + C +C 双击复制』和『发送文件』功能需要用户允许 Gomoon 的权限请求，并且**重启**应用。
 

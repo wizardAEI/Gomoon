@@ -1,8 +1,6 @@
-import { ChatBaiduWenxin } from 'langchain/chat_models/baiduwenxin'
-import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { ChatPromptTemplate } from 'langchain/prompts'
-import { AIMessage, BaseMessageLike, HumanMessage, SystemMessage } from 'langchain/schema'
-import { models } from './models'
+import { AIMessage, HumanMessage, SystemMessage } from 'langchain/schema'
+import { ModelInterfaceType, models } from './models'
 import { LLMChain } from 'langchain/chains'
 import { userData } from '@renderer/store/user'
 import {
@@ -18,7 +16,7 @@ const msgDict = {
   ai: (s: string) => new AIMessage(s)
 } as const
 
-const createModel = (chat: ChatBaiduWenxin | ChatOpenAI) => {
+const createModel = (chat: ModelInterfaceType) => {
   return {
     async answer(
       msg: {

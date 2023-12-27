@@ -14,10 +14,21 @@ export interface SettingModel {
       secretKey: string
       temperature: number
     }
+    AliQWen: {
+      apiKey: string
+      temperature: number
+    }
   }
 }
 
-export type ModelsType = 'ERNIE3' | 'ERNIE4' | 'GPT3' | 'GPT4'
+export type ModelsType =
+  | 'ERNIE3'
+  | 'ERNIE4'
+  | 'GPT3'
+  | 'GPT4'
+  | 'QWenTurbo'
+  | 'QWenPlus'
+  | 'QWenMax'
 
 export interface UserDataModel {
   firstTime: boolean

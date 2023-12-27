@@ -18,7 +18,6 @@ export default function (props: { class: string; content: string }) {
       const srcIndex = token.attrIndex('src')
       const src = token.attrs![srcIndex][1]
       const alt = token.content || ''
-      console.log(tokens)
       const style = `max-width: 300px; border-radius: 5px;`
       return `<img src="${src}" alt="${alt}" style="${style}" />`
     }

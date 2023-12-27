@@ -1,11 +1,15 @@
 import { Models } from '@renderer/store/setting'
 import { ChatBaiduWenxin } from 'langchain/chat_models/baiduwenxin'
 import { ChatOpenAI } from 'langchain/chat_models/openai'
-import { event } from '../util'
+import { ChatAliQWen } from './qwen'
+
+import { event } from '../../util'
 import { ModelsType } from 'src/main/model/model'
 
+export type ModelInterfaceType = ChatBaiduWenxin | ChatOpenAI | ChatAliQWen
+
 export const defaultModels = () =>
-  new Object({
+  ({
     OpenAI: {
       apiKey: 'api-key',
       baseURL: '',
@@ -14,6 +18,10 @@ export const defaultModels = () =>
     BaiduWenxin: {
       apiKey: 'api-key',
       secretKey: 'secret-key',
+      temperature: 0.7
+    },
+    AliQWen: {
+      apiKey: '',
       temperature: 0.7
     }
   }) as Models
@@ -48,15 +56,30 @@ const newGPTModal = (
     }
   })
 
+const newQWenModel = (
+  config: { apiKey: string; temperature: number; enableSearch?: boolean },
+  modelName: string
+) =>
+  new ChatAliQWen({
+    streaming: true,
+    modelName,
+    aliApiKey: config.apiKey || 'api-key',
+    temperature: config.temperature,
+    enableSearch: config.enableSearch
+  })
+
 const updateModels = (
   model: Models
 ): {
-  [key in ModelsType]: ChatBaiduWenxin | ChatOpenAI
+  [key in ModelsType]: ModelInterfaceType
 } => ({
   ERNIE3: newERNIEModal(model.BaiduWenxin, 'ERNIE-Bot'),
   ERNIE4: newERNIEModal(model.BaiduWenxin, 'ERNIE-Bot-4'),
   GPT3: newGPTModal(model.OpenAI, 'gpt-3.5-turbo-0613'),
-  GPT4: newGPTModal(model.OpenAI, 'gpt-4-1106-preview')
+  GPT4: newGPTModal(model.OpenAI, 'gpt-4-1106-preview'),
+  QWenTurbo: newQWenModel(model.AliQWen, 'qwen-turbo'),
+  QWenPlus: newQWenModel(model.AliQWen, 'qwen-plus'),
+  QWenMax: newQWenModel(model.AliQWen, 'qwen-max')
 })
 
 export const models = {

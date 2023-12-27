@@ -13,6 +13,10 @@ export function getDefaultConfig(): SettingModel {
         apiKey: '',
         secretKey: '',
         temperature: 0.7
+      },
+      AliQWen: {
+        apiKey: '',
+        temperature: 0.7
       }
     },
     canMultiCopy: true,

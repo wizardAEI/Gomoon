@@ -6,6 +6,7 @@ export default function EditInput(props: {
   value?: string
   spellcheck?: boolean
   onSave: (value: string) => void
+  optional?: boolean
 }) {
   const [value, setValue] = createSignal(props.value || '')
   const [isEditing, setIsEditing] = createSignal(false)
@@ -29,7 +30,7 @@ export default function EditInput(props: {
             }}
           >
             <span class="text-gray-500 mr-2 truncate text-ellipsis text-sm">
-              {value() || '填写您的 ' + props.label}
+              {value() || '填写您的 ' + props.label + (props.optional ? '（非必填）' : '')}
             </span>
           </div>
         }

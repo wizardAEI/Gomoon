@@ -55,6 +55,7 @@ export default function Answer() {
           }}
           onCancel={() => {
             setShowModal(false)
+            setInputText('')
           }}
         />
       </Show>
@@ -87,7 +88,7 @@ export default function Answer() {
         />
       </Show>
 
-      <div class="fixed bottom-10 w-full px-4">
+      <div class="fixed bottom-10 z-20 w-full px-4">
         <Input
           disable={showModal()}
           send={genAns}

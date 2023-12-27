@@ -1,3 +1,7 @@
+function stringError(err: Error) {
+  return `\n\n出问题了 \n${err.name} \n${err.message}`
+}
+
 export function ErrorDict(err: Error): string {
   if (err.message.includes('AbortError') || err.name.includes('AbortError')) {
     return ' ⏹'
@@ -10,6 +14,8 @@ export function ErrorDict(err: Error): string {
     return `您还未添加密钥。\n请点击${
       navigator.userAgent.includes('Mac') ? '右' : '左'
     }上角设置，进入设置页面进行添加。`
+  } else if (err.message.includes('404')) {
+    return `${stringError(err)}\n这通常是由于您未配置上述缺少的模型。`
   }
-  return `\n\n出问题了:${err.name}: ${err.message}。这通常是由于密钥没有配置正确或网络出现问题。`
+  return `${stringError(err)}\n这通常是由于密钥没有配置正确或网络出现问题。`
 }

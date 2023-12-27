@@ -18,18 +18,31 @@ import {
   useAssistant,
   getLines
 } from './model/index'
-import { AssistantModel, CreateAssistantModel, HistoryModel, UserDataModel } from './model/model'
-import { hideWindow, minimize, setQuicklyWakeUp } from './window'
+import {
+  AssistantModel,
+  CreateAssistantModel,
+  HistoryModel,
+  SettingModel,
+  UserDataModel
+} from './model/model'
+import { hideWindow, minimize, setQuicklyWakeUp, updateCors } from './window'
 import parseFile from './lib/ai/fileLoader'
 import { writeFile } from 'fs'
 import { parseURL2Str } from './lib/ai/parseURL'
+import { isValidUrl } from './lib/utils'
 
 export function initAppEventsHandler() {
   /**
    * FEAT: 配置相关(特指配置页的信息)
    */
   ipcMain.handle('load-config', () => {
-    return loadUserConfig()
+    const config = loadUserConfig()
+    const urls: string[] = []
+    if (isValidUrl(config.models.OpenAI.baseURL)) {
+      urls.push(config.models.OpenAI.baseURL)
+    }
+    urls.length && updateCors(urls)
+    return config
   })
   ipcMain.handle('set-is-on-top', (e, isOnTop: boolean) => {
     const mainWindow = BrowserWindow.fromWebContents(e.sender)
@@ -37,7 +50,14 @@ export function initAppEventsHandler() {
     setIsOnTop(isOnTop)
     return mainWindow!.isAlwaysOnTop()
   })
-  ipcMain.handle('set-models', (_, models: any) => setModels(models))
+  ipcMain.handle('set-models', (_, models: SettingModel['models']) => {
+    const urls: string[] = []
+    if (isValidUrl(models.OpenAI.baseURL)) {
+      urls.push(models.OpenAI.baseURL)
+    }
+    urls.length && updateCors(urls)
+    setModels(models)
+  })
   ipcMain.handle('set-can-multi-copy', (_, canMultiCopy: boolean) => {
     setCanMultiCopy(canMultiCopy)
   })
