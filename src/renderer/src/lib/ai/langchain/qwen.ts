@@ -315,6 +315,12 @@ export class ChatAliQWen extends BaseChatModel implements AliQWenChatInput {
                 resolved = true
                 resolve(response)
               }
+            },
+            (err) => {
+              if (!rejected) {
+                rejected = true
+                reject(err)
+              }
             }
           ).catch((error) => {
             if (!rejected) {
@@ -333,25 +339,29 @@ export class ChatAliQWen extends BaseChatModel implements AliQWenChatInput {
           },
           false,
           options?.signal
-        ).then((data) => {
-          if (data?.code) {
-            throw new Error(data?.message)
-          }
-
-          const { output, usage } = data
-
-          return {
-            id: data.request_id,
-            object: 'chat.completion.chunk',
-            created: Date.now() / 1000,
-            result: output.text,
-            usage: {
-              completion_tokens: usage.output_tokens,
-              prompt_tokens: usage.input_tokens,
-              total_tokens: usage.total_tokens
+        )
+          .then((data) => {
+            if (data?.code) {
+              throw new Error(data?.message)
             }
-          }
-        })
+
+            const { output, usage } = data
+
+            return {
+              id: data.request_id,
+              object: 'chat.completion.chunk',
+              created: Date.now() / 1000,
+              result: output.text,
+              usage: {
+                completion_tokens: usage.output_tokens,
+                prompt_tokens: usage.input_tokens,
+                total_tokens: usage.total_tokens
+              }
+            }
+          })
+          .catch((err) => {
+            console.error(err)
+          })
 
     const {
       completion_tokens: completionTokens,
@@ -386,62 +396,67 @@ export class ChatAliQWen extends BaseChatModel implements AliQWenChatInput {
     request: ChatCompletionRequest,
     stream: boolean,
     signal?: AbortSignal,
-    onmessage?: (event: MessageEvent) => void
+    onmessage?: (event: MessageEvent) => void,
+    onError?: (error: Error) => void
   ): Promise<any> {
     const makeCompletionRequest = async () => {
-      const response = await fetch(this.apiUrl, {
-        method: 'POST',
-        headers: {
-          ...(stream ? { Accept: 'text/event-stream' } : {}),
-          Authorization: `Bearer ${this.aliApiKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(request),
-        signal
-      })
+      try {
+        const response = await fetch(this.apiUrl, {
+          method: 'POST',
+          headers: {
+            ...(stream ? { Accept: 'text/event-stream' } : {}),
+            Authorization: `Bearer ${this.aliApiKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(request),
+          signal
+        })
 
-      if (!stream) {
-        return response.json()
-      }
-
-      if (response.body) {
-        // response will not be a stream if an error occurred
-        if (!response.headers.get('content-type')?.startsWith('text/event-stream')) {
-          onmessage?.(
-            new MessageEvent('message', {
-              data: await response.text()
-            })
-          )
-          return
+        if (!stream) {
+          return response.json()
         }
-        const reader = response.body.getReader()
-        const decoder = new TextDecoder('utf-8')
-        let data = ''
-        let continueReading = true
-        while (continueReading) {
-          const { done, value } = await reader.read()
-          if (done) {
-            continueReading = false
-            break
+
+        if (response.body) {
+          // response will not be a stream if an error occurred
+          if (!response.headers.get('content-type')?.startsWith('text/event-stream')) {
+            onmessage?.(
+              new MessageEvent('message', {
+                data: await response.text()
+              })
+            )
+            return
           }
-          data += decoder.decode(value)
-          let continueProcessing = true
-          while (continueProcessing) {
-            const newlineIndex = data.indexOf('\n')
-            if (newlineIndex === -1) {
-              continueProcessing = false
+          const reader = response.body.getReader()
+          const decoder = new TextDecoder('utf-8')
+          let data = ''
+          let continueReading = true
+          while (continueReading) {
+            const { done, value } = await reader.read()
+            if (done) {
+              continueReading = false
               break
             }
-            const line = data.slice(0, newlineIndex)
-            data = data.slice(newlineIndex + 1)
-            if (line.startsWith('data:')) {
-              const event = new MessageEvent('message', {
-                data: line.slice('data:'.length).trim()
-              })
-              onmessage?.(event)
+            data += decoder.decode(value)
+            let continueProcessing = true
+            while (continueProcessing) {
+              const newlineIndex = data.indexOf('\n')
+              if (newlineIndex === -1) {
+                continueProcessing = false
+                break
+              }
+              const line = data.slice(0, newlineIndex)
+              data = data.slice(newlineIndex + 1)
+              if (line.startsWith('data:')) {
+                const event = new MessageEvent('message', {
+                  data: line.slice('data:'.length).trim()
+                })
+                onmessage?.(event)
+              }
             }
           }
         }
+      } catch (err) {
+        onError?.(err as Error)
       }
     }
 

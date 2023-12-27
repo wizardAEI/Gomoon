@@ -33,6 +33,7 @@ module.exports = {
         text2: '#baccd9', // 云水蓝
         'text-dark': '#151b26', // 深色
         'text-dark2': '#276b84', // 深蓝绿
+        'text-link': '#2382c6', // 链接色
         'white/70': '#ffffff70', // 白色透明度70%
         success: '#12c569', // 绿色
         error: '#DF919C', // 红色

@@ -1,5 +1,5 @@
 import { ChatPromptTemplate } from 'langchain/prompts'
-import { AIMessage, HumanMessage, SystemMessage } from 'langchain/schema'
+import { AIMessage, HumanMessage, LLMResult, SystemMessage } from 'langchain/schema'
 import { ModelInterfaceType, models } from './models'
 import { LLMChain } from 'langchain/chains'
 import { userData } from '@renderer/store/user'
@@ -53,9 +53,8 @@ const createModel = (chat: ModelInterfaceType) => {
               handleLLMEnd() {
                 option.endCallback?.()
               },
-              handleLLMError(err, runId, parentRunId, tags) {
+              handleLLMError(err) {
                 option.errorCallback?.(err)
-                console.error('answer error: ', err, runId, parentRunId, tags)
               }
             }
           ]
@@ -69,7 +68,7 @@ const createModel = (chat: ModelInterfaceType) => {
       }[],
       option: {
         newTokenCallback: (content: string) => void
-        endCallback?: () => void
+        endCallback?: (output: LLMResult) => void
         errorCallback?: (err: any) => void
         pauseSignal: AbortSignal
       }
@@ -86,8 +85,8 @@ const createModel = (chat: ModelInterfaceType) => {
                 console.error('chat error: ', err, runId, parentRunId, tags)
                 option.errorCallback?.(err)
               },
-              handleLLMEnd() {
-                option.endCallback?.()
+              handleLLMEnd(output) {
+                option.endCallback?.(output)
               }
             }
           ],

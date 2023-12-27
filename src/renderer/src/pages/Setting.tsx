@@ -152,6 +152,22 @@ export default function Setting() {
           />
         </div>
       </Card>
+      <Card title="更多信息">
+        <div class="flex gap-1">
+          <span>版本号：v1.0.4</span>
+        </div>
+        <div class="text-sm text-text2">
+          <span>本项目开源于</span>
+          <a
+            class="text-text-link hover:text-active"
+            href="https://github.com/wizardAEI/Gomoon"
+            target="_blank"
+          >
+            GitHub
+          </a>
+          <span> 。欢迎 Star 和提出您的宝贵建议。</span>
+        </div>
+      </Card>
     </div>
   )
 }

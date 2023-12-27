@@ -25,7 +25,13 @@ import {
   SettingModel,
   UserDataModel
 } from './model/model'
-import { hideWindow, minimize, setQuicklyWakeUp, updateCSP, updateCors } from './window'
+import {
+  hideWindow,
+  minimize,
+  setQuicklyWakeUp,
+  updateRespHeaders,
+  updateSendHeaders
+} from './window'
 import parseFile from './lib/ai/fileLoader'
 import { writeFile } from 'fs'
 import { parseURL2Str } from './lib/ai/parseURL'
@@ -43,9 +49,11 @@ export function initAppEventsHandler() {
       urls.push(config.models.OpenAI.baseURL)
     }
     if (urls.toString() !== preBaseUrls.toString()) {
-      updateCors(urls)
-      updateCSP({
-        'connect-src': urls
+      updateSendHeaders(urls)
+      updateRespHeaders(urls, {
+        cspItems: {
+          'connect-src': urls
+        }
       })
       preBaseUrls = urls
     }
@@ -63,9 +71,11 @@ export function initAppEventsHandler() {
       urls.push(models.OpenAI.baseURL)
     }
     if (urls.toString() !== preBaseUrls.toString()) {
-      updateCors(urls)
-      updateCSP({
-        'connect-src': urls
+      updateSendHeaders(urls)
+      updateRespHeaders(urls, {
+        cspItems: {
+          'connect-src': urls
+        }
       })
       preBaseUrls = urls
     }

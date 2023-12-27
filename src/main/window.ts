@@ -7,7 +7,8 @@ import {
   clipboard,
   globalShortcut,
   OnBeforeSendHeadersListenerDetails,
-  BeforeSendResponse
+  BeforeSendResponse,
+  session
 } from 'electron'
 import { join } from 'path'
 import { is } from '@electron-toolkit/utils'
@@ -16,6 +17,38 @@ import trayIcon from '../../resources/icon@20.png?asset'
 import { loadUserConfig } from './model'
 import { getResourcesPath, quitApp } from './lib'
 import { spawn } from 'child_process'
+
+let mainWindow: BrowserWindow | null = null
+let tray: Tray | null = null
+let preKeys = ''
+
+export function setQuicklyWakeUp(keys: string) {
+  /**
+   * FEAT: 按键监听
+   */
+  globalShortcut.register(keys, () => {
+    if (mainWindow?.isVisible()) {
+      mainWindow?.hide()
+      return
+    }
+    mainWindow?.webContents.send('show-window')
+    mainWindow?.show()
+  })
+  preKeys && globalShortcut.unregister(preKeys)
+  preKeys = keys
+}
+
+export function hideWindow() {
+  mainWindow?.hide()
+}
+
+export function minimize() {
+  mainWindow?.minimize()
+}
+
+export function showWindow() {
+  mainWindow?.show()
+}
 
 const cors: {
   defaultURLs: string[]
@@ -36,7 +69,7 @@ const cors: {
     const { origin, host } = new URL(details.url)
     details.requestHeaders['Origin'] = origin
     details.requestHeaders['Host'] = host
-    callback({ requestHeaders: details.requestHeaders })
+    callback({ cancel: false, requestHeaders: details.requestHeaders })
   }
 }
 type cspItem = 'default-src' | 'script-src' | 'style-src' | 'connect-src' | 'img-src' | 'worker-src'
@@ -92,69 +125,29 @@ function csp(items?: {
   // "default-src 'self'; script-src https://cdn.jsdelivr.net 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://dashscope.aliyuncs.com https://api.openai.com https://api.chatanywhere.com.cn https://api.chatanywhere.tech  https://tiktoken.pages.dev https://aip.baidubce.com https://cdn.jsdelivr.net http://www.baidu.com data:; img-src https: http: data: 'self'; worker-src 'self' blob:;"
 }
 
-let mainWindow: BrowserWindow | null = null
-let tray: Tray | null = null
-let preKeys = ''
-
-export function setQuicklyWakeUp(keys: string) {
-  /**
-   * FEAT: 按键监听
-   */
-  globalShortcut.register(keys, () => {
-    if (mainWindow?.isVisible()) {
-      mainWindow?.hide()
-      return
-    }
-    mainWindow?.webContents.send('show-window')
-    mainWindow?.show()
-  })
-  preKeys && globalShortcut.unregister(preKeys)
-  preKeys = keys
-}
-
-export function hideWindow() {
-  mainWindow?.hide()
-}
-
-export function minimize() {
-  mainWindow?.minimize()
-}
-
-export function showWindow() {
-  mainWindow?.show()
-}
-
-export function updateCors(urls: string[]) {
-  mainWindow?.webContents.session.clearCache()
-  mainWindow?.webContents.session.webRequest.onBeforeSendHeaders(
+export function updateSendHeaders(urls: string[] = []) {
+  session.defaultSession.webRequest.onBeforeSendHeaders(
     { urls: cors.defaultURLs.concat(urls.map((url) => (url.endsWith('/*') ? url : url + '/*'))) },
     cors.handler
   )
-  mainWindow?.webContents.session.webRequest.onHeadersReceived(
+}
+export function updateRespHeaders(
+  urls: string[] = [],
+  conf?: { cspItems?: { [key in cspItem]?: string[] } }
+) {
+  session.defaultSession.webRequest.onHeadersReceived(
     { urls: cors.defaultURLs.concat(urls.map((url) => (url.endsWith('/*') ? url : url + '/*'))) },
     (details, callback) => {
       if (details.responseHeaders) {
-        details.responseHeaders['Access-Control-Allow-Origin'] = []
         details.responseHeaders['access-control-allow-origin'] = ['*']
         details.responseHeaders['access-control-allow-headers'] = ['*']
         details.responseHeaders['access-control-allow-methods'] = ['*']
         details.responseHeaders['access-control-allow-credentials'] = ['true']
+        details.responseHeaders['Content-Security-Policy'] = [csp(conf?.cspItems)]
       }
       callback({ responseHeaders: details.responseHeaders })
     }
   )
-}
-
-export function updateCSP(items: { [key in cspItem]?: string[] }) {
-  mainWindow?.webContents.session.clearCache()
-  mainWindow?.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-    callback({
-      responseHeaders: {
-        ...details.responseHeaders,
-        'Content-Security-Policy': csp(items)
-      }
-    })
-  })
 }
 
 export function createWindow(): void {
@@ -255,6 +248,9 @@ export function createWindow(): void {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
+
+  updateSendHeaders()
+  updateRespHeaders()
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
