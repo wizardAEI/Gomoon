@@ -25,7 +25,7 @@ import {
   SettingModel,
   UserDataModel
 } from './model/model'
-import { hideWindow, minimize, setQuicklyWakeUp, updateCors } from './window'
+import { hideWindow, minimize, setQuicklyWakeUp, updateCSP, updateCors } from './window'
 import parseFile from './lib/ai/fileLoader'
 import { writeFile } from 'fs'
 import { parseURL2Str } from './lib/ai/parseURL'
@@ -35,13 +35,20 @@ export function initAppEventsHandler() {
   /**
    * FEAT: 配置相关(特指配置页的信息)
    */
+  let preBaseUrls: string[] = []
   ipcMain.handle('load-config', () => {
     const config = loadUserConfig()
     const urls: string[] = []
     if (isValidUrl(config.models.OpenAI.baseURL)) {
       urls.push(config.models.OpenAI.baseURL)
     }
-    urls.length && updateCors(urls)
+    if (urls.toString() !== preBaseUrls.toString()) {
+      updateCors(urls)
+      updateCSP({
+        'connect-src': urls
+      })
+      preBaseUrls = urls
+    }
     return config
   })
   ipcMain.handle('set-is-on-top', (e, isOnTop: boolean) => {
@@ -55,7 +62,13 @@ export function initAppEventsHandler() {
     if (isValidUrl(models.OpenAI.baseURL)) {
       urls.push(models.OpenAI.baseURL)
     }
-    urls.length && updateCors(urls)
+    if (urls.toString() !== preBaseUrls.toString()) {
+      updateCors(urls)
+      updateCSP({
+        'connect-src': urls
+      })
+      preBaseUrls = urls
+    }
     setModels(models)
   })
   ipcMain.handle('set-can-multi-copy', (_, canMultiCopy: boolean) => {

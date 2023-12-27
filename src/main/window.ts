@@ -39,6 +39,47 @@ const cors: {
     callback({ requestHeaders: details.requestHeaders })
   }
 }
+type cspItem = 'default-src' | 'script-src' | 'style-src' | 'connect-src' | 'img-src' | 'worker-src'
+function csp(items?: {
+  [key in cspItem]?: string[]
+}) {
+  const defaultItem: {
+    [key in cspItem]: string[]
+  } = {
+    'default-src': [],
+    'script-src': ['https://cdn.jsdelivr.net', "'unsafe-eval'"],
+    'style-src': ["'unsafe-inline'"],
+    'connect-src': [
+      'https://dashscope.aliyuncs.com',
+      'https://api.openai.com',
+      'https://tiktoken.pages.dev',
+      'https://aip.baidubce.com',
+      'https://cdn.jsdelivr.net',
+      'http://www.baidu.com',
+      'data:'
+    ],
+    'img-src': ['https:', 'http:', 'data:', 'blob:'],
+    'worker-src': ['blob:']
+  }
+  let cspStr = ''
+  function item2Str(item: string[] | undefined) {
+    if (!item) {
+      return ''
+    }
+    return item.join(' ')
+  }
+  for (let item in defaultItem) {
+    cspStr +=
+      item +
+      " 'self' " +
+      item2Str(defaultItem[item as cspItem]) +
+      ' ' +
+      item2Str(items?.[item]) +
+      '; '
+  }
+  return cspStr
+  // "default-src 'self'; script-src https://cdn.jsdelivr.net 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://dashscope.aliyuncs.com https://api.openai.com https://api.chatanywhere.com.cn https://api.chatanywhere.tech  https://tiktoken.pages.dev https://aip.baidubce.com https://cdn.jsdelivr.net http://www.baidu.com data:; img-src https: http: data: 'self'; worker-src 'self' blob:;"
+}
 
 let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
@@ -73,13 +114,36 @@ export function showWindow() {
 }
 
 export function updateCors(urls: string[]) {
-  mainWindow?.webContents.session.webRequest.onBeforeSendHeaders(null)
+  mainWindow?.webContents.session.clearCache()
   mainWindow?.webContents.session.webRequest.onBeforeSendHeaders(
-    {
-      urls: cors.defaultURLs.concat(urls.map((url) => (url.endsWith('/*') ? url : url + '/*')))
-    },
+    { urls: cors.defaultURLs.concat(urls.map((url) => (url.endsWith('/*') ? url : url + '/*'))) },
     cors.handler
   )
+  mainWindow?.webContents.session.webRequest.onHeadersReceived(
+    { urls: cors.defaultURLs.concat(urls.map((url) => (url.endsWith('/*') ? url : url + '/*'))) },
+    (details, callback) => {
+      if (details.responseHeaders) {
+        details.responseHeaders['Access-Control-Allow-Origin'] = []
+        details.responseHeaders['access-control-allow-origin'] = ['*']
+        details.responseHeaders['access-control-allow-headers'] = ['*']
+        details.responseHeaders['access-control-allow-methods'] = ['*']
+        details.responseHeaders['access-control-allow-credentials'] = ['true']
+      }
+      callback({ responseHeaders: details.responseHeaders })
+    }
+  )
+}
+
+export function updateCSP(items: { [key in cspItem]?: string[] }) {
+  mainWindow?.webContents.session.clearCache()
+  mainWindow?.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy': csp(items)
+      }
+    })
+  })
 }
 
 export function createWindow(): void {
@@ -102,33 +166,6 @@ export function createWindow(): void {
 
   // preConfig
   mainWindow!.setAlwaysOnTop(userConfig.isOnTop, 'status')
-  // FEAT: CORS
-  const filter = {
-    urls: cors.defaultURLs // Remote API URS for which you are getting CORS error,
-  }
-  mainWindow.webContents.session.webRequest.onBeforeSendHeaders(filter, cors.handler)
-
-  mainWindow.webContents.session.webRequest.onHeadersReceived(filter, (details, callback) => {
-    if (details.responseHeaders) {
-      details.responseHeaders['Access-Control-Allow-Origin'] = []
-      details.responseHeaders['access-control-allow-origin'] = ['*']
-      details.responseHeaders['access-control-allow-headers'] = ['*']
-      details.responseHeaders['access-control-allow-methods'] = ['*']
-      details.responseHeaders['access-control-allow-credentials'] = ['true']
-      details.responseHeaders['Content-Security-Policy'] = []
-    }
-    callback({ responseHeaders: details.responseHeaders })
-  })
-
-  mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-    callback({
-      responseHeaders: {
-        ...details.responseHeaders,
-        'Content-Security-Policy':
-          "default-src 'self'; script-src https://cdn.jsdelivr.net 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://dashscope.aliyuncs.com https://api.openai.com https://api.chatanywhere.com.cn https://api.chatanywhere.tech  https://tiktoken.pages.dev https://aip.baidubce.com https://cdn.jsdelivr.net http://www.baidu.com data:; img-src https: http: data: 'self'; worker-src 'self' blob:;"
-      }
-    })
-  })
 
   // FEAT: 链接跳转，自动打开浏览器
   mainWindow.webContents.on('will-frame-navigate', (event) => {

@@ -43,14 +43,17 @@ Gomoon 的名字来源于 _赛博朋克：边缘行者_ 的中 Lucy 的愿望：
 
 ## 交流
 
-如果你有任何问题或者想交流一下使用体验，分享自己的助手，欢迎加入群聊：
+如果你有任何问题或者想交流一下使用体验，分享自己的助手，欢迎加入群聊（后续 Gomoon 更新通知也会发布在群内）：
 
 <img order-radius="100px"  height="250px" src="https://github.com/wizardAEI/blog-images/blob/main/groupcode.jpg" alt=""/>
 
 ## 鸣谢
 
-感谢以下贡献者的支持：
+感谢以下开发者的支持：
 
-| 贡献者                                                                                     | 贡献内容                 |
-| ------------------------------------------------------------------------------------------ | ------------------------ |
-| [![用户名1](https://github.com/e9ab98e991ab.png?size=50)](https://github.com/e9ab98e991ab) | mac 端 x86_64 架构的适配 |
+| 贡献者                                                                                          | 贡献内容                 |
+| ----------------------------------------------------------------------------------------------- | ------------------------ |
+| [![e9ab98e991ab](https://github.com/e9ab98e991ab.png?size=50)](https://github.com/e9ab98e991ab) | mac 端 x86_64 架构的适配 |
+| [![zhengxs2018](https://github.com/zhengxs2018.png?size=50)](https://github.com/zhengxs2018)    | 支持通义千问模型         |
+
+如果你也想一起共建 Gomoon，欢迎进群畅聊、提交 PR 或者 Issue。
