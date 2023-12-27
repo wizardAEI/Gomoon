@@ -50,11 +50,12 @@ function csp(items?: {
     'script-src': ['https://cdn.jsdelivr.net', "'unsafe-eval'"],
     'style-src': ["'unsafe-inline'"],
     'connect-src': [
-      'https://dashscope.aliyuncs.com',
-      'https://api.openai.com',
-      'https://tiktoken.pages.dev',
-      'https://aip.baidubce.com',
-      'https://cdn.jsdelivr.net',
+      // 'https://dashscope.aliyuncs.com',
+      // 'https://api.openai.com',
+      // 'https://tiktoken.pages.dev',
+      // 'https://aip.baidubce.com',
+      // 'https://cdn.jsdelivr.net',
+      'https:',
       'http://www.baidu.com',
       'data:'
     ],
@@ -66,6 +67,16 @@ function csp(items?: {
     if (!item) {
       return ''
     }
+    // 去除网址后的路径
+    item = item.map((url) => {
+      try {
+        const { origin } = new URL(url)
+        if (origin === 'null') return url
+        return origin || url
+      } catch (e) {
+        return url
+      }
+    })
     return item.join(' ')
   }
   for (let item in defaultItem) {
