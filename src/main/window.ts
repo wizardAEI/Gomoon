@@ -122,7 +122,6 @@ function csp(items?: {
       '; '
   }
   return cspStr
-  // "default-src 'self'; script-src https://cdn.jsdelivr.net 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://dashscope.aliyuncs.com https://api.openai.com https://api.chatanywhere.com.cn https://api.chatanywhere.tech  https://tiktoken.pages.dev https://aip.baidubce.com https://cdn.jsdelivr.net http://www.baidu.com data:; img-src https: http: data: 'self'; worker-src 'self' blob:;"
 }
 
 export function updateSendHeaders(urls: string[] = []) {
@@ -183,11 +182,10 @@ export function createWindow(): void {
   // FEAT: 双击复制回答
   if (userConfig.canMultiCopy) {
     let filename = 'eventTracker'
-    if (process.arch === 'x64') {
-      filename = 'eventTracker_x64'
-    }
     if (process.platform === 'win32') {
       filename += '.exe'
+    } else if (process.arch === 'x64') {
+      filename = 'eventTracker_x64'
     }
     const eventTracker = spawn(getResourcesPath(filename))
     eventTracker.stdout.on('data', (data) => {
