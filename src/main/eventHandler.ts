@@ -26,6 +26,7 @@ import {
   UserDataModel
 } from './model/model'
 import {
+  checkUpdate,
   hideWindow,
   minimize,
   setQuicklyWakeUp,
@@ -36,6 +37,7 @@ import parseFile from './lib/ai/fileLoader'
 import { writeFile } from 'fs'
 import { parseURL2Str } from './lib/ai/parseURL'
 import { isValidUrl } from './lib/utils'
+import { autoUpdater } from 'electron-updater'
 
 export function initAppEventsHandler() {
   /**
@@ -136,8 +138,15 @@ export function initAppEventsHandler() {
   })
 
   // 升级
-  ipcMain.handle('check-for-update', () => {})
-  ipcMain.handle('quit-for-update', () => {})
+  ipcMain.handle('check-update', async () => {
+    return await checkUpdate()
+  })
+  ipcMain.handle('quit-for-update', () => {
+    autoUpdater.quitAndInstall()
+  })
+  ipcMain.handle('download-update', async () => {
+    return await autoUpdater.downloadUpdate()
+  })
 
   // 其他
   app.on('browser-window-created', () => {})

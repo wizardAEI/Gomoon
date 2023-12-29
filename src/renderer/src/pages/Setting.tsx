@@ -15,12 +15,15 @@ import { onCleanup, onMount } from 'solid-js'
 import { unwrap } from 'solid-js/store'
 import SettingIcon from '@renderer/assets/icon/base/SettingIcon'
 import groupCodeJpg from '@renderer/assets/groupcode.jpg'
+import { updateStatusLabel, updateVersion } from '@renderer/store/system'
+import { useLoading } from '@renderer/components/ui/DynamicLoading'
 export default function Setting() {
   onMount(() => {
     onCleanup(() => {
       updateModelsToFile()
     })
   })
+  const loading = useLoading()
   return (
     <div class="flex select-none flex-col gap-3 p-5">
       <div class="flex select-none items-center gap-1  text-lg text-text1">
@@ -174,7 +177,16 @@ export default function Setting() {
         <div></div>
         <div class="mt-1 flex items-center gap-2 text-text2">
           <span>版本号：v1.0.4</span>
-          <a class="text-text-link cursor-pointer hover:text-active">检查更新</a>
+          <a
+            class="text-text-link cursor-pointer hover:text-active"
+            onClick={async () => {
+              loading.show('正在检查更新')
+              await updateVersion()
+              loading.hide()
+            }}
+          >
+            {updateStatusLabel()}
+          </a>
         </div>
       </Card>
     </div>

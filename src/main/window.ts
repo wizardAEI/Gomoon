@@ -150,8 +150,9 @@ export function updateRespHeaders(
   )
 }
 
-export async function checkUpdate() {
-  autoUpdater.isUpdaterActive()
+export async function checkUpdate(): Promise<boolean> {
+  const res = await autoUpdater.checkForUpdates()
+  return (res && res.updateInfo.version !== app.getVersion()) || false
 }
 
 export function createWindow(): void {
@@ -175,24 +176,22 @@ export function createWindow(): void {
   // preConfig
   mainWindow!.setAlwaysOnTop(userConfig.isOnTop, 'status')
 
+  // 版本更新
   autoUpdater.forceDevUpdateConfig = true
   autoUpdater.autoInstallOnAppQuit = false
   autoUpdater.autoDownload = false
-  autoUpdater.on('update-available', () => {
-    mainWindow?.webContents.send('post-message', 'update-available')
-  })
   autoUpdater.on('download-progress', (progress) => {
-    mainWindow?.webContents.send('post-message', 'download-progress')
-    mainWindow?.webContents.send('post-message', progress)
+    mainWindow?.webContents.send('post-message', 'download-progress ' + progress.percent)
   })
-  // function autoUpdate() {
-  //   autoUpdater.checkForUpdates().then((res) => {
-  //     // 如果有新版本则下载：
-  //     if (res && res.updateInfo.version !== app.getVersion()) {
-  //       autoUpdater.downloadUpdate()
-  //     }
-  //   })
-  // }
+  autoUpdater.on('update-downloaded', () => {
+    mainWindow?.webContents.send('post-message', 'update-downloaded')
+  })
+  autoUpdater.checkForUpdates().then((res) => {
+    // 如果有新版本则下载：
+    if (res && res.updateInfo.version !== app.getVersion()) {
+      autoUpdater.downloadUpdate()
+    }
+  })
 
   // FEAT: 链接跳转，自动打开浏览器
   mainWindow.webContents.on('will-frame-navigate', (event) => {

@@ -65,11 +65,9 @@ export const api = {
     ipcRenderer.invoke('save-file', fileName, content),
 
   // 更新
-  checkUpdate: (): Promise<{
-    canUpdate: boolean
-    haveDownload: boolean
-  }> => ipcRenderer.invoke('check-update'),
+  checkUpdate: (): Promise<boolean> => ipcRenderer.invoke('check-update'),
   quitForUpdate: () => ipcRenderer.invoke('quit-for-update'),
+  downloadUpdate: (): Promise<string[]> => ipcRenderer.invoke('download-update'),
 
   // 其他
   getLines: (): Promise<Partial<Line>[]> => ipcRenderer.invoke('get-lines'),
