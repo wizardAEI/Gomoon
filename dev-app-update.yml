@@ -1,3 +1,5 @@
-provider: generic
-url: https://example.com/auto-updates
-updaterCacheDirName: Gomoon-updater
+provider: github
+owner: wizardAEI
+repo: Gomoon
+# url: https://example.com/auto-updates
+# updaterCacheDirName: Gomoon-updater

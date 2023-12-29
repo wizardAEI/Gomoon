@@ -170,7 +170,7 @@ export default function Setting() {
           </a>
           <span> 。欢迎 Star 和提出您的宝贵建议。</span>
         </div>
-        <div class="mt-1 flex gap-1 text-text2">版本号：v1.0.4</div>
+        <div class="mt-1 flex gap-1 text-text2">版本号：v1.0.5(test)</div>
       </Card>
     </div>
   )

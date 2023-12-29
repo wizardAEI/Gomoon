@@ -17,6 +17,7 @@ import trayIcon from '../../resources/icon@20.png?asset'
 import { loadUserConfig } from './model'
 import { getResourcesPath, quitApp } from './lib'
 import { spawn } from 'child_process'
+import { autoUpdater } from 'electron-updater'
 
 let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
@@ -169,6 +170,8 @@ export function createWindow(): void {
 
   // preConfig
   mainWindow!.setAlwaysOnTop(userConfig.isOnTop, 'status')
+
+  autoUpdater.checkForUpdatesAndNotify()
 
   // FEAT: 链接跳转，自动打开浏览器
   mainWindow.webContents.on('will-frame-navigate', (event) => {
