@@ -135,6 +135,10 @@ export function initAppEventsHandler() {
     }
   })
 
+  // 升级
+  ipcMain.handle('check-for-update', () => {})
+  ipcMain.handle('quit-for-update', () => {})
+
   // 其他
   app.on('browser-window-created', () => {})
   ipcMain.handle('hide-window', () => hideWindow())

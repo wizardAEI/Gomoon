@@ -45,6 +45,11 @@ const App = () => {
     // FEAT: OCR
     OCRInit()
 
+    // FEAT: receive msg
+    window.api.receiveMsg((_, msg: string) => {
+      console.log('receive msg', msg)
+    })
+
     // 避免 ctrl + r 刷新页面 (生产环境)
     if (process.env.NODE_ENV === 'production') {
       window.addEventListener('keydown', (e) => {

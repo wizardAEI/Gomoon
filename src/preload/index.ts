@@ -64,10 +64,23 @@ export const api = {
   saveFile: (fileName: string, content: string) =>
     ipcRenderer.invoke('save-file', fileName, content),
 
+  // 更新
+  checkUpdate: (): Promise<{
+    canUpdate: boolean
+    haveDownload: boolean
+  }> => ipcRenderer.invoke('check-update'),
+  quitForUpdate: () => ipcRenderer.invoke('quit-for-update'),
+
   // 其他
   getLines: (): Promise<Partial<Line>[]> => ipcRenderer.invoke('get-lines'),
   parsePageToString: (url: string): Promise<string> =>
-    ipcRenderer.invoke('parse-page-to-string', url)
+    ipcRenderer.invoke('parse-page-to-string', url),
+  receiveMsg: (callback: (event: IpcRendererEvent, msg: string) => void) => {
+    ipcRenderer.on('post-message', callback)
+    return () => {
+      ipcRenderer.removeListener('post-message', callback)
+    }
+  }
 } as const
 
 // Use `contextBridge` APIs to expose Electron APIs to

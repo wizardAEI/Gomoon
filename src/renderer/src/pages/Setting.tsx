@@ -14,6 +14,7 @@ import EditInput from '@renderer/components/ui/EditInput'
 import { onCleanup, onMount } from 'solid-js'
 import { unwrap } from 'solid-js/store'
 import SettingIcon from '@renderer/assets/icon/base/SettingIcon'
+import groupCodeJpg from '@renderer/assets/groupcode.jpg'
 export default function Setting() {
   onMount(() => {
     onCleanup(() => {
@@ -156,7 +157,7 @@ export default function Setting() {
         <div>
           <span>加入群聊，获取最新版本信息，和群友畅聊 AI ：</span>
           <div class="flex justify-center">
-            <img src="/groupcode.jpg" class="h-32 w-32 rounded-md border-none p-2" />
+            <img src={groupCodeJpg} class="h-32 w-32 rounded-md border-none p-2" />
           </div>
         </div>
         <div class="text-sm text-text2">
@@ -170,7 +171,11 @@ export default function Setting() {
           </a>
           <span> 。欢迎 Star 和提出您的宝贵建议。</span>
         </div>
-        <div class="mt-1 flex gap-1 text-text2">版本号：v1.0.5(test)</div>
+        <div></div>
+        <div class="mt-1 flex items-center gap-2 text-text2">
+          <span>版本号：v1.0.4</span>
+          <a class="text-text-link cursor-pointer hover:text-active">检查更新</a>
+        </div>
       </Card>
     </div>
   )
