@@ -19,6 +19,8 @@ nsis:
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always
+  allowToChangeInstallationDirectory: true
+  language: 2052 # 简体中文
 mac:
   extendInfo:
     - NSCameraUsageDescription: Application requests access to the device's camera.
