@@ -7,7 +7,8 @@ import {
   clipboard,
   globalShortcut,
   OnBeforeSendHeadersListenerDetails,
-  BeforeSendResponse
+  BeforeSendResponse,
+  session
 } from 'electron'
 import { join } from 'path'
 import { is } from '@electron-toolkit/utils'
@@ -16,70 +17,7 @@ import trayIcon from '../../resources/icon@20.png?asset'
 import { loadUserConfig } from './model'
 import { getResourcesPath, quitApp } from './lib'
 import { spawn } from 'child_process'
-
-const cors: {
-  defaultURLs: string[]
-  handler:
-    | ((
-        details: OnBeforeSendHeadersListenerDetails,
-        callback: (beforeSendResponse: BeforeSendResponse) => void
-      ) => void)
-    | null
-} = {
-  defaultURLs: [
-    'http://www.baidu.com/*',
-    'https://dashscope.aliyuncs.com/*',
-    'https://aip.baidubce.com/*',
-    'https://api.openai.com/*'
-  ],
-  handler: (details, callback) => {
-    const { origin, host } = new URL(details.url)
-    details.requestHeaders['Origin'] = origin
-    details.requestHeaders['Host'] = host
-    callback({ requestHeaders: details.requestHeaders })
-  }
-}
-type cspItem = 'default-src' | 'script-src' | 'style-src' | 'connect-src' | 'img-src' | 'worker-src'
-function csp(items?: {
-  [key in cspItem]?: string[]
-}) {
-  const defaultItem: {
-    [key in cspItem]: string[]
-  } = {
-    'default-src': [],
-    'script-src': ['https://cdn.jsdelivr.net', "'unsafe-eval'"],
-    'style-src': ["'unsafe-inline'"],
-    'connect-src': [
-      'https://dashscope.aliyuncs.com',
-      'https://api.openai.com',
-      'https://tiktoken.pages.dev',
-      'https://aip.baidubce.com',
-      'https://cdn.jsdelivr.net',
-      'http://www.baidu.com',
-      'data:'
-    ],
-    'img-src': ['https:', 'http:', 'data:', 'blob:'],
-    'worker-src': ['blob:']
-  }
-  let cspStr = ''
-  function item2Str(item: string[] | undefined) {
-    if (!item) {
-      return ''
-    }
-    return item.join(' ')
-  }
-  for (let item in defaultItem) {
-    cspStr +=
-      item +
-      " 'self' " +
-      item2Str(defaultItem[item as cspItem]) +
-      ' ' +
-      item2Str(items?.[item]) +
-      '; '
-  }
-  return cspStr
-  // "default-src 'self'; script-src https://cdn.jsdelivr.net 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://dashscope.aliyuncs.com https://api.openai.com https://api.chatanywhere.com.cn https://api.chatanywhere.tech  https://tiktoken.pages.dev https://aip.baidubce.com https://cdn.jsdelivr.net http://www.baidu.com data:; img-src https: http: data: 'self'; worker-src 'self' blob:;"
-}
+import { autoUpdater } from 'electron-updater'
 
 let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
@@ -113,37 +51,103 @@ export function showWindow() {
   mainWindow?.show()
 }
 
-export function updateCors(urls: string[]) {
-  mainWindow?.webContents.session.clearCache()
-  mainWindow?.webContents.session.webRequest.onBeforeSendHeaders(
+const cors: {
+  defaultURLs: string[]
+  handler:
+    | ((
+        details: OnBeforeSendHeadersListenerDetails,
+        callback: (beforeSendResponse: BeforeSendResponse) => void
+      ) => void)
+    | null
+} = {
+  defaultURLs: [
+    'http://www.baidu.com/*',
+    'https://dashscope.aliyuncs.com/*',
+    'https://aip.baidubce.com/*',
+    'https://api.openai.com/*'
+  ],
+  handler: (details, callback) => {
+    const { origin, host } = new URL(details.url)
+    details.requestHeaders['Origin'] = origin
+    details.requestHeaders['Host'] = host
+    callback({ cancel: false, requestHeaders: details.requestHeaders })
+  }
+}
+type cspItem = 'default-src' | 'script-src' | 'style-src' | 'connect-src' | 'img-src' | 'worker-src'
+function csp(items?: {
+  [key in cspItem]?: string[]
+}) {
+  const defaultItem: {
+    [key in cspItem]: string[]
+  } = {
+    'default-src': [],
+    'script-src': ['https://cdn.jsdelivr.net', "'unsafe-eval'"],
+    'style-src': ["'unsafe-inline'"],
+    'connect-src': [
+      // 'https://dashscope.aliyuncs.com',
+      // 'https://api.openai.com',
+      // 'https://tiktoken.pages.dev',
+      // 'https://aip.baidubce.com',
+      // 'https://cdn.jsdelivr.net',
+      'https:',
+      'http://www.baidu.com',
+      'data:'
+    ],
+    'img-src': ['https:', 'http:', 'data:', 'blob:'],
+    'worker-src': ['blob:']
+  }
+  let cspStr = ''
+  function item2Str(item: string[] | undefined) {
+    if (!item) {
+      return ''
+    }
+    // 去除网址后的路径
+    item = item.map((url) => {
+      try {
+        const { origin } = new URL(url)
+        if (origin === 'null') return url
+        return origin || url
+      } catch (e) {
+        return url
+      }
+    })
+    return item.join(' ')
+  }
+  for (let item in defaultItem) {
+    cspStr +=
+      item +
+      " 'self' " +
+      item2Str(defaultItem[item as cspItem]) +
+      ' ' +
+      item2Str(items?.[item]) +
+      '; '
+  }
+  return cspStr
+}
+
+export function updateSendHeaders(urls: string[] = []) {
+  session.defaultSession.webRequest.onBeforeSendHeaders(
     { urls: cors.defaultURLs.concat(urls.map((url) => (url.endsWith('/*') ? url : url + '/*'))) },
     cors.handler
   )
-  mainWindow?.webContents.session.webRequest.onHeadersReceived(
+}
+export function updateRespHeaders(
+  urls: string[] = [],
+  conf?: { cspItems?: { [key in cspItem]?: string[] } }
+) {
+  session.defaultSession.webRequest.onHeadersReceived(
     { urls: cors.defaultURLs.concat(urls.map((url) => (url.endsWith('/*') ? url : url + '/*'))) },
     (details, callback) => {
       if (details.responseHeaders) {
-        details.responseHeaders['Access-Control-Allow-Origin'] = []
         details.responseHeaders['access-control-allow-origin'] = ['*']
         details.responseHeaders['access-control-allow-headers'] = ['*']
         details.responseHeaders['access-control-allow-methods'] = ['*']
         details.responseHeaders['access-control-allow-credentials'] = ['true']
+        details.responseHeaders['Content-Security-Policy'] = [csp(conf?.cspItems)]
       }
       callback({ responseHeaders: details.responseHeaders })
     }
   )
-}
-
-export function updateCSP(items: { [key in cspItem]?: string[] }) {
-  mainWindow?.webContents.session.clearCache()
-  mainWindow?.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-    callback({
-      responseHeaders: {
-        ...details.responseHeaders,
-        'Content-Security-Policy': csp(items)
-      }
-    })
-  })
 }
 
 export function createWindow(): void {
@@ -167,6 +171,8 @@ export function createWindow(): void {
   // preConfig
   mainWindow!.setAlwaysOnTop(userConfig.isOnTop, 'status')
 
+  autoUpdater.checkForUpdatesAndNotify()
+
   // FEAT: 链接跳转，自动打开浏览器
   mainWindow.webContents.on('will-frame-navigate', (event) => {
     if (event.url.includes('localhost')) {
@@ -179,11 +185,10 @@ export function createWindow(): void {
   // FEAT: 双击复制回答
   if (userConfig.canMultiCopy) {
     let filename = 'eventTracker'
-    if (process.arch === 'x64') {
-      filename = 'eventTracker_x64'
-    }
     if (process.platform === 'win32') {
       filename += '.exe'
+    } else if (process.arch === 'x64') {
+      filename = 'eventTracker_x64'
     }
     const eventTracker = spawn(getResourcesPath(filename))
     eventTracker.stdout.on('data', (data) => {
@@ -244,6 +249,9 @@ export function createWindow(): void {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
+
+  updateSendHeaders()
+  updateRespHeaders()
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.

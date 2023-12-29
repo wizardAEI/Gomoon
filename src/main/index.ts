@@ -10,20 +10,19 @@ app.dock?.setIcon(icon)
 app.dock?.setMenu(Menu.buildFromTemplate([]))
 
 // 检测只启动一个app
-const gotTheLock = app.requestSingleInstanceLock();
+const gotTheLock = app.requestSingleInstanceLock()
 
 if (!gotTheLock) {
   // 如果获取锁失败，说明已经有一个实例在运行了，可以直接退出
-  app.quit();
+  app.quit()
 } else {
   app.on('second-instance', () => {
     // 当运行第二个实例时，将会聚焦到 myWindow 这个窗口
-    showWindow();
-  });
+    showWindow()
+  })
 }
 
 app.whenReady().then(() => {
-
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 

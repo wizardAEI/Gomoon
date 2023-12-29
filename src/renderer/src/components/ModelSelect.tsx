@@ -4,6 +4,7 @@ import QWenIcon from '@renderer/assets/icon/models/QWenIcon'
 import { setSelectedModel, userData } from '@renderer/store/user'
 import { createMemo, createSignal, For, JSXElement, onCleanup, Show } from 'solid-js'
 import { ModelsType } from 'src/main/model/model'
+import { settingStore } from '@renderer/store/setting'
 
 export default function (props: { position: string; size?: number; translate?: string }) {
   const options: {
@@ -12,7 +13,7 @@ export default function (props: { position: string; size?: number; translate?: s
     value: ModelsType
   }[] = [
     {
-      label: <span class="text-base text-current">文心3</span>,
+      label: <span class="text-base text-current">文心 3.5</span>,
       icon(size: number) {
         return (
           <WenxinIcon
@@ -25,7 +26,7 @@ export default function (props: { position: string; size?: number; translate?: s
       value: 'ERNIE3'
     },
     {
-      label: <span class="text-base text-current">文心4</span>,
+      label: <span class="text-base text-current">文心 4.0</span>,
       icon(size: number) {
         return (
           <WenxinIcon
@@ -38,46 +39,7 @@ export default function (props: { position: string; size?: number; translate?: s
       value: 'ERNIE4'
     },
     {
-      label: <span class="text-sm leading-6 text-current">千问Turbo</span>,
-      icon(size: number) {
-        return (
-          <QWenIcon
-            width={size - 2}
-            height={size - 2}
-            class="cursor-pointer overflow-hidden rounded-md"
-          />
-        )
-      },
-      value: 'QWenTurbo'
-    },
-    {
-      label: <span class="text-sm leading-6 text-current">千问Plus</span>,
-      icon(size: number) {
-        return (
-          <QWenIcon
-            width={size - 2}
-            height={size - 2}
-            class="cursor-pointer overflow-hidden rounded-md"
-          />
-        )
-      },
-      value: 'QWenPlus'
-    },
-    {
-      label: <span class="text-sm leading-6 text-current">千问Max</span>,
-      icon(size: number) {
-        return (
-          <QWenIcon
-            width={size - 2}
-            height={size - 2}
-            class="cursor-pointer overflow-hidden rounded-md"
-          />
-        )
-      },
-      value: 'QWenMax'
-    },
-    {
-      label: <span class="text-base text-current">GPT3.5</span>,
+      label: <span class="text-base text-current">GPT 3.5</span>,
       icon(size: number) {
         return (
           <ChatGptIcon
@@ -90,7 +52,7 @@ export default function (props: { position: string; size?: number; translate?: s
       value: 'GPT3'
     },
     {
-      label: <span class="text-base text-current">GPT4</span>,
+      label: <span class="text-base text-current">GPT 4.0</span>,
       icon(size: number) {
         return (
           <ChatGptIcon
@@ -103,6 +65,51 @@ export default function (props: { position: string; size?: number; translate?: s
       value: 'GPT4'
     }
   ]
+
+  if (settingStore.models.AliQWen.apiKey) {
+    options.push(
+      {
+        label: <span class="text-sm leading-6 text-current">千问Turbo</span>,
+        icon(size: number) {
+          return (
+            <QWenIcon
+              width={size - 2}
+              height={size - 2}
+              class="cursor-pointer overflow-hidden rounded-md"
+            />
+          )
+        },
+        value: 'QWenTurbo'
+      },
+      {
+        label: <span class="text-sm leading-6 text-current">千问Plus</span>,
+        icon(size: number) {
+          return (
+            <QWenIcon
+              width={size - 2}
+              height={size - 2}
+              class="cursor-pointer overflow-hidden rounded-md"
+            />
+          )
+        },
+        value: 'QWenPlus'
+      },
+      {
+        label: <span class="text-sm leading-6 text-current">千问Max</span>,
+        icon(size: number) {
+          return (
+            <QWenIcon
+              width={size - 2}
+              height={size - 2}
+              class="cursor-pointer overflow-hidden rounded-md"
+            />
+          )
+        },
+        value: 'QWenMax'
+      }
+    )
+  }
+
   // 使用 createSignal 来管理下拉菜单的显示状态
   const [isOpen, setIsOpen] = createSignal(false)
   // 使用 createSignal 来管理选中的值
@@ -140,14 +147,14 @@ export default function (props: { position: string; size?: number; translate?: s
       </div>
       <Show when={isOpen()}>
         <div
-          class={`absolute z-10 mt-3 grid w-80 grid-cols-3 grid-rows-3 gap-1 rounded-md bg-dark p-2 shadow-center ${
+          class={`absolute z-10 mt-3 flex  flex-wrap gap-1 rounded-md bg-dark-plus p-2 shadow-center ${
             props.position
-          } ${props.translate || ''}`}
+          } ${props.translate || ''} ${options.length > 4 ? 'w-[312px]' : 'w-[212px]'}`}
         >
           <For each={options}>
             {(option) => (
               <div
-                class={`cursor-pointer break-words rounded-lg py-1 pl-1 pr-0 ${
+                class={`w-24 cursor-pointer break-words rounded-lg py-1 pl-1 pr-0 ${
                   userData.selectedModel === option.value ? 'bg-active-gradient' : ''
                 } hover:bg-gray
                 `}

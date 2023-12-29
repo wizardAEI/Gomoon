@@ -21,8 +21,8 @@ export default function Setting() {
     })
   })
   return (
-    <div class="flex h-full select-none flex-col gap-3 p-5">
-      <div class="flex select-none items-center gap-1 text-lg  text-text1">
+    <div class="flex select-none flex-col gap-3 p-5">
+      <div class="flex select-none items-center gap-1  text-lg text-text1">
         <SettingIcon width={20} height={20} /> <span class="text-base font-medium">应用设置</span>{' '}
       </div>
       <Card title="模型引擎配置" noPadding>
@@ -151,6 +151,26 @@ export default function Setting() {
             onCheckedChange={setSendWithCmdOrCtrl}
           />
         </div>
+      </Card>
+      <Card title="更多信息">
+        <div>
+          <span>加入群聊，获取最新版本信息，和群友畅聊 AI ：</span>
+          <div class="flex justify-center">
+            <img src="/groupcode.jpg" class="h-32 w-32 rounded-md border-none p-2" />
+          </div>
+        </div>
+        <div class="text-sm text-text2">
+          <span>本项目开源于</span>
+          <a
+            class="text-text-link hover:text-active"
+            href="https://github.com/wizardAEI/Gomoon"
+            target="_blank"
+          >
+            GitHub
+          </a>
+          <span> 。欢迎 Star 和提出您的宝贵建议。</span>
+        </div>
+        <div class="mt-1 flex gap-1 text-text2">版本号：v1.0.5(test)</div>
       </Card>
     </div>
   )

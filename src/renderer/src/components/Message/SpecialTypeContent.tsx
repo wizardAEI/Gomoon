@@ -11,30 +11,30 @@ export default function (meta: ContentMetaData, mdStyle: string) {
         onClick={() => {
           window.api.openPath(meta.src)
         }}
-        class="flex cursor-pointer gap-1 break-words text-text-dark2 duration-150 hover:text-active"
+        class="flex cursor-pointer gap-1 text-text-dark2 duration-150 hover:text-active"
       >
         <BaseFileIcon class="shrink-0 grow-0" width={20} height={20} />
-        <span>{meta.filename}</span>
+        <span class="truncate">{meta.filename}</span>
       </div>
     )
   }
   if (meta.type === 'url') {
     return (
-      <div class="group/link flex gap-1">
+      <span class="group/link flex gap-1">
         <LinkIcon
           class="shrink-0 grow-0 text-text-dark2 group-hover/link:text-active"
           width={16}
           height={16}
         />
         <a
-          class="break-words text-text-dark2 underline group-hover/link:text-active"
+          class="flex-1 truncate text-text-dark2 underline group-hover/link:text-active"
           href={meta.src}
           target="_blank"
           rel="noreferrer"
         >
           {meta.src}
         </a>
-      </div>
+      </span>
     )
   }
   if (meta.type === 'search') {

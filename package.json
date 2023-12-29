@@ -1,7 +1,7 @@
 {
   "name": "gomoon",
   "productName": "Gomoon",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "A ai tools for everyone on Mac, Windows and Linux.",
   "main": "./out/main/index.js",
   "author": "aei",
@@ -52,6 +52,7 @@
     "solidjs-use": "^2.3.0",
     "tesseract.js": "^5.0.3",
     "ulid": "^2.3.0",
+    "vectordb": "^0.4.1",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

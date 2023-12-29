@@ -33,6 +33,7 @@ module.exports = {
         text2: '#baccd9', // 云水蓝
         'text-dark': '#151b26', // 深色
         'text-dark2': '#276b84', // 深蓝绿
+        'text-link': '#2382c6', // 链接色
         'white/70': '#ffffff70', // 白色透明度70%
         success: '#12c569', // 绿色
         error: '#DF919C', // 红色
@@ -68,7 +69,7 @@ module.exports = {
       },
       boxShadow: {
         green: '20px 20px 60px #93b58a, -20px -20px 60px #c7f5ba',
-        center: '1px 1px 12px #51939330'
+        center: '0px 4px 12px #51939330'
       }
     }
   },

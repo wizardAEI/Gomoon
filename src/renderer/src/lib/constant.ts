@@ -9,7 +9,7 @@ export function ErrorDict(err: Error): string {
     err.message.includes('Request timed out.') ||
     err.name.includes('Request timed out.')
   ) {
-    return '\n\n回答超时，请重试'
+    return '\n\n回答超时，请检查网络后重试'
   } else if (err.message.includes('401') || err.message.includes('Failed to fetch')) {
     return `您还未添加密钥。\n请点击${
       navigator.userAgent.includes('Mac') ? '右' : '左'
