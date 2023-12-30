@@ -17,6 +17,7 @@ import SettingIcon from '@renderer/assets/icon/base/SettingIcon'
 import groupCodeJpg from '@renderer/assets/groupcode.jpg'
 import { updateStatusLabel, updateVersion } from '@renderer/store/system'
 import { useLoading } from '@renderer/components/ui/DynamicLoading'
+import { useToast } from '@renderer/components/ui/Toast'
 export default function Setting() {
   onMount(() => {
     onCleanup(() => {
@@ -24,6 +25,7 @@ export default function Setting() {
     })
   })
   const loading = useLoading()
+  const toast = useToast()
   return (
     <div class="flex select-none flex-col gap-3 p-5">
       <div class="flex select-none items-center gap-1  text-lg text-text1">
@@ -181,7 +183,11 @@ export default function Setting() {
             class="text-text-link cursor-pointer hover:text-active"
             onClick={async () => {
               loading.show('正在检查更新')
-              await updateVersion()
+              try {
+                await updateVersion()
+              } catch (e) {
+                toast.error('检查更新失败')
+              }
               loading.hide()
             }}
           >

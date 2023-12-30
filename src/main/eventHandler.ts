@@ -38,6 +38,7 @@ import { writeFile } from 'fs'
 import { parseURL2Str } from './lib/ai/parseURL'
 import { isValidUrl } from './lib/utils'
 import { autoUpdater } from 'electron-updater'
+import { quitApp } from './lib'
 
 export function initAppEventsHandler() {
   /**
@@ -142,7 +143,8 @@ export function initAppEventsHandler() {
     return await checkUpdate()
   })
   ipcMain.handle('quit-for-update', () => {
-    autoUpdater.quitAndInstall()
+    quitApp.quit()
+    autoUpdater.quitAndInstall(undefined, true)
   })
   ipcMain.handle('download-update', async () => {
     return await autoUpdater.downloadUpdate()
