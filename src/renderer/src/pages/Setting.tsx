@@ -188,6 +188,8 @@ export default function Setting() {
                   toast.success('已是最新版本')
                 }
               } catch (e) {
+                // 浏览器打开 github
+                window.open('https://github.com/wizardAEI/Gomoon')
                 toast.error('检查更新失败')
               }
               loading.hide()
