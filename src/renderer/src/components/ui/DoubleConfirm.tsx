@@ -28,14 +28,14 @@ export default function (props: {
       <Show when={show()}>
         <div
           class={
-            'absolute flex animate-popup flex-col gap-2 overflow-visible rounded-md bg-dark-con px-2 py-1 shadow-center ' +
+            'absolute flex animate-popup flex-col gap-2 overflow-visible rounded-md bg-dark-plus px-2 py-1 shadow-center ' +
             props.position
           }
         >
           <div class="text-center text-sm">{props.label}</div>
           <div class="flex justify-around">
             <button
-              class="mr-1 w-9 rounded-sm px-1 py-[1px] text-[12px] leading-4 duration-300 hover:bg-active"
+              class="mr-1 w-9 rounded-sm bg-dark px-1 py-[1px] text-[12px] leading-4 duration-300 hover:bg-active"
               onClick={(e) => {
                 e.stopPropagation()
                 setShow(false)
@@ -44,7 +44,7 @@ export default function (props: {
               取消
             </button>
             <button
-              class="w-9 rounded-sm px-1 py-[1px] text-[12px] leading-4 duration-300 hover:bg-active"
+              class="w-9 rounded-sm bg-dark px-1 py-[1px] text-[12px] leading-4 duration-300 hover:bg-active"
               onClick={(e) => {
                 e.stopPropagation()
                 setShow(false)

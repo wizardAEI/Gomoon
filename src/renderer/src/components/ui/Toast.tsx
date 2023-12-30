@@ -51,7 +51,7 @@ export function ToastsContainer() {
       <For each={useContext(UIContext)!.toasts()}>
         {(toast) => (
           <div class={'fixed left-1/2 z-50 -translate-x-1/2 select-none ' + toast.position}>
-            <div class="flex animate-popup flex-col gap-2 rounded-lg bg-dark-con shadow-center">
+            <div class="flex animate-popup flex-col gap-2 rounded-lg bg-dark-plus shadow-center">
               <div class={`m-2 flex max-w-xs items-center gap-1`}>
                 <span class="flex">{Icon[toast.type]}</span>
                 <span>{toast.text}</span>

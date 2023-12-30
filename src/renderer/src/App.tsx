@@ -15,6 +15,8 @@ import { loadHistories } from './store/history'
 import { ToastProvider } from './components/ui/Toast'
 import { LoadingProvider } from './components/ui/DynamicLoading'
 import { init as OCRInit } from './lib/ai/ocr'
+import { setUpdaterStatus } from './store/system'
+import System from './pages/System'
 
 const App = () => {
   const nav = useNavigate()
@@ -45,6 +47,20 @@ const App = () => {
     // FEAT: OCR
     OCRInit()
 
+    // FEAT: receive msg
+    window.api.receiveMsg((_, msg: string) => {
+      if (msg === 'update-downloaded')
+        setUpdaterStatus({
+          haveDownloaded: true
+        })
+      if (msg.includes('download-progress')) {
+        const progress = parseInt(msg.split(' ')[1])
+        setUpdaterStatus({
+          updateProgress: progress
+        })
+      }
+    })
+
     // 避免 ctrl + r 刷新页面 (生产环境)
     if (process.env.NODE_ENV === 'production') {
       window.addEventListener('keydown', (e) => {
@@ -74,6 +90,7 @@ const App = () => {
             </Show>
           </div>
         </div>
+        <System />
       </LoadingProvider>
     </ToastProvider>
   )
