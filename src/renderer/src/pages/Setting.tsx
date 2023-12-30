@@ -174,7 +174,7 @@ export default function Setting() {
           >
             GitHub
           </a>
-          <span> 。欢迎 Star 和提出您的宝贵建议。</span>
+          <span> 。您的 Star 和建议是对该项目最大的支持！</span>
         </div>
         <div></div>
         <div class="mt-1 flex items-center gap-2 text-text2">
@@ -184,7 +184,9 @@ export default function Setting() {
             onClick={async () => {
               loading.show('正在检查更新')
               try {
-                await updateVersion()
+                if (!(await updateVersion())) {
+                  toast.success('已是最新版本')
+                }
               } catch (e) {
                 toast.error('检查更新失败')
               }

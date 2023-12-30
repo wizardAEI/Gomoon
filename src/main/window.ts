@@ -194,6 +194,7 @@ export function createWindow(): void {
     if (res && res.updateInfo.version !== app.getVersion()) {
       autoUpdater.downloadUpdate()
     }
+    console.log(res!.updateInfo.version)
   })
 
   // FEAT: 链接跳转，自动打开浏览器
