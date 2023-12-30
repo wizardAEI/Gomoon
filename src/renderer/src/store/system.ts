@@ -7,6 +7,7 @@ export interface SystemStore {
     canUpdate: boolean
     haveDownloaded: boolean
     updateProgress: number
+    version: string
   }
 }
 
@@ -14,7 +15,8 @@ const [systemStore, setSystemStore] = createStore<SystemStore>({
   updateStatus: {
     canUpdate: false,
     haveDownloaded: false,
-    updateProgress: 0
+    updateProgress: 0,
+    version: ''
   }
 })
 export function setUpdaterStatus(status: Partial<SystemStore['updateStatus']>) {
@@ -47,13 +49,13 @@ export const updateStatusLabel = createMemo(() => {
 export async function updateVersion() {
   if (systemStore.updateStatus.haveDownloaded) {
     window.api.quitForUpdate()
-    return
+    return true
   }
   if (
     systemStore.updateStatus.updateProgress > 0 &&
     systemStore.updateStatus.updateProgress < 100
   ) {
-    return
+    return true
   }
   if (systemStore.updateStatus.canUpdate) {
     setUpdaterStatus({ updateProgress: 1 })
@@ -62,12 +64,15 @@ export async function updateVersion() {
         setUpdaterStatus({ haveDownloaded: true })
       }
     })
-    return
+    return true
   }
   const res = await window.api.checkUpdate()
   if (res) {
     setUpdaterStatus({ canUpdate: true })
+  } else {
+    return false
   }
+  return true
 }
 
 export { systemStore }
