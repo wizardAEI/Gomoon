@@ -159,12 +159,6 @@ export default function Setting() {
         </div>
       </Card>
       <Card title="更多信息">
-        <div>
-          <span>加入群聊，获取最新版本信息，和群友畅聊 AI ：</span>
-          <div class="flex justify-center">
-            <img src={groupCodeJpg} class="h-32 w-32 rounded-md border-none p-2" />
-          </div>
-        </div>
         <div class="text-sm text-text2">
           <span>本项目开源于</span>
           <a
