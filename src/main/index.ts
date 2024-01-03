@@ -4,6 +4,7 @@ import icon from '../../resources/icon.png?asset'
 import { initAppEventsHandler } from './eventHandler'
 import { createWindow, showWindow } from './window'
 import { quitApp } from './lib'
+import { embedding2 } from './lib/ai/embedding/embedding2'
 
 // dock
 app.dock?.setIcon(icon)
