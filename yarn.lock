@@ -5754,10 +5754,10 @@ tesseract.js-core@^5.0.0:
   resolved "https://registry.yarnpkg.com/tesseract.js-core/-/tesseract.js-core-5.0.0.tgz#159089b2e8a8c6b1f285134b1f7da6fc56914225"
   integrity sha512-lJur5LzjinW5VYMKlVNnBU2JPLpO+A9VqAYBeuV+ZgH0hKvsnm+536Yyp+/zRTBdLe7D6Kok0FN9g+TE4J8qGA==
 
-tesseract.js@^5.0.3:
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/tesseract.js/-/tesseract.js-5.0.3.tgz#e1e4d36f764a1ac09014f1f7fef5132149b68c9a"
-  integrity sha512-UcEaIRQ+KSjxl57SS2WQgnac8hON0uJgqR6418MYLBeFPGqrAooNwcKVIoSVCzflO3CxTKPg5Ic7z7JuW7wOGA==
+tesseract.js@^5.0.4:
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/tesseract.js/-/tesseract.js-5.0.4.tgz#8f18d299cac7600e51eab53b4402202402b2c1e0"
+  integrity sha512-GCIoSQMZlvTP2AaHrjUOH29/oyO7ZyHVe+BhTexEcO7/nDClRVDRjl2sYJLOWSSNbTDrm5q2m1+gfaf3lUrZ5Q==
   dependencies:
     bmp-js "^0.1.0"
     idb-keyval "^6.2.0"
