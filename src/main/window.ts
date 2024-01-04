@@ -81,14 +81,14 @@ function csp(items?: {
     [key in cspItem]: string[]
   } = {
     'default-src': [],
-    'script-src': ['https://cdn.jsdelivr.net', "'unsafe-eval'"],
+    'script-src': ['https://jsd.cdn.zzko.cn', "'unsafe-eval'"],
     'style-src': ["'unsafe-inline'"],
     'connect-src': [
       // 'https://dashscope.aliyuncs.com',
       // 'https://api.openai.com',
       // 'https://tiktoken.pages.dev',
       // 'https://aip.baidubce.com',
-      // 'https://cdn.jsdelivr.net',
+      // 'https://jsd.cdn.zzko.cn',
       'https:',
       'http://www.baidu.com',
       'data:'
@@ -194,7 +194,6 @@ export function createWindow(): void {
     if (res && res.updateInfo.version !== app.getVersion()) {
       autoUpdater.downloadUpdate()
     }
-    console.log(res!.updateInfo.version)
   })
 
   // FEAT: 链接跳转，自动打开浏览器
