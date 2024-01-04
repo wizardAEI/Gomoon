@@ -1,6 +1,5 @@
 import { app } from 'electron'
 import { join } from 'path'
-import { embedding2 } from './ai/embedding/embedding2'
 
 export function getResourcesPath(filename: string): string {
   return app.isPackaged
@@ -17,5 +16,3 @@ export const quitApp = {
     this.shouldQuit = false
   }
 }
-
-embedding2('')

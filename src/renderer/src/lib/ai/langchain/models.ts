@@ -4,7 +4,7 @@ import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { ChatAliQWen } from './qwen'
 
 import { event } from '../../util'
-import { ModelsType } from 'src/main/model/model'
+import { ModelsType } from 'src/main/models/model'
 
 export type ModelInterfaceType = ChatBaiduWenxin | ChatOpenAI | ChatAliQWen
 

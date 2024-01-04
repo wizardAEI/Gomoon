@@ -7,7 +7,7 @@ import {
   Line,
   SettingModel,
   UserDataModel
-} from '../main/model/model'
+} from '../main/models/model'
 import { FileLoaderRes } from '../main/lib/ai/fileLoader'
 
 // Custom APIs for renderer

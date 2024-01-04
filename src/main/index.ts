@@ -4,7 +4,7 @@ import icon from '../../resources/icon.png?asset'
 import { initAppEventsHandler } from './eventHandler'
 import { createWindow, showWindow } from './window'
 import { quitApp } from './lib'
-import { embedding2 } from './lib/ai/embedding/embedding2'
+import { embedding } from './lib/ai/embedding/embedding'
 
 // dock
 app.dock?.setIcon(icon)
@@ -36,6 +36,7 @@ app.whenReady().then(() => {
 
   initAppEventsHandler()
   createWindow()
+  embedding('Hello world')
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

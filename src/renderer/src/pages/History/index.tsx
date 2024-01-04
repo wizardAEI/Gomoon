@@ -9,7 +9,7 @@ import { Msg, setMsgs } from '@renderer/store/msgs'
 import { setSelectedAssistantForAns, setSelectedAssistantForChat } from '@renderer/store/user'
 import { useNavigate } from '@solidjs/router'
 import { For, Show } from 'solid-js'
-import { HistoryModel } from 'src/main/model/model'
+import { HistoryModel } from 'src/main/models/model'
 import SpecialTypeContent from './SpecialTypeContent'
 import { decorateContent } from './utils'
 const map = {

@@ -17,14 +17,14 @@ import {
   updateUserData,
   useAssistant,
   getLines
-} from './model/index'
+} from './models/index'
 import {
   AssistantModel,
   CreateAssistantModel,
   HistoryModel,
   SettingModel,
   UserDataModel
-} from './model/model'
+} from './models/model'
 import {
   checkUpdate,
   hideWindow,
