@@ -4,7 +4,6 @@ export async function embedding(text: string) {
   const { AutoTokenizer, CLIPTextModelWithProjection, env } = await import('@xenova/transformers')
   env.localModelPath = getResourcesPath('models')
   env.backends.onnx.wasm.numThreads = 1
-  env.cacheDir = getResourcesPath('cache')
   let tokenizer = await AutoTokenizer.from_pretrained('Xenova/bert-base-chinese')
   const text_model = await CLIPTextModelWithProjection.from_pretrained('Xenova/bert-base-chinese', {
     model_file_name: 'model'

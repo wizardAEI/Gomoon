@@ -63,6 +63,7 @@ export const api = {
   openPath: (path: string) => ipcRenderer.invoke('open-path', path),
   saveFile: (fileName: string, content: string) =>
     ipcRenderer.invoke('save-file', fileName, content),
+  embedding: () => ipcRenderer.invoke('embedding'),
 
   // 更新
   checkUpdate: (): Promise<boolean> => ipcRenderer.invoke('check-update'),
