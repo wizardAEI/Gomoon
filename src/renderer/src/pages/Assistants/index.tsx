@@ -1,10 +1,7 @@
 import CrossMark from '@renderer/assets/icon/base/CrossMark'
 import EditIcon from '@renderer/assets/icon/base/EditIcon'
 import Plus from '@renderer/assets/icon/base/Plus'
-import Upload from '@renderer/assets/icon/base/Upload'
 import CapitalIcon from '@renderer/components/ui/CapitalIcon'
-import ToolTip from '@renderer/components/ui/ToolTip'
-import { compWithTip } from '@renderer/components/ui/compWithTip'
 import {
   assistants,
   assistantsStatus,
@@ -116,9 +113,10 @@ export default function () {
                       e.stopPropagation()
                     }}
                   />
-                  <ToolTip
+                  {/* // TODO: 完善功能 */}
+                  {/* <ToolTip
                     label={compWithTip((tip) => (
-                      <Upload
+                      <CodeIcon
                         height={20}
                         width={20}
                         class="cursor-pointer text-gray duration-100 hover:text-active"
@@ -128,11 +126,11 @@ export default function () {
                         }}
                       />
                     ))}
-                    content="上传"
+                    content="创建服务"
                     position={{
                       placement: 'top'
                     }}
-                  />
+                  /> */}
                   <DoubleConfirm
                     label="确认删除"
                     position="right-[-10px] top-[-46px]"

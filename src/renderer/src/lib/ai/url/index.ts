@@ -1,7 +1,10 @@
-// import { nonStreamingAssistant } from '../langchain'
-
+// TODO: 优化内容获取截取逻辑（或者分片）
 export async function parsePageToString(url: string): Promise<string> {
-  return window.api.parsePageToString(url)
+  const content = await window.api.parsePageToString(url)
+  if (content.length > 2500) {
+    return content.slice(0, 2500) + '...'
+  }
+  return await window.api.parsePageToString(url)
 }
 
 export async function parsePageForUrl(url: string) {
@@ -22,11 +25,3 @@ export async function parsePageForUrl(url: string) {
 //       content
 //   )
 // }
-
-export async function parsePageForSearch(url: string) {
-  let content = await parsePageToString(url)
-  if (content.length > 1500) {
-    content = content.slice(0, 2000) + '...'
-  }
-  return content
-}

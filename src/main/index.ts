@@ -4,7 +4,6 @@ import icon from '../../resources/icon.png?asset'
 import { initAppEventsHandler } from './eventHandler'
 import { createWindow, showWindow } from './window'
 import { quitApp } from './lib'
-import { parseURL2Str } from './lib/ai/parseURL'
 
 // dock
 app.dock?.setIcon(icon)
