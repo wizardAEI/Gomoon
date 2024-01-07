@@ -17,14 +17,14 @@ import {
   updateUserData,
   useAssistant,
   getLines
-} from './model/index'
+} from './models/index'
 import {
   AssistantModel,
   CreateAssistantModel,
   HistoryModel,
   SettingModel,
   UserDataModel
-} from './model/model'
+} from './models/model'
 import {
   checkUpdate,
   hideWindow,
@@ -39,6 +39,7 @@ import { parseURL2Str } from './lib/ai/parseURL'
 import { isValidUrl } from './lib/utils'
 import { autoUpdater } from 'electron-updater'
 import { quitApp } from './lib'
+import { embedding } from './lib/ai/embedding/embedding'
 
 export function initAppEventsHandler() {
   /**
@@ -136,6 +137,10 @@ export function initAppEventsHandler() {
     if (res.filePath) {
       writeFile(res.filePath, content, () => {})
     }
+  })
+  ipcMain.handle('embedding', async (_) => {
+    console.log(process?.release?.name) // node
+    embedding('hello')
   })
 
   // 升级

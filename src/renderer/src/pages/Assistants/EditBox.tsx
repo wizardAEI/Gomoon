@@ -1,5 +1,5 @@
 import { createSignal } from 'solid-js'
-import { AssistantModel } from 'src/main/model/model'
+import { AssistantModel } from 'src/main/models/model'
 
 export default function (props: {
   assistant: AssistantModel

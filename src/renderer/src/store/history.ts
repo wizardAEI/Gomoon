@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash'
 import { createStore } from 'solid-js/store'
-import { HistoryModel } from 'src/main/model/model'
+import { HistoryModel } from 'src/main/models/model'
 
 const [histories, setHistories] = createStore<HistoryModel[]>([])
 

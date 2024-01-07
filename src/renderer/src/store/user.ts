@@ -1,5 +1,5 @@
 import { createStore } from 'solid-js/store'
-import { ModelsType, UserDataModel } from 'src/main/model/model'
+import { ModelsType, UserDataModel } from 'src/main/models/model'
 import { assistants, useAssistant } from './assistants'
 
 const [userData, setUserData] = createStore<UserDataModel>({

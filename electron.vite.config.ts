@@ -3,6 +3,7 @@ import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import solid from 'vite-plugin-solid'
 
 export default defineConfig({
+  // 打包成 esm
   main: {
     plugins: [
       externalizeDepsPlugin({

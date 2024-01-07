@@ -20,6 +20,7 @@ import System from './pages/System'
 
 const App = () => {
   const nav = useNavigate()
+
   onMount(async () => {
     // FEAT: 获取配置信息
     loadConfig()
@@ -60,6 +61,8 @@ const App = () => {
         })
       }
     })
+
+    window.api.embedding()
 
     // 避免 ctrl + r 刷新页面 (生产环境)
     if (process.env.NODE_ENV === 'production') {
