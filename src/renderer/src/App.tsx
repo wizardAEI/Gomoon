@@ -62,7 +62,7 @@ const App = () => {
       }
     })
 
-    // window.api.embedding()
+    window.api.embedding()
 
     // 避免 ctrl + r 刷新页面 (生产环境)
     if (process.env.NODE_ENV === 'production') {
