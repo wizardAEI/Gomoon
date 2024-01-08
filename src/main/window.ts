@@ -139,10 +139,13 @@ export function updateRespHeaders(
     { urls: cors.defaultURLs.concat(urls.map((url) => (url.endsWith('/*') ? url : url + '/*'))) },
     (details, callback) => {
       if (details.responseHeaders) {
-        details.responseHeaders['access-control-allow-origin'] = ['*']
-        details.responseHeaders['access-control-allow-headers'] = ['*']
+        !details.responseHeaders['access-control-allow-origin']?.length &&
+          !details.responseHeaders['Access-Control-Allow-Origin']?.length &&
+          (details.responseHeaders['access-control-allow-origin'] = ['*'])
+        !details.responseHeaders['access-control-allow-headers']?.length &&
+          (details.responseHeaders['access-control-allow-headers'] = ['*'])
+        console.log(details.responseHeaders)
         details.responseHeaders['access-control-allow-methods'] = ['*']
-        details.responseHeaders['access-control-allow-credentials'] = ['true']
         details.responseHeaders['Content-Security-Policy'] = [csp(conf?.cspItems)]
       }
       callback({ responseHeaders: details.responseHeaders })

@@ -139,7 +139,6 @@ export function initAppEventsHandler() {
     }
   })
   ipcMain.handle('embedding', async (_) => {
-    console.log(process?.release?.name) // node
     embedding('hello')
   })
 

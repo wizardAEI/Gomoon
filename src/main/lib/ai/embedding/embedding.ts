@@ -13,28 +13,5 @@ export async function embedding(text: string) {
   let text_inputs = tokenizer([text], { padding: true, truncation: true })
   // Compute embeddings
   const res = await text_model(text_inputs)
-  console.log(res.logits.data)
+  return res.legits.data
 }
-// import { Pipeline } from '@xenova/transformers'
-// class EmbeddingPipeline {
-//   static task = 'text-classification'
-//   static model = 'Xenova/bert-base-chinese'
-//   static instance: null | Promise<Pipeline> = null
-//   static async getInstance() {
-//     if (this.instance === null) {
-//       let { pipeline, env } = await import('@xenova/transformers')
-//       env.localModelPath = getResourcesPath('models')
-//       env.backends.onnx.wasm.numThreads = 1
-//       this.instance = pipeline('feature-extraction', this.model)
-//     }
-//     return this.instance
-//   }
-// }
-
-// export async function embedding(text: string) {
-//   const res = await (
-//     await EmbeddingPipeline.getInstance()
-//   )(text, { pooling: 'mean', normalize: true })
-//   console.log(res)
-//   return res
-// }
