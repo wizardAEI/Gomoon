@@ -143,9 +143,11 @@ export function updateRespHeaders(
           !details.responseHeaders['Access-Control-Allow-Origin']?.length &&
           (details.responseHeaders['access-control-allow-origin'] = ['*'])
         !details.responseHeaders['access-control-allow-headers']?.length &&
+          !details.responseHeaders['Access-Control-Allow-Headers']?.length &&
           (details.responseHeaders['access-control-allow-headers'] = ['*'])
-        console.log(details.responseHeaders)
-        details.responseHeaders['access-control-allow-methods'] = ['*']
+        !details.responseHeaders['access-control-allow-methods']?.length &&
+          !details.responseHeaders['Access-Control-Allow-Methods']?.length &&
+          (details.responseHeaders['access-control-allow-methods'] = ['*'])
         details.responseHeaders['Content-Security-Policy'] = [csp(conf?.cspItems)]
       }
       callback({ responseHeaders: details.responseHeaders })
