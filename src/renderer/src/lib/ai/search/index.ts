@@ -46,13 +46,37 @@ export async function searchByBaidu(question: string, logger: (content: string) 
     logger('查询创建失败，重新创建中...')
   }
   if (!processedContent.suc) {
-    throw new Error('查询创建失败')
+    throw new Error('查询创建失败，请重新提问')
   }
   logger('收集链接中...')
   const links = (await fetchBaiduResults(processedContent.query)).sort(() => Math.random() - 0.5)
+  const valuableLinks: string[] = []
+  const linkNum = links.length
+  while (links.length) {
+    if (valuableLinks.length >= 2) {
+      break
+    }
+    const link = links.pop()
+    const prompt2 = `我讲给你一段网页内容，请分析内容并判断该网页是否可能和问题 ${question} 有关，如果相关请回复yes，否则请回复no。不要添加任何其他内容。
+    网页内容：
+    ${(await parsePageToString(link!)).slice(0, 150)}
+    `
+    const c = (await nonStreamingAssistant(prompt2)).content as string
+    if (c.includes('yes')) {
+      valuableLinks.push(link!)
+    }
+    logger(
+      `收集链接中(${valuableLinks.length}/2)，${
+        linkNum - links.length - valuableLinks.length
+      }个无效链接`
+    )
+  }
+  if (valuableLinks.length === 0) {
+    throw new Error('没有获取到有效的链接，请重新提问')
+  }
   let content = `<gomoon-search question="${question}"/>接下来我将会给你几个与\n ${question} \n这个问题有关的网页文本内容（这其中可能会包括一些标题，用户信息，备案号，相关推荐，按钮内容等。请你剔除无效信息）。请综合理解信息并直接给出最终答案，不要多余的解释。(不要说自己不能联网或获取不到实时信息等):\n`
   logger(`解析链接中...`)
-  const res = await Promise.all(links.slice(0, 3).map((link) => parsePageToString(link)))
+  const res = await Promise.all(valuableLinks.map((link) => parsePageToString(link)))
   res.map((r, i) => {
     content += `\n\n\n第${i + 1}个网页信息：${r}`
   })

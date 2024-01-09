@@ -35,7 +35,7 @@ export default function Input(props: {
       try {
         content = await searchByBaidu(content || inputText(), (m) => dynamicLoading.show(m))
       } catch (e) {
-        toast.error('查询失败')
+        toast.error((e as Error).message || '查询失败')
       }
       dynamicLoading.hide()
     }

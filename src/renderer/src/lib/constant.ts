@@ -16,6 +16,8 @@ export function ErrorDict(err: Error): string {
     }上角设置，进入设置页面进行添加。`
   } else if (err.message.includes('404')) {
     return `${stringError(err)}\n这通常是由于您未配置上述缺少的模型。`
+  } else if (err.message.includes('maximum')) {
+    return `${stringError(err)}\n这通常是由于您的总字数超过了模型的限制。`
   }
   return `${stringError(err)}\n这通常是由于密钥没有配置正确或网络出现问题。`
 }
