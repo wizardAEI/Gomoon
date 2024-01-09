@@ -4,7 +4,7 @@ import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { ChatAliQWen } from './qwen'
 
 import { event } from '../../util'
-import { ModelsType } from 'src/main/model/model'
+import { ModelsType } from 'src/main/models/model'
 
 export type ModelInterfaceType = ChatBaiduWenxin | ChatOpenAI | ChatAliQWen
 
@@ -75,7 +75,7 @@ const updateModels = (
 } => ({
   ERNIE3: newERNIEModal(model.BaiduWenxin, 'ERNIE-Bot'),
   ERNIE4: newERNIEModal(model.BaiduWenxin, 'ERNIE-Bot-4'),
-  GPT3: newGPTModal(model.OpenAI, 'gpt-3.5-turbo-0613'),
+  GPT3: newGPTModal(model.OpenAI, 'gpt-3.5-turbo-1106'),
   GPT4: newGPTModal(model.OpenAI, 'gpt-4-1106-preview'),
   QWenTurbo: newQWenModel(model.AliQWen, 'qwen-turbo'),
   QWenPlus: newQWenModel(model.AliQWen, 'qwen-plus'),

@@ -14,7 +14,7 @@ import { join } from 'path'
 import { is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import trayIcon from '../../resources/icon@20.png?asset'
-import { loadUserConfig } from './model'
+import { loadUserConfig } from './models'
 import { getResourcesPath, quitApp } from './lib'
 import { spawn } from 'child_process'
 import { autoUpdater } from 'electron-updater'
@@ -139,10 +139,15 @@ export function updateRespHeaders(
     { urls: cors.defaultURLs.concat(urls.map((url) => (url.endsWith('/*') ? url : url + '/*'))) },
     (details, callback) => {
       if (details.responseHeaders) {
-        details.responseHeaders['access-control-allow-origin'] = ['*']
-        details.responseHeaders['access-control-allow-headers'] = ['*']
-        details.responseHeaders['access-control-allow-methods'] = ['*']
-        details.responseHeaders['access-control-allow-credentials'] = ['true']
+        !details.responseHeaders['access-control-allow-origin']?.length &&
+          !details.responseHeaders['Access-Control-Allow-Origin']?.length &&
+          (details.responseHeaders['access-control-allow-origin'] = ['*'])
+        !details.responseHeaders['access-control-allow-headers']?.length &&
+          !details.responseHeaders['Access-Control-Allow-Headers']?.length &&
+          (details.responseHeaders['access-control-allow-headers'] = ['*'])
+        !details.responseHeaders['access-control-allow-methods']?.length &&
+          !details.responseHeaders['Access-Control-Allow-Methods']?.length &&
+          (details.responseHeaders['access-control-allow-methods'] = ['*'])
         details.responseHeaders['Content-Security-Policy'] = [csp(conf?.cspItems)]
       }
       callback({ responseHeaders: details.responseHeaders })

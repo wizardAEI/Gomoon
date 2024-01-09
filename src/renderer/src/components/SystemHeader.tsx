@@ -12,7 +12,7 @@ import {
   setSelectedAssistantForChat,
   userData
 } from '@renderer/store/user'
-import { AssistantModel } from 'src/main/model/model'
+import { AssistantModel } from 'src/main/models/model'
 
 export default function (props: { type: 'chat' | 'ans' }) {
   const nav = useNavigate()

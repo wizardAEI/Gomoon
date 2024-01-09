@@ -3,7 +3,7 @@ import WenxinIcon from '@renderer/assets/icon/models/WenxinIcon'
 import QWenIcon from '@renderer/assets/icon/models/QWenIcon'
 import { setSelectedModel, userData } from '@renderer/store/user'
 import { createMemo, createSignal, For, JSXElement, onCleanup, Show } from 'solid-js'
-import { ModelsType } from 'src/main/model/model'
+import { ModelsType } from 'src/main/models/model'
 import { settingStore } from '@renderer/store/setting'
 
 export default function (props: { position: string; size?: number; translate?: string }) {

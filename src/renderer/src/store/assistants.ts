@@ -1,5 +1,5 @@
 import { createStore, produce } from 'solid-js/store'
-import { AssistantModel } from 'src/main/model/model'
+import { AssistantModel } from 'src/main/models/model'
 import { userData } from './user'
 import { createMemo } from 'solid-js'
 import { cloneDeep } from 'lodash'

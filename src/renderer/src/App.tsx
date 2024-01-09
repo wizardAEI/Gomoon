@@ -20,6 +20,7 @@ import System from './pages/System'
 
 const App = () => {
   const nav = useNavigate()
+
   onMount(async () => {
     // FEAT: 获取配置信息
     loadConfig()
