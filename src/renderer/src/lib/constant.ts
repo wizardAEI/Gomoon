@@ -11,9 +11,9 @@ export function ErrorDict(err: Error): string {
   ) {
     return '\n\n回答超时，请检查网络后重试'
   } else if (err.message.includes('401') || err.message.includes('Failed to fetch')) {
-    return `您还未添加密钥。\n请点击${
+    return `密钥或BaseURL不正确。\n请点击${
       navigator.userAgent.includes('Mac') ? '右' : '左'
-    }上角设置，进入设置页面进行添加。`
+    }上角设置，进入设置页面进行设置。`
   } else if (err.message.includes('404')) {
     return `${stringError(err)}\n这通常是由于您未配置上述缺少的模型。`
   } else if (err.message.includes('maximum')) {

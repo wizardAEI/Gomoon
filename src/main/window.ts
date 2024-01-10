@@ -139,15 +139,16 @@ export function updateRespHeaders(
     { urls: cors.defaultURLs.concat(urls.map((url) => (url.endsWith('/*') ? url : url + '/*'))) },
     (details, callback) => {
       if (details.responseHeaders) {
-        !details.responseHeaders['access-control-allow-origin']?.length &&
-          !details.responseHeaders['Access-Control-Allow-Origin']?.length &&
-          (details.responseHeaders['access-control-allow-origin'] = ['*'])
-        !details.responseHeaders['access-control-allow-headers']?.length &&
-          !details.responseHeaders['Access-Control-Allow-Headers']?.length &&
-          (details.responseHeaders['access-control-allow-headers'] = ['*'])
-        !details.responseHeaders['access-control-allow-methods']?.length &&
-          !details.responseHeaders['Access-Control-Allow-Methods']?.length &&
-          (details.responseHeaders['access-control-allow-methods'] = ['*'])
+        details.responseHeaders['access-control-allow-origin']?.length
+          ? (details.responseHeaders['access-control-allow-origin'] = ['*'])
+          : (details.responseHeaders['Access-Control-Allow-Origin'] = ['*'])
+        details.responseHeaders['access-control-allow-headers']?.length
+          ? (details.responseHeaders['access-control-allow-headers'] = ['*'])
+          : (details.responseHeaders['Access-Control-Allow-Headers'] = ['*'])
+        details.responseHeaders['access-control-allow-methods']?.length
+          ? (details.responseHeaders['access-control-allow-methods'] = ['*'])
+          : (details.responseHeaders['Access-Control-Allow-Methods'] = ['*'])
+
         details.responseHeaders['Content-Security-Policy'] = [csp(conf?.cspItems)]
       }
       callback({ responseHeaders: details.responseHeaders })
