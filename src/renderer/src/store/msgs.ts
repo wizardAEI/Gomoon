@@ -6,7 +6,7 @@ import { addHistory } from './history'
 import { cloneDeep } from 'lodash'
 import { getCurrentAssistantForChat } from './assistants'
 import { removeMeta } from '@renderer/lib/ai/parseString'
-
+import { setConsumedToken } from './input'
 export interface Msg {
   id: string
   role: Roles
@@ -102,7 +102,11 @@ export function genMsg(id: string) {
       newTokenCallback(content: string) {
         editMsgByAdd(content, id)
       },
-      endCallback() {
+      endCallback(res) {
+        let consumedToken = res.llmOutput?.estimatedTokenUsage?.totalTokens ?? 0
+        !consumedToken && (consumedToken = res.llmOutput?.tokenUsage?.totalTokens)
+        !consumedToken && (consumedToken = 0)
+        setConsumedToken(consumedToken)
         removeGeneratingStatus(id)
       },
       errorCallback(err: Error) {

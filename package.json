@@ -24,6 +24,8 @@
     "@electron-toolkit/preload": "^2.0.0",
     "@electron-toolkit/utils": "^2.0.0",
     "@langchain/community": "^0.0.16",
+    "@langchain/core": "^0.1.12",
+    "@langchain/openai": "^0.0.10",
     "@solidjs/router": "^0.9.1",
     "@types/markdown-it": "^13.0.7",
     "@types/prismjs": "^1.26.3",

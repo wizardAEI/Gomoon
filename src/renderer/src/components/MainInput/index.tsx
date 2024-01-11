@@ -5,7 +5,7 @@ import { useEventListener } from 'solidjs-use'
 import { settingStore } from '@renderer/store/setting'
 import RefreshIcon from '@renderer/assets/icon/base/RefreshIcon'
 import Tools from './Tools'
-import { inputText, isNetworking, setInputText } from '@renderer/store/input'
+import { inputText, isNetworking, setInputText, tokens } from '@renderer/store/input'
 import { useLoading } from '../ui/DynamicLoading'
 import { searchByBaidu } from '@renderer/lib/ai/search'
 
@@ -162,6 +162,11 @@ export default function Input(props: {
             }
             class="font-sans max-h-48 flex-1 resize-none rounded-2xl border-none bg-dark-pro px-4 py-[6px] text-sm text-text1 caret-text2 transition-none focus:outline-none"
           />
+          <Show when={props.type === 'chat'}>
+            <div class="text-text3 absolute bottom-0 right-3 leading-8">
+              {tokens().consumedToken} / {tokens().maxToken}
+            </div>
+          </Show>
           {/* <button class="absolute bottom-1 right-1 h-8 w-8 cursor-pointer overflow-hidden rounded-full bg-cyber px-0 py-1">
           <ChatIcon class="duration-150 hover:text-active" width={24} height={24} />
         </button> */}

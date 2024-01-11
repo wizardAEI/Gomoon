@@ -1,10 +1,5 @@
-import {
-  LLMResult,
-  HumanMessage,
-  SystemMessage,
-  AIMessage,
-  BaseMessageChunk
-} from 'langchain/schema'
+import { LLMResult } from '@langchain/core/outputs'
+import { BaseMessageChunk, HumanMessage, SystemMessage, AIMessage } from '@langchain/core/messages'
 import { ModelInterfaceType, models } from './models'
 import { userData } from '@renderer/store/user'
 import {
@@ -126,7 +121,7 @@ export const chatAssistant = async (
   }[],
   option: {
     newTokenCallback: (content: string) => void
-    endCallback?: () => void
+    endCallback?: (result: LLMResult) => void
     errorCallback?: (err: any) => void
     pauseSignal: AbortSignal
   }

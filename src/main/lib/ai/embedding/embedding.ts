@@ -6,6 +6,7 @@ export async function embedding(text: string) {
   env.backends.onnx.wasm.numThreads = 1
   env.backends.onnx.logLevel = 'info'
   let tokenizer = await AutoTokenizer.from_pretrained('Xenova/bert-base-chinese')
+  console.log(tokenizer)
   const text_model = await CLIPTextModelWithProjection.from_pretrained('Xenova/bert-base-chinese', {
     model_file_name: 'model'
   })

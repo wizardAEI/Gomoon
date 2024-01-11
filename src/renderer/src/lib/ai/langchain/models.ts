@@ -1,7 +1,7 @@
 import { Models } from '@renderer/store/setting'
-import { ChatBaiduWenxin } from 'langchain/chat_models/baiduwenxin'
+import { ChatBaiduWenxin } from '@langchain/community/chat_models/baiduwenxin'
 import { ChatAlibabaTongyi } from '@langchain/community/chat_models/alibaba_tongyi'
-import { ChatOpenAI } from 'langchain/chat_models/openai'
+import { ChatOpenAI } from '@langchain/openai'
 
 import { event } from '../../util'
 import { ModelsType } from 'src/main/models/model'
@@ -73,7 +73,7 @@ const updateModels = (
 ): {
   [key in ModelsType]: ModelInterfaceType
 } => ({
-  ERNIE3: newERNIEModal(model.BaiduWenxin, 'ERNIE-Bot'),
+  ERNIE3: newERNIEModal(model.BaiduWenxin, 'ERNIE-Bot-turbo'),
   ERNIE4: newERNIEModal(model.BaiduWenxin, 'ERNIE-Bot-4'),
   GPT3: newGPTModal(model.OpenAI, 'gpt-3.5-turbo-1106'),
   GPT4: newGPTModal(model.OpenAI, 'gpt-4-1106-preview'),

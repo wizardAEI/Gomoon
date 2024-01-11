@@ -19,7 +19,7 @@ function ToolWrap(props: { children: JSXElement; onClick?: () => void; active?: 
         'flex cursor-pointer select-none rounded-lg border border-solid  px-1 py-[1px] text-[12px] hover:text-white ' +
         (props.active
           ? 'border-dark-plus bg-dark-con text-text1'
-          : 'bg-dark-plus border-dark-con hover:border-active')
+          : 'border-dark-con bg-dark-plus hover:border-active')
       }
     >
       {props.children}
@@ -183,8 +183,8 @@ export default function Tools(props: {
         <ToolWrap
           active={isNetworking()}
           onClick={() => {
-            if (userData.selectedModel === 'ERNIE3' || userData.selectedModel === 'ERNIE4') {
-              toast.warning('ERNIE3和ERNIE4模型已默认联网查询')
+            if (userData.selectedModel === 'ERNIE4') {
+              toast.warning('文心4模型已默认联网查询')
               return
             }
             setNetworkingStatus(!isNetworking())
