@@ -4,9 +4,10 @@ import { createStore, produce } from 'solid-js/store'
 import { ulid } from 'ulid'
 import { addHistory } from './history'
 import { cloneDeep } from 'lodash'
-import { getCurrentAssistantForChat } from './assistants'
+import { assistants, getCurrentAssistantForChat } from './assistants'
 import { removeMeta } from '@renderer/lib/ai/parseString'
-import { setConsumedToken } from './input'
+import { consumedToken, setConsumedToken } from './input'
+import { userData } from './user'
 export interface Msg {
   id: string
   role: Roles
@@ -14,12 +15,25 @@ export interface Msg {
 }
 const [msgs, setMsgs] = createStore<Array<Msg>>([])
 
-let trash: Array<Msg> = []
+let trash: {
+  msgs: Array<Msg>
+  consumedToken: number
+} = {
+  msgs: [],
+  consumedToken: 0
+}
+
+function initTrash() {
+  trash = {
+    msgs: [],
+    consumedToken: 0
+  }
+}
 
 const abortMap = new Map<string, (ans?: string) => void>()
 
 export function pushMsg(msg: Msg) {
-  trash = []
+  initTrash()
   setMsgs(
     produce((msgs) => {
       msgs.push(msg)
@@ -28,13 +42,18 @@ export function pushMsg(msg: Msg) {
 }
 
 export function clearMsgs() {
-  trash = cloneDeep(msgs)
+  trash = {
+    msgs: cloneDeep(msgs),
+    consumedToken: consumedToken()
+  }
   setMsgs([])
+  setConsumedToken(0)
 }
 
 export function restoreMsgs() {
-  trash.length && setMsgs(trash)
-  trash = []
+  trash.consumedToken && setMsgs(trash.msgs)
+  setConsumedToken(trash.consumedToken)
+  initTrash()
 }
 
 export function editMsg(msg: Partial<Msg>, id: string) {
@@ -119,10 +138,20 @@ export function genMsg(id: string) {
   abortMap.set(id, () => controller.abort())
 }
 
-export function stopGenMsg(id: string) {
+export async function stopGenMsg(id: string) {
   abortMap.get(id)?.()
   abortMap.delete(id)
   removeGeneratingStatus(id)
+
+  // 自行计算token消费
+  const currentMsgs = msgs.reduce((acc, msg) => {
+    acc += msg.content
+    return acc
+  }, '')
+  const systemContent = assistants.find(
+    (assistant) => assistant.id === userData.selectedAssistantForChat
+  )?.prompt
+  setConsumedToken(await window.api.getTokenNum(systemContent + currentMsgs))
 }
 
 export async function saveMsgsBeforeID(id: string) {

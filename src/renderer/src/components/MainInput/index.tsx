@@ -26,10 +26,12 @@ export default function Input(props: {
   let textAreaContainerDiv: HTMLDivElement | undefined
   let cleanupForRestoreMsgs: (() => void) | undefined
   let [refreshing, setRefreshing] = createSignal(false)
+  let [inputTokenNum, setInputTokenNum] = createSignal(0)
   let isCompositing = false
   const toast = useToast()
   const dynamicLoading = useLoading()
   async function submit(content?: string) {
+    setInputTokenNum(0)
     if (isNetworking()) {
       dynamicLoading.show('查询中')
       try {
@@ -52,6 +54,12 @@ export default function Input(props: {
       onCleanup(() => {
         removeListener()
       })
+      // 计算 token 数量
+      if (inputText().length) {
+        window.api.getTokenNum(inputText()).then((num) => {
+          setInputTokenNum(num)
+        })
+      }
     }
 
     // 让input聚焦，box边框变为激活色
@@ -81,10 +89,15 @@ export default function Input(props: {
     }
   })
 
-  function onInput(e) {
+  async function onInput(e) {
+    e.preventDefault()
     cleanupForRestoreMsgs?.()
     setInputText(e.target.value)
-    e.preventDefault()
+    if (e.target.value === '') {
+      setInputTokenNum(0)
+      return
+    }
+    setInputTokenNum(await window.api.getTokenNum(e.target.value))
   }
 
   return (
@@ -164,7 +177,7 @@ export default function Input(props: {
           />
           <Show when={props.type === 'chat'}>
             <div class="text-text3 absolute bottom-0 right-3 leading-8">
-              {tokens().consumedToken} / {tokens().maxToken}
+              {tokens().consumedToken(inputTokenNum())} / {tokens().maxToken}
             </div>
           </Show>
           {/* <button class="absolute bottom-1 right-1 h-8 w-8 cursor-pointer overflow-hidden rounded-full bg-cyber px-0 py-1">

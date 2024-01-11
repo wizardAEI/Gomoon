@@ -39,7 +39,7 @@ import { parseURL2Str } from './lib/ai/parseURL'
 import { isValidUrl } from './lib/utils'
 import { autoUpdater } from 'electron-updater'
 import { quitApp } from './lib'
-import { embedding } from './lib/ai/embedding/embedding'
+import { embedding, tokenize } from './lib/ai/embedding/embedding'
 
 export function initAppEventsHandler() {
   /**
@@ -140,6 +140,9 @@ export function initAppEventsHandler() {
   })
   ipcMain.handle('embedding', async (_) => {
     embedding('hello')
+  })
+  ipcMain.handle('get-token-num', async (_, content: string) => {
+    return (await tokenize(content)).input_ids?.size || 0
   })
 
   // 升级

@@ -62,7 +62,6 @@ export const inputText = createMemo(() => {
 
 export const tokens = createMemo(() => {
   function parseNum(num: number) {
-    console.log(num, typeof num)
     if (num < 1000) {
       return num
     }
@@ -70,8 +69,12 @@ export const tokens = createMemo(() => {
   }
   return {
     maxToken: parseNum(modelDict[userData.selectedModel].maxToken),
-    consumedToken: parseNum(inputStore.consumedToken)
+    consumedToken: (plusNum: number) => parseNum(inputStore.consumedToken + plusNum)
   }
+})
+
+export const consumedToken = createMemo(() => {
+  return inputStore.consumedToken
 })
 
 export function setConsumedToken(token: number) {
