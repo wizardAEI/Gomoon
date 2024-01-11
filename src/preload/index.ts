@@ -64,6 +64,7 @@ export const api = {
   saveFile: (fileName: string, content: string) =>
     ipcRenderer.invoke('save-file', fileName, content),
   embedding: () => ipcRenderer.invoke('embedding'),
+  getTokenNum: (text: string): Promise<number> => ipcRenderer.invoke('get-token-num', text),
 
   // 更新
   checkUpdate: (): Promise<boolean> => ipcRenderer.invoke('check-update'),

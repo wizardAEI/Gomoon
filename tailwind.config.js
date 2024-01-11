@@ -31,6 +31,7 @@ module.exports = {
         light: '#e2e1e4', // 亮色 芡食白
         text1: '#d8e3e7', // 云峰白
         text2: '#baccd9', // 云水蓝
+        text3: '#baccd970', // 云水蓝70%
         'text-dark': '#151b26', // 深色
         'text-dark2': '#276b84', // 深蓝绿
         'text-link': '#2382c6', // 链接色

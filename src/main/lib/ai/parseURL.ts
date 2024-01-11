@@ -56,5 +56,7 @@ export async function parseURL2Str(url: string) {
     const title = document.querySelector('title')?.innerText || ''
     return `${title}\n\n` + findMainContent(total)
   })
+  // 释放资源
+  await page.close()
   return mainContent
 }

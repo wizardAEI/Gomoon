@@ -5,7 +5,7 @@ import { useEventListener } from 'solidjs-use'
 import { settingStore } from '@renderer/store/setting'
 import RefreshIcon from '@renderer/assets/icon/base/RefreshIcon'
 import Tools from './Tools'
-import { inputText, isNetworking, setInputText } from '@renderer/store/input'
+import { inputText, isNetworking, setInputText, tokens } from '@renderer/store/input'
 import { useLoading } from '../ui/DynamicLoading'
 import { searchByBaidu } from '@renderer/lib/ai/search'
 
@@ -26,16 +26,18 @@ export default function Input(props: {
   let textAreaContainerDiv: HTMLDivElement | undefined
   let cleanupForRestoreMsgs: (() => void) | undefined
   let [refreshing, setRefreshing] = createSignal(false)
+  let [inputTokenNum, setInputTokenNum] = createSignal(0)
   let isCompositing = false
   const toast = useToast()
   const dynamicLoading = useLoading()
   async function submit(content?: string) {
+    setInputTokenNum(0)
     if (isNetworking()) {
       dynamicLoading.show('查询中')
       try {
         content = await searchByBaidu(content || inputText(), (m) => dynamicLoading.show(m))
       } catch (e) {
-        toast.error('查询失败')
+        toast.error((e as Error).message || '查询失败')
       }
       dynamicLoading.hide()
     }
@@ -52,6 +54,12 @@ export default function Input(props: {
       onCleanup(() => {
         removeListener()
       })
+      // 计算 token 数量
+      if (inputText().length) {
+        window.api.getTokenNum(inputText()).then((num) => {
+          setInputTokenNum(num)
+        })
+      }
     }
 
     // 让input聚焦，box边框变为激活色
@@ -81,10 +89,15 @@ export default function Input(props: {
     }
   })
 
-  function onInput(e) {
+  async function onInput(e) {
+    e.preventDefault()
     cleanupForRestoreMsgs?.()
     setInputText(e.target.value)
-    e.preventDefault()
+    if (e.target.value === '') {
+      setInputTokenNum(0)
+      return
+    }
+    setInputTokenNum(await window.api.getTokenNum(e.target.value))
   }
 
   return (
@@ -162,6 +175,11 @@ export default function Input(props: {
             }
             class="font-sans max-h-48 flex-1 resize-none rounded-2xl border-none bg-dark-pro px-4 py-[6px] text-sm text-text1 caret-text2 transition-none focus:outline-none"
           />
+          <Show when={props.type === 'chat'}>
+            <div class="text-text3 absolute bottom-0 right-3 leading-8">
+              {tokens().consumedToken(inputTokenNum())} / {tokens().maxToken}
+            </div>
+          </Show>
           {/* <button class="absolute bottom-1 right-1 h-8 w-8 cursor-pointer overflow-hidden rounded-full bg-cyber px-0 py-1">
           <ChatIcon class="duration-150 hover:text-active" width={24} height={24} />
         </button> */}
