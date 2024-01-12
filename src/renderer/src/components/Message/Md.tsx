@@ -1,11 +1,36 @@
 import MarkdownIt from 'markdown-it'
-import { createSignal } from 'solid-js'
+import { createSignal, onMount } from 'solid-js'
 import { useClipboard, useEventListener } from 'solidjs-use'
 import mdHighlight from 'markdown-it-highlightjs'
 
 export default function (props: { class: string; content: string }) {
   const [source] = createSignal('')
   const { copy, copied } = useClipboard({ source, copiedDuring: 1000 })
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(text)
+      utterance.lang = 'zh-CN'
+      window.speechSynthesis.speak(utterance)
+    } else {
+      console.error('Your browser does not support speech synthesis')
+    }
+  }
+
+  let contentDom: HTMLDivElement | undefined
+  onMount(() => {
+    // FEAT: 用户滑动选择文本
+    contentDom?.addEventListener('mouseup', () => {
+      const selection = window.getSelection()
+      if (selection) {
+        if (selection.rangeCount > 0) {
+          // FEAT: 朗读文本
+          speakText(selection.toString())
+        }
+      }
+    })
+  })
+
   function htmlString(content: string) {
     const md = MarkdownIt({
       linkify: true,
@@ -58,5 +83,5 @@ export default function (props: { class: string; content: string }) {
 
     return md.render(content)
   }
-  return <div class={props.class} innerHTML={htmlString(props.content)} />
+  return <div ref={contentDom} class={props.class} innerHTML={htmlString(props.content)} />
 }

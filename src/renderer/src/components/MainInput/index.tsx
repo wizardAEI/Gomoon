@@ -139,6 +139,11 @@ export default function Input(props: {
           </div>
         </Show>
         <div ref={textAreaContainerDiv} class="cyber-box relative flex flex-1 backdrop-blur-md">
+          <Show when={props.type === 'chat'}>
+            <div class="text-text3 absolute bottom-0 right-3 leading-8">
+              {tokens().consumedToken(inputTokenNum())} / {tokens().maxToken}
+            </div>
+          </Show>
           <textarea
             ref={textAreaDiv}
             value={inputText()}
@@ -175,11 +180,6 @@ export default function Input(props: {
             }
             class="font-sans max-h-48 flex-1 resize-none rounded-2xl border-none bg-dark-pro px-4 py-[6px] text-sm text-text1 caret-text2 transition-none focus:outline-none"
           />
-          <Show when={props.type === 'chat'}>
-            <div class="text-text3 absolute bottom-0 right-3 leading-8">
-              {tokens().consumedToken(inputTokenNum())} / {tokens().maxToken}
-            </div>
-          </Show>
           {/* <button class="absolute bottom-1 right-1 h-8 w-8 cursor-pointer overflow-hidden rounded-full bg-cyber px-0 py-1">
           <ChatIcon class="duration-150 hover:text-active" width={24} height={24} />
         </button> */}
