@@ -30,7 +30,7 @@ function processQuery(content: string) {
   }
 }
 export async function searchByBaidu(question: string, logger: (content: string) => void) {
-  const prompt = `请根据 ${question} 给我一个使用于搜索引擎的关键词，并使用<>包裹。除了关键词外不要添加任何其他内容。`
+  const prompt = `请根据『 ${question} 』这个问题给我一个或多个使用于搜索引擎的关键词，并使用尖括号<>包裹。除了关键词和尖括号外不要添加任何其他内容。例如我问你今天北京的天气，你可以回复：<天气 北京>`
   let times = 3
   logger('创建查询中...')
   let processedContent = {

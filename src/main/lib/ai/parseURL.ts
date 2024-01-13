@@ -3,8 +3,9 @@ import puppeteer from 'puppeteer'
 export async function parseURL2Str(url: string) {
   const page = await (await puppeteer.launch()).newPage()
   try {
-    await page.goto(url, { waitUntil: 'load', timeout: 10000 })
-  } catch {
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 })
+  } catch (e) {
+    if ((e as Error).message.includes('timeout')) return '页面解析超时'
     return '内容解析失败'
   }
   const mainContent = await page.evaluate(() => {
