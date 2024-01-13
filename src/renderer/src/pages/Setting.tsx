@@ -171,9 +171,9 @@ export default function Setting() {
         </div>
         <div></div>
         <div class="mt-1 flex items-center gap-2 text-text2">
-          <span>版本号：v1.0.4</span>
+          <span>版本号：v1.0.5</span>
           <a
-            class="text-text-link cursor-pointer hover:text-active"
+            class="cursor-pointer text-text-link hover:text-active"
             onClick={async () => {
               loading.show('正在检查更新')
               try {

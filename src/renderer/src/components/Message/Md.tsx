@@ -1,11 +1,48 @@
 import MarkdownIt from 'markdown-it'
-import { createSignal } from 'solid-js'
+import { Show, createSignal, onMount } from 'solid-js'
 import { useClipboard, useEventListener } from 'solidjs-use'
 import mdHighlight from 'markdown-it-highlightjs'
+import SpeechIcon from '@renderer/assets/icon/SpeechIcon'
+import FindIcon from '@renderer/assets/icon/FindIcon'
 
-export default function (props: { class: string; content: string }) {
+export default function Md(props: { class: string; content: string }) {
   const [source] = createSignal('')
   const { copy, copied } = useClipboard({ source, copiedDuring: 1000 })
+  const [showCopyBtn, setShowCopyBtn] = createSignal(false)
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(text)
+      utterance.lang = 'zh-CN'
+      window.speechSynthesis.speak(utterance)
+    } else {
+      console.error('Your browser does not support speech synthesis')
+    }
+  }
+
+  let contentDom: HTMLDivElement | undefined
+  onMount(() => {
+    // FEAT: 用户滑动选择文本
+    contentDom?.addEventListener('mouseup', () => {
+      const selection = window.getSelection()
+      if (selection) {
+        if (selection.toString().length > 0) {
+          setShowCopyBtn(true)
+          // FEAT: 弹出朗读文本按钮
+          // speakText(selection.toString())
+        } else {
+          setShowCopyBtn(false)
+        }
+      }
+    })
+    window.addEventListener('mouseup', (e) => {
+      const el = e.target as HTMLElement
+      // 如果不是点击在contentDom上，则隐藏复制按钮
+      if (!contentDom?.contains(el)) {
+        setShowCopyBtn(false)
+      }
+    })
+  })
+
   function htmlString(content: string) {
     const md = MarkdownIt({
       linkify: true,
@@ -58,5 +95,23 @@ export default function (props: { class: string; content: string }) {
 
     return md.render(content)
   }
-  return <div class={props.class} innerHTML={htmlString(props.content)} />
+  return (
+    <>
+      <Show when={showCopyBtn()}>
+        <div class="absolute flex gap-1 rounded-[10px] bg-dark-plus px-1 py-[2px]">
+          <SpeechIcon
+            height={22}
+            width={22}
+            class="cursor-pointer text-gray duration-100 hover:text-active"
+          />
+          <FindIcon
+            height={20}
+            width={20}
+            class="cursor-pointer text-gray duration-100 hover:text-active"
+          />
+        </div>
+      </Show>
+      <div ref={contentDom} class={props.class} innerHTML={htmlString(props.content)} />
+    </>
+  )
 }
