@@ -9,13 +9,22 @@ import { inputText, isNetworking, setInputText, tokens } from '@renderer/store/i
 import { useLoading } from '../ui/DynamicLoading'
 import { searchByBaidu } from '@renderer/lib/ai/search'
 
+const typeDict: {
+  [key: string]: 'chat' | 'ans'
+} = {
+  ai: 'chat',
+  human: 'chat',
+  ans: 'ans',
+  question: 'ans'
+}
+
 /**
  * FEAT: Input 组件，用于接收用户输入的文本，onMountHandler可以在外部操作 input 元素
  */
 export default function Input(props: {
   send: (msg: string) => void
   onMountHandler?: (textAreaDiv: HTMLTextAreaElement) => void
-  type: 'chat' | 'ans'
+  type: 'ai' | 'human' | 'ans' | 'question'
   showClearButton?: boolean
   disable?: boolean
   isGenerating?: boolean
@@ -32,7 +41,7 @@ export default function Input(props: {
   const dynamicLoading = useLoading()
   async function submit(content?: string) {
     setInputTokenNum(0)
-    if (isNetworking()) {
+    if (isNetworking() && props.type !== 'ai') {
       dynamicLoading.show('查询中')
       try {
         content = await searchByBaidu(content || inputText(), (m) => dynamicLoading.show(m))
@@ -102,7 +111,7 @@ export default function Input(props: {
 
   return (
     <div class="flex flex-col gap-2">
-      <Tools onSubmit={submit} onInput={(c) => setInputText(c)} type={props.type} />
+      <Tools onSubmit={submit} onInput={(c) => setInputText(c)} type={typeDict[props.type]} />
       <div class="over relative flex w-full gap-1">
         <Show when={props.showClearButton && !props.isGenerating && !inputText()?.length}>
           <div class="-ml-3 mr-[2px] flex cursor-pointer flex-col items-center justify-center">
@@ -139,8 +148,8 @@ export default function Input(props: {
           </div>
         </Show>
         <div ref={textAreaContainerDiv} class="cyber-box relative flex flex-1 backdrop-blur-md">
-          <Show when={props.type === 'chat'}>
-            <div class="text-text3 absolute bottom-0 right-3 leading-8">
+          <Show when={typeDict[props.type] === 'chat'}>
+            <div class="absolute bottom-0 right-3 leading-8 text-text3">
               {tokens().consumedToken(inputTokenNum())} / {tokens().maxToken}
             </div>
           </Show>

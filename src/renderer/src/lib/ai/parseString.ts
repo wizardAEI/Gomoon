@@ -1,6 +1,6 @@
 const regForFile = /<gomoon-file .*?\/>/g,
   regForUrl = /<gomoon-url .*?\/>/g,
-  regForSearch = /<gomoon-search .*?\/>/g
+  regForSearch = /<gomoon-search .*?\/>/gs
 
 function resetReg() {
   ;(regForFile.lastIndex = 0), (regForUrl.lastIndex = 0) // 重置正则
@@ -10,7 +10,7 @@ export function removeMeta(str: string, isLastMsg = false) {
   // 剔除 <gomoon-file ... /> <gomoon-url ... /> 等
   if (!isLastMsg) {
     if (str.match(regForSearch)) {
-      return str.match(regForSearch)![0].replace(/<gomoon-search question="(.+?)".*?\/>$/, '$1')
+      return str.match(regForSearch)![0].replace(/<gomoon-search question="(.+?)".*?\/>$/s, '$1')
     }
   }
   const newStr = str.replace(regForFile, '').replace(regForUrl, '').replace(regForSearch, '')
