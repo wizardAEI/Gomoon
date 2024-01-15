@@ -34,7 +34,6 @@
     "@zag-js/solid": "^0.31.1",
     "@zag-js/switch": "^0.31.1",
     "@zag-js/tooltip": "^0.31.1",
-    "axios": "^1.6.2",
     "cheerio": "^1.0.0-rc.12",
     "electron-updater": "^6.1.1",
     "highlight.js": "^11.9.0",
