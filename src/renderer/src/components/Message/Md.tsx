@@ -1,49 +1,72 @@
 import MarkdownIt from 'markdown-it'
-import { Show, createSignal, onMount } from 'solid-js'
+import { Show, createMemo, createSignal, onCleanup, onMount } from 'solid-js'
 import { useClipboard, useEventListener } from 'solidjs-use'
 import mdHighlight from 'markdown-it-highlightjs'
 import SpeechIcon from '@renderer/assets/icon/SpeechIcon'
 import FindIcon from '@renderer/assets/icon/FindIcon'
+import { load } from 'cheerio'
 
 export default function Md(props: { class: string; content: string }) {
+  let selectContent = ''
+  let [findContent, setFindContent] = createSignal('')
   const [source] = createSignal('')
   const { copy, copied } = useClipboard({ source, copiedDuring: 1000 })
   const [showCopyBtn, setShowCopyBtn] = createSignal(false)
-  function speakText(text) {
+  let btn: HTMLDivElement | undefined
+  function speakText() {
     if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(text)
+      const utterance = new SpeechSynthesisUtterance(selectContent)
       utterance.lang = 'zh-CN'
       window.speechSynthesis.speak(utterance)
     } else {
       console.error('Your browser does not support speech synthesis')
     }
+    setShowCopyBtn(false)
+  }
+  function findText() {
+    setFindContent(selectContent)
+    setShowCopyBtn(false)
   }
 
   let contentDom: HTMLDivElement | undefined
   onMount(() => {
     // FEAT: 用户滑动选择文本
-    contentDom?.addEventListener('mouseup', () => {
+    const showButton = (e: MouseEvent) => {
       const selection = window.getSelection()
+      setFindContent('')
       if (selection) {
         if (selection.toString().length > 0) {
           setShowCopyBtn(true)
-          // FEAT: 弹出朗读文本按钮
-          // speakText(selection.toString())
+          btn!.style.top = `${e.clientY - 20}px`
+          btn!.style.left = `${e.clientX + 10}px`
+          if (btn!.offsetLeft + btn!.clientWidth > window.innerWidth) {
+            btn!.style.left = `${e.clientX - btn!.clientWidth - 10}px`
+            btn!.style.top = `${e.clientY - 20}px`
+          }
+          selectContent = selection.toString()
         } else {
           setShowCopyBtn(false)
         }
       }
-    })
-    window.addEventListener('mouseup', (e) => {
+    }
+    const hideButton = (e: MouseEvent) => {
       const el = e.target as HTMLElement
       // 如果不是点击在contentDom上，则隐藏复制按钮
-      if (!contentDom?.contains(el)) {
+      if (!contentDom?.contains(el) && !btn?.contains(el)) {
         setShowCopyBtn(false)
       }
+    }
+    contentDom?.addEventListener('mouseup', showButton)
+    window.addEventListener('mouseup', hideButton)
+    onCleanup(() => {
+      contentDom?.removeEventListener('mouseup', showButton)
+      window.removeEventListener('mouseup', hideButton)
     })
   })
 
-  function htmlString(content: string) {
+  const htmlString = createMemo(() => {
+    let content = props.content
+
     const md = MarkdownIt({
       linkify: true,
       breaks: true
@@ -78,8 +101,7 @@ export default function Md(props: { class: string; content: string }) {
     md.renderer.rules.fence = (...args) => {
       const [tokens, idx] = args
       const token = tokens[idx]
-      const rawCode = fence(...args)
-
+      let rawCode = fence(...args)
       return `<div class="relative mt-1 w-full text-text1">
           <div data-code=${encodeURIComponent(
             token.content
@@ -93,25 +115,52 @@ export default function Md(props: { class: string; content: string }) {
           </div>`
     }
 
-    return md.render(content)
-  }
+    const $ = load(`<div id="gomoon-md">${md.render(content)}</div>`)
+    // FEAT: 对findContent高亮
+    function highlightText(node: any) {
+      if (!findContent()) return
+      $(node)
+        .contents()
+        .each(function (_, elem) {
+          if (elem.type === 'text') {
+            // 如果是文本节点，则替换文本
+            const text = $(elem).text()
+            const newText = text.replace(
+              new RegExp(findContent(), 'gi'),
+              `<span class="bg-active rounded-sm">${findContent()}</span>`
+            )
+            $(elem).replaceWith(newText)
+          } else if (
+            elem.type === 'tag' &&
+            !['script', 'style', 'svg'].includes(elem.tagName.toLowerCase())
+          ) {
+            highlightText(elem)
+          }
+        })
+    }
+    highlightText($('#gomoon-md'))
+    return $.html() || ''
+  })
+
   return (
     <>
+      <div ref={contentDom} class={props.class} innerHTML={htmlString()} />
       <Show when={showCopyBtn()}>
-        <div class="absolute flex gap-1 rounded-[10px] bg-dark-plus px-1 py-[2px]">
+        <div ref={btn} class="fixed flex gap-1 rounded-[10px] bg-dark-plus px-1 py-[2px]">
           <SpeechIcon
+            onClick={speakText}
             height={22}
             width={22}
             class="cursor-pointer text-gray duration-100 hover:text-active"
           />
           <FindIcon
+            onClick={findText}
             height={20}
             width={20}
             class="cursor-pointer text-gray duration-100 hover:text-active"
           />
         </div>
       </Show>
-      <div ref={contentDom} class={props.class} innerHTML={htmlString(props.content)} />
     </>
   )
 }
