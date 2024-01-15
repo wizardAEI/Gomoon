@@ -164,6 +164,7 @@ export default function Chat() {
               // 重新编辑某一条消息
               editMsg({ content: inputText() }, editId())
               if (msgs.find((msg) => msg.id === editId())?.role === 'ai') {
+                setEditId('')
                 return
               }
               const id = msgs[msgs.findIndex((msg) => msg.id === editId()) + 1]?.id
@@ -196,7 +197,7 @@ export default function Chat() {
           // 显示时自动聚焦
           autoFocusWhenShow
           isGenerating={msgStatus.generatingList.length > 0}
-          type="chat"
+          type={(msgs.find((msg) => msg.id === editId())?.role as 'human' | 'ai') || 'human'}
         />
       </div>
     </div>
