@@ -1,12 +1,11 @@
-import axios from 'axios'
 import { load } from 'cheerio'
 import { nonStreamingAssistant } from '../langchain'
 import { parsePageToString } from '../url'
 
 async function fetchBaiduResults(keyword) {
   const searchUrl = `http://www.baidu.com/s?wd=${encodeURIComponent(keyword)}`
-  const { data } = await axios.get(searchUrl)
-  const $ = load(data)
+  const html = await fetch(searchUrl).then((res) => res.text())
+  const $ = load(html)
   const links: string[] = []
   $('.t a').each((_, element) => {
     // TODO: 识别广告

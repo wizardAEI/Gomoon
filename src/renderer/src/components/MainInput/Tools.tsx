@@ -8,7 +8,12 @@ import { useLoading } from '../ui/DynamicLoading'
 import exportRecord from '@renderer/lib/md/exportRecord'
 import { exportAssistants, importAssistants } from '@renderer/store/assistants'
 import { parsePageForUrl } from '@renderer/lib/ai/url'
-import { isNetworking, setNetworkingStatus } from '@renderer/store/input'
+import {
+  isNetworking,
+  setNetworkingStatus,
+  memoCapsule,
+  setMemoCapsule
+} from '@renderer/store/input'
 import { userData } from '@renderer/store/user'
 
 function ToolWrap(props: { children: JSXElement; onClick?: () => void; active?: boolean }) {
@@ -66,6 +71,14 @@ export default function Tools(props: {
         ref={toolsDiv}
         class="no-scroll-bar flex items-center gap-2 overflow-x-auto overflow-y-visible whitespace-nowrap"
       >
+        <ToolWrap
+          active={memoCapsule()}
+          onClick={() => {
+            setMemoCapsule(!memoCapsule())
+          }}
+        >
+          <span class="text-[12px]">记忆胶囊</span>
+        </ToolWrap>
         <ToolWrap>
           <label for="file" style={{ cursor: 'pointer' }}>
             <span class="text-[12px]">发送文件</span>

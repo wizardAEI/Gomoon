@@ -31,12 +31,14 @@ const modelDict: {
 
 interface InputStore {
   isNetworking: boolean
+  memoCapsule: boolean
   inputText?: string
   consumedToken: number
 }
 
 const [inputStore, setInputStore] = createStore<InputStore>({
   isNetworking: false,
+  memoCapsule: false,
   inputText: '',
   consumedToken: 0
 })
@@ -51,6 +53,14 @@ export const isNetworking = createMemo(() => {
   }
   return inputStore.isNetworking
 })
+
+export const memoCapsule = createMemo(() => {
+  return inputStore.memoCapsule
+})
+
+export function setMemoCapsule(status: boolean) {
+  setInputStore('memoCapsule', status)
+}
 
 export function setInputText(text: string) {
   setInputStore('inputText', text)

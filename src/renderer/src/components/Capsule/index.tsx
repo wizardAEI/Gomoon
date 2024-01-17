@@ -1,22 +1,29 @@
 import { useNavigate } from '@solidjs/router'
 import ModelSelect from '../ModelSelect'
 import CapitalIcon from '../ui/CapitalIcon'
+import { memoCapsule } from '@renderer/store/input'
+import { Show } from 'solid-js'
 
 export default function (props: { type: 'chat' | 'ans'; botName: string }) {
   const nav = useNavigate()
   return (
-    <div class="group/capsule fixed left-1/2 top-10 z-20 flex -translate-x-1/2 select-none items-center rounded-xl bg-dark-pro">
+    <div class="group/capsule fixed left-1/2 top-10 z-20 flex -translate-x-1/2 select-none items-center rounded-xl border-2 border-solid border-dark-con bg-dark-pro">
       <div
         onClick={() => {
           nav('/assistants?type=' + props.type)
         }}
-        class=" flex cursor-pointer items-center gap-1 rounded-xl rounded-r-none border-2 border-r-0 border-solid border-dark-plus px-[6px] py-[2px] text-text2 hover:border-active hover:text-text1"
+        class="mx-[-2px] my-[-2px] flex cursor-pointer items-center gap-[2px] rounded-xl rounded-r-none border-2 border-solid border-transparent px-[6px] py-[2px] text-text2 hover:border-active hover:text-text1"
       >
-        <CapitalIcon size={16} content={props.botName || ''} />
-        <span class="max-w-[160px] truncate text-sm">{props.botName}</span>
+        <CapitalIcon bg="active-gradient" size={16} content={props.botName || ''} />
+        <span class="max-w-[120px] truncate text-sm">{props.botName}</span>
       </div>
-      <div class="h-7 w-[2px] bg-dark-plus group-hover/capsule:bg-active"> </div>
-      <div class="relative rounded-xl rounded-l-none border-2 border-l-0 border-solid border-dark-plus px-[6px] py-[3px] hover:border-active">
+      <Show when={memoCapsule()}>
+        <div class="my-[-2px] ml-[-2px] flex h-7 cursor-pointer items-center gap-[2px] border-2 border-solid border-transparent px-1 text-text2 hover:border-active hover:text-text1">
+          <CapitalIcon bg="green-gradient" size={16} content={'武侠江湖'} />
+          <span class="max-w-[120px] truncate text-sm">武侠江湖</span>
+        </div>
+      </Show>
+      <div class="relative my-[-2px] mr-[-2px] rounded-xl rounded-l-none border-2 border-solid border-transparent px-[6px] py-[3px] hover:border-active">
         <ModelSelect position="right-20" translate="translate-x-1/2" size={18} />
       </div>
     </div>
