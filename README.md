@@ -43,7 +43,7 @@ Gomoon 的名字来源于 _赛博朋克：边缘行者_ 的中 Lucy 的愿望：
 
 ## 交流
 
-如果你有任何问题或者想交流一下使用体验，分享自己的助手，欢迎加入群聊（后续 Gomoon 更新通知也会发布在群内）：
+如果你有任何问题或者想交流一下使用体验，分享自己的助手，欢迎加入[Gomoon超级群](https://imdodo.com/s/263031?inv=VERBM)（后续 Gomoon 更新通知也会发布在群内）：
 
 <img order-radius="100px"  height="250px" src="https://github.com/wizardAEI/blog-images/blob/main/groupcode.jpg" alt=""/>
 

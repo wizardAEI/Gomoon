@@ -76,3 +76,10 @@ export interface Line {
   content: string
   from: string
 }
+
+export interface Memo {
+  id: string
+  version: number
+  name: string
+  introduce?: string
+}

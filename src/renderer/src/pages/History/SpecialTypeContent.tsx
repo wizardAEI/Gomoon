@@ -1,7 +1,7 @@
 import BaseFileIcon from '@renderer/assets/icon/file/baseFileIcon'
 import { ContentMetaData } from '@renderer/lib/ai/parseString'
 import { decorateContent } from './utils'
-import NetworkIcon from '@renderer/assets/icon/networkIcon'
+import NetworkIcon from '@renderer/assets/icon/NetworkIcon'
 import LinkIcon from '@renderer/assets/icon/LinkIcon'
 
 export default function (meta: ContentMetaData) {

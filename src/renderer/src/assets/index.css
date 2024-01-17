@@ -6,13 +6,13 @@
     @apply bg-dark text-text1;
   }
   input {
-    @apply placeholder:text-text3 w-full max-w-[512px] rounded-md border-[1px] border-solid border-active bg-dark py-1 pl-2 pr-8 text-sm text-text1 outline-none;
+    @apply w-full max-w-[512px] rounded-md border-[1px] border-solid border-active bg-dark py-1 pl-2 pr-8 text-sm text-text1 outline-none placeholder:text-text3;
   }
   button {
     @apply cursor-pointer overflow-hidden rounded-md border-0 bg-gray px-3 py-1 text-text1 focus:outline-none active:animate-click;
   }
   textarea {
-    @apply placeholder:text-text3 flex-1 resize-none rounded-md border-[1px] border-solid border-active bg-dark py-1 pl-2 text-base text-text1 caret-text2 transition-none focus:outline-none;
+    @apply flex-1 resize-none rounded-md border-[1px] border-solid border-active bg-dark py-1 pl-2 text-base text-text1 caret-text2 transition-none placeholder:text-text3 focus:outline-none;
   }
 }
 
@@ -64,6 +64,26 @@
 }
 
 /* markdown 专属css */
+
+.markdown h1 {
+  font-size: 1.8em;
+  margin: 0.3em 0 0.3em;
+}
+.markdown h2 {
+  font-size: 1.6em;
+  margin: 0.2em 0 0.2em;
+}
+
+.markdown h3 {
+  font-size: 1.4em;
+  margin: 0.2em 0 0.2em;
+}
+
+.markdown h4 {
+  font-size: 1.2em;
+  margin: 0.2em 0 0.2em;
+}
+
 .markdown ol,
 .markdown ul {
   margin-left: 16px;

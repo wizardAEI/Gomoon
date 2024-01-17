@@ -171,8 +171,8 @@ export function createWindow(): void {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     title: 'Gomoon',
-    width: 420,
-    height: 650,
+    width: 480,
+    height: 750,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
