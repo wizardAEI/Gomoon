@@ -17,6 +17,8 @@ import { LoadingProvider } from './components/ui/DynamicLoading'
 import { init as OCRInit } from './lib/ai/ocr'
 import { setUpdaterStatus } from './store/system'
 import System from './pages/System'
+import Memo from './pages/Memo'
+import { loadMemories } from './store/memo'
 
 const App = () => {
   const nav = useNavigate()
@@ -38,6 +40,9 @@ const App = () => {
 
     // FEAT: 历史信息
     loadHistories()
+
+    // FEAT: 记忆信息
+    loadMemories()
 
     // FEAT: 快捷键触发操作
     const removeListener = window.api.multiCopy(async (_: IpcRendererEvent, msg: string) => {
@@ -86,6 +91,7 @@ const App = () => {
                 <Route path="/setting" component={Setting} />
                 <Route path="/assistants" component={Assistants} />
                 <Route path="/history" component={History} />
+                <Route path="/memo" component={Memo} />
                 <Route path="*" component={Chat} />
               </Routes>
             </Show>

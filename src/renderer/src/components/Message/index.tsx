@@ -2,7 +2,7 @@ import { Roles } from '@renderer/lib/ai/langchain'
 import { Show, createMemo } from 'solid-js'
 import 'highlight.js/styles/atom-one-dark.css'
 import { msgStatus, msgs } from '@renderer/store/msgs'
-import MsgPopup, { MsgPopupByUser, Pause, WithDrawal } from './Popup'
+import MsgPopup, { MsgPopupForUser, Pause, WithDrawal } from './Popup'
 import { ansStatus } from '@renderer/store/answer'
 import { parseMeta } from '@renderer/lib/ai/parseString'
 import SpecialTypeContent from './SpecialTypeContent'
@@ -72,7 +72,7 @@ export default function Message(props: {
           <MsgPopup type={props.type} id={props.id || ''} content={props.content} />
         </Show>
         <Show when={showCompsByUser()}>
-          <MsgPopupByUser type={props.type} id={props.id || ''} content={props.content} />
+          <MsgPopupForUser type={props.type} id={props.id || ''} content={props.content} />
         </Show>
       </Show>
       <div class={style[props.type] + ' relative m-4 rounded-2xl p-3'}>

@@ -5,6 +5,7 @@ import {
   CreateAssistantModel,
   HistoryModel,
   Line,
+  MemoModel,
   SettingModel,
   UserDataModel
 } from '../main/models/model'
@@ -52,6 +53,9 @@ export const api = {
   getHistories: (): Promise<HistoryModel[]> => ipcRenderer.invoke('get-histories'),
   addHistory: (history: HistoryModel) => ipcRenderer.invoke('add-history', history),
   deleteHistory: (historyId: string) => ipcRenderer.invoke('delete-history', historyId),
+
+  // memory 相关
+  getMemories: (): Promise<MemoModel[]> => ipcRenderer.invoke('get-memories'),
 
   // 文件相关
   parseFile: (

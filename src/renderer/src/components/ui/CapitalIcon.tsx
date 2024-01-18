@@ -5,7 +5,7 @@ import { createMemo, createUniqueId, Show } from 'solid-js'
 export default function CapitalIcon(props: {
   size?: number
   content: string
-  bg?: 'gray' | 'active-gradient' | 'green-gradient'
+  bg?: 'bg-gray' | 'bg-active-gradient' | 'bg-green-gradient'
   hiddenTiptop?: boolean
 }) {
   const [state, send] = useMachine(
@@ -19,7 +19,9 @@ export default function CapitalIcon(props: {
     <div>
       <button
         {...api().triggerProps}
-        class={`flex items-center justify-center rounded-md border-0 p-0 text-[12px] font-bold leading-3 bg-${props.bg}`}
+        class={`flex items-center justify-center rounded-md border-0 p-0 text-[12px] font-bold leading-3 ${
+          props.bg || 'bg-gray'
+        }`}
         style={{
           width: props.size ? `${props.size}px` : '16px',
           height: props.size ? `${props.size}px` : '16px'

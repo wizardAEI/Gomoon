@@ -35,6 +35,7 @@ export interface UserDataModel {
   selectedModel: ModelsType
   selectedAssistantForChat: string
   selectedAssistantForAns: string
+  selectedMemo: string
   firstTimeFor: {
     modelSelect?: boolean
     assistantSelect?: boolean
@@ -77,9 +78,16 @@ export interface Line {
   from: string
 }
 
-export interface Memo {
+export default interface MemoryFragment {
+  type: 'md' | 'url' | 'svg' | 'word'
+  name: string
+  from: string
+}
+export interface MemoModel {
   id: string
   version: number
   name: string
   introduce?: string
+  fragment: MemoryFragment[]
 }
+export type CreateMemoModel = Omit<MemoModel, 'id' | 'version'>

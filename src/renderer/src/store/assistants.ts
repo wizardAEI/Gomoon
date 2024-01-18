@@ -90,6 +90,7 @@ export const getCurrentAssistantForAnswer = createMemo<AssistantModel>(() => {
       type: 'ans',
       id: 'default',
       name: '暂无助手',
+      introduce: '',
       prompt: '',
       version: 0
     }

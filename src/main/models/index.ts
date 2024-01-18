@@ -1,13 +1,22 @@
 import { app } from 'electron'
 import { JSONSyncPreset } from 'lowdb/node'
-import { AssistantModel, CreateAssistantModel, HistoryModel, SettingModel } from './model'
-import { getDefaultUserData } from './default/getDefaultUserData'
-import { getDefaultConfig } from './default/getDefaultConfig'
+import {
+  AssistantModel,
+  CreateAssistantModel,
+  CreateMemoModel,
+  HistoryModel,
+  SettingModel
+} from './model'
+import {
+  getDefaultConfig,
+  getDefaultAssistants,
+  getDefaultLines,
+  getDefaultUserData,
+  getDefaultMemories
+} from './default'
 import { join } from 'path'
 import { ulid } from 'ulid'
 import { merge } from 'lodash'
-import getDefaultAssistants from './default/getDefaultAssistants'
-import getDefaultLines from './default/getDefaultLines'
 
 const appDataPath = app.getPath('userData')
 const configDB = JSONSyncPreset(join(appDataPath, 'config.json'), getDefaultConfig())
@@ -174,4 +183,22 @@ export function deleteHistory(id: string) {
  */
 export function getLines() {
   return getDefaultLines()
+}
+
+/**
+ * FEAT: 记忆相关 Memo
+ */
+const memoDB = JSONSyncPreset(join(appDataPath, 'memories.json'), getDefaultMemories())
+export function getMemories() {
+  return memoDB.data || []
+}
+export function createMemo(m: CreateMemoModel): CreateMemoModel {
+  const newM = {
+    ...m,
+    id: ulid(),
+    version: 1
+  }
+  memoDB.data.unshift(newM)
+  memoDB.write()
+  return newM
 }

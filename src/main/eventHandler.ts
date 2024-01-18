@@ -16,7 +16,8 @@ import {
   updateAssistant,
   updateUserData,
   useAssistant,
-  getLines
+  getLines,
+  getMemories
 } from './models/index'
 import {
   AssistantModel,
@@ -116,6 +117,11 @@ export function initAppEventsHandler() {
   ipcMain.handle('get-histories', () => getHistories())
   ipcMain.handle('add-history', (_, history: HistoryModel) => addHistory(history))
   ipcMain.handle('delete-history', (_, id: string) => deleteHistory(id))
+
+  /**
+   * FEAT: memory 相关
+   */
+  ipcMain.handle('get-memories', () => getMemories())
 
   // 文件相关
   ipcMain.handle('parse-file', (_, files) => parseFile(files))

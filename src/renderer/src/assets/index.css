@@ -6,7 +6,7 @@
     @apply bg-dark text-text1;
   }
   input {
-    @apply w-full max-w-[512px] rounded-md border-[1px] border-solid border-active bg-dark py-1 pl-2 pr-8 text-sm text-text1 outline-none placeholder:text-text3;
+    @apply w-full max-w-[512px] rounded-md border-[1px] border-solid border-active bg-dark px-2 py-1 text-sm text-text1 outline-none placeholder:text-text3;
   }
   button {
     @apply cursor-pointer overflow-hidden rounded-md border-0 bg-gray px-3 py-1 text-text1 focus:outline-none active:animate-click;

@@ -14,7 +14,7 @@ export default function (props: {
     })
   }
   return (
-    <div class="relative m-4 flex flex-col gap-2 rounded-2xl border-2 border-solid border-active bg-dark p-4 duration-150">
+    <div class="relative m-4 flex flex-col gap-2 rounded-2xl  bg-dark p-4 duration-150">
       <span>助手名称</span>
       <input
         type="text"
@@ -28,7 +28,7 @@ export default function (props: {
         onChange={(e) => setField('introduce', e.currentTarget.value)}
         placeholder="可不填"
       />
-      <span>助手prompt（提示）</span>
+      <span>提示（Prompt）</span>
       <textarea
         rows={4}
         value={a().prompt}
