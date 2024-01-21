@@ -4,9 +4,8 @@ import {
   AssistantModel,
   CreateAssistantModel,
   CreateMemoModel,
-  HistoryModel,
-  SettingModel
-} from './model'
+  HistoryModel} from './model'
+import { SettingModel } from "../../lib/langchain"
 import {
   getDefaultConfig,
   getDefaultAssistants,

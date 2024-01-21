@@ -3,23 +3,7 @@ import { isEqual, merge, cloneDeep } from 'lodash'
 import { event } from '@renderer/lib/util'
 import { defaultModels } from '@renderer/lib/ai/langchain/models'
 import { Line } from 'src/main/models/model'
-export interface Models {
-  OpenAI: {
-    apiKey: string
-    baseURL: string
-    temperature: number
-  }
-  BaiduWenxin: {
-    apiKey: string
-    secretKey: string
-    temperature: number
-  }
-  AliQWen: {
-    apiKey: string
-    temperature: number
-  }
-}
-
+import { Models } from 'src/lib/langchain'
 const [settingStore, setSettingStore] = createStore<{
   isOnTop: boolean
   isLoaded: boolean

@@ -161,8 +161,8 @@ export async function checkUpdate(): Promise<boolean> {
   return (res && res.updateInfo.version !== app.getVersion()) || false
 }
 
-export function postMsgToMainWindow(msg: string) {
-  mainWindow?.webContents.send('post-message', msg)
+export async function postMsgToMainWindow(msg: string) {
+  return await mainWindow?.webContents.send('post-message', msg)
 }
 
 export function createWindow(): void {

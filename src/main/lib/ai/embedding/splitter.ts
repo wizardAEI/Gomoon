@@ -1,4 +1,5 @@
 import markdownIt, { Token } from 'markdown-it'
+import { postMsgToMainWindow } from '../../../window'
 
 const md = markdownIt()
 
@@ -84,4 +85,70 @@ export function createTreeFromMarkdown(markdown): Node[] {
   }
   buildTree(tree)
   return tree
+}
+
+export interface Chunk {
+  index: { value: string }[]
+  document: { content: string }
+}
+export async function getChunkFromNodes(
+  nodes: Node[],
+  options: {
+    chunkSize: number
+    chunkOverlap: number
+    useLm?: boolean
+  } = {
+    chunkSize: 500,
+    chunkOverlap: 2 // 左右两个节点
+  }
+): Promise<Chunk[]> {
+  const chunk: Chunk[] = []
+  const { chunkSize, chunkOverlap } = options
+  const dfs = async (nodes: Node[], index: number) => {
+    const node = nodes[index]
+    if (node.total.length < chunkSize) {
+      chunk.push({
+        index: [{ value: node.total }, { value: node.content }, { value: node.title }],
+        document: { content: node.total }
+      })
+      console.log('chunk:', node.total)
+      // TODO: 这里使用大模型出现问题，由于时间问题后续需要加上进度功能
+      if (options.useLm) {
+        console.log('use lm for:', node.total)
+        postMsgToMainWindow(node.total)
+      }
+      // TODO: 尝试加上 chunkOverlap 是否有效果
+      let lapLNum = 0,
+        lapRNum = 0
+      while (lapLNum + lapRNum < chunkOverlap) {
+        if (lapLNum <= index) {
+          const n = nodes[index - lapLNum]
+          if ((chunk[chunk.length - 1].document.content + '\n' + n.total).length > chunkSize) break
+          chunk[chunk.length - 1].document = {
+            content: chunk[chunk.length - 1].document.content + '\n' + n.total
+          }
+          lapLNum++
+        }
+        if (index + lapRNum < nodes.length) {
+          const n = nodes[index + lapRNum]
+          if ((chunk[chunk.length - 1].document.content + '\n' + n.total).length > chunkSize) break
+          chunk[chunk.length - 1].document = {
+            content: chunk[chunk.length - 1].document.content + '\n' + n.total
+          }
+          lapRNum++
+        }
+        if (lapLNum > index && index + lapRNum >= nodes.length) {
+          break
+        }
+      }
+    } else {
+      for (let i = 0; i < node.children.length; i++) {
+        await dfs(node.children, i)
+      }
+    }
+  }
+  for (let i = 0; i < nodes.length; i++) {
+    await dfs(nodes, i)
+  }
+  return chunk
 }

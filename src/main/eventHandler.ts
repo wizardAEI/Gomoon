@@ -23,9 +23,9 @@ import {
   AssistantModel,
   CreateAssistantModel,
   HistoryModel,
-  SettingModel,
   UserDataModel
 } from './models/model'
+import { SettingModel } from "../lib/langchain"
 import {
   checkUpdate,
   hideWindow,
@@ -41,6 +41,7 @@ import { isValidUrl } from './lib/utils'
 import { autoUpdater } from 'electron-updater'
 import { quitApp } from './lib'
 import { embedding, tokenize } from './lib/ai/embedding/embedding'
+import { EditFragmentOption, editFragment } from './lib/ai/embedding/index'
 
 export function initAppEventsHandler() {
   /**
@@ -122,6 +123,7 @@ export function initAppEventsHandler() {
    * FEAT: memory 相关
    */
   ipcMain.handle('get-memories', () => getMemories())
+  ipcMain.handle('edit-memory', (_, option: EditFragmentOption) => editFragment(option))
 
   // 文件相关
   ipcMain.handle('parse-file', (_, files) => parseFile(files))

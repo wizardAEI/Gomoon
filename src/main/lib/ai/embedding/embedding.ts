@@ -1,6 +1,6 @@
 import { getResourcesPath } from '../..'
 
-export async function embedding(text: string) {
+export async function embedding(text: string): Promise<Float32Array> {
   const { AutoTokenizer, CLIPTextModelWithProjection, env } = await import('@xenova/transformers')
   env.localModelPath = getResourcesPath('models/')
   env.backends.onnx.wasm.numThreads = 1
@@ -14,7 +14,7 @@ export async function embedding(text: string) {
   let text_inputs = tokenizer([text], { padding: true, truncation: true })
   // Compute embeddings
   const res = await text_model(text_inputs)
-  return res.legits.data
+  return res.logits?.data || []
 }
 
 export async function tokenize(text: string) {

@@ -5,6 +5,7 @@
     "src/renderer/src/**/*",
     "src/renderer/src/**/*.json",
     "src/renderer/src/**/*.tsx",
+    "src/lib/**/*",
   ],
   "compilerOptions": {
     "composite": true,

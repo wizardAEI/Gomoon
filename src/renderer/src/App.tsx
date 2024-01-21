@@ -54,7 +54,7 @@ const App = () => {
     OCRInit()
 
     // FEAT: receive msg
-    window.api.receiveMsg((_, msg: string) => {
+    window.api.receiveMsg(async (_, msg: string) => {
       if (msg === 'update-downloaded')
         setUpdaterStatus({
           haveDownloaded: true

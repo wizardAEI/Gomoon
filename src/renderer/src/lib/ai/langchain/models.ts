@@ -1,10 +1,10 @@
-import { Models } from '@renderer/store/setting'
+import { Models } from 'src/lib/langchain'
 import { ChatBaiduWenxin } from '@langchain/community/chat_models/baiduwenxin'
 import { ChatAlibabaTongyi } from '@langchain/community/chat_models/alibaba_tongyi'
 import { ChatOpenAI } from '@langchain/openai'
 
 import { event } from '../../util'
-import { ModelsType } from 'src/main/models/model'
+import { ModelsType } from 'src/lib/langchain'
 
 export type ModelInterfaceType = ChatBaiduWenxin | ChatOpenAI | ChatAlibabaTongyi
 

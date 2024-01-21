@@ -1,15 +1,16 @@
 import { IpcRendererEvent, contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import {
+import MemoryFragment, {
   AssistantModel,
   CreateAssistantModel,
   HistoryModel,
   Line,
   MemoModel,
-  SettingModel,
   UserDataModel
 } from '../main/models/model'
+import { SettingModel } from "../lib/langchain"
 import { FileLoaderRes } from '../main/lib/ai/fileLoader'
+import { EditFragmentOption } from '../main/lib/ai/embedding/index'
 
 // Custom APIs for renderer
 export const api = {
@@ -56,6 +57,12 @@ export const api = {
 
   // memory 相关
   getMemories: (): Promise<MemoModel[]> => ipcRenderer.invoke('get-memories'),
+  editFragment: (
+    option: EditFragmentOption
+  ): Promise<{
+    suc: boolean
+    reason?: string
+  }> => ipcRenderer.invoke('edit-memory', option),
 
   // 文件相关
   parseFile: (
@@ -79,7 +86,7 @@ export const api = {
   getLines: (): Promise<Partial<Line>[]> => ipcRenderer.invoke('get-lines'),
   parsePageToString: (url: string): Promise<string> =>
     ipcRenderer.invoke('parse-page-to-string', url),
-  receiveMsg: (callback: (event: IpcRendererEvent, msg: string) => void) => {
+  receiveMsg: (callback: (event: IpcRendererEvent, msg: string) => Promise<void>) => {
     ipcRenderer.on('post-message', callback)
     return () => {
       ipcRenderer.removeListener('post-message', callback)

@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs'
 import { getResourcesPath } from '../lib'
-import { AssistantModel, Line, MemoModel, SettingModel, UserDataModel } from './model'
+import { AssistantModel, Line, MemoModel, UserDataModel } from './model'
+import { SettingModel } from "../../lib/langchain"
 
 export function getDefaultAssistants(): AssistantModel[] {
   const a = readFileSync(getResourcesPath('assistants.json'), 'utf-8')

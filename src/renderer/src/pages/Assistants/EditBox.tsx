@@ -20,6 +20,7 @@ export default function (props: {
         type="text"
         value={a().name}
         onChange={(e) => setField('name', e.currentTarget.value)}
+        placeholder="助手名称"
       />
       <span>介绍</span>
       <input
