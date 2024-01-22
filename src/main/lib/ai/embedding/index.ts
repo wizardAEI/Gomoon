@@ -6,7 +6,7 @@ export interface EditFragmentOption {
   id: string
   fragment: MemoryFragment
   type: 'add' | 'remove'
-  useLm: boolean
+  useLM: boolean
 }
 
 const fragmentsMap: {
@@ -45,7 +45,7 @@ export async function editFragment(option: EditFragmentOption): Promise<{
       const chunks = await getChunkFromNodes(nodes, {
         chunkSize: 500,
         chunkOverlap: 2,
-        useLm: option.useLm
+        useLM: option.useLM
       })
       // fragmentsMap[option.id].push(option.fragment)
     }

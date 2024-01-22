@@ -1,19 +1,15 @@
 import { LLMResult } from '@langchain/core/outputs'
-import { BaseMessageChunk, HumanMessage, SystemMessage, AIMessage } from '@langchain/core/messages'
-import { ModelInterfaceType, models } from './models'
+import { BaseMessageChunk, HumanMessage, SystemMessage } from '@langchain/core/messages'
+import { models } from './models'
+import { ModelInterfaceType } from '@lib/langchain'
 import { userData } from '@renderer/store/user'
 import {
   getCurrentAssistantForAnswer,
   getCurrentAssistantForChat
 } from '@renderer/store/assistants'
+import { msgDict } from '@lib/langchain'
 
 export type Roles = 'human' | 'system' | 'ai'
-
-const msgDict = {
-  human: (s: string) => new HumanMessage(s),
-  system: (s: string) => new SystemMessage(s),
-  ai: (s: string) => new AIMessage(s)
-} as const
 
 const createModel = (chat: ModelInterfaceType) => {
   return {

@@ -3,8 +3,7 @@ import Plus from '@renderer/assets/icon/base/Plus'
 import BaseFileIcon from '@renderer/assets/icon/file/baseFileIcon'
 import { useLoading } from '@renderer/components/ui/DynamicLoading'
 import Switch from '@renderer/components/ui/SwitchItem'
-import { nonStreamingAssistant } from '@renderer/lib/ai/langchain'
-import { cloneDeep } from 'lodash'
+import { useToast } from '@renderer/components/ui/Toast'
 import { For, createSignal } from 'solid-js'
 import { MemoModel } from 'src/main/models/model'
 
@@ -14,8 +13,9 @@ export default function (props: {
   onSave: (m: MemoModel) => void
 }) {
   const [m, setM] = createSignal(props.memo)
-  const [useLm, setUseLm] = createSignal(true)
+  const [useLM, setUseLM] = createSignal(true)
   const load = useLoading()
+  const toast = useToast()
   function setField(key: keyof MemoModel, value: any) {
     setM({
       ...m(),
@@ -45,9 +45,9 @@ export default function (props: {
             <Switch
               size="sm"
               label="大模型优化"
-              checked={useLm()}
+              checked={useLM()}
               onCheckedChange={() => {
-                setUseLm(!useLm())
+                setUseLM(!useLM())
               }}
             />
           </div>
@@ -97,17 +97,21 @@ export default function (props: {
               e.target.value = ''
               if (file) {
                 load.show('解析文件中')
-                const res = await window.api.editFragment({
-                  id: m().id,
-                  fragment: {
-                    name: file.name,
-                    from: file.path,
-                    type: 'md'
-                  },
-                  type: 'add',
-                  useLm: useLm()
-                })
-                console.log(res)
+                try {
+                  const res = await window.api.editFragment({
+                    id: m().id,
+                    fragment: {
+                      name: file.name,
+                      from: file.path,
+                      type: 'md'
+                    },
+                    type: 'add',
+                    useLM: useLM()
+                  })
+                  console.log(res)
+                } catch (error: any) {
+                  toast.error(error?.message || '解析失败')
+                }
                 load.hide()
               }
             }}

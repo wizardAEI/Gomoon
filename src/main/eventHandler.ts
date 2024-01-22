@@ -7,7 +7,7 @@ import {
   getAssistants,
   getHistories,
   getUserData,
-  loadUserConfig,
+  loadAppConfig,
   setCanMultiCopy,
   setQuicklyWakeUpKeys,
   setIsOnTop,
@@ -23,9 +23,9 @@ import {
   AssistantModel,
   CreateAssistantModel,
   HistoryModel,
+  SettingModel,
   UserDataModel
 } from './models/model'
-import { SettingModel } from "../lib/langchain"
 import {
   checkUpdate,
   hideWindow,
@@ -49,7 +49,7 @@ export function initAppEventsHandler() {
    */
   let preBaseUrls: string[] = []
   ipcMain.handle('load-config', () => {
-    const config = loadUserConfig()
+    const config = loadAppConfig()
     const urls: string[] = []
     if (isValidUrl(config.models.OpenAI.baseURL)) {
       urls.push(config.models.OpenAI.baseURL)

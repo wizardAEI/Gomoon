@@ -1,4 +1,4 @@
-import { ModelsType } from '../../lib/langchain'
+import { Models, ModelsType } from '../../lib/langchain'
 
 export interface UserDataModel {
   firstTime: boolean
@@ -61,3 +61,10 @@ export interface MemoModel {
   fragment: MemoryFragment[]
 }
 export type CreateMemoModel = Omit<MemoModel, 'id' | 'version'>
+export interface SettingModel {
+  isOnTop: boolean
+  canMultiCopy: boolean
+  quicklyWakeUpKeys: string
+  sendWithCmdOrCtrl: boolean
+  models: Models
+}

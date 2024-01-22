@@ -1,5 +1,5 @@
 import markdownIt, { Token } from 'markdown-it'
-import { postMsgToMainWindow } from '../../../window'
+import { lmInvoke } from '../langchain'
 
 const md = markdownIt()
 
@@ -96,7 +96,7 @@ export async function getChunkFromNodes(
   options: {
     chunkSize: number
     chunkOverlap: number
-    useLm?: boolean
+    useLM?: boolean
   } = {
     chunkSize: 500,
     chunkOverlap: 2 // 左右两个节点
@@ -111,11 +111,24 @@ export async function getChunkFromNodes(
         index: [{ value: node.total }, { value: node.content }, { value: node.title }],
         document: { content: node.total }
       })
-      console.log('chunk:', node.total)
-      // TODO: 这里使用大模型出现问题，由于时间问题后续需要加上进度功能
-      if (options.useLm) {
-        console.log('use lm for:', node.total)
-        postMsgToMainWindow(node.total)
+      // TODO: 这里使用大模型，由于时间问题后续需要加上进度功能
+      if (options.useLM) {
+        const content = (
+          await lmInvoke({
+            system: `我将会给你一段文字，请根据内容提出几个问题，使用序号标出。例如我给出『小明是一个学生，他喜欢打羽毛球。』，你将回复：
+1. 小明是什么职业 
+2. 小明的爱好是什么。
+提出问题时不要延伸提问，确保现有内容可以明确的回答该问题；回复除了问题外不要添加任何其他内容。`,
+            content: node.total
+          })
+        ).trim()
+        content.split('\n').forEach((line) => {
+          // 判断是否以序号开头，如果是则认为该行是问题，去除序号
+          if (line.match(/^[0-9]+\./)) {
+            line = line.replace(/^[0-9]+\./, '')
+            chunk[chunk.length - 1].index.push({ value: line })
+          }
+        })
       }
       // TODO: 尝试加上 chunkOverlap 是否有效果
       let lapLNum = 0,

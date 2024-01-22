@@ -28,7 +28,8 @@ export default defineConfig({
   renderer: {
     resolve: {
       alias: {
-        '@renderer': resolve('src/renderer/src')
+        '@renderer': resolve('src/renderer/src'),
+        '@lib': resolve('src/lib')
       }
     },
     // public 目录下的文件可以直接通过 / 访问

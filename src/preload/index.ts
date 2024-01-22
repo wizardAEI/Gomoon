@@ -1,14 +1,14 @@
 import { IpcRendererEvent, contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import MemoryFragment, {
+import {
   AssistantModel,
   CreateAssistantModel,
   HistoryModel,
   Line,
   MemoModel,
+  SettingModel,
   UserDataModel
 } from '../main/models/model'
-import { SettingModel } from "../lib/langchain"
 import { FileLoaderRes } from '../main/lib/ai/fileLoader'
 import { EditFragmentOption } from '../main/lib/ai/embedding/index'
 

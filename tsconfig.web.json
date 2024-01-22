@@ -14,7 +14,10 @@
     "paths": {
       "@renderer/*": [
         "src/renderer/src/*"
-      ]
+      ],
+      "@lib/*": [
+        "src/lib/*"
+        ]
     }
   }
 }

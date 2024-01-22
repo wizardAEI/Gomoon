@@ -1,7 +1,7 @@
 import { createStore, unwrap } from 'solid-js/store'
 import { isEqual, merge, cloneDeep } from 'lodash'
 import { event } from '@renderer/lib/util'
-import { defaultModels } from '@renderer/lib/ai/langchain/models'
+import { defaultModels } from '@lib/langchain'
 import { Line } from 'src/main/models/model'
 import { Models } from 'src/lib/langchain'
 const [settingStore, setSettingStore] = createStore<{
