@@ -52,20 +52,7 @@ export default function (props: {
             />
           </div>
         </div>
-        <For
-          each={[
-            {
-              type: 'md',
-              name: '测试文件.md',
-              from: '/a/b/c'
-            },
-            {
-              type: 'md',
-              name: '测试文件.md',
-              from: '/a/b/c'
-            }
-          ]}
-        >
+        <For each={m().fragment}>
           {(file) => (
             <div class="flex select-none justify-between">
               <div class="mt-2 flex gap-1">
@@ -103,12 +90,22 @@ export default function (props: {
                     fragment: {
                       name: file.name,
                       from: file.path,
-                      type: 'md'
+                      type: file.name.split('.').pop() as 'md' | 'xlsx'
                     },
                     type: 'add',
                     useLM: useLM()
                   })
-                  console.log(res)
+                  if (!res.suc) {
+                    toast.error(res.reason || '解析失败')
+                  } else {
+                    setField('fragment', [
+                      ...m().fragment,
+                      {
+                        type: file.name.split('.').pop() as 'md' | 'xlsx',
+                        name: file.name
+                      }
+                    ])
+                  }
                 } catch (error: any) {
                   toast.error(error?.message || '解析失败')
                 }

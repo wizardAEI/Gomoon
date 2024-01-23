@@ -41,7 +41,13 @@ import { isValidUrl } from './lib/utils'
 import { autoUpdater } from 'electron-updater'
 import { quitApp } from './lib'
 import { embedding, tokenize } from './lib/ai/embedding/embedding'
-import { EditFragmentOption, editFragment } from './lib/ai/embedding/index'
+import {
+  EditFragmentOption,
+  SaveMemoParams,
+  cancelSaveMemo,
+  editFragment,
+  saveMemo
+} from './lib/ai/embedding/index'
 
 export function initAppEventsHandler() {
   /**
@@ -124,6 +130,8 @@ export function initAppEventsHandler() {
    */
   ipcMain.handle('get-memories', () => getMemories())
   ipcMain.handle('edit-memory', (_, option: EditFragmentOption) => editFragment(option))
+  ipcMain.handle('save-memory', (_, option: SaveMemoParams) => saveMemo(option))
+  ipcMain.handle('cancel-save-memory', (_, id: string) => cancelSaveMemo(id))
 
   // 文件相关
   ipcMain.handle('parse-file', (_, files) => parseFile(files))

@@ -1,7 +1,7 @@
 <h1 align="center">Gomoon</h1>
 <div align="center">
 <img order-radius="100px" height="150px" src="https://github.com/wizardAEI/blog-images/blob/main/gomoon-icon.png" alt=""/>
-<div><b>Gomoon</b> 是一款桌面端的大模型工具应用。</div>
+<div><b>Gomoon</b> 是一款桌面端的大模型效率工具。</div>
 </div>
 
 <h1 align="center"> </h1>

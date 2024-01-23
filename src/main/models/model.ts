@@ -49,9 +49,9 @@ export interface Line {
 }
 
 export default interface MemoryFragment {
-  type: 'md' | 'url' | 'svg' | 'word'
+  type: 'md' | 'xlsx'
   name: string
-  from: string
+  from?: string
 }
 export interface MemoModel {
   id: string

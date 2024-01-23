@@ -1,5 +1,13 @@
 import { loadLMMap, msgDict } from '../../../lib/langchain'
-import { getLMConfig } from '../../service'
+import { getUserData, loadAppConfig } from '../../models'
+
+function getLMConfig() {
+  return {
+    models: loadAppConfig().models,
+    current: getUserData().selectedModel
+  }
+}
+
 export async function lmInvoke(option: { system?: string; content: string }): Promise<string> {
   const lm = loadLMMap(getLMConfig().models)[getLMConfig().current]
   if (!lm) {

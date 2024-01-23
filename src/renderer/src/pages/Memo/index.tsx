@@ -50,6 +50,10 @@ export default function () {
                       toast.error('名称不能为空')
                       return
                     }
+                    window.api.saveMemory({
+                      id: m.id,
+                      memoName: m.name
+                    })
                   }}
                 />
               }
