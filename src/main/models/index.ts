@@ -1,13 +1,17 @@
 import { app } from 'electron'
 import { JSONSyncPreset } from 'lowdb/node'
-import { AssistantModel, CreateAssistantModel, HistoryModel, SettingModel } from './model'
-import { getDefaultUserData } from './default/getDefaultUserData'
-import { getDefaultConfig } from './default/getDefaultConfig'
+import { AssistantModel, CreateAssistantModel, CreateMemoModel, HistoryModel } from './model'
+import { SettingModel } from './model'
+import {
+  getDefaultConfig,
+  getDefaultAssistants,
+  getDefaultLines,
+  getDefaultUserData,
+  getDefaultMemories
+} from './default'
 import { join } from 'path'
 import { ulid } from 'ulid'
 import { merge } from 'lodash'
-import getDefaultAssistants from './default/getDefaultAssistants'
-import getDefaultLines from './default/getDefaultLines'
 
 const appDataPath = app.getPath('userData')
 const configDB = JSONSyncPreset(join(appDataPath, 'config.json'), getDefaultConfig())
@@ -17,11 +21,11 @@ const configDB = JSONSyncPreset(join(appDataPath, 'config.json'), getDefaultConf
  * 因为后续配置页的设置可能会在用户有感的情况下加载一些其他第三方或者更加底层的配置，所以这里单独抽出来，且每一个配置项都单独写一个函数
  * 后续较轻的配置项，可以合并一个函数
  */
-export function loadUserConfig() {
+export function loadAppConfig() {
   return merge(getDefaultConfig(), configDB.data)
 }
 
-export function setUserConfig(config: Partial<SettingModel>) {
+export function setAppConfig(config: Partial<SettingModel>) {
   configDB.data = {
     ...configDB.data,
     ...config
@@ -174,4 +178,22 @@ export function deleteHistory(id: string) {
  */
 export function getLines() {
   return getDefaultLines()
+}
+
+/**
+ * FEAT: 记忆相关 Memo
+ */
+const memoDB = JSONSyncPreset(join(appDataPath, 'memories.json'), getDefaultMemories())
+export function getMemories() {
+  return memoDB.data || []
+}
+export function createMemo(m: CreateMemoModel): CreateMemoModel {
+  const newM = {
+    ...m,
+    id: ulid(),
+    version: 1
+  }
+  memoDB.data.unshift(newM)
+  memoDB.write()
+  return newM
 }

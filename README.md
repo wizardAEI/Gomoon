@@ -1,7 +1,7 @@
 <h1 align="center">Gomoon</h1>
 <div align="center">
 <img order-radius="100px" height="150px" src="https://github.com/wizardAEI/blog-images/blob/main/gomoon-icon.png" alt=""/>
-<div><b>Gomoon</b> 是一款桌面端的大模型工具应用。</div>
+<div><b>Gomoon</b> 是一款桌面端的大模型效率工具。</div>
 </div>
 
 <h1 align="center"> </h1>
@@ -17,9 +17,9 @@
 - 创建属于自己的助手，选择多种大模型引擎（支持实时切换）
 - 快速问答和连续的对话以及存取对话历史
 - 对话可以复制，暂停 ⏸，以及重新生成，方便你的使用。更厉害的是你还可以直接编辑答案，让后续的对话更加的智能
-- 快速唤起，快捷键，置顶等功能，例如你可以使用 `Ctrl + G` 快速唤起 Gomoon，双击复制(`Command + C +C`)快速问答
-- 发送文件，图片和URL解析，联网查询
-- 下载对话记录，助手一键导入导出功能, 把你觉得实用的助手分享给你的朋友
+- **快速唤起，快捷键，置顶等功能，例如你可以使用 `Ctrl + G` 快速唤起 Gomoon，双击复制(`Command + C +C`)快速问答**
+- 记忆胶囊，发送文件，图片和URL解析，联网查询
+- 下载对话记录，助手一键导入导出, 把你觉得实用的助手分享给你的朋友
 
 更多实用的功能等你来探索！
 

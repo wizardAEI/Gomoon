@@ -14,7 +14,7 @@ import { join } from 'path'
 import { is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import trayIcon from '../../resources/icon@20.png?asset'
-import { loadUserConfig } from './models'
+import { loadAppConfig } from './models'
 import { getResourcesPath, quitApp } from './lib'
 import { spawn } from 'child_process'
 import { autoUpdater } from 'electron-updater'
@@ -161,12 +161,12 @@ export async function checkUpdate(): Promise<boolean> {
   return (res && res.updateInfo.version !== app.getVersion()) || false
 }
 
-export function postMsgToMainWindow(msg: string) {
-  mainWindow?.webContents.send('post-message', msg)
+export async function postMsgToMainWindow(msg: string) {
+  return await mainWindow?.webContents.send('post-message', msg)
 }
 
 export function createWindow(): void {
-  const userConfig = loadUserConfig()
+  const userConfig = loadAppConfig()
 
   // Create the browser window.
   mainWindow = new BrowserWindow({

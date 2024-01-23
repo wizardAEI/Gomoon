@@ -1,9 +1,7 @@
 let worker: Tesseract.Worker | undefined
 export const init = async () => {
   worker = await Tesseract.createWorker('eng+chi_sim', undefined, {
-    logger: (_m) => {
-      //   console.log(_m)
-    }
+    logger: (_m) => {}
   })
 }
 

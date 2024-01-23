@@ -7,7 +7,7 @@ import {
   getAssistants,
   getHistories,
   getUserData,
-  loadUserConfig,
+  loadAppConfig,
   setCanMultiCopy,
   setQuicklyWakeUpKeys,
   setIsOnTop,
@@ -16,7 +16,8 @@ import {
   updateAssistant,
   updateUserData,
   useAssistant,
-  getLines
+  getLines,
+  getMemories
 } from './models/index'
 import {
   AssistantModel,
@@ -40,6 +41,13 @@ import { isValidUrl } from './lib/utils'
 import { autoUpdater } from 'electron-updater'
 import { quitApp } from './lib'
 import { embedding, tokenize } from './lib/ai/embedding/embedding'
+import {
+  EditFragmentOption,
+  SaveMemoParams,
+  cancelSaveMemo,
+  editFragment,
+  saveMemo
+} from './lib/ai/embedding/index'
 
 export function initAppEventsHandler() {
   /**
@@ -47,7 +55,7 @@ export function initAppEventsHandler() {
    */
   let preBaseUrls: string[] = []
   ipcMain.handle('load-config', () => {
-    const config = loadUserConfig()
+    const config = loadAppConfig()
     const urls: string[] = []
     if (isValidUrl(config.models.OpenAI.baseURL)) {
       urls.push(config.models.OpenAI.baseURL)
@@ -116,6 +124,14 @@ export function initAppEventsHandler() {
   ipcMain.handle('get-histories', () => getHistories())
   ipcMain.handle('add-history', (_, history: HistoryModel) => addHistory(history))
   ipcMain.handle('delete-history', (_, id: string) => deleteHistory(id))
+
+  /**
+   * FEAT: memory 相关
+   */
+  ipcMain.handle('get-memories', () => getMemories())
+  ipcMain.handle('edit-memory', (_, option: EditFragmentOption) => editFragment(option))
+  ipcMain.handle('save-memory', (_, option: SaveMemoParams) => saveMemo(option))
+  ipcMain.handle('cancel-save-memory', (_, id: string) => cancelSaveMemo(id))
 
   // 文件相关
   ipcMain.handle('parse-file', (_, files) => parseFile(files))

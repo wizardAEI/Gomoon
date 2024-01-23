@@ -91,7 +91,7 @@ export default function MsgPopup(props: { id: string; content: string; type: Msg
   )
 }
 
-export function MsgPopupByUser(props: { id: string; content: string; type: MsgTypes }) {
+export function MsgPopupForUser(props: { id: string; content: string; type: MsgTypes }) {
   const [source] = createSignal('')
   const { copy } = useClipboard({ source })
   return (

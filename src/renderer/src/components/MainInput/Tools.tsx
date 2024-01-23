@@ -59,7 +59,7 @@ export default function Tools(props: {
     }
   }
   return (
-    <div class="group/tools relative px-1">
+    <div class="group/tools relative select-none px-1">
       <LeftArrow
         class="absolute left-[-16px] top-1/2 -translate-y-1/2 transform cursor-pointer opacity-0 delay-200 duration-200 hover:text-active group-hover/tools:opacity-100"
         width={18}

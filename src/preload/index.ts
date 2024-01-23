@@ -5,10 +5,12 @@ import {
   CreateAssistantModel,
   HistoryModel,
   Line,
+  MemoModel,
   SettingModel,
   UserDataModel
 } from '../main/models/model'
 import { FileLoaderRes } from '../main/lib/ai/fileLoader'
+import { EditFragmentOption, SaveMemoParams } from '../main/lib/ai/embedding/index'
 
 // Custom APIs for renderer
 export const api = {
@@ -53,6 +55,17 @@ export const api = {
   addHistory: (history: HistoryModel) => ipcRenderer.invoke('add-history', history),
   deleteHistory: (historyId: string) => ipcRenderer.invoke('delete-history', historyId),
 
+  // memory 相关
+  getMemories: (): Promise<MemoModel[]> => ipcRenderer.invoke('get-memories'),
+  editFragment: (
+    option: EditFragmentOption
+  ): Promise<{
+    suc: boolean
+    reason?: string
+  }> => ipcRenderer.invoke('edit-memory', option),
+  saveMemory: (memo: SaveMemoParams): Promise<MemoModel> => ipcRenderer.invoke('save-memory', memo),
+  cancelSaveMemory: (id: string) => ipcRenderer.invoke('cancel-save-memory', id),
+
   // 文件相关
   parseFile: (
     files: {
@@ -75,7 +88,7 @@ export const api = {
   getLines: (): Promise<Partial<Line>[]> => ipcRenderer.invoke('get-lines'),
   parsePageToString: (url: string): Promise<string> =>
     ipcRenderer.invoke('parse-page-to-string', url),
-  receiveMsg: (callback: (event: IpcRendererEvent, msg: string) => void) => {
+  receiveMsg: (callback: (event: IpcRendererEvent, msg: string) => Promise<void>) => {
     ipcRenderer.on('post-message', callback)
     return () => {
       ipcRenderer.removeListener('post-message', callback)

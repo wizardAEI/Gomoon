@@ -37,6 +37,7 @@ export default function EditInput(props: {
       >
         <div class="relative">
           <input
+            class="pr-8"
             spellcheck={props.spellcheck || false}
             ref={inputRef}
             type="text"

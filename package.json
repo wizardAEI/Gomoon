@@ -50,7 +50,7 @@
     "solidjs-use": "^2.3.0",
     "tesseract.js": "^5.0.4",
     "ulid": "^2.3.0",
-    "vectordb": "^0.4.1",
+    "vectordb": "^0.4.3",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

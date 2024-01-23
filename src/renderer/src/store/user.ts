@@ -7,6 +7,7 @@ const [userData, setUserData] = createStore<UserDataModel>({
   selectedModel: 'GPT4',
   selectedAssistantForAns: '',
   selectedAssistantForChat: '',
+  selectedMemo: '',
   firstTimeFor: {
     modelSelect: true,
     assistantSelect: true
@@ -67,5 +68,7 @@ export async function hasFirstTimeFor(key: keyof UserDataModel['firstTimeFor']) 
   })
   loadUserData()
 }
+
+// TODO: 看一下是否需要为MEMO新增方法
 
 export { userData }
