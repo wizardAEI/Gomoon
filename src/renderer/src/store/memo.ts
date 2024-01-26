@@ -2,6 +2,8 @@ import { createMemo } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 import { MemoModel } from 'src/main/models/model'
 import { userData } from './user'
+import { cloneDeep } from 'lodash'
+import { SaveMemoParams } from 'src/main/lib/ai/embedding'
 
 const [memories, setMemories] = createStore<MemoModel[]>([])
 const [memoriesStatus, setMemoriesStatus] = createStore<{
@@ -58,4 +60,22 @@ export function onCancelEditMemo(id: string) {
     )
   }
 }
+export async function saveMemo(m: SaveMemoParams) {
+  if (m.id === 'creating') {
+    await window.api.saveMemory(cloneDeep(m))
+    setMemories(
+      produce((memo) => {
+        memo.shift()
+      })
+    )
+  } else {
+    // await window.api.updateAssistant(m)
+  }
+  loadMemories()
+}
+export async function useMemo(id: string) {
+  await window.api.useMemory(id)
+  await loadMemories()
+}
+
 export { memories, memoriesStatus }

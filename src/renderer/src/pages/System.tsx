@@ -1,5 +1,5 @@
 import { useToast } from '@renderer/components/ui/Toast'
-import { systemStore } from '@renderer/store/system'
+import { systemStore } from '@renderer/store/setting'
 import { createEffect } from 'solid-js'
 
 export default function System() {

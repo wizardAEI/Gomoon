@@ -1,13 +1,14 @@
 import { Show, createEffect, createSignal, onCleanup, onMount } from 'solid-js'
-import { clearMsgs, msgs, restoreMsgs } from '../../store/msgs'
+import { clearMsgs, msgs, restoreMsgs } from '../../store/chat'
 import { useToast } from '../ui/Toast'
 import { useEventListener } from 'solidjs-use'
 import { settingStore } from '@renderer/store/setting'
 import RefreshIcon from '@renderer/assets/icon/base/RefreshIcon'
 import Tools from './Tools'
-import { inputText, isNetworking, setInputText, tokens } from '@renderer/store/input'
+import { inputText, isNetworking, memoCapsule, setInputText, tokens } from '@renderer/store/input'
 import { useLoading } from '../ui/DynamicLoading'
 import { searchByBaidu } from '@renderer/lib/ai/search'
+import { userData } from '@renderer/store/user'
 
 const typeDict: {
   [key: string]: 'chat' | 'ans'
@@ -41,6 +42,20 @@ export default function Input(props: {
   const dynamicLoading = useLoading()
   async function submit(content?: string) {
     setInputTokenNum(0)
+    if (memoCapsule() && props.type !== 'ai') {
+      dynamicLoading.show('记忆胶囊启动⚡️⚡️')
+      try {
+        content = await window.api.getMemoryData({
+          id: userData.selectedMemo,
+          content: inputText()
+        })
+        console.log('>>', content)
+      } catch (e) {
+        toast.error((e as Error).message || '查询失败')
+      }
+      dynamicLoading.hide()
+      return
+    }
     if (isNetworking() && props.type !== 'ai') {
       dynamicLoading.show('查询中')
       try {

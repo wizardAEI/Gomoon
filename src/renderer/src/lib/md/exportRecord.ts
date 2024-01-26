@@ -1,5 +1,5 @@
 import { answerStore } from '@renderer/store/answer'
-import { msgs } from '@renderer/store/msgs'
+import { msgs } from '@renderer/store/chat'
 import moment from 'moment'
 
 const roleDict = {

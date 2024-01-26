@@ -7,15 +7,15 @@ import {
   editMsg,
   reActiveGeneratingStatus,
   genMsg
-} from '../store/msgs'
+} from '../store/chat'
 import Message from '@renderer/components/Message'
-import { For, Show, createSignal, onCleanup, onMount } from 'solid-js'
+import { For, Show, createEffect, createSignal, onCleanup, onMount } from 'solid-js'
 import { ulid } from 'ulid'
 import { event } from '@renderer/lib/util'
 import { getCurrentAssistantForChat } from '@renderer/store/assistants'
 import SystemHeader from '@renderer/components/SystemHeader'
 import Capsule from '@renderer/components/Capsule'
-import { lines } from '@renderer/store/setting'
+import { currentLines } from '@renderer/store/user'
 import { inputText, setInputText } from '@renderer/store/input'
 const scrollToBottom = (el: HTMLDivElement, index: number) => {
   if (index === msgs.length - 1) {
@@ -30,8 +30,29 @@ const scrollToBottom = (el: HTMLDivElement, index: number) => {
 
 export default function Chat() {
   const [editId, setEditId] = createSignal('')
+
+  // FEAT: 打字机效果
   const [linesContent, setLinesContent] = createSignal('')
   const [linesFrom, setLinesFrom] = createSignal('')
+  createEffect((b) => {
+    if (!currentLines().length || b) return
+    const index = Math.floor(Math.random() * currentLines().length)
+    const linesFull = currentLines()[index]?.content ?? '' + ' — '
+    setLinesContent(linesFull.slice(0, 1))
+    // 打字机效果,逐渐显示introduce
+    const timer = setInterval(() => {
+      if (linesFull.length === linesContent().length) {
+        clearInterval(timer)
+        setLinesFrom(currentLines()[index].from)
+      } else {
+        setLinesContent((i) => {
+          return i + linesFull[i.length]
+        })
+      }
+    }, 70)
+    return true
+  }, false)
+
   // FEAT: 记录用户点击编辑后如果没有发送，则取消编辑
   const [previousMsg, setPreviousMsg] = createSignal<{
     content: string
@@ -39,22 +60,6 @@ export default function Chat() {
     state: 'pending' | 'complete'
   }>({ content: '', id: '', state: 'complete' })
   onMount(() => {
-    // 随机取一个介绍语
-    const index = Math.floor(Math.random() * lines.length)
-    const linesFull = lines[index].content + ' — '
-    setLinesContent(linesFull.slice(0, 1))
-    // 打字机效果,逐渐显示introduce
-    const timer = setInterval(() => {
-      if (linesFull.length === linesContent().length) {
-        clearInterval(timer)
-        setLinesFrom(lines[index].from)
-      } else {
-        setLinesContent((i) => {
-          return i + linesFull[i.length]
-        })
-      }
-    }, 70)
-
     requestAnimationFrame(() => {
       const chatContainer = document.querySelector('.chat-container')
       if (chatContainer) {

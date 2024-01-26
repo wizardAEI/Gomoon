@@ -1,7 +1,7 @@
 import { Roles } from '@renderer/lib/ai/langchain'
 import { Show, createMemo } from 'solid-js'
 import 'highlight.js/styles/atom-one-dark.css'
-import { msgStatus, msgs } from '@renderer/store/msgs'
+import { msgStatus, msgs } from '@renderer/store/chat'
 import MsgPopup, { MsgPopupForUser, Pause, WithDrawal } from './Popup'
 import { ansStatus } from '@renderer/store/answer'
 import { parseMeta } from '@renderer/lib/ai/parseString'

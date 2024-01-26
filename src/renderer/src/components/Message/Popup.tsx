@@ -10,7 +10,7 @@ import EditIcon from '@renderer/assets/icon/base/EditIcon'
 import { event } from '@renderer/lib/util'
 import WithdrawalIcon from '@renderer/assets/icon/base/WithdrawalICon'
 import PauseIcon from '@renderer/assets/icon/base/PauseIcon'
-import { saveMsgsBeforeID, stopGenMsg } from '@renderer/store/msgs'
+import { saveMsgsBeforeID, stopGenMsg } from '@renderer/store/chat'
 import { compWithTip } from '../ui/compWithTip'
 
 export default function MsgPopup(props: { id: string; content: string; type: MsgTypes }) {

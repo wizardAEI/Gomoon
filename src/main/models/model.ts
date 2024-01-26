@@ -60,7 +60,7 @@ export interface MemoModel {
   introduce?: string
   fragment: MemoryFragment[]
 }
-export type CreateMemoModel = Omit<MemoModel, 'id' | 'version'>
+export type CreateMemoModel = Omit<MemoModel, 'version'>
 export interface SettingModel {
   isOnTop: boolean
   canMultiCopy: boolean
