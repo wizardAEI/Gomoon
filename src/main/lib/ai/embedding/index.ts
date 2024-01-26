@@ -2,7 +2,7 @@ import { readFileSync } from 'fs'
 import MemoryFragment from '../../../models/model'
 import { createTreeFromMarkdown, getChunkFromNodes } from './splitter'
 import { embedding } from './embedding'
-import { saveData, saveIndex } from '../../../models/embedding'
+import { getData, saveData, saveIndex } from '../../../models/memo'
 import { ulid } from 'ulid'
 import { createMemo } from '../../../models'
 
@@ -19,7 +19,7 @@ const fragmentsMap: {
 
 let dataMap: {
   [key in string]:
-    | { name: string; data: string; vectors: Float32Array[]; indexes: string[] }[]
+    | { id: string; name: string; data: string; vectors: Float32Array[]; indexes: string[] }[]
     | undefined
 } = {}
 
@@ -52,7 +52,7 @@ export async function editFragment(option: EditFragmentOption): Promise<{
       // memory
       const nodes = createTreeFromMarkdown(res.content)
       const chunks = await getChunkFromNodes(nodes, {
-        chunkSize: 500,
+        chunkSize: 700,
         chunkOverlap: 2,
         useLM: option.useLM
       })
@@ -64,6 +64,7 @@ export async function editFragment(option: EditFragmentOption): Promise<{
         }
         dataMap[option.id] === undefined && (dataMap[option.id] = [])
         dataMap[option.id]?.push({
+          id: ulid(),
           name: option.fragment.name,
           data: chunk.document.content,
           vectors,
@@ -89,24 +90,26 @@ export interface SaveMemoParams {
 }
 export async function saveMemo(params: SaveMemoParams) {
   const data = dataMap[params.id]
-  const name = ulid()
+  const memoId = ulid()
   if (params.id === 'creating') {
     saveData(
-      name,
+      memoId,
       (data || []).map((item) => ({
-        id: ulid(),
+        id: item.id,
         content: item.data,
-        indexes: item.indexes
+        indexes: item.indexes,
+        fileName: item.name
       }))
     )
     await saveIndex(
-      name,
+      memoId,
       (data || []).map((item) => ({
-        id: ulid(),
+        id: item.id,
         vectors: item.vectors
       }))
     )
     createMemo({
+      id: memoId,
       name: params.memoName,
       introduce: params.introduce,
       fragment: fragmentsMap[params.id] || []
@@ -114,6 +117,14 @@ export async function saveMemo(params: SaveMemoParams) {
   }
   fragmentsMap[params.id] = undefined
   dataMap[params.id] = undefined
+}
+
+export interface GetMemoParams {
+  id: string
+  content: string
+}
+export function getMemo(data: GetMemoParams) {
+  return getData(data)
 }
 
 export function cancelSaveMemo(id: string) {

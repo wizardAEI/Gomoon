@@ -10,7 +10,7 @@ import {
   UserDataModel
 } from '../main/models/model'
 import { FileLoaderRes } from '../main/lib/ai/fileLoader'
-import { EditFragmentOption, SaveMemoParams } from '../main/lib/ai/embedding/index'
+import { EditFragmentOption, GetMemoParams, SaveMemoParams } from '../main/lib/ai/embedding/index'
 
 // Custom APIs for renderer
 export const api = {
@@ -65,6 +65,8 @@ export const api = {
   }> => ipcRenderer.invoke('edit-memory', option),
   saveMemory: (memo: SaveMemoParams): Promise<MemoModel> => ipcRenderer.invoke('save-memory', memo),
   cancelSaveMemory: (id: string) => ipcRenderer.invoke('cancel-save-memory', id),
+  useMemory: (memoId: string) => ipcRenderer.invoke('use-memory', memoId),
+  getMemoryData: (data: GetMemoParams) => ipcRenderer.invoke('get-memory-data', data),
 
   // 文件相关
   parseFile: (
@@ -76,7 +78,6 @@ export const api = {
   openPath: (path: string) => ipcRenderer.invoke('open-path', path),
   saveFile: (fileName: string, content: string) =>
     ipcRenderer.invoke('save-file', fileName, content),
-  embedding: () => ipcRenderer.invoke('embedding'),
   getTokenNum: (text: string): Promise<number> => ipcRenderer.invoke('get-token-num', text),
 
   // 更新

@@ -1,6 +1,28 @@
 import { createStore } from 'solid-js/store'
-import { ModelsType, UserDataModel } from 'src/main/models/model'
+import { Line, UserDataModel } from 'src/main/models/model'
 import { assistants, useAssistant } from './assistants'
+import { ModelsType } from '@lib/langchain'
+import { memories, useMemo } from './memo'
+import { createMemo } from 'solid-js'
+
+/**
+ * @abstract 所有不在设置页面的数据
+ */
+
+/**
+ * FEAT: Lines
+ */
+const [lines, setLines] = createStore<Line[]>([])
+
+export async function loadLines() {
+  const l = await window.api.getLines()
+  setLines(
+    l.map((line) => ({ from: 'Gomoon', content: '快速双击复制，可以直接进入问答模式', ...line }))
+  )
+}
+export const currentLines = createMemo(() => {
+  return lines
+})
 
 const [userData, setUserData] = createStore<UserDataModel>({
   firstTime: true,
@@ -13,9 +35,9 @@ const [userData, setUserData] = createStore<UserDataModel>({
     assistantSelect: true
   }
 })
-
 export async function loadUserData() {
   setUserData(await window.api.getUserData())
+  loadLines()
 }
 
 export function userHasUse() {
@@ -53,6 +75,17 @@ export async function setSelectedAssistantForChat(assistantID: string) {
   await useAssistant(assistantID)
   return window.api.setUserData({
     selectedAssistantForChat: assistantID
+  })
+}
+
+export async function setSelectedMemo(memoID: string) {
+  if (memories.findIndex((item) => item.id === memoID) === -1) {
+    return
+  }
+  setUserData('selectedMemo', memoID)
+  await useMemo(memoID)
+  return window.api.setUserData({
+    selectedMemo: memoID
   })
 }
 

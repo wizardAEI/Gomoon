@@ -77,6 +77,7 @@ export function createTreeFromMarkdown(markdown): Node[] {
           level: levelNext,
           totalBefore: splice(totalBefore, content)
         })
+        totalBefore = splice(totalBefore, node.total)
         continue
       } else if (levelNext === level) {
         node.total = content
@@ -124,13 +125,13 @@ export async function getChunkFromNodes(
     chunkOverlap: number
     useLM?: boolean
   } = {
-    chunkSize: 500,
+    chunkSize: 700,
     chunkOverlap: 2 // 左右两个节点
   }
 ): Promise<Chunk[]> {
   const chunk: Chunk[] = []
   const { chunkSize, chunkOverlap } = options
-
+  const chunkTask: number[] = []
   const split = (total: string, size: number) => {
     if (total.match(/```/)) {
       return [total]
@@ -153,15 +154,15 @@ export async function getChunkFromNodes(
     }
   }
 
-  const dfs = async (
+  const dfs = (
     nodes: Node[],
     index: number,
-    option?: {
+    data?: {
       titleBefore: string
     }
   ) => {
     const node = nodes[index]
-    const title = (option?.titleBefore ? option?.titleBefore + ' ' : '') + node.title
+    const title = (data?.titleBefore ? data?.titleBefore + ' ' : '') + node.title
     if (node.total.length < chunkSize) {
       chunk.push({
         indexes: [{ value: node.total }, { value: title }],
@@ -172,9 +173,14 @@ export async function getChunkFromNodes(
       }
       // TODO: 这里使用大模型，由于时间问题后续需要加上进度功能
       if (options.useLM) {
-        const questions = await getQuestionsByLM(node.total)
-        questions.forEach((question) => {
-          chunk[chunk.length - 1].indexes.push({ value: question })
+        const index = chunk.length - 1
+        chunkTask.push(index)
+        console.log('task-1', index)
+        getQuestionsByLM(node.total).then((questions) => {
+          questions.forEach((question) => {
+            chunk[index].indexes.push({ value: question })
+          })
+          chunkTask.splice(chunkTask.indexOf(index), 1)
         })
       }
       // TODO: 尝试加上 chunkOverlap 是否有效果
@@ -203,20 +209,26 @@ export async function getChunkFromNodes(
         }
       }
     } else {
-      const pushContent = (contents: string[]) => {
-        contents.forEach(async (content) => {
+      const pushContent = async (contents: string[]) => {
+        for (let i = 0; i < contents.length; i++) {
+          const content = contents[i]
           chunk.push({
             indexes: [{ value: content }, { value: title }],
             document: { content }
           })
-          // TODO: 这里使用大模型，由于时间问题后续需要加上进度功能
           if (options.useLM) {
-            const questions = await getQuestionsByLM(content)
-            questions.forEach((question) => {
-              chunk[chunk.length - 1].indexes.push({ value: question })
+            const index = chunk.length - 1
+            chunkTask.push(index)
+            console.log('task', index)
+            // TODO: 这里使用大模型，由于时间问题后续需要加上进度功能
+            getQuestionsByLM(content).then((questions) => {
+              questions.forEach((question) => {
+                chunk[index].indexes.push({ value: question })
+              })
+              chunkTask.splice(chunkTask.indexOf(index), 1)
             })
           }
-        })
+        }
       }
       if (!node.children?.length) {
         const contents = split(node.total, chunkSize)
@@ -229,14 +241,22 @@ export async function getChunkFromNodes(
         pushContent(contents)
       }
       for (let i = 0; i < node.children.length; i++) {
-        await dfs(node.children, i, {
+        dfs(node.children, i, {
           titleBefore: title
         })
       }
     }
   }
   for (let i = 0; i < nodes.length; i++) {
-    await dfs(nodes, i)
+    dfs(nodes, i)
+  }
+  // 等待所有任务完成,或超时（60s）
+  let timeout = 60 * 1000
+  while (chunkTask.length && timeout > 0) {
+    console.log('wait', chunkTask)
+    // sleep(100)
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    timeout -= 1000
   }
   return chunk
 }

@@ -1,9 +1,9 @@
-import { createStore, unwrap } from 'solid-js/store'
+import { createStore, produce, unwrap } from 'solid-js/store'
 import { isEqual, merge, cloneDeep } from 'lodash'
 import { event } from '@renderer/lib/util'
 import { defaultModels } from '@lib/langchain'
-import { Line } from 'src/main/models/model'
 import { Models } from 'src/lib/langchain'
+import { createMemo } from 'solid-js'
 const [settingStore, setSettingStore] = createStore<{
   isOnTop: boolean
   isLoaded: boolean
@@ -51,7 +51,6 @@ export async function loadConfig() {
   setSettingStore('canMultiCopy', config.canMultiCopy)
   setSettingStore('quicklyWakeUpKeys', config.quicklyWakeUpKeys)
   setSettingStore('sendWithCmdOrCtrl', config.sendWithCmdOrCtrl)
-  await loadLines()
   setSettingStore('isLoaded', true)
   event.emit('updateModels', config.models)
 }
@@ -67,16 +66,79 @@ export async function updateModelsToFile() {
   event.emit('updateModels', config.models)
 }
 
-/**
- * FEAT: Lines
- */
-const [lines, setLines] = createStore<Line[]>([])
+export { settingStore, setSettingStore }
 
-export async function loadLines() {
-  const l = await window.api.getLines()
-  setLines(
-    l.map((line) => ({ from: 'Gomoon', content: '快速双击复制，可以直接进入问答模式', ...line }))
+export interface UpdaterStore {
+  updateStatus: {
+    canUpdate: boolean
+    haveDownloaded: boolean
+    updateProgress: number
+    version: string
+  }
+}
+
+const [updaterStore, setUpdaterStore] = createStore<UpdaterStore>({
+  updateStatus: {
+    canUpdate: false,
+    haveDownloaded: false,
+    updateProgress: 0,
+    version: ''
+  }
+})
+export function setUpdaterStatus(status: Partial<UpdaterStore['updateStatus']>) {
+  setUpdaterStore(
+    produce((s) => {
+      s.updateStatus = {
+        ...s.updateStatus,
+        ...status
+      }
+    })
   )
 }
 
-export { settingStore, setSettingStore, lines }
+export const updateStatusLabel = createMemo(() => {
+  const dict = {
+    canUpdate: '有新版本,点击下载！',
+    updateProgress:
+      '下载中: ' + updaterStore.updateStatus.updateProgress + '%（请不要中途退出应用）',
+    haveDownloaded: '新版本下载完成,立即安装！'
+  }
+  let label = '检查更新'
+  for (const key in dict) {
+    if (updaterStore.updateStatus[key]) {
+      label = dict[key]
+    }
+  }
+  return label
+})
+
+export async function updateVersion() {
+  if (updaterStore.updateStatus.haveDownloaded) {
+    window.api.quitForUpdate()
+    return true
+  }
+  if (
+    updaterStore.updateStatus.updateProgress > 0 &&
+    updaterStore.updateStatus.updateProgress < 100
+  ) {
+    return true
+  }
+  if (updaterStore.updateStatus.canUpdate) {
+    setUpdaterStatus({ updateProgress: 1 })
+    window.api.downloadUpdate().then((res) => {
+      if (res.length) {
+        setUpdaterStatus({ haveDownloaded: true })
+      }
+    })
+    return true
+  }
+  const res = await window.api.checkUpdate()
+  if (res) {
+    setUpdaterStatus({ canUpdate: true })
+  } else {
+    return false
+  }
+  return true
+}
+
+export { updaterStore as systemStore }

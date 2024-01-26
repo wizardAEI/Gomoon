@@ -6,7 +6,9 @@ import {
   updateModelsToFile,
   setSendWithCmdOrCtrl,
   setCanMultiCopy,
-  setQuicklyWakeUpKeys
+  setQuicklyWakeUpKeys,
+  updateVersion,
+  updateStatusLabel
 } from '../store/setting'
 import Switch from '@renderer/components/ui/SwitchItem'
 import Expand from '@renderer/components/ui/Expand'
@@ -14,7 +16,6 @@ import EditInput from '@renderer/components/ui/EditInput'
 import { onCleanup, onMount } from 'solid-js'
 import { unwrap } from 'solid-js/store'
 import SettingIcon from '@renderer/assets/icon/base/SettingIcon'
-import { updateStatusLabel, updateVersion } from '@renderer/store/system'
 import { useLoading } from '@renderer/components/ui/DynamicLoading'
 import { useToast } from '@renderer/components/ui/Toast'
 export default function Setting() {

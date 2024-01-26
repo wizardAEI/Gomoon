@@ -17,7 +17,8 @@ import {
   updateUserData,
   useAssistant,
   getLines,
-  getMemories
+  getMemories,
+  useMemo
 } from './models/index'
 import {
   AssistantModel,
@@ -40,12 +41,14 @@ import { parseURL2Str } from './lib/ai/parseURL'
 import { isValidUrl } from './lib/utils'
 import { autoUpdater } from 'electron-updater'
 import { quitApp } from './lib'
-import { embedding, tokenize } from './lib/ai/embedding/embedding'
+import { tokenize } from './lib/ai/embedding/embedding'
 import {
   EditFragmentOption,
+  GetMemoParams,
   SaveMemoParams,
   cancelSaveMemo,
   editFragment,
+  getMemo,
   saveMemo
 } from './lib/ai/embedding/index'
 
@@ -132,6 +135,8 @@ export function initAppEventsHandler() {
   ipcMain.handle('edit-memory', (_, option: EditFragmentOption) => editFragment(option))
   ipcMain.handle('save-memory', (_, option: SaveMemoParams) => saveMemo(option))
   ipcMain.handle('cancel-save-memory', (_, id: string) => cancelSaveMemo(id))
+  ipcMain.handle('use-memory', (_, id: string) => useMemo(id))
+  ipcMain.handle('get-memory-data', (_, data: GetMemoParams) => getMemo(data))
 
   // 文件相关
   ipcMain.handle('parse-file', (_, files) => parseFile(files))
@@ -153,9 +158,6 @@ export function initAppEventsHandler() {
     if (res.filePath) {
       writeFile(res.filePath, content, () => {})
     }
-  })
-  ipcMain.handle('embedding', async (_) => {
-    embedding('hello')
   })
   ipcMain.handle('get-token-num', async (_, content: string) => {
     return (await tokenize(content)).input_ids?.size || 0

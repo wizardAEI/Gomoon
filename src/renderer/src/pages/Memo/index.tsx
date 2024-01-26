@@ -4,7 +4,8 @@ import {
   getCurrentMemo,
   memories,
   memoriesStatus,
-  onCancelEditMemo
+  onCancelEditMemo,
+  saveMemo
 } from '@renderer/store/memo'
 import { For, Show } from 'solid-js'
 import EditBox from './EditBox'
@@ -14,9 +15,13 @@ import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
 import { useToast } from '@renderer/components/ui/Toast'
 import CrossMark from '@renderer/assets/icon/base/CrossMark'
 import { MemoModel } from 'src/main/models/model'
+import { setSelectedMemo } from '@renderer/store/user'
+import { useNavigate } from '@solidjs/router'
 
 export default function () {
   const toast = useToast()
+  const nav = useNavigate()
+
   return (
     <div class="max-w-[100%] overflow-hidden">
       <div class="mb-5 animate-scale-down-entrance select-none p-2">
@@ -41,7 +46,7 @@ export default function () {
                   onCancel={() => {
                     onCancelEditMemo(m.id)
                   }}
-                  onSave={(m: MemoModel) => {
+                  onSave={async (m: MemoModel) => {
                     if (m.fragment.length === 0) {
                       toast.error('至少要有一个片段')
                       return
@@ -50,9 +55,10 @@ export default function () {
                       toast.error('名称不能为空')
                       return
                     }
-                    window.api.saveMemory({
+                    await saveMemo({
                       id: m.id,
-                      memoName: m.name
+                      memoName: m.name,
+                      introduce: m.introduce
                     })
                   }}
                 />
@@ -60,7 +66,10 @@ export default function () {
             >
               <div
                 class="relative m-4 flex flex-col gap-2 rounded-2xl border-2 border-solid border-transparent bg-dark p-4 duration-150 hover:border-active"
-                onClick={async () => {}}
+                onClick={async () => {
+                  setSelectedMemo(m.id)
+                  nav(-1)
+                }}
               >
                 <div class="flex items-center">
                   <div class="flex flex-1 items-center gap-2">

@@ -190,10 +190,52 @@ export function getMemories() {
 export function createMemo(m: CreateMemoModel): CreateMemoModel {
   const newM = {
     ...m,
-    id: ulid(),
     version: 1
   }
   memoDB.data.unshift(newM)
   memoDB.write()
   return newM
 }
+
+export function useMemo(id: string) {
+  const index = memoDB.data.findIndex((item) => item.id === id)
+  if (index === -1) {
+    return
+  }
+  const item = memoDB.data[index]
+  memoDB.data.splice(index, 1)
+  memoDB.data.unshift(item)
+  memoDB.write()
+}
+
+// export function updateAssistant(a: AssistantModel) {
+//   const index = assistantsDB.data.findIndex((item) => item.id === a.id)
+//   if (index === -1) {
+//     assistantsDB.data = [
+//       ...assistantsDB.data,
+//       {
+//         ...a,
+//         version: 1,
+//         id: ulid()
+//       }
+//     ]
+//   } else {
+//     assistantsDB.data[index] = {
+//       ...a,
+//       version:
+//         assistantsDB.data[index].version < a.version
+//           ? a.version
+//           : assistantsDB.data[index].version + 1
+//     }
+//   }
+//   assistantsDB.write()
+// }
+
+// export function deleteAssistant(id: string) {
+//   const index = assistantsDB.data.findIndex((item) => item.id === id)
+//   if (index === -1) {
+//     return
+//   }
+//   assistantsDB.data.splice(index, 1)
+//   assistantsDB.write()
+// }

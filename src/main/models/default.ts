@@ -21,7 +21,7 @@ export function getDefaultConfig(): SettingModel {
       BaiduWenxin: {
         apiKey: '',
         secretKey: '',
-        temperature: 0.7
+        temperature: 0.5
       },
       AliQWen: {
         apiKey: '',
