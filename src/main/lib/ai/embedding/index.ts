@@ -50,7 +50,7 @@ export async function editFragment(option: EditFragmentOption): Promise<{
       const res = await readFile(option.fragment)
       if (!res.suc) return { suc: false, reason: res.reason }
       // memory
-      const nodes = createTreeFromMarkdown(res.content)
+      const nodes = createTreeFromMarkdown(res.content || '')
       const chunks = await getChunkFromNodes(nodes, {
         chunkSize: 700,
         chunkOverlap: 2,

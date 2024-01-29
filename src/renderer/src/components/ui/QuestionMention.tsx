@@ -1,12 +1,12 @@
 import QuestionMarkIcon from '@renderer/assets/icon/base/QuestionMarkIcon'
 import * as tooltip from '@zag-js/tooltip'
 import { normalizeProps, useMachine } from '@zag-js/solid'
-import { createMemo, createUniqueId, Show } from 'solid-js'
+import { createMemo, createUniqueId, JSX, Show } from 'solid-js'
 
 export default function QuestionMention(props: {
   size?: number
   color?: string
-  content: string
+  content: string | JSX.Element
   fill?: string
 }) {
   const [state, send] = useMachine(
@@ -42,7 +42,7 @@ export default function QuestionMention(props: {
             style={{
               color: props.color || '#333333'
             }}
-            class="rounded-md bg-white p-1 text-xs"
+            class="rounded-md bg-white/90 p-1 text-xs"
           >
             {props.content}
           </div>

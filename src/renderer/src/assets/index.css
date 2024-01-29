@@ -14,6 +14,9 @@
   textarea {
     @apply flex-1 resize-none rounded-md border-[1px] border-solid border-gray bg-dark py-1 pl-2 text-base text-text1 caret-text2 transition-none placeholder:text-text3 focus:border-active focus:outline-none;
   }
+  a {
+    @apply text-text-link hover:text-active;
+  }
 }
 
 @tailwind base;
