@@ -2,7 +2,7 @@ import CrossMark from '@renderer/assets/icon/base/CrossMark'
 import EmptyIcon from '@renderer/assets/icon/base/EmptyIcon'
 import HistoryIcon from '@renderer/assets/icon/base/HistoryIcon'
 import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
-import { parseMeta } from '@renderer/lib/ai/parseString'
+import { parseDisplayArr } from '@renderer/lib/ai/parseString'
 import { setAnswerStore } from '@renderer/store/answer'
 import { histories, removeHistory } from '@renderer/store/history'
 import { Msg, setMsgs } from '@renderer/store/chat'
@@ -84,15 +84,21 @@ export default function () {
               </div>
               <For each={sliceArr(h.contents)}>
                 {(c, index) => {
-                  const meta = parseMeta(c.content)
+                  const meta = parseDisplayArr(c.content)
                   return (
                     <div class="flex flex-col gap-1 break-words text-sm">
                       <div class={index() === 0 ? 'pr-3' : ''}>
-                        <Show when={meta.type === 'text'} fallback={SpecialTypeContent(meta)}>
-                          <span>
-                            {map[c.role]}: {decorateContent(c.content)}
-                          </span>
-                        </Show>
+                        <For each={meta}>
+                          {(m) => {
+                            return (
+                              <Show when={m.type === 'text'} fallback={SpecialTypeContent(m)}>
+                                <span>
+                                  {map[c.role]}: {decorateContent(c.content)}
+                                </span>
+                              </Show>
+                            )
+                          }}
+                        </For>
                       </div>
                       <div class="border-b-0 border-t border-dashed border-gray"></div>
                     </div>

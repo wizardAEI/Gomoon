@@ -55,12 +55,13 @@ export function createTreeFromMarkdown(
     beforeContent += contentProcess()
     i++
   }
-  tree.push({
-    title: getTitle(beforeContent),
-    content: beforeContent,
-    total: beforeContent,
-    children: []
-  })
+  beforeContent &&
+    tree.push({
+      title: getTitle(beforeContent),
+      content: beforeContent,
+      total: beforeContent,
+      children: []
+    })
   const buildTree = (options: { nodes: Node[]; level: number; totalBefore: string }) => {
     let { nodes, level, totalBefore } = options
     while (i < tokens.length) {

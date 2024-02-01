@@ -1,10 +1,10 @@
 import { Roles } from '@renderer/lib/ai/langchain'
-import { Show, createMemo } from 'solid-js'
+import { For, Show, createMemo } from 'solid-js'
 import 'highlight.js/styles/atom-one-dark.css'
 import { msgStatus, msgs } from '@renderer/store/chat'
 import MsgPopup, { MsgPopupForUser, Pause, WithDrawal } from './Popup'
 import { ansStatus } from '@renderer/store/answer'
-import { parseMeta } from '@renderer/lib/ai/parseString'
+import { parseDisplayArr } from '@renderer/lib/ai/parseString'
 import SpecialTypeContent from './SpecialTypeContent'
 import Md from './Md'
 export type MsgTypes = Roles | 'ans' | 'question'
@@ -30,7 +30,7 @@ export default function Message(props: {
   isEmpty?: boolean
 }) {
   const meta = createMemo(() => {
-    return parseMeta(props.content)
+    return parseDisplayArr(props.content)
   })
   // FEAT: 是否显示小组件
   const showComps = createMemo(
@@ -44,7 +44,7 @@ export default function Message(props: {
       return (
         !msgStatus.generatingList.includes(msgs[genIndex]?.id || '') &&
         props.type === 'human' &&
-        meta().type === 'text'
+        meta().find((item) => item.type !== 'text')
       )
     }
     return false
@@ -76,12 +76,15 @@ export default function Message(props: {
         </Show>
       </Show>
       <div class={style[props.type] + ' relative m-4 rounded-2xl p-3'}>
-        <Show
-          when={meta().type === 'text'}
-          fallback={SpecialTypeContent(meta(), mdStyle[props.type])}
-        >
-          <Md class={mdStyle[props.type] + ' markdown break-words'} content={props.content} />
-        </Show>
+        <For each={meta()}>
+          {(m) =>
+            m.type === 'text' ? (
+              <Md class={mdStyle[props.type] + ' markdown break-words'} content={m.content} />
+            ) : (
+              SpecialTypeContent(m, mdStyle[props.type])
+            )
+          }
+        </For>
         {/* 交互问题，取消使用右下角的小组件，后续可能重新使用 */}
         {/* <Show when={showComps()}>
           <div class="-mb-2 -mr-1 mt-1 flex justify-end gap-1 pl-32">

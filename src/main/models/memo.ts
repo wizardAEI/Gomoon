@@ -4,6 +4,7 @@ import { JSONSyncPreset } from 'lowdb/node'
 import { Connection, connect } from 'vectordb'
 import { mkdirSync } from 'fs'
 import { embedding } from '../lib/ai/embedding/embedding'
+import { MemoResult } from './model'
 
 const appDataPath = app.getPath('userData')
 const memoPath = join(appDataPath, 'memo')
@@ -77,11 +78,7 @@ export async function saveIndex(
   table.add(data)
 }
 
-export async function getData(data: { id: string; content: string }): Promise<
-  Array<{
-    content: string
-  }>
-> {
+export async function getData(data: { id: string; content: string }): Promise<Array<MemoResult>> {
   await connectDB()
   const tables = await db!.tableNames()
   if (!tables.includes(data.id)) {
@@ -89,7 +86,6 @@ export async function getData(data: { id: string; content: string }): Promise<
   }
   const table = await db!.openTable(data.id)
   const indexes = await embedding(data.content)
-  console.log('>>', indexes)
   const result = (await table
     .search(Array.from(indexes.map((index) => Number(index))))
     .limit(20)

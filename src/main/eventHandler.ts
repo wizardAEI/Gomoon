@@ -160,7 +160,8 @@ export function initAppEventsHandler() {
     }
   })
   ipcMain.handle('get-token-num', async (_, content: string) => {
-    return (await tokenize(content)).input_ids?.size || 0
+    if (content === '') return 0
+    return (await tokenize(content)).length || 0
   })
 
   // 升级

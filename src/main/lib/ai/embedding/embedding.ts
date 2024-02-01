@@ -20,6 +20,6 @@ export async function tokenize(text: string) {
   env.backends.onnx.logLevel = 'info'
   let tokenizer = await AutoTokenizer.from_pretrained('Xenova/bert-base-chinese')
   // Run tokenization
-  let text_inputs = tokenizer([text], { padding: true, truncation: true })
+  let text_inputs = tokenizer.encode(text)
   return text_inputs
 }

@@ -1,23 +1,62 @@
-const regForFile = /<gomoon-file .*?\/>/g,
-  regForUrl = /<gomoon-url .*?\/>/g,
-  regForSearch = /<gomoon-search .*?\/>/gs
+const regDict = {
+  // e.g. <gomoon-file src="https://xxx" filename="xxx"> 文件信息 </gomoon-file>
+  regForFile: /<gomoon-file (.*?)>(.*?)<\/gomoon-file>/gs,
+  regForUrl: /<gomoon-url (.*?)>(.*?)<\/gomoon-url>/gs,
+  // e.g. <gomoon-search><gomoon-question>谁是Mary</gomoon-question><gomoon-val>查询信息</gomoon-val></gomoon-search>
+  regForSearch: /<gomoon-search>(.*?)<\/gomoon-search>/gs,
+  regForMemo: /<gomoon-memo>(.*?)<\/gomoon-memo>/gs,
+  regForQuestion: /<gomoon-question>(.*?)<\/gomoon-question>/gs,
+  regForVal: /<gomoon-val>(.*?)<\/gomoon-val>/gs,
+  regForDrawer: /<gomoon-drawer>(.*?)<\/gomoon-drawer>/gs
+}
 
 function resetReg() {
-  ;(regForFile.lastIndex = 0), (regForUrl.lastIndex = 0) // 重置正则
+  for (const key in regDict) {
+    regDict[key].lastIndex = 0
+  }
 }
 
-export function removeMeta(str: string, isLastMsg = false) {
-  // 剔除 <gomoon-file ... /> <gomoon-url ... /> 等
-  if (!isLastMsg) {
-    if (str.match(regForSearch)) {
-      return str.match(regForSearch)![0].replace(/<gomoon-search question="(.+?)".*?\/>$/s, '$1')
-    }
-  }
-  const newStr = str.replace(regForFile, '').replace(regForUrl, '').replace(regForSearch, '')
+export function extractMeta(str: string, isLastMsg = false) {
   resetReg()
-  return newStr
+  const arr: {
+    type: 'search' | 'memo'
+    primary: string
+    val: string
+  }[] = []
+  const { regForFile, regForUrl, regForSearch, regForMemo, regForQuestion, regForVal } = regDict
+  str.match(regForSearch)?.forEach((match) => {
+    match = match.replace(regForSearch, '$1')
+    regForQuestion.lastIndex = 0
+    regForVal.lastIndex = 0
+    arr.push({
+      type: 'search',
+      primary: match.match(regForQuestion)?.[0]?.replace(regForQuestion, '$1') || '',
+      val: match.match(regForVal)?.[0]?.replace(regForVal, '$1') || ''
+    })
+  })
+  str.match(regForMemo)?.forEach((match) => {
+    match = match.replace(regForMemo, '$1')
+    regDict.regForQuestion.lastIndex = 0
+    regDict.regForVal.lastIndex = 0
+    arr.push({
+      type: 'memo',
+      primary: match.match(regForQuestion)?.[0]?.replace(regForQuestion, '$1') || '',
+      val: match.match(regForVal)?.[0]?.replace(regForVal, '$1') || ''
+    })
+  })
+  str = str
+    .replace(regForFile, '$2')
+    .replace(regForUrl, '$2')
+    .replace(regForSearch, '')
+    .replace(regForMemo, '')
+
+  str += isLastMsg
+    ? arr.map((item) => item.val).join('\n')
+    : arr.map((item) => item.primary).join('\n')
+  return str
 }
-export type ContentMetaData =
+
+export type ContentDisplay =
   | {
       type: 'file'
       src: string
@@ -29,35 +68,63 @@ export type ContentMetaData =
     }
   | {
       type: 'text'
+      content: string
     }
   | {
       type: 'search'
       question: string
     }
-
-export function parseMeta(str: string): ContentMetaData {
-  // 解析 <gomoon-file ... /> <gomoon-url ... /> 等
-  if (str.match(regForFile)) {
-    return {
-      type: 'file',
-      src: str.match(regForFile)![0].replace(/<gomoon-file .*?src="(.+?)".*?\/>$/, '$1'),
-      filename: str.match(regForFile)![0].replace(/<gomoon-file .*?filename="(.+?)".*?\/>$/, '$1')
+  | {
+      type: 'memo'
+      question: string
     }
-  }
-  if (str.match(regForUrl)) {
-    return {
-      type: 'url',
-      src: str.match(regForUrl)![0].replace(/<gomoon-url src="(.+?)".*?\/>$/, '$1')
-    }
-  }
-  if (str.match(regForSearch)) {
-    return {
-      type: 'search',
-      question: str.match(regForSearch)![0].replace(/<gomoon-search question="(.+?)".*?\/>$/, '$1')
-    }
-  }
+export function parseDisplayArr(str: string): ContentDisplay[] {
   resetReg()
-  return {
-    type: 'text'
+  const { regForFile, regForUrl, regForSearch, regForMemo, regForQuestion, regForDrawer } = regDict
+  const arr: ContentDisplay[] = []
+  str = str.replace(regForDrawer, '')
+  str.match(regForFile)?.forEach((match) => {
+    arr.push({
+      type: 'file',
+      src: match.replace(/<gomoon-file .*?src="(.+?)".*?\/>$/, '$1'),
+      filename: match.replace(/<gomoon-file .*?filename="(.+?)".*?\/>$/, '$1')
+    })
+  })
+  str.match(regForUrl)?.forEach((match) => {
+    arr.push({
+      type: 'url',
+      src: match.replace(/<gomoon-url .*?src="(.+?)".*?\/>$/, '$1')
+    })
+  })
+  str.match(regForSearch)?.forEach((match) => {
+    match = match.replace(regForSearch, '$1')
+    regForQuestion.lastIndex = 0
+    arr.push({
+      type: 'search',
+      question: match.match(regForQuestion)?.[0]?.replace(regForQuestion, '$1') || ''
+    })
+  })
+  str.match(regForMemo)?.forEach((match) => {
+    match = match.replace(regForMemo, '$1')
+    regForQuestion.lastIndex = 0
+    arr.push({
+      type: 'memo',
+      question: match.match(regForQuestion)?.[0]?.replace(regForQuestion, '$1') || ''
+    })
+  })
+  if (arr.length === 0) {
+    return [
+      {
+        type: 'text',
+        content: str
+      }
+    ]
+  } else {
+    return arr.concat({
+      type: 'text',
+      content: Object.keys(regDict).reduce((pre, cur) => {
+        return pre.replace(regDict[cur], '')
+      }, str)
+    })
   }
 }

@@ -5,7 +5,7 @@ import { ulid } from 'ulid'
 import { addHistory } from './history'
 import { cloneDeep } from 'lodash'
 import { assistants, getCurrentAssistantForChat } from './assistants'
-import { removeMeta } from '@renderer/lib/ai/parseString'
+import { extractMeta } from '@renderer/lib/ai/parseString'
 import { consumedToken, setConsumedToken } from './input'
 import { userData } from './user'
 export interface Msg {
@@ -115,7 +115,7 @@ export function genMsg(id: string) {
   chatAssistant(
     currentMsgs.map((m, i) => ({
       ...m,
-      content: removeMeta(m.content, i === currentMsgs.length - 1)
+      content: extractMeta(m.content, i === currentMsgs.length - 1)
     })),
     {
       newTokenCallback(content: string) {

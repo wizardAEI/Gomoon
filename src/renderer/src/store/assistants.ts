@@ -69,7 +69,7 @@ export async function saveAssistant(a: AssistantModel) {
       })
     )
   } else {
-    await window.api.updateAssistant(a)
+    await window.api.updateAssistant(cloneDeep(a))
   }
   loadAssistants()
 }

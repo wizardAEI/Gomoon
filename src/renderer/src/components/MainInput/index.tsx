@@ -1,14 +1,15 @@
-import { Show, createEffect, createSignal, onCleanup, onMount } from 'solid-js'
+import { Show, createEffect, createMemo, createSignal, onCleanup, onMount } from 'solid-js'
 import { clearMsgs, msgs, restoreMsgs } from '../../store/chat'
 import { useToast } from '../ui/Toast'
 import { useEventListener } from 'solidjs-use'
 import { settingStore } from '@renderer/store/setting'
 import RefreshIcon from '@renderer/assets/icon/base/RefreshIcon'
-import Tools from './Tools'
+import Tools, { Artifacts } from './Tools'
 import { inputText, isNetworking, memoCapsule, setInputText, tokens } from '@renderer/store/input'
 import { useLoading } from '../ui/DynamicLoading'
 import { searchByBaidu } from '@renderer/lib/ai/search'
 import { userData } from '@renderer/store/user'
+import { processMemo } from '@renderer/lib/ai/memo'
 
 const typeDict: {
   [key: string]: 'chat' | 'ans'
@@ -34,41 +35,79 @@ export default function Input(props: {
 }) {
   let textAreaDiv: HTMLTextAreaElement | undefined
   let textAreaContainerDiv: HTMLDivElement | undefined
-  let cleanupForRestoreMsgs: (() => void) | undefined
-  let [refreshing, setRefreshing] = createSignal(false)
-  let [inputTokenNum, setInputTokenNum] = createSignal(0)
   let isCompositing = false
+  let cleanupForRestoreMsgs: (() => void) | undefined
+  const [refreshing, setRefreshing] = createSignal(false)
+  const [inputTokenNum, setInputTokenNum] = createSignal(0)
+  const [artifactTokenNum, setArtifactTokenNum] = createSignal(0)
+  const [artifacts, setArtifacts] = createSignal<Artifacts[]>([])
+  const artifactContent = () => {
+    const total = artifacts()
+      .map((a) => a.val)
+      .join('\n\n')
+    return total.length ? total + '<gomoon-drawer>\n\n依据上述信息回答问题：</gomoon-drawer>' : ''
+  }
+
   const toast = useToast()
   const dynamicLoading = useLoading()
-  async function submit(content?: string) {
+
+  // content 为 tools 传递来的信息，优先级：content > inputText()
+  async function submit() {
     setInputTokenNum(0)
+    if (artifactContent().length) {
+      props.send(artifactContent() + inputText())
+      setInputText(''), setArtifacts([])
+      return
+    }
+    let content = ''
     if (memoCapsule() && props.type !== 'ai') {
       dynamicLoading.show('记忆胶囊启动⚡️⚡️')
       try {
-        content = await window.api.getMemoryData({
-          id: userData.selectedMemo,
-          content: inputText()
-        })
-        console.log('>>', content)
+        content = processMemo(
+          inputText() ?? '',
+          await window.api.getMemoryData({
+            id: userData.selectedMemo,
+            content: inputText()
+          })
+        )
       } catch (e) {
         toast.error((e as Error).message || '查询失败')
       }
       dynamicLoading.hide()
-      return
     }
     if (isNetworking() && props.type !== 'ai') {
       dynamicLoading.show('查询中')
       try {
-        content = await searchByBaidu(content || inputText(), (m) => dynamicLoading.show(m))
+        content = await searchByBaidu(inputText(), (m) => dynamicLoading.show(m))
       } catch (e) {
         toast.error((e as Error).message || '查询失败')
       }
       dynamicLoading.hide()
     }
-    props.send(content || (inputText() ?? ''))
+    props.send(content || inputText())
     setInputText('')
     textAreaDiv!.style.height = 'auto'
   }
+
+  createEffect(async () => {
+    const content = artifactContent()
+    if (!content) {
+      setArtifactTokenNum(0)
+      return
+    }
+    // 如果300ms内返回则不显示loading
+    const timer = setTimeout(() => {
+      dynamicLoading.show('正在计算Token，这取决于电脑运行本地模型的速度')
+    }, 300)
+    const num = await window.api.getTokenNum(content)
+    clearTimeout(timer)
+    setArtifactTokenNum(num)
+    dynamicLoading.hide()
+  })
+
+  const tokenConsumeDisplay = createMemo(() => {
+    return `${tokens().consumedToken(inputTokenNum() + artifactTokenNum())} / ${tokens().maxToken}`
+  })
 
   onMount(() => {
     if (props.autoFocusWhenShow) {
@@ -79,11 +118,9 @@ export default function Input(props: {
         removeListener()
       })
       // 计算 token 数量
-      if (inputText().length) {
-        window.api.getTokenNum(inputText()).then((num) => {
-          setInputTokenNum(num)
-        })
-      }
+      window.api.getTokenNum(inputText()).then((num) => {
+        setInputTokenNum(num)
+      })
     }
 
     // 让input聚焦，box边框变为激活色
@@ -117,16 +154,17 @@ export default function Input(props: {
     e.preventDefault()
     cleanupForRestoreMsgs?.()
     setInputText(e.target.value)
-    if (e.target.value === '') {
-      setInputTokenNum(0)
-      return
-    }
     setInputTokenNum(await window.api.getTokenNum(e.target.value))
   }
 
   return (
     <div class="flex flex-col gap-2">
-      <Tools onSubmit={submit} onInput={(c) => setInputText(c)} type={typeDict[props.type]} />
+      <Tools
+        artifacts={artifacts}
+        setArtifacts={setArtifacts}
+        onInput={(c) => setInputText(c)}
+        type={typeDict[props.type]}
+      />
       <div class="over relative flex w-full gap-1">
         <Show when={props.showClearButton && !props.isGenerating && !inputText()?.length}>
           <div class="-ml-3 mr-[2px] flex cursor-pointer flex-col items-center justify-center">
@@ -163,11 +201,7 @@ export default function Input(props: {
           </div>
         </Show>
         <div ref={textAreaContainerDiv} class="cyber-box relative flex flex-1 backdrop-blur-md">
-          <Show when={typeDict[props.type] === 'chat'}>
-            <div class="absolute bottom-0 right-3 leading-8 text-text3">
-              {tokens().consumedToken(inputTokenNum())} / {tokens().maxToken}
-            </div>
-          </Show>
+          <div class="absolute bottom-0 right-3 leading-8 text-text3">{tokenConsumeDisplay()}</div>
           <textarea
             ref={textAreaDiv}
             value={inputText()}
