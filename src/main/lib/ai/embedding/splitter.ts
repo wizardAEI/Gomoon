@@ -4,10 +4,18 @@ import { lmInvoke } from '../langchain'
 const md = markdownIt()
 
 interface Node {
+  markup: string
   title: string
   content: string
   total: string
   children: Node[]
+}
+
+const splice = (a: string, b: string) => {
+  if (a.length) {
+    return a + '\n' + b
+  }
+  return b
 }
 
 export function createTreeFromMarkdown(
@@ -22,19 +30,12 @@ export function createTreeFromMarkdown(
   const isType = (tokenType: string) => {
     return tokens[i].type === tokenType
   }
-  const splice = (a: string, b: string) => {
-    if (a.length) {
-      return a + '\n' + b
-    }
-    return b
-  }
   const getTitle = (str: string) => {
     str = str.trim().split('\n')[0]
     return str.slice(0, config?.titleMaxLength || 150)
   }
   const contentProcess = (): string => {
     if (isType('list_item_open')) {
-      console.log(tokens[i])
       let content = ''
       content += '\n' + tokens[i].info + tokens[i].markup + ' '
       while (i < tokens.length && !isType('list_item_close')) {
@@ -57,6 +58,7 @@ export function createTreeFromMarkdown(
   }
   beforeContent &&
     tree.push({
+      markup: '',
       title: getTitle(beforeContent),
       content: beforeContent,
       total: beforeContent,
@@ -82,6 +84,7 @@ export function createTreeFromMarkdown(
         i++
       }
       const node = {
+        markup,
         title: getTitle(title),
         content: content,
         total: '',
@@ -111,9 +114,13 @@ export function createTreeFromMarkdown(
     }
     return totalBefore
   }
-
-  i < tokens.length &&
-    buildTree({ nodes: tree, level: parseInt(tokens[i].tag.slice(1)), totalBefore: '' })
+  while (i < tokens.length) {
+    buildTree({
+      nodes: tree,
+      level: parseInt(tokens[i].tag.slice(1)),
+      totalBefore: ''
+    })
+  }
   return tree
 }
 
@@ -160,8 +167,10 @@ export async function getChunkFromNodes(
     if (total.match(/```/)) {
       return [total]
     } else {
+      // 拆分成chunkSize大小
       const lines = total.split('\n')
       if (lines.length <= 1) {
+        // 以size切分lines[0]
         const contents: string[] = []
         while (lines[0].length > size) {
           const content = lines[0].slice(0, size)
@@ -186,6 +195,14 @@ export async function getChunkFromNodes(
       return contents
     }
   }
+  const processTitle = (titles: string): string => {
+    return titles
+      .split('\n')
+      .reduce((prev, curr) => {
+        return prev + ' ' + curr.trim().replace(/(^#+) /, '')
+      }, '')
+      .trim()
+  }
 
   const dfs = (
     nodes: Node[],
@@ -195,16 +212,21 @@ export async function getChunkFromNodes(
     }
   ) => {
     const node = nodes[index]
-    const title = (data?.titleBefore ? data?.titleBefore + ' ' : '') + node.title
+    const totalTitle = splice(
+      data?.titleBefore ? data?.titleBefore : '',
+      node.markup + ' ' + node.title
+    )
     if (node.total.length < chunkSize) {
-      chunk.push({ indexes: [{ value: node.title }], document: { content: node.total } })
+      chunk.push({
+        indexes: [{ value: processTitle(totalTitle) }],
+        document: { content: splice(data?.titleBefore ?? '', node.total) }
+      })
       if (node.title !== node.content) chunk[chunk.length - 1].indexes.push({ value: node.content })
       if (node.title !== node.total) chunk[chunk.length - 1].indexes.push({ value: node.total })
       // TODO: 这里使用大模型，由于时间问题后续需要加上进度功能
       if (options.useLM) {
         const index = chunk.length - 1
         chunkTask.push(index)
-        console.log('task-1', index)
         getQuestionsByLM(node.total).then((questions) => {
           questions.forEach((question) => {
             chunk[index].indexes.push({ value: question })
@@ -240,15 +262,14 @@ export async function getChunkFromNodes(
     } else {
       const pushContent = async (contents: string[]) => {
         for (let i = 0; i < contents.length; i++) {
-          const content = contents[i]
+          const content = splice(data?.titleBefore ?? '', contents[i])
           chunk.push({
-            indexes: [{ value: content }, { value: title }],
+            indexes: [{ value: content }, { value: processTitle(totalTitle) }],
             document: { content }
           })
           if (options.useLM) {
             const index = chunk.length - 1
             chunkTask.push(index)
-            console.log('task', index)
             // TODO: 这里使用大模型，由于时间问题后续需要加上进度功能
             getQuestionsByLM(content).then((questions) => {
               questions.forEach((question) => {
@@ -271,7 +292,7 @@ export async function getChunkFromNodes(
       }
       for (let i = 0; i < node.children.length; i++) {
         dfs(node.children, i, {
-          titleBefore: title
+          titleBefore: totalTitle
         })
       }
     }

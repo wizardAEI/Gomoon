@@ -21,7 +21,7 @@ export function genAns(q: string) {
   ansID = ID
   let haveAnswer = false
   ansAssistant({
-    question: extractMeta(q),
+    question: extractMeta(q, true),
     newTokenCallback(content) {
       ID === ansID &&
         setAnswerStore('answer', (ans) => {

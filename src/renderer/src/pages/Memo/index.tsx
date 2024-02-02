@@ -5,6 +5,7 @@ import {
   memories,
   memoriesStatus,
   onCancelEditMemo,
+  onEditMemo,
   saveMemo
 } from '@renderer/store/memo'
 import { For, Show } from 'solid-js'
@@ -88,6 +89,7 @@ export default function () {
                       class="cursor-pointer text-gray duration-100 hover:text-active"
                       onClick={(e) => {
                         e.stopPropagation()
+                        onEditMemo(m.id)
                       }}
                     />
                     <DoubleConfirm

@@ -4,15 +4,15 @@ import { JSONSyncPreset } from 'lowdb/node'
 import { Connection, connect } from 'vectordb'
 import { existsSync, mkdirSync, unlinkSync } from 'fs'
 import { embedding } from '../lib/ai/embedding/embedding'
-import { MemoResult } from './model'
+import { MemoFragmentData, MemoResult } from './model'
 
 const appDataPath = app.getPath('userData')
 const memoPath = join(appDataPath, 'memo')
-let db: Connection | null = null
+let dbl: Connection | null = null
 
 async function connectDB() {
-  if (db) return
-  db = await connect(join(memoPath))
+  if (dbl) return
+  dbl = await connect(join(memoPath))
 }
 
 mkdirSync(memoPath, { recursive: true })
@@ -44,7 +44,7 @@ export function saveData(
   db.write()
 }
 
-export async function saveIndex(
+export async function saveIndexes(
   memoId: string,
   data: {
     id: string
@@ -52,7 +52,7 @@ export async function saveIndex(
   }[]
 ) {
   await connectDB()
-  const tables = await db!.tableNames()
+  const tables = await dbl!.tableNames()
   if (!tables.includes(memoId)) {
     const tableData = data.reduce(
       (
@@ -71,21 +71,22 @@ export async function saveIndex(
       },
       []
     )
-    await db!.createTable(memoId, tableData)
+    await dbl!.createTable(memoId, tableData)
     return
   }
-  const table = await db!.openTable(memoId)
+  const table = await dbl!.openTable(memoId)
   table.add(data)
 }
 
 export async function getData(data: { id: string; content: string }): Promise<Array<MemoResult>> {
   await connectDB()
-  const tables = await db!.tableNames()
+  const tables = await dbl!.tableNames()
   if (!tables.includes(data.id)) {
     return []
   }
-  const table = await db!.openTable(data.id)
+  const table = await dbl!.openTable(data.id)
   const indexes = await embedding(data.content)
+  console.log(indexes)
   const result = (await table
     .search(Array.from(indexes.map((index) => Number(index))))
     .limit(20)
@@ -113,14 +114,44 @@ export async function getData(data: { id: string; content: string }): Promise<Ar
   return contents
 }
 
+export async function getMemoDataAndIndexes(memoId: string): Promise<MemoFragmentData[]> {
+  const path = join(memoPath, memoId)
+  const jsonDb = JSONSyncPreset<{
+    [id: string]: {
+      content: string
+      indexes: string[]
+      fileName: string
+    }
+  }>(path, {})
+  const arr: MemoFragmentData[] = []
+  for (let key in jsonDb.data) {
+    await connectDB()
+    const tables = await dbl!.tableNames()
+    if (!tables.includes(memoId)) {
+      return []
+    }
+    const table = await dbl!.openTable(memoId)
+    console.log(key)
+    const res = await table.filter(`id = '${key}'`).execute()
+    arr.push({
+      id: key,
+      name: jsonDb.data[key].fileName,
+      data: jsonDb.data[key].content,
+      vectors: res.map((item) => item.vector as Float32Array),
+      indexes: jsonDb.data[key].indexes
+    })
+  }
+  return arr
+}
+
 export async function deleteDataAndIndex(memoId: string) {
   // delete memo data file
   const path = join(memoPath, memoId)
   existsSync(path) && unlinkSync(path)
   // delete memo indexes table
   await connectDB()
-  const tables = await db!.tableNames()
+  const tables = await dbl!.tableNames()
   if (tables.includes(memoId)) {
-    await db!.dropTable(memoId)
+    await dbl!.dropTable(memoId)
   }
 }

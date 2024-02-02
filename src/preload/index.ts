@@ -5,6 +5,7 @@ import {
   CreateAssistantModel,
   HistoryModel,
   Line,
+  MemoFragment,
   MemoModel,
   MemoResult,
   SettingModel,
@@ -63,12 +64,15 @@ export const api = {
   ): Promise<{
     suc: boolean
     reason?: string
-  }> => ipcRenderer.invoke('edit-memory', option),
+  }> => ipcRenderer.invoke('edit-fragment', option),
   saveMemory: (memo: SaveMemoParams): Promise<MemoModel> => ipcRenderer.invoke('save-memory', memo),
   cancelSaveMemory: (id: string) => ipcRenderer.invoke('cancel-save-memory', id),
   useMemory: (memoId: string) => ipcRenderer.invoke('use-memory', memoId),
   getMemoryData: (data: GetMemoParams): Promise<Array<MemoResult>> =>
     ipcRenderer.invoke('get-memory-data', data),
+  deleteMemory: (memoId: string) => ipcRenderer.invoke('delete-memory', memoId),
+  editMemory: (memoId: string, fragments: MemoFragment[]) =>
+    ipcRenderer.invoke('edit-memory', memoId, fragments),
 
   // 文件相关
   parseFile: (

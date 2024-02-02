@@ -60,7 +60,6 @@ export default function Md(props: { class: string; content: string }) {
     window.addEventListener('mouseup', hideButton)
     // 监听 ctrl + c 事件
     const handleKeydown = (e: KeyboardEvent) => {
-      console.log(e)
       if ((e.ctrlKey && e.key === 'c') || (e.metaKey && e.key === 'c')) {
         setShowSelectBtn(false)
       }

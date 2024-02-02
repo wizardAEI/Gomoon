@@ -1,29 +1,33 @@
 import { readFileSync } from 'fs'
-import MemoryFragment from '../../../models/model'
+import { MemoFragmentData, MemoFragment } from '../../../models/model'
 import { createTreeFromMarkdown, getChunkFromNodes } from './splitter'
 import { embedding } from './embedding'
-import { deleteDataAndIndex, getData, saveData, saveIndex } from '../../../models/memo'
+import {
+  deleteDataAndIndex,
+  getData,
+  getMemoDataAndIndexes,
+  saveData,
+  saveIndexes
+} from '../../../models/memo'
 import { ulid } from 'ulid'
 import { createMemo, deleteMemo, updateMemo } from '../../../models'
 
 export interface EditFragmentOption {
   id: string
-  fragment: MemoryFragment
+  fragment: MemoFragment
   type: 'add' | 'remove'
   useLM: boolean
 }
 
 const fragmentsMap: {
-  [key in string]: MemoryFragment[] | undefined
+  [key in string]: MemoFragment[] | undefined
 } = {}
 
 let dataMap: {
-  [key in string]:
-    | { id: string; name: string; data: string; vectors: Float32Array[]; indexes: string[] }[]
-    | undefined
+  [key in string]: MemoFragmentData[] | undefined
 } = {}
 
-async function readFile(fragment: MemoryFragment): Promise<{
+async function readFile(fragment: MemoFragment): Promise<{
   suc: boolean
   content?: string
   reason?: string
@@ -89,9 +93,9 @@ export interface SaveMemoParams {
   introduce?: string
   version?: number
 }
-export async function editMemo(memoId: string) {
-  fragmentsMap[memoId] = undefined
-  dataMap[memoId] = undefined
+export async function editMemo(memoId: string, fragments: MemoFragment[]) {
+  fragmentsMap[memoId] = fragments
+  dataMap[memoId] = await getMemoDataAndIndexes(memoId)
 }
 export async function saveMemo(params: SaveMemoParams) {
   const data = dataMap[params.id]
@@ -106,7 +110,7 @@ export async function saveMemo(params: SaveMemoParams) {
         fileName: item.name
       }))
     )
-    await saveIndex(
+    await saveIndexes(
       memoId,
       (data ?? []).map((item) => ({
         id: item.id,
@@ -130,7 +134,7 @@ export async function saveMemo(params: SaveMemoParams) {
         fileName: item.name
       }))
     )
-    await saveIndex(
+    await saveIndexes(
       params.id,
       (data ?? []).map((item) => ({
         id: item.id,

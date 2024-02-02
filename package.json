@@ -29,7 +29,7 @@
     "@solidjs/router": "^0.9.1",
     "@types/markdown-it": "^13.0.7",
     "@types/prismjs": "^1.26.3",
-    "@xenova/transformers": "^2.13.4",
+    "@xenova/transformers": "^2.14.2",
     "@zag-js/checkbox": "^0.31.1",
     "@zag-js/solid": "^0.31.1",
     "@zag-js/switch": "^0.31.1",
@@ -50,7 +50,7 @@
     "solidjs-use": "^2.3.0",
     "tesseract.js": "^5.0.4",
     "ulid": "^2.3.0",
-    "vectordb": "^0.4.3",
+    "vectordb": "^0.4.7",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

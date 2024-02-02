@@ -45,6 +45,14 @@ export function createNewMemo() {
     })
   )
 }
+export async function onEditMemo(id: string) {
+  await window.api.editMemory(id, cloneDeep(memories.find((m) => m.id === id)?.fragment) || [])
+  setMemoriesStatus(
+    produce((m) => {
+      m[id] = 'editing'
+    })
+  )
+}
 export function onCancelEditMemo(id: string) {
   if (id === 'creating') {
     setMemories(

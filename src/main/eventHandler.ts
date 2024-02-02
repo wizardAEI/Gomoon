@@ -24,6 +24,7 @@ import {
   AssistantModel,
   CreateAssistantModel,
   HistoryModel,
+  MemoFragment,
   SettingModel,
   UserDataModel
 } from './models/model'
@@ -49,6 +50,7 @@ import {
   cancelSaveMemo,
   dropMemo,
   editFragment,
+  editMemo,
   getMemo,
   saveMemo
 } from './lib/ai/embedding/index'
@@ -133,8 +135,11 @@ export function initAppEventsHandler() {
    * FEAT: memory 相关
    */
   ipcMain.handle('get-memories', () => getMemories())
-  ipcMain.handle('edit-memory', (_, option: EditFragmentOption) => editFragment(option))
+  ipcMain.handle('edit-fragment', (_, option: EditFragmentOption) => editFragment(option))
   ipcMain.handle('save-memory', (_, option: SaveMemoParams) => saveMemo(option))
+  ipcMain.handle('edit-memory', (_, id: string, fragments: MemoFragment[]) =>
+    editMemo(id, fragments)
+  )
   ipcMain.handle('delete-memory', (_, id: string) => dropMemo(id))
   ipcMain.handle('cancel-save-memory', (_, id: string) => cancelSaveMemo(id))
   ipcMain.handle('use-memory', (_, id: string) => useMemo(id))
