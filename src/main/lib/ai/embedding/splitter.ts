@@ -146,6 +146,7 @@ async function getQuestionsByLM(total: string): Promise<string[]> {
 }
 
 export interface Chunk {
+  // indexes 含有以下索引：1.其所有祖先的标题+自身标题 2.当前标题下内容 3.当前标题和子标题下所有内容 4. 大模型根据2的提问
   indexes: { value: string }[]
   document: { content: string }
 }
