@@ -10,8 +10,9 @@ export async function parsePageToString(url: string): Promise<string> {
 export async function parsePageForUrl(url: string) {
   let content = await parsePageToString(url)
   return (
-    `<gomoon-url src="${url}"/>接下来我将会给你一个网址下的全部文本内容，这其中可能会包括一些标题，用户信息，备案号，相关推荐，按钮内容等。请你剔除无效信息来理解内容，并给出一个精简的总结：\n` +
-    content
+    `<gomoon-url src="${url}"/>这是一个网址下的文本内容，其中可能会包括一些标题，用户信息，备案号，相关推荐，按钮内容等无效信息：\n` +
+    content +
+    '</gomoon-url>'
   )
 }
 

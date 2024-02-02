@@ -1,14 +1,15 @@
 import BaseFileIcon from '@renderer/assets/icon/file/baseFileIcon'
-import { ContentMetaData } from '@renderer/lib/ai/parseString'
+import { ContentDisplay } from '@renderer/lib/ai/parseString'
 import { decorateContent } from './utils'
 import NetworkIcon from '@renderer/assets/icon/NetworkIcon'
 import LinkIcon from '@renderer/assets/icon/LinkIcon'
+import CapsuleIcon from '@renderer/assets/icon/CapsuleIcon'
 
-export default function (meta: ContentMetaData) {
+export default function (meta: ContentDisplay, role = '我', index: number) {
   if (meta.type === 'file') {
     return (
       <div class="flex cursor-pointer items-center overflow-hidden">
-        <span class="mr-1">我:</span>
+        {index === 0 && <span class="mr-1">{role}</span>}
         <BaseFileIcon class="shrink-0 grow-0 text-text2" width={18} height={18} />
         <span class="truncate text-text2">{decorateContent(meta.filename)}</span>
       </div>
@@ -18,7 +19,7 @@ export default function (meta: ContentMetaData) {
     return (
       <div>
         <span class="flex items-start">
-          <span class="mr-1">我:</span>
+          {index === 0 && <span class="mr-1">我:</span>}
           <LinkIcon
             class="mr-[2px] shrink-0 grow-0 text-text-dark2 group-hover/link:text-active"
             width={14}
@@ -35,8 +36,23 @@ export default function (meta: ContentMetaData) {
     return (
       <div>
         <span class="flex items-start break-words">
-          <span class="mr-1">我:</span>
+          {index === 0 && <span class="mr-1">我:</span>}
           <NetworkIcon
+            class="shrink-0 grow-0 translate-y-[1px] text-text2"
+            width={18}
+            height={18}
+          />
+          <span class="text-text2">{decorateContent(meta.question)}</span>
+        </span>
+      </div>
+    )
+  }
+  if (meta.type === 'memo') {
+    return (
+      <div>
+        <span class="flex items-start break-words">
+          {index === 0 && <span class="mr-1">我:</span>}
+          <CapsuleIcon
             class="shrink-0 grow-0 translate-y-[1px] text-text2"
             width={18}
             height={18}

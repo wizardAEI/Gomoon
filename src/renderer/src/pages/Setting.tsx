@@ -18,6 +18,7 @@ import { unwrap } from 'solid-js/store'
 import SettingIcon from '@renderer/assets/icon/base/SettingIcon'
 import { useLoading } from '@renderer/components/ui/DynamicLoading'
 import { useToast } from '@renderer/components/ui/Toast'
+import QuestionMention from '@renderer/components/ui/QuestionMention'
 export default function Setting() {
   onMount(() => {
     onCleanup(() => {
@@ -53,7 +54,23 @@ export default function Setting() {
             }}
           />
         </Expand>
-        <Expand title="文心系列">
+        <Expand
+          title={
+            <div class="flex items-center gap-1">
+              文心系列
+              <QuestionMention
+                content={
+                  <a
+                    class="text-small"
+                    href="https://console.bce.baidu.com/qianfan/ais/console/applicationConsole/application"
+                  >
+                    密钥注册地址
+                  </a>
+                }
+              />
+            </div>
+          }
+        >
           <EditInput
             label="apiKey"
             value={settingStore.models.BaiduWenxin.apiKey}
@@ -73,7 +90,20 @@ export default function Setting() {
             }}
           />
         </Expand>
-        <Expand title="千问系列">
+        <Expand
+          title={
+            <div class="flex items-center gap-1">
+              千问系列
+              <QuestionMention
+                content={
+                  <a class="text-small" href="https://dashscope.console.aliyun.com/apiKey">
+                    密钥注册地址
+                  </a>
+                }
+              />
+            </div>
+          }
+        >
           <EditInput
             label="apiKey"
             value={settingStore.models.AliQWen.apiKey}
@@ -161,11 +191,7 @@ export default function Setting() {
       <Card title="更多信息">
         <div class="text-sm text-text2">
           <span>本项目开源于</span>
-          <a
-            class="text-text-link hover:text-active"
-            href="https://github.com/wizardAEI/Gomoon"
-            target="_blank"
-          >
+          <a href="https://github.com/wizardAEI/Gomoon" target="_blank">
             GitHub
           </a>
           <span> 。您的 Star 和建议是对该项目最大的支持！</span>

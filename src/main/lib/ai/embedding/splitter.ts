@@ -10,25 +10,14 @@ interface Node {
   children: Node[]
 }
 
-export function createTreeFromMarkdown(markdown): Node[] {
+export function createTreeFromMarkdown(
+  markdown: string,
+  config?: {
+    titleMaxLength?: number
+  }
+): Node[] {
   const tree: Node[] = []
   const tokens: Token[] = md.parse(markdown, {})
-  if (!tokens.find((t) => t.type === 'heading_open')) {
-    let i = 0
-    while (i < tokens.length) {
-      if (tokens[i].type === 'inline') {
-        tree.push({
-          title: tokens[i].content,
-          content: markdown,
-          total: markdown,
-          children: []
-        })
-        break
-      }
-      i++
-    }
-    return tree
-  }
   let i = 0
   const isType = (tokenType: string) => {
     return tokens[i].type === tokenType
@@ -39,6 +28,40 @@ export function createTreeFromMarkdown(markdown): Node[] {
     }
     return b
   }
+  const getTitle = (str: string) => {
+    str = str.trim().split('\n')[0]
+    return str.slice(0, config?.titleMaxLength || 150)
+  }
+  const contentProcess = (): string => {
+    if (isType('list_item_open')) {
+      console.log(tokens[i])
+      let content = ''
+      content += '\n' + tokens[i].info + tokens[i].markup + ' '
+      while (i < tokens.length && !isType('list_item_close')) {
+        i++
+        content += tokens[i].content ? tokens[i].content + '\n' : ''
+      }
+      return content.slice(0, -1)
+    }
+    if (isType('inline')) return '\n' + tokens[i].content
+    if (isType('fence')) {
+      const fence = tokens[i]
+      return '\n' + fence.markup + fence.info + '\n' + fence.content + fence.markup
+    }
+    return ''
+  }
+  let beforeContent = ''
+  while (i < tokens.length && !isType('heading_open')) {
+    beforeContent += contentProcess()
+    i++
+  }
+  beforeContent &&
+    tree.push({
+      title: getTitle(beforeContent),
+      content: beforeContent,
+      total: beforeContent,
+      children: []
+    })
   const buildTree = (options: { nodes: Node[]; level: number; totalBefore: string }) => {
     let { nodes, level, totalBefore } = options
     while (i < tokens.length) {
@@ -46,21 +69,20 @@ export function createTreeFromMarkdown(markdown): Node[] {
         i++
         continue
       }
-      let content = tokens[i].markup
-      while (i < tokens.length && !isType('inline')) i++
-      const title = tokens[i].content
-      content += ` ${tokens[i].content}`
-      i++
+      const markup = tokens[i].markup
+      let content = ''
+      while (i < tokens.length && !isType('heading_close')) {
+        i++
+        content += tokens[i].content
+      }
+      const title = content
+      content = markup + ' ' + content
       while (i < tokens.length && !isType('heading_open')) {
-        if (isType('inline')) content += '\n' + tokens[i].content
-        if (isType('fence')) {
-          const fence = tokens[i]
-          content += '\n' + fence.markup + fence.info + '\n' + fence.content + fence.markup
-        }
+        content += contentProcess()
         i++
       }
       const node = {
-        title: title,
+        title: getTitle(title),
         content: content,
         total: '',
         children: []
@@ -75,7 +97,7 @@ export function createTreeFromMarkdown(markdown): Node[] {
         node.total = buildTree({
           nodes: node.children,
           level: levelNext,
-          totalBefore: splice(totalBefore, content)
+          totalBefore: content
         })
         totalBefore = splice(totalBefore, node.total)
         continue
@@ -89,7 +111,9 @@ export function createTreeFromMarkdown(markdown): Node[] {
     }
     return totalBefore
   }
-  buildTree({ nodes: tree, level: 1, totalBefore: '' })
+
+  i < tokens.length &&
+    buildTree({ nodes: tree, level: parseInt(tokens[i].tag.slice(1)), totalBefore: '' })
   return tree
 }
 
@@ -125,7 +149,7 @@ export async function getChunkFromNodes(
     chunkOverlap: number
     useLM?: boolean
   } = {
-    chunkSize: 700,
+    chunkSize: 500,
     chunkOverlap: 2 // 左右两个节点
   }
 ): Promise<Chunk[]> {
@@ -136,8 +160,17 @@ export async function getChunkFromNodes(
     if (total.match(/```/)) {
       return [total]
     } else {
-      // 拆分成chunkSize大小
       const lines = total.split('\n')
+      if (lines.length <= 1) {
+        const contents: string[] = []
+        while (lines[0].length > size) {
+          const content = lines[0].slice(0, size)
+          contents.push(content)
+          lines[0] = lines[0].slice(size)
+        }
+        contents.push(lines[0])
+        return contents
+      }
       let content = '',
         contents: string[] = []
       for (let i = 0; i < lines.length; i++) {
@@ -164,13 +197,9 @@ export async function getChunkFromNodes(
     const node = nodes[index]
     const title = (data?.titleBefore ? data?.titleBefore + ' ' : '') + node.title
     if (node.total.length < chunkSize) {
-      chunk.push({
-        indexes: [{ value: node.total }, { value: title }],
-        document: { content: node.total }
-      })
-      if (node.total !== node.content) {
-        chunk[chunk.length - 1].indexes.push({ value: node.content })
-      }
+      chunk.push({ indexes: [{ value: node.title }], document: { content: node.total } })
+      if (node.title !== node.content) chunk[chunk.length - 1].indexes.push({ value: node.content })
+      if (node.title !== node.total) chunk[chunk.length - 1].indexes.push({ value: node.total })
       // TODO: 这里使用大模型，由于时间问题后续需要加上进度功能
       if (options.useLM) {
         const index = chunk.length - 1

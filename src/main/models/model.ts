@@ -68,3 +68,7 @@ export interface SettingModel {
   sendWithCmdOrCtrl: boolean
   models: Models
 }
+
+export interface MemoResult {
+  content: string
+}

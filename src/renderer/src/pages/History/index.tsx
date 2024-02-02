@@ -2,7 +2,7 @@ import CrossMark from '@renderer/assets/icon/base/CrossMark'
 import EmptyIcon from '@renderer/assets/icon/base/EmptyIcon'
 import HistoryIcon from '@renderer/assets/icon/base/HistoryIcon'
 import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
-import { parseMeta } from '@renderer/lib/ai/parseString'
+import { parseDisplayArr } from '@renderer/lib/ai/parseString'
 import { setAnswerStore } from '@renderer/store/answer'
 import { histories, removeHistory } from '@renderer/store/history'
 import { Msg, setMsgs } from '@renderer/store/chat'
@@ -13,10 +13,10 @@ import { HistoryModel } from 'src/main/models/model'
 import SpecialTypeContent from './SpecialTypeContent'
 import { decorateContent } from './utils'
 const map = {
-  human: '我',
-  ai: '助手',
-  question: '问题',
-  ans: '答案'
+  human: '我:',
+  ai: '助手:',
+  question: '问题:',
+  ans: '答案:'
 }
 export default function () {
   const nav = useNavigate()
@@ -84,15 +84,21 @@ export default function () {
               </div>
               <For each={sliceArr(h.contents)}>
                 {(c, index) => {
-                  const meta = parseMeta(c.content)
+                  const meta = parseDisplayArr(c.content)
                   return (
                     <div class="flex flex-col gap-1 break-words text-sm">
                       <div class={index() === 0 ? 'pr-3' : ''}>
-                        <Show when={meta.type === 'text'} fallback={SpecialTypeContent(meta)}>
-                          <span>
-                            {map[c.role]}: {decorateContent(c.content)}
-                          </span>
-                        </Show>
+                        <For each={meta}>
+                          {(m, index) => {
+                            return m.type === 'text' ? (
+                              <>
+                                {index() === 0 && `${map[c.role]}`} {decorateContent(m.content)}
+                              </>
+                            ) : (
+                              SpecialTypeContent(m, map[c.role], index())
+                            )
+                          }}
+                        </For>
                       </div>
                       <div class="border-b-0 border-t border-dashed border-gray"></div>
                     </div>

@@ -6,6 +6,7 @@ import {
   HistoryModel,
   Line,
   MemoModel,
+  MemoResult,
   SettingModel,
   UserDataModel
 } from '../main/models/model'
@@ -66,7 +67,8 @@ export const api = {
   saveMemory: (memo: SaveMemoParams): Promise<MemoModel> => ipcRenderer.invoke('save-memory', memo),
   cancelSaveMemory: (id: string) => ipcRenderer.invoke('cancel-save-memory', id),
   useMemory: (memoId: string) => ipcRenderer.invoke('use-memory', memoId),
-  getMemoryData: (data: GetMemoParams) => ipcRenderer.invoke('get-memory-data', data),
+  getMemoryData: (data: GetMemoParams): Promise<Array<MemoResult>> =>
+    ipcRenderer.invoke('get-memory-data', data),
 
   // 文件相关
   parseFile: (

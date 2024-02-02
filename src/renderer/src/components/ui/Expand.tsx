@@ -1,7 +1,7 @@
 import DownwardArrow from '@renderer/assets/icon/base/arrow/DownwardArrow'
 import UpwardArrow from '@renderer/assets/icon/base/arrow/UpwardArrow'
-import { JSXElement, Show, createSignal } from 'solid-js'
-export default function Expand(props: { title: string; children: JSXElement }) {
+import { JSX, JSXElement, Show, createSignal } from 'solid-js'
+export default function Expand(props: { title: string | JSX.Element; children: JSXElement }) {
   const [expanded, setExpanded] = createSignal(false)
 
   return (

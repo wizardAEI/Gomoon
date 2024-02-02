@@ -2,6 +2,8 @@ export async function parseFile(file: File): Promise<{
   suc: boolean
   content: string
   length?: number
+  src?: string
+  filename?: string
 }> {
   // .doc
   if (file.type === 'application/msword') {
@@ -20,8 +22,11 @@ export async function parseFile(file: File): Promise<{
   return {
     suc: true,
     content:
-      `<gomoon-file src="${fileLoader.path}" filename="${fileLoader.filename}" />接下来我会把一个${type}文件的全部文本内容发送给你，请你理解内容并给出一个精简的总结：\n` +
-      fileLoader.content,
-    length: fileLoader.content.length
+      `<gomoon-file src="${fileLoader.path}" filename="${fileLoader.filename}">这是一个${type}文件的文本内容：\n` +
+      fileLoader.content +
+      '</gomoon-file>',
+    length: fileLoader.content.length,
+    src: fileLoader.path,
+    filename: fileLoader.filename
   }
 }
