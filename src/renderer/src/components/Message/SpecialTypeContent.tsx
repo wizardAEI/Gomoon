@@ -10,6 +10,7 @@ export default function (meta: ContentDisplay, mdStyle: string) {
     return (
       <div
         onClick={() => {
+          console.log('open file', meta)
           window.api.openPath(meta.src)
         }}
         class="flex cursor-pointer gap-1 py-[2px] text-text-dark2 duration-150 hover:text-active"

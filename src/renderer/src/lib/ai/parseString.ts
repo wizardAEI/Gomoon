@@ -23,7 +23,15 @@ export function extractMeta(str: string, isLastMsg = false) {
     primary: string
     val: string
   }[] = []
-  const { regForFile, regForUrl, regForSearch, regForMemo, regForQuestion, regForVal } = regDict
+  const {
+    regForFile,
+    regForUrl,
+    regForSearch,
+    regForMemo,
+    regForQuestion,
+    regForVal,
+    regForDrawer
+  } = regDict
   str.match(regForSearch)?.forEach((match) => {
     match = match.replace(regForSearch, '$1')
     regForQuestion.lastIndex = 0
@@ -45,6 +53,7 @@ export function extractMeta(str: string, isLastMsg = false) {
     })
   })
   str = str
+    .replace(regForDrawer, '$1')
     .replace(regForFile, '$2')
     .replace(regForUrl, '$2')
     .replace(regForSearch, '')
@@ -86,14 +95,14 @@ export function parseDisplayArr(str: string): ContentDisplay[] {
   str.match(regForFile)?.forEach((match) => {
     arr.push({
       type: 'file',
-      src: match.replace(/<gomoon-file .*?src="(.+?)".*?\/>$/, '$1'),
-      filename: match.replace(/<gomoon-file .*?filename="(.+?)".*?\/>$/, '$1')
+      src: match.match(/<gomoon-file .*?src="(.+?)".*?>/)?.[1] || '',
+      filename: match.match(/<gomoon-file .*?filename="(.+?)".*?>/)?.[1] || ''
     })
   })
   str.match(regForUrl)?.forEach((match) => {
     arr.push({
       type: 'url',
-      src: match.replace(/<gomoon-url .*?src="(.+?)".*?\/>$/, '$1')
+      src: match.replace(/<gomoon-url .*?src="(.+?)".*?>/, '$1')
     })
   })
   str.match(regForSearch)?.forEach((match) => {

@@ -44,7 +44,7 @@ export default function Message(props: {
       return (
         !msgStatus.generatingList.includes(msgs[genIndex]?.id || '') &&
         props.type === 'human' &&
-        meta().find((item) => item.type !== 'text')
+        !meta().find((item) => item.type !== 'text')
       )
     }
     return false
