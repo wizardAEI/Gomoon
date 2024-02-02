@@ -47,6 +47,7 @@ import {
   GetMemoParams,
   SaveMemoParams,
   cancelSaveMemo,
+  dropMemo,
   editFragment,
   getMemo,
   saveMemo
@@ -134,6 +135,7 @@ export function initAppEventsHandler() {
   ipcMain.handle('get-memories', () => getMemories())
   ipcMain.handle('edit-memory', (_, option: EditFragmentOption) => editFragment(option))
   ipcMain.handle('save-memory', (_, option: SaveMemoParams) => saveMemo(option))
+  ipcMain.handle('delete-memory', (_, id: string) => dropMemo(id))
   ipcMain.handle('cancel-save-memory', (_, id: string) => cancelSaveMemo(id))
   ipcMain.handle('use-memory', (_, id: string) => useMemo(id))
   ipcMain.handle('get-memory-data', (_, data: GetMemoParams) => getMemo(data))

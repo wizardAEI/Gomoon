@@ -11,7 +11,7 @@ export default function Md(props: { class: string; content: string }) {
   let [findContent, setFindContent] = createSignal('')
   const [source] = createSignal('')
   const { copy, copied } = useClipboard({ source, copiedDuring: 1000 })
-  const [showCopyBtn, setShowCopyBtn] = createSignal(false)
+  const [showSelectBtn, setShowSelectBtn] = createSignal(false)
   let btn: HTMLDivElement | undefined
   function speakText() {
     if ('speechSynthesis' in window) {
@@ -21,11 +21,11 @@ export default function Md(props: { class: string; content: string }) {
     } else {
       console.error('Your browser does not support speech synthesis')
     }
-    setShowCopyBtn(false)
+    setShowSelectBtn(false)
   }
   function findText() {
     setFindContent(selectContent)
-    setShowCopyBtn(false)
+    setShowSelectBtn(false)
   }
 
   let contentDom: HTMLDivElement | undefined
@@ -36,7 +36,7 @@ export default function Md(props: { class: string; content: string }) {
       setFindContent('')
       if (selection) {
         if (selection.toString().length > 0) {
-          setShowCopyBtn(true)
+          setShowSelectBtn(true)
           btn!.style.top = `${e.clientY - 20}px`
           btn!.style.left = `${e.clientX + 10}px`
           if (btn!.offsetLeft + btn!.clientWidth > window.innerWidth) {
@@ -45,7 +45,7 @@ export default function Md(props: { class: string; content: string }) {
           }
           selectContent = selection.toString()
         } else {
-          setShowCopyBtn(false)
+          setShowSelectBtn(false)
         }
       }
     }
@@ -53,14 +53,26 @@ export default function Md(props: { class: string; content: string }) {
       const el = e.target as HTMLElement
       // 如果不是点击在contentDom上，则隐藏复制按钮
       if (!contentDom?.contains(el) && !btn?.contains(el)) {
-        setShowCopyBtn(false)
+        showSelectBtn() && setShowSelectBtn(false)
       }
     }
     contentDom?.addEventListener('mouseup', showButton)
     window.addEventListener('mouseup', hideButton)
+    // 监听 ctrl + c 事件
+    const handleKeydown = (e: KeyboardEvent) => {
+      console.log(e)
+      if ((e.ctrlKey && e.key === 'c') || (e.metaKey && e.key === 'c')) {
+        setShowSelectBtn(false)
+      }
+      if ((e.ctrlKey && e.key === 'f') || (e.metaKey && e.key === 'f')) {
+        findText()
+      }
+    }
+    window.addEventListener('keydown', handleKeydown)
     onCleanup(() => {
       contentDom?.removeEventListener('mouseup', showButton)
       window.removeEventListener('mouseup', hideButton)
+      window.addEventListener('keydown', handleKeydown)
     })
   })
 
@@ -145,7 +157,7 @@ export default function Md(props: { class: string; content: string }) {
   return (
     <>
       <div ref={contentDom} class={props.class} innerHTML={htmlString()} />
-      <Show when={showCopyBtn()}>
+      <Show when={showSelectBtn()}>
         <div ref={btn} class="fixed flex gap-1 rounded-[10px] bg-dark-plus px-1 py-[2px]">
           <SpeechIcon
             onClick={speakText}

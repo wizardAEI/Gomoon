@@ -79,15 +79,19 @@ export async function editFragment(option: EditFragmentOption): Promise<{
       (fragment) => fragment.name !== option.fragment.name
     )
     dataMap[option.id] = dataMap[option.id]?.filter((index) => index.name !== option.fragment.name)
+    return { suc: true }
   }
   return { suc: false, reason: '未匹配到操作类型' }
 }
-
 export interface SaveMemoParams {
   id: string
   memoName: string
   introduce?: string
   version?: number
+}
+export async function editMemo(memoId: string) {
+  fragmentsMap[memoId] = undefined
+  dataMap[memoId] = undefined
 }
 export async function saveMemo(params: SaveMemoParams) {
   const data = dataMap[params.id]
