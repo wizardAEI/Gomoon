@@ -2,7 +2,7 @@ import { app } from 'electron'
 import { join } from 'path'
 import { JSONSyncPreset } from 'lowdb/node'
 import { Connection, connect } from 'vectordb'
-import { mkdirSync } from 'fs'
+import { existsSync, mkdirSync, unlinkSync } from 'fs'
 import { embedding } from '../lib/ai/embedding/embedding'
 import { MemoResult } from './model'
 
@@ -16,7 +16,7 @@ async function connectDB() {
 }
 
 mkdirSync(memoPath, { recursive: true })
-// 这里的数据文件先使用
+
 export function saveData(
   memoId: string,
   data: {
@@ -45,7 +45,7 @@ export function saveData(
 }
 
 export async function saveIndex(
-  name: string,
+  memoId: string,
   data: {
     id: string
     vectors: Float32Array[]
@@ -53,7 +53,7 @@ export async function saveIndex(
 ) {
   await connectDB()
   const tables = await db!.tableNames()
-  if (!tables.includes(name)) {
+  if (!tables.includes(memoId)) {
     const tableData = data.reduce(
       (
         arr: {
@@ -71,10 +71,10 @@ export async function saveIndex(
       },
       []
     )
-    await db!.createTable(name, tableData)
+    await db!.createTable(memoId, tableData)
     return
   }
-  const table = await db!.openTable(name)
+  const table = await db!.openTable(memoId)
   table.add(data)
 }
 
@@ -111,4 +111,16 @@ export async function getData(data: { id: string; content: string }): Promise<Ar
     })
   })
   return contents
+}
+
+export async function deleteDataAndIndex(memoId: string) {
+  // delete memo data file
+  const path = join(memoPath, memoId)
+  existsSync(path) && unlinkSync(path)
+  // delete memo indexes table
+  await connectDB()
+  const tables = await db!.tableNames()
+  if (tables.includes(memoId)) {
+    await db!.dropTable(memoId)
+  }
 }

@@ -2,9 +2,9 @@ import { readFileSync } from 'fs'
 import MemoryFragment from '../../../models/model'
 import { createTreeFromMarkdown, getChunkFromNodes } from './splitter'
 import { embedding } from './embedding'
-import { getData, saveData, saveIndex } from '../../../models/memo'
+import { deleteDataAndIndex, getData, saveData, saveIndex } from '../../../models/memo'
 import { ulid } from 'ulid'
-import { createMemo } from '../../../models'
+import { createMemo, deleteMemo, updateMemo } from '../../../models'
 
 export interface EditFragmentOption {
   id: string
@@ -87,14 +87,15 @@ export interface SaveMemoParams {
   id: string
   memoName: string
   introduce?: string
+  version?: number
 }
 export async function saveMemo(params: SaveMemoParams) {
   const data = dataMap[params.id]
-  const memoId = ulid()
   if (params.id === 'creating') {
+    const memoId = ulid()
     saveData(
       memoId,
-      (data || []).map((item) => ({
+      (data ?? []).map((item) => ({
         id: item.id,
         content: item.data,
         indexes: item.indexes,
@@ -103,7 +104,7 @@ export async function saveMemo(params: SaveMemoParams) {
     )
     await saveIndex(
       memoId,
-      (data || []).map((item) => ({
+      (data ?? []).map((item) => ({
         id: item.id,
         vectors: item.vectors
       }))
@@ -112,13 +113,43 @@ export async function saveMemo(params: SaveMemoParams) {
       id: memoId,
       name: params.memoName,
       introduce: params.introduce,
-      fragment: fragmentsMap[params.id] || []
+      fragment: fragmentsMap[params.id] ?? []
+    })
+  } else {
+    deleteDataAndIndex(params.id)
+    saveData(
+      params.id,
+      (data ?? []).map((item) => ({
+        id: item.id,
+        content: item.data,
+        indexes: item.indexes,
+        fileName: item.name
+      }))
+    )
+    await saveIndex(
+      params.id,
+      (data ?? []).map((item) => ({
+        id: item.id,
+        vectors: item.vectors
+      }))
+    )
+    updateMemo({
+      id: params.id,
+      name: params.memoName,
+      version: params.version ?? 0,
+      introduce: params.introduce,
+      fragment: fragmentsMap[params.id] ?? []
     })
   }
   fragmentsMap[params.id] = undefined
   dataMap[params.id] = undefined
 }
-
+export async function dropMemo(memoId: string) {
+  deleteDataAndIndex(memoId)
+  deleteMemo(memoId)
+  fragmentsMap[memoId] = undefined
+  dataMap[memoId] = undefined
+}
 export interface GetMemoParams {
   id: string
   content: string
