@@ -10,6 +10,7 @@ import { useLoading } from '../ui/DynamicLoading'
 import { searchByBaidu } from '@renderer/lib/ai/search'
 import { userData } from '@renderer/store/user'
 import { processMemo } from '@renderer/lib/ai/memo'
+import { clearAns, restoreAns } from '@renderer/store/answer'
 
 const typeDict: {
   [key: string]: 'chat' | 'ans'
@@ -60,7 +61,7 @@ export default function Input(props: {
       return
     }
     let content = ''
-    if (memoCapsule() && props.type !== 'ai') {
+    if (memoCapsule() && props.type !== 'ai' && props.type !== 'ans') {
       dynamicLoading.show('记忆胶囊启动⚡️⚡️')
       try {
         content = processMemo(
@@ -75,7 +76,7 @@ export default function Input(props: {
       }
       dynamicLoading.hide()
     }
-    if (isNetworking() && props.type !== 'ai') {
+    if (isNetworking() && props.type !== 'ai' && props.type !== 'ans') {
       dynamicLoading.show('查询中')
       try {
         content = await searchByBaidu(inputText(), (m) => dynamicLoading.show(m))
@@ -88,6 +89,10 @@ export default function Input(props: {
     setInputText('')
     textAreaDiv!.style.height = 'auto'
   }
+
+  createEffect(() => {
+    onCleanup(() => cleanupForRestoreMsgs?.())
+  })
 
   createEffect(async () => {
     const content = artifactContent()
@@ -106,7 +111,14 @@ export default function Input(props: {
   })
 
   const tokenConsumeDisplay = createMemo(() => {
-    return `${tokens().consumedToken(inputTokenNum() + artifactTokenNum())} / ${tokens().maxToken}`
+    if (props.type === 'ans' || props.type === 'question') {
+      return `${tokens().consumedTokenForAns(inputTokenNum() + artifactTokenNum())} / ${
+        tokens().maxToken
+      }`
+    }
+    return `${tokens().consumedTokenForChat(inputTokenNum() + artifactTokenNum())} / ${
+      tokens().maxToken
+    }`
   })
 
   onMount(() => {
@@ -178,6 +190,17 @@ export default function Input(props: {
                   duration: 1000,
                   position: 'top-3/4'
                 })
+                console.log(props)
+                if (props.type === 'ans' || props.type === 'question') {
+                  clearAns()
+                  cleanupForRestoreMsgs = useEventListener(document, 'keydown', (e) => {
+                    if ((e.key === 'z' && e.ctrlKey) || (e.key === 'z' && e.metaKey)) {
+                      restoreAns()
+                      cleanupForRestoreMsgs?.()
+                    }
+                  })
+                  return
+                }
                 if (!msgs.length) return
                 clearMsgs()
                 cleanupForRestoreMsgs = useEventListener(document, 'keydown', (e) => {

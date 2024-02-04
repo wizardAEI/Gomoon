@@ -20,7 +20,7 @@ const createModel = (chat: ModelInterfaceType) => {
       },
       option: {
         newTokenCallback: (content: string) => void
-        endCallback?: () => void
+        endCallback?: (res: LLMResult) => void
         errorCallback?: (err: any) => void
         pauseSignal: AbortSignal
       }
@@ -35,8 +35,8 @@ const createModel = (chat: ModelInterfaceType) => {
             handleLLMNewToken(token) {
               option.newTokenCallback(token)
             },
-            handleLLMEnd() {
-              option.endCallback?.()
+            handleLLMEnd(output) {
+              option.endCallback?.(output)
             },
             handleLLMError(err) {
               option.errorCallback?.(err)
@@ -90,7 +90,7 @@ const createModel = (chat: ModelInterfaceType) => {
 export const ansAssistant = async (option: {
   question: string
   newTokenCallback: (content: string) => void
-  endCallback?: () => void
+  endCallback?: (result: LLMResult) => void
   errorCallback?: (err: any) => void
   pauseSignal: AbortSignal
 }): Promise<BaseMessageChunk> => {

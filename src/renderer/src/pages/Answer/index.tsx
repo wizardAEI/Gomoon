@@ -1,6 +1,6 @@
 import Input from '@renderer/components/MainInput'
 import Message from '@renderer/components/Message'
-import { genAns, answerStore, clearAns, ansStatus } from '../../store/answer'
+import { genAns, answerStore, ansStatus } from '../../store/answer'
 import { Show, createSignal, onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
 import { useSearchParams } from '@solidjs/router'
@@ -39,7 +39,6 @@ export default function Answer() {
       setShowModal(true)
     })
     onCleanup(() => {
-      clearAns()
       removeListener()
     })
   })
@@ -90,6 +89,7 @@ export default function Answer() {
 
       <div class="fixed bottom-10 z-20 w-full px-4">
         <Input
+          showClearButton
           disable={showModal()}
           send={genAns}
           // 自动聚焦
@@ -98,7 +98,7 @@ export default function Answer() {
           }}
           // onShow自动聚焦
           autoFocusWhenShow
-          type="ans"
+          type="question"
         />
       </div>
     </div>
