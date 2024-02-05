@@ -190,7 +190,6 @@ export default function Input(props: {
                   duration: 1000,
                   position: 'top-3/4'
                 })
-                console.log(props)
                 if (props.type === 'ans' || props.type === 'question') {
                   clearAns()
                   cleanupForRestoreMsgs = useEventListener(document, 'keydown', (e) => {

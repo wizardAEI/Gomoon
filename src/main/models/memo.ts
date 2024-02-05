@@ -86,7 +86,6 @@ export async function getData(data: { id: string; content: string }): Promise<Ar
   }
   const table = await dbl!.openTable(data.id)
   const indexes = await embedding(data.content)
-  console.log(indexes)
   const result = (await table
     .search(Array.from(indexes.map((index) => Number(index))))
     .limit(20)
@@ -131,7 +130,6 @@ export async function getMemoDataAndIndexes(memoId: string): Promise<MemoFragmen
       return []
     }
     const table = await dbl!.openTable(memoId)
-    console.log(key)
     const res = await table.filter(`id = '${key}'`).execute()
     arr.push({
       id: key,

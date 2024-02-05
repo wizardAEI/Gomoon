@@ -1,5 +1,5 @@
 import { useNavigate } from '@solidjs/router'
-import ModelSelect from '../ModelSelect'
+import ModelSelect from '../MainSelections/ModelSelect'
 import CapitalIcon from '../ui/CapitalIcon'
 import { memoCapsule } from '@renderer/store/input'
 import { Show } from 'solid-js'
