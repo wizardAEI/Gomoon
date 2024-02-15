@@ -71,7 +71,7 @@ export default function Md(props: { class: string; content: string }) {
     onCleanup(() => {
       contentDom?.removeEventListener('mouseup', showButton)
       window.removeEventListener('mouseup', hideButton)
-      window.addEventListener('keydown', handleKeydown)
+      window.removeEventListener('keydown', handleKeydown)
     })
   })
 

@@ -44,7 +44,7 @@ export default function Answer() {
   })
 
   return (
-    <div class="flex h-full flex-col gap-4 overflow-auto pb-48 pt-10">
+    <div class="flex h-[calc(100vh-136px)] flex-col gap-4 overflow-auto pb-48 pt-10">
       <Show when={showModal()}>
         <SelectAssistantModal
           onConfirm={() => {

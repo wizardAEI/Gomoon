@@ -223,7 +223,9 @@ export default function Input(props: {
           </div>
         </Show>
         <div ref={textAreaContainerDiv} class="cyber-box relative flex flex-1 backdrop-blur-md">
-          <div class="absolute bottom-0 right-3 leading-8 text-text3">{tokenConsumeDisplay()}</div>
+          <div class="absolute bottom-0 right-3 select-none leading-8 text-text3">
+            {tokenConsumeDisplay()}
+          </div>
           <textarea
             ref={textAreaDiv}
             value={inputText()}

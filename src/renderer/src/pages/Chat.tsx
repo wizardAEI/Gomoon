@@ -98,7 +98,7 @@ export default function Chat() {
   })
 
   return (
-    <div class="chat-container flex h-full flex-col overflow-auto pb-48 pt-10">
+    <div class="chat-container flex h-[calc(100vh-136px)] flex-col overflow-auto pb-24 pt-10">
       <Show
         when={msgs.length}
         fallback={
