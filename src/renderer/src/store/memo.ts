@@ -54,6 +54,7 @@ export async function onEditMemo(id: string) {
   )
 }
 export function onCancelEditMemo(id: string) {
+  window.api.cancelSaveMemory(id)
   if (id === 'creating') {
     setMemories(
       produce((m) => {
@@ -61,7 +62,7 @@ export function onCancelEditMemo(id: string) {
       })
     )
   } else {
-    setMemories(
+    setMemoriesStatus(
       produce((m) => {
         m[id] = 'saved'
       })
@@ -69,21 +70,22 @@ export function onCancelEditMemo(id: string) {
   }
 }
 export async function saveMemo(m: SaveMemoParams) {
-  if (m.id === 'creating') {
-    await window.api.saveMemory(cloneDeep(m))
-    setMemories(
-      produce((memo) => {
-        memo.shift()
-      })
-    )
-  } else {
-    // await window.api.updateAssistant(m)
-  }
+  await window.api.saveMemory(cloneDeep(m))
+  setMemories(
+    produce((memo) => {
+      memo.shift()
+    })
+  )
   loadMemories()
 }
 export async function useMemo(id: string) {
   await window.api.useMemory(id)
   await loadMemories()
+}
+
+export async function deleteMemo(id: string) {
+  await window.api.deleteMemory(id)
+  loadMemories()
 }
 
 export { memories, memoriesStatus }

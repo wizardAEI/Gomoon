@@ -1,6 +1,7 @@
 import Plus from '@renderer/assets/icon/base/Plus'
 import {
   createNewMemo,
+  deleteMemo,
   getCurrentMemo,
   memories,
   memoriesStatus,
@@ -95,7 +96,7 @@ export default function () {
                     <DoubleConfirm
                       label="确认删除"
                       position="right-[-10px] top-[-46px]"
-                      onConfirm={() => {}}
+                      onConfirm={() => deleteMemo(m.id)}
                       preConfirm={() => {
                         const canDel = m.id !== getCurrentMemo()?.id
                         if (!canDel) {

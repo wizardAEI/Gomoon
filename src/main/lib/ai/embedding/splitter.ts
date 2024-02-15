@@ -339,8 +339,7 @@ export async function getChunkFromNodes(
   // 等待所有任务完成,或超时（60s）
   let timeout = 60 * 1000
   while (chunkTask.length && timeout > 0) {
-    console.log('wait', chunkTask)
-    // sleep(100)
+    console.log('wait', timeout, chunkTask)
     await new Promise((resolve) => setTimeout(resolve, 1000))
     timeout -= 1000
   }
