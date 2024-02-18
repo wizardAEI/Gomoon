@@ -98,7 +98,7 @@ export default function Chat() {
   })
 
   return (
-    <div class="chat-container flex h-[calc(100vh-136px)] flex-col overflow-auto pb-24 pt-10">
+    <div class="chat-container relative flex h-[calc(100vh-124px)] flex-col overflow-auto pb-24 pt-10">
       <Show
         when={msgs.length}
         fallback={
@@ -157,6 +157,7 @@ export default function Chat() {
           )}
         </For>
       </Show>
+      <div class="fixed bottom-0 left-0 right-0 h-28 bg-transparent backdrop-blur-xl"></div>
       <div class="fixed bottom-10 z-20 w-full px-4">
         <Input
           showClearButton
