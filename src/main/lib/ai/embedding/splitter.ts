@@ -297,7 +297,9 @@ export async function getChunkFromNodes(
     } else {
       const pushContent = async (contents: string[]) => {
         for (let i = 0; i < contents.length; i++) {
-          const content = splice(data?.titleBefore ?? '', contents[i])
+          const content = contents[i].startsWith(node.markup + ' ')
+            ? splice(data?.titleBefore ?? '', contents[i])
+            : splice(totalTitle, contents[i])
           chunk.push({
             indexes: [{ value: content }, { value: processTitle(totalTitle) }],
             document: { content },
