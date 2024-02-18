@@ -1,10 +1,12 @@
 import Plus from '@renderer/assets/icon/base/Plus'
 import {
   createNewMemo,
+  deleteMemo,
   getCurrentMemo,
   memories,
   memoriesStatus,
   onCancelEditMemo,
+  onEditMemo,
   saveMemo
 } from '@renderer/store/memo'
 import { For, Show } from 'solid-js'
@@ -88,12 +90,13 @@ export default function () {
                       class="cursor-pointer text-gray duration-100 hover:text-active"
                       onClick={(e) => {
                         e.stopPropagation()
+                        onEditMemo(m.id)
                       }}
                     />
                     <DoubleConfirm
                       label="确认删除"
                       position="right-[-10px] top-[-46px]"
-                      onConfirm={() => {}}
+                      onConfirm={() => deleteMemo(m.id)}
                       preConfirm={() => {
                         const canDel = m.id !== getCurrentMemo()?.id
                         if (!canDel) {

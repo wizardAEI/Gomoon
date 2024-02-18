@@ -5,7 +5,7 @@ export async function embedding(text: string): Promise<Float32Array> {
   env.localModelPath = getResourcesPath('models/')
   env.backends.onnx.wasm.numThreads = 1
   env.backends.onnx.logLevel = 'info'
-  const extractor = await pipeline('feature-extraction', 'Xenova/bert-base-chinese', {
+  const extractor = await pipeline('feature-extraction', 'Xenova/jina-embeddings-v2-base-zh', {
     model_file_name: 'model',
     local_files_only: true
   })
@@ -18,7 +18,7 @@ export async function tokenize(text: string) {
   env.localModelPath = getResourcesPath('models/')
   env.backends.onnx.wasm.numThreads = 1
   env.backends.onnx.logLevel = 'info'
-  let tokenizer = await AutoTokenizer.from_pretrained('Xenova/bert-base-chinese')
+  let tokenizer = await AutoTokenizer.from_pretrained('Xenova/jina-embeddings-v2-base-zh')
   // Run tokenization
   let text_inputs = tokenizer.encode(text)
   return text_inputs

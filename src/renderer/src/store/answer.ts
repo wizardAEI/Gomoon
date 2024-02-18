@@ -5,6 +5,20 @@ import { addHistory } from './history'
 import { ErrorDict } from '@renderer/lib/constant'
 import { getCurrentAssistantForAnswer } from './assistants'
 import { extractMeta } from '@renderer/lib/ai/parseString'
+import { consumedToken, setConsumedTokenForAns } from './input'
+
+let trash = {
+  answer: '',
+  question: '',
+  consumedToken: 0
+}
+function initTrash() {
+  trash = {
+    answer: '',
+    question: '',
+    consumedToken: 0
+  }
+}
 
 const [answerStore, setAnswerStore] = createStore({
   answer: '',
@@ -21,7 +35,7 @@ export function genAns(q: string) {
   ansID = ID
   let haveAnswer = false
   ansAssistant({
-    question: extractMeta(q),
+    question: extractMeta(q, true),
     newTokenCallback(content) {
       ID === ansID &&
         setAnswerStore('answer', (ans) => {
@@ -32,8 +46,12 @@ export function genAns(q: string) {
           return ans + content
         })
     },
-    endCallback() {
+    endCallback(res) {
+      let consumedToken = res.llmOutput?.estimatedTokenUsage?.totalTokens ?? 0
+      !consumedToken && (consumedToken = res.llmOutput?.tokenUsage?.totalTokens)
+      !consumedToken && (consumedToken = 0)
       ID === ansID && setGeneratingStatus(false)
+      setConsumedTokenForAns(consumedToken)
     },
     errorCallback(err) {
       if (ID !== ansID) return
@@ -43,10 +61,11 @@ export function genAns(q: string) {
     pauseSignal: controller.signal
   })
 }
-export function stopGenAns() {
+export async function stopGenAns() {
   controller?.abort()
   ansID = ''
   setGeneratingStatus(false)
+  setConsumedTokenForAns(await window.api.getTokenNum(answerStore.question + answerStore.answer))
 }
 export function reGenAns() {
   setAnswerStore('answer', '')
@@ -86,8 +105,24 @@ export async function saveAns() {
 
 export function clearAns() {
   stopGenAns()
+  trash = {
+    answer: answerStore.answer,
+    question: answerStore.question,
+    consumedToken: consumedToken().ans
+  }
+  setConsumedTokenForAns(0)
   setAnswerStore('answer', '')
   setAnswerStore('question', '')
+}
+
+export function restoreAns() {
+  if (!trash.consumedToken) {
+    return
+  }
+  setAnswerStore('answer', trash.answer)
+  setAnswerStore('question', trash.question)
+  setConsumedTokenForAns(trash.consumedToken)
+  initTrash()
 }
 
 export { answerStore, setAnswerStore, ansStatus }

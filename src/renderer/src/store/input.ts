@@ -33,14 +33,20 @@ interface InputStore {
   isNetworking: boolean
   memoCapsule: boolean
   inputText?: string
-  consumedToken: number
+  consumedToken: {
+    ans: number
+    chat: number
+  }
 }
 
 const [inputStore, setInputStore] = createStore<InputStore>({
   isNetworking: false,
   memoCapsule: false,
   inputText: '',
-  consumedToken: 0
+  consumedToken: {
+    ans: 0,
+    chat: 0
+  }
 })
 
 export function setNetworkingStatus(status: boolean) {
@@ -79,14 +85,16 @@ export const tokens = createMemo(() => {
   }
   return {
     maxToken: parseNum(modelDict[userData.selectedModel].maxToken),
-    consumedToken: (plusNum: number) => parseNum(inputStore.consumedToken + plusNum)
+    consumedTokenForChat: (plusNum: number) => parseNum(inputStore.consumedToken.chat + plusNum),
+    consumedTokenForAns: (plusNum: number) => parseNum(inputStore.consumedToken.ans + plusNum)
   }
 })
-
 export const consumedToken = createMemo(() => {
   return inputStore.consumedToken
 })
-
-export function setConsumedToken(token: number) {
-  setInputStore('consumedToken', token)
+export function setConsumedTokenForChat(token: number) {
+  setInputStore('consumedToken', 'chat', token)
+}
+export function setConsumedTokenForAns(token: number) {
+  setInputStore('consumedToken', 'ans', token)
 }

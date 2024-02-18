@@ -48,17 +48,24 @@ export interface Line {
   from: string
 }
 
-export default interface MemoryFragment {
+export interface MemoFragment {
   type: 'md' | 'xlsx'
   name: string
   from?: string
+}
+export interface MemoFragmentData {
+  id: string
+  name: string
+  data: string
+  vectors: Float32Array[]
+  indexes: string[]
 }
 export interface MemoModel {
   id: string
   version: number
   name: string
   introduce?: string
-  fragment: MemoryFragment[]
+  fragment: MemoFragment[]
 }
 export type CreateMemoModel = Omit<MemoModel, 'version'>
 export interface SettingModel {

@@ -9,10 +9,7 @@ export default function (meta: ContentDisplay, mdStyle: string) {
   if (meta.type === 'file') {
     return (
       <div
-        onClick={() => {
-          console.log('open file', meta)
-          window.api.openPath(meta.src)
-        }}
+        onClick={() => window.api.openPath(meta.src)}
         class="flex cursor-pointer gap-1 py-[2px] text-text-dark2 duration-150 hover:text-active"
       >
         <BaseFileIcon class="shrink-0 grow-0" width={20} height={20} />

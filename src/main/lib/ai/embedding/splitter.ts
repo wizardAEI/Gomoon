@@ -4,10 +4,18 @@ import { lmInvoke } from '../langchain'
 const md = markdownIt()
 
 interface Node {
+  markup: string
   title: string
   content: string
   total: string
   children: Node[]
+}
+
+const splice = (a: string, b: string) => {
+  if (a.length) {
+    return a + '\n' + b
+  }
+  return b
 }
 
 export function createTreeFromMarkdown(
@@ -22,19 +30,12 @@ export function createTreeFromMarkdown(
   const isType = (tokenType: string) => {
     return tokens[i].type === tokenType
   }
-  const splice = (a: string, b: string) => {
-    if (a.length) {
-      return a + '\n' + b
-    }
-    return b
-  }
   const getTitle = (str: string) => {
     str = str.trim().split('\n')[0]
     return str.slice(0, config?.titleMaxLength || 150)
   }
   const contentProcess = (): string => {
     if (isType('list_item_open')) {
-      console.log(tokens[i])
       let content = ''
       content += '\n' + tokens[i].info + tokens[i].markup + ' '
       while (i < tokens.length && !isType('list_item_close')) {
@@ -48,6 +49,36 @@ export function createTreeFromMarkdown(
       const fence = tokens[i]
       return '\n' + fence.markup + fence.info + '\n' + fence.content + fence.markup
     }
+    if (tokens[i].type === 'table_open') {
+      let isInsideRow = false,
+        currentRow = '',
+        tableMarkdown = '',
+        isHeader = false,
+        headerNum = 0
+      for (i = 0; i < tokens.length; i++) {
+        const token = tokens[i]
+        if (token.type === 'table_close') break
+        if (token.type === 'tr_open') {
+          isInsideRow = true
+          currentRow = '|'
+        } else if (token.type === 'tr_close') {
+          isInsideRow = false
+          tableMarkdown += currentRow.trim() + '\n'
+          if (!isHeader) {
+            isHeader = true
+            for (let j = 0; j < headerNum; j++) tableMarkdown += '|-'
+            tableMarkdown += '|\n'
+          }
+        } else if (isInsideRow && (token.type === 'th_open' || token.type === 'td_open')) {
+          if (token.type === 'th_open' && !isHeader) headerNum++
+        } else if (isInsideRow && (token.type === 'th_close' || token.type === 'td_close')) {
+          currentRow += '|'
+        } else if (isInsideRow) {
+          currentRow += contentProcess().slice(1)
+        }
+      }
+      return '\n' + tableMarkdown.slice(0, -1)
+    }
     return ''
   }
   let beforeContent = ''
@@ -57,6 +88,7 @@ export function createTreeFromMarkdown(
   }
   beforeContent &&
     tree.push({
+      markup: '',
       title: getTitle(beforeContent),
       content: beforeContent,
       total: beforeContent,
@@ -82,6 +114,7 @@ export function createTreeFromMarkdown(
         i++
       }
       const node = {
+        markup,
         title: getTitle(title),
         content: content,
         total: '',
@@ -111,19 +144,23 @@ export function createTreeFromMarkdown(
     }
     return totalBefore
   }
-
-  i < tokens.length &&
-    buildTree({ nodes: tree, level: parseInt(tokens[i].tag.slice(1)), totalBefore: '' })
+  while (i < tokens.length) {
+    buildTree({
+      nodes: tree,
+      level: parseInt(tokens[i].tag.slice(1)),
+      totalBefore: ''
+    })
+  }
   return tree
 }
 
 async function getQuestionsByLM(total: string): Promise<string[]> {
   const content = (
     await lmInvoke({
-      system: `我将会给你一段文字，请根据内容提出几个问题，使用序号标出。例如我给出『小明是一个学生，他喜欢打羽毛球。』，你将回复：
-1. 小明是什么职业 
-2. 小明的爱好是什么。
-提出问题时不要延伸提问，确保现有内容可以明确的回答该问题；回复除了问题外不要添加任何其他内容。`,
+      system: `我将会给你一段文字，请你根据内容提出几个问题，使用序号标出。例如我给出『小明是一个学生，他喜欢打羽毛球。』，你将回复：
+  1. 小明是什么职业 
+  2. 小明的爱好是什么。
+  提出问题时不要延伸提问，并且确保内容可以明确的回答提出的问题；回复除了问题外不要添加任何其他内容。`,
       content: total
     })
   ).trim()
@@ -139,15 +176,19 @@ async function getQuestionsByLM(total: string): Promise<string[]> {
 }
 
 export interface Chunk {
+  // indexes 含有以下索引：1.其所有祖先的标题+自身标题 2.当前标题下内容 3.当前标题和子标题下所有内容 4. 大模型根据2的提问
   indexes: { value: string }[]
   document: { content: string }
+  from?: string
 }
+
 export async function getChunkFromNodes(
   nodes: Node[],
   options: {
     chunkSize: number
     chunkOverlap: number
     useLM?: boolean
+    from?: string
   } = {
     chunkSize: 500,
     chunkOverlap: 2 // 左右两个节点
@@ -160,8 +201,10 @@ export async function getChunkFromNodes(
     if (total.match(/```/)) {
       return [total]
     } else {
+      // 拆分成chunkSize大小
       const lines = total.split('\n')
       if (lines.length <= 1) {
+        // 以size切分lines[0]
         const contents: string[] = []
         while (lines[0].length > size) {
           const content = lines[0].slice(0, size)
@@ -186,6 +229,14 @@ export async function getChunkFromNodes(
       return contents
     }
   }
+  const processTitle = (titles: string): string => {
+    return titles
+      .split('\n')
+      .reduce((prev, curr) => {
+        return prev + ' ' + curr.trim().replace(/(^#+) /, '')
+      }, '')
+      .trim()
+  }
 
   const dfs = (
     nodes: Node[],
@@ -195,16 +246,22 @@ export async function getChunkFromNodes(
     }
   ) => {
     const node = nodes[index]
-    const title = (data?.titleBefore ? data?.titleBefore + ' ' : '') + node.title
+    const totalTitle = splice(
+      data?.titleBefore ? data?.titleBefore : '',
+      node.markup + ' ' + node.title
+    )
     if (node.total.length < chunkSize) {
-      chunk.push({ indexes: [{ value: node.title }], document: { content: node.total } })
+      chunk.push({
+        indexes: [{ value: processTitle(totalTitle) }],
+        document: { content: splice(data?.titleBefore ?? '', node.total) },
+        from: options.from
+      })
       if (node.title !== node.content) chunk[chunk.length - 1].indexes.push({ value: node.content })
       if (node.title !== node.total) chunk[chunk.length - 1].indexes.push({ value: node.total })
       // TODO: 这里使用大模型，由于时间问题后续需要加上进度功能
       if (options.useLM) {
         const index = chunk.length - 1
         chunkTask.push(index)
-        console.log('task-1', index)
         getQuestionsByLM(node.total).then((questions) => {
           questions.forEach((question) => {
             chunk[index].indexes.push({ value: question })
@@ -240,15 +297,15 @@ export async function getChunkFromNodes(
     } else {
       const pushContent = async (contents: string[]) => {
         for (let i = 0; i < contents.length; i++) {
-          const content = contents[i]
+          const content = splice(data?.titleBefore ?? '', contents[i])
           chunk.push({
-            indexes: [{ value: content }, { value: title }],
-            document: { content }
+            indexes: [{ value: content }, { value: processTitle(totalTitle) }],
+            document: { content },
+            from: options.from
           })
           if (options.useLM) {
             const index = chunk.length - 1
             chunkTask.push(index)
-            console.log('task', index)
             // TODO: 这里使用大模型，由于时间问题后续需要加上进度功能
             getQuestionsByLM(content).then((questions) => {
               questions.forEach((question) => {
@@ -271,7 +328,7 @@ export async function getChunkFromNodes(
       }
       for (let i = 0; i < node.children.length; i++) {
         dfs(node.children, i, {
-          titleBefore: title
+          titleBefore: totalTitle
         })
       }
     }
@@ -282,8 +339,7 @@ export async function getChunkFromNodes(
   // 等待所有任务完成,或超时（60s）
   let timeout = 60 * 1000
   while (chunkTask.length && timeout > 0) {
-    console.log('wait', chunkTask)
-    // sleep(100)
+    console.log('wait', timeout, chunkTask)
     await new Promise((resolve) => setTimeout(resolve, 1000))
     timeout -= 1000
   }

@@ -6,7 +6,7 @@ import { addHistory } from './history'
 import { cloneDeep } from 'lodash'
 import { assistants, getCurrentAssistantForChat } from './assistants'
 import { extractMeta } from '@renderer/lib/ai/parseString'
-import { consumedToken, setConsumedToken } from './input'
+import { consumedToken, setConsumedTokenForChat } from './input'
 import { userData } from './user'
 export interface Msg {
   id: string
@@ -44,15 +44,16 @@ export function pushMsg(msg: Msg) {
 export function clearMsgs() {
   trash = {
     msgs: cloneDeep(msgs),
-    consumedToken: consumedToken()
+    consumedToken: consumedToken().chat
   }
   setMsgs([])
-  setConsumedToken(0)
+  setConsumedTokenForChat(0)
 }
 
 export function restoreMsgs() {
-  trash.consumedToken && setMsgs(trash.msgs)
-  setConsumedToken(trash.consumedToken)
+  if (!trash.consumedToken) return
+  setMsgs(trash.msgs)
+  setConsumedTokenForChat(trash.consumedToken)
   initTrash()
 }
 
@@ -125,7 +126,7 @@ export function genMsg(id: string) {
         let consumedToken = res.llmOutput?.estimatedTokenUsage?.totalTokens ?? 0
         !consumedToken && (consumedToken = res.llmOutput?.tokenUsage?.totalTokens)
         !consumedToken && (consumedToken = 0)
-        setConsumedToken(consumedToken)
+        setConsumedTokenForChat(consumedToken)
         removeGeneratingStatus(id)
       },
       errorCallback(err: Error) {
@@ -151,7 +152,7 @@ export async function stopGenMsg(id: string) {
   const systemContent = assistants.find(
     (assistant) => assistant.id === userData.selectedAssistantForChat
   )?.prompt
-  setConsumedToken(await window.api.getTokenNum(systemContent + currentMsgs))
+  setConsumedTokenForChat(await window.api.getTokenNum(systemContent + currentMsgs))
 }
 
 export async function saveMsgsBeforeID(id: string) {

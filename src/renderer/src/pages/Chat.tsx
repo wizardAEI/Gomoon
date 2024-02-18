@@ -13,7 +13,7 @@ import { For, Show, createEffect, createSignal, onCleanup, onMount } from 'solid
 import { ulid } from 'ulid'
 import { event } from '@renderer/lib/util'
 import { getCurrentAssistantForChat } from '@renderer/store/assistants'
-import SystemHeader from '@renderer/components/SystemHeader'
+import SystemHeader from '@renderer/components/MainSelections'
 import Capsule from '@renderer/components/Capsule'
 import { currentLines } from '@renderer/store/user'
 import { inputText, setInputText } from '@renderer/store/input'
@@ -34,10 +34,11 @@ export default function Chat() {
   // FEAT: 打字机效果
   const [linesContent, setLinesContent] = createSignal('')
   const [linesFrom, setLinesFrom] = createSignal('')
-  createEffect((b) => {
-    if (!currentLines().length || b) return
+  // onMount 由于可能还没 load 完数据，导致没有 lines，所以使用 createEffect
+  createEffect(() => {
+    if (!currentLines().length) return
     const index = Math.floor(Math.random() * currentLines().length)
-    const linesFull = currentLines()[index]?.content ?? '' + ' — '
+    const linesFull = (currentLines()[index]?.content ?? '') + ' — '
     setLinesContent(linesFull.slice(0, 1))
     // 打字机效果,逐渐显示introduce
     const timer = setInterval(() => {
@@ -51,7 +52,7 @@ export default function Chat() {
       }
     }, 70)
     return true
-  }, false)
+  })
 
   // FEAT: 记录用户点击编辑后如果没有发送，则取消编辑
   const [previousMsg, setPreviousMsg] = createSignal<{
@@ -97,7 +98,7 @@ export default function Chat() {
   })
 
   return (
-    <div class="chat-container flex h-full flex-col overflow-auto pb-48 pt-10">
+    <div class="chat-container relative flex h-[calc(100vh-124px)] flex-col overflow-auto pb-24 pt-10">
       <Show
         when={msgs.length}
         fallback={
@@ -156,6 +157,7 @@ export default function Chat() {
           )}
         </For>
       </Show>
+      <div class="fixed bottom-0 left-0 right-0 h-28 bg-transparent backdrop-blur-xl"></div>
       <div class="fixed bottom-10 z-20 w-full px-4">
         <Input
           showClearButton

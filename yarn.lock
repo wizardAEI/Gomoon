@@ -690,30 +690,30 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@lancedb/vectordb-darwin-arm64@0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@lancedb/vectordb-darwin-arm64/-/vectordb-darwin-arm64-0.4.3.tgz#f04e117329e87414c5627340173a65dd48ec40a2"
-  integrity sha512-47CvvSaV1EdUsFEpXUJApTk+hMzAhCxVizipCFUlXCgcmzpCDL86wNgJij/X9a+j6zADhIX//Lsu0qd/an/Bpw==
+"@lancedb/vectordb-darwin-arm64@0.4.7":
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/@lancedb/vectordb-darwin-arm64/-/vectordb-darwin-arm64-0.4.7.tgz#f123b4cd6b1e16280d91188efbba55038fab2382"
+  integrity sha512-kACOIytgjBfX8NRwjPKe311XRN3lbSN13B7avT5htMd3kYm3AnnMag9tZhlwoO7lIuvGaXhy7mApygJrjhfJ4g==
 
-"@lancedb/vectordb-darwin-x64@0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@lancedb/vectordb-darwin-x64/-/vectordb-darwin-x64-0.4.3.tgz#849bc82a5151fea39bf772b37e14525df82e6b02"
-  integrity sha512-UlZZv8CmJIuRJNJG+Y1VmFsGyPR8W/72Q5EwgMMsSES6zpMQ9pNdBDWhL3UGX6nMRgnbprkwYiWJ3xHhJvtqtw==
+"@lancedb/vectordb-darwin-x64@0.4.7":
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/@lancedb/vectordb-darwin-x64/-/vectordb-darwin-x64-0.4.7.tgz#4db7857e2212aae90ed0ec1c51cec94a41251016"
+  integrity sha512-vb74iK5uPWCwz5E60r3yWp/R/HSg54/Z9AZWYckYXqsPv4w/nfbkM5iZhfRqqR/9uE6JClWJKOtjbk7b8CFRFg==
 
-"@lancedb/vectordb-linux-arm64-gnu@0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@lancedb/vectordb-linux-arm64-gnu/-/vectordb-linux-arm64-gnu-0.4.3.tgz#cf8eabf20136df3688c9be3a9457de054ede3912"
-  integrity sha512-L6NVJr/lKEd8+904FzZNpT8BGQMs2cHNYbGJMIaVvGnMiIJgKAFKtOyGtdDjoe1xRZoEw21yjRGksGbnRO5wHQ==
+"@lancedb/vectordb-linux-arm64-gnu@0.4.7":
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/@lancedb/vectordb-linux-arm64-gnu/-/vectordb-linux-arm64-gnu-0.4.7.tgz#9f0ee72da449fbd768c88b48038520cf2aff1e11"
+  integrity sha512-jHp7THm6S9sB8RaCxGoZXLAwGAUHnawUUilB1K3mvQsRdfB2bBs0f7wDehW+PDhr+Iog4LshaWbcnoQEUJWR+Q==
 
-"@lancedb/vectordb-linux-x64-gnu@0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@lancedb/vectordb-linux-x64-gnu/-/vectordb-linux-x64-gnu-0.4.3.tgz#8798b60f19ecea7ba2d7f09fbf3b444b349c8441"
-  integrity sha512-OBx3WF3pK0xNfFJeErmuD9R2QWLa3XdeZspyTsIrQmBDeKj3HKh8y7Scpx4NH5Y09+9JNqRRKRZN7OqWTYhITg==
+"@lancedb/vectordb-linux-x64-gnu@0.4.7":
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/@lancedb/vectordb-linux-x64-gnu/-/vectordb-linux-x64-gnu-0.4.7.tgz#8e43f3c883223f76187e627d48c2bb4b026d0fbf"
+  integrity sha512-LKbVe6Wrp/AGqCCjKliNDmYoeTNgY/wfb2DTLjrx41Jko/04ywLrJ6xSEAn3XD5RDCO5u3fyUdXHHHv5a3VAAQ==
 
-"@lancedb/vectordb-win32-x64-msvc@0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@lancedb/vectordb-win32-x64-msvc/-/vectordb-win32-x64-msvc-0.4.3.tgz#943ba22c8b1b6f4822517ff03c3c48fa9c7a9d7b"
-  integrity sha512-n9IvR81NXZKnSN91mrgeXbEyCiGM+YLJpOgbdHoEtMP04VDnS+iSU4jGOtQBKErvWeCJQaGFQ9qzdcVchpRGyw==
+"@lancedb/vectordb-win32-x64-msvc@0.4.7":
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/@lancedb/vectordb-win32-x64-msvc/-/vectordb-win32-x64-msvc-0.4.7.tgz#564d388d4054bc166d92829b8e60f5f8d058a682"
+  integrity sha512-C5ln4+wafeY1Sm4PeV0Ios9lUaQVVip5Mjl9XU7ngioSEMEuXI/XMVfIdVfDPppVNXPeQxg33wLA272uw88D1Q==
 
 "@langchain/community@^0.0.16":
   version "0.0.16"
@@ -1305,10 +1305,10 @@
   resolved "https://registry.npmjs.org/@ungap/structured-clone/-/structured-clone-1.2.0.tgz"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
-"@xenova/transformers@^2.13.4":
-  version "2.13.4"
-  resolved "https://registry.yarnpkg.com/@xenova/transformers/-/transformers-2.13.4.tgz#4874c628ca6a8e36c6bdb6e04a0418d8f3f7a43b"
-  integrity sha512-yk8yDvQaCTEZJsasoUj+FWEM9dVcNdDXlushzJ0KjFe2oUOJ3XqICAJz1Htz/vWtM20ErGt509EKogACGYlpxA==
+"@xenova/transformers@^2.14.2":
+  version "2.14.2"
+  resolved "https://registry.yarnpkg.com/@xenova/transformers/-/transformers-2.14.2.tgz#dd6458da2c6c4e79a1776fc87ba69f7cc7269172"
+  integrity sha512-R0MBCNgxsQ/LHfX2qQLjNGngPepohkjkyFn4axNe5Ui4L2KC8l/4AmJd4t9w8oeCbqAfZrxXXiFWpF5yXuCTxQ==
   dependencies:
     "@huggingface/jinja" "^0.1.0"
     onnxruntime-web "1.14.0"
@@ -6269,21 +6269,21 @@ validate-html-nesting@^1.2.1:
   resolved "https://registry.npmjs.org/validate-html-nesting/-/validate-html-nesting-1.2.2.tgz"
   integrity sha512-hGdgQozCsQJMyfK5urgFcWEqsSSrK63Awe0t/IMR0bZ0QMtnuaiHzThW81guu3qx9abLi99NEuiaN6P9gVYsNg==
 
-vectordb@^0.4.3:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/vectordb/-/vectordb-0.4.3.tgz#c02c445047b3a688e55252e30d8991056ce2ceb1"
-  integrity sha512-7ToixoZgAB/hn44EE4ftcdE74SGRX+wmGejatTQodFBiYD9RQLW8LIuGo8MmT+AkYEDAuOR98jTEFUwnEU5sqA==
+vectordb@^0.4.7:
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/vectordb/-/vectordb-0.4.7.tgz#1fbace898f7bb35455306d3f2eb88bcb505f7300"
+  integrity sha512-qrQb1uGPXmhfyup/BB6q43mcP6uG9mSedy38vyUcKj5l89WHhVVvxwisHC18Q7mUQbatC0bZMYrV3lMmRggOuw==
   dependencies:
     "@apache-arrow/ts" "^14.0.2"
     "@neon-rs/load" "^0.0.74"
     apache-arrow "^14.0.2"
     axios "^1.4.0"
   optionalDependencies:
-    "@lancedb/vectordb-darwin-arm64" "0.4.3"
-    "@lancedb/vectordb-darwin-x64" "0.4.3"
-    "@lancedb/vectordb-linux-arm64-gnu" "0.4.3"
-    "@lancedb/vectordb-linux-x64-gnu" "0.4.3"
-    "@lancedb/vectordb-win32-x64-msvc" "0.4.3"
+    "@lancedb/vectordb-darwin-arm64" "0.4.7"
+    "@lancedb/vectordb-darwin-x64" "0.4.7"
+    "@lancedb/vectordb-linux-arm64-gnu" "0.4.7"
+    "@lancedb/vectordb-linux-x64-gnu" "0.4.7"
+    "@lancedb/vectordb-win32-x64-msvc" "0.4.7"
 
 verror@^1.10.0:
   version "1.10.1"

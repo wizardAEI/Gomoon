@@ -121,25 +121,6 @@ export default function Tools(props: {
           ref={toolsDiv}
           class="no-scroll-bar flex items-center gap-2 overflow-x-auto overflow-y-visible whitespace-nowrap"
         >
-          <ToolWrap
-            active={memoCapsule() && props.artifacts().length === 0}
-            onClick={() => {
-              if (props.artifacts().length) {
-                toast.warning('请先清空参考文件或链接')
-                return
-              }
-              setMemoCapsule(!memoCapsule())
-              setNetworkingStatus(false)
-              memoCapsule()
-                ? toast.success('记忆胶囊⚡️⚡️', {
-                    duration: 2000,
-                    position: 'top-1/3'
-                  })
-                : toast.success('已关闭记忆胶囊')
-            }}
-          >
-            <span class="text-[12px]">记忆胶囊</span>
-          </ToolWrap>
           <ToolWrap>
             <label for="file" style={{ cursor: 'pointer' }}>
               <span class="text-[12px]">发送文件</span>
@@ -279,6 +260,25 @@ export default function Tools(props: {
             }}
           >
             联网查询
+          </ToolWrap>
+          <ToolWrap
+            active={memoCapsule() && props.artifacts().length === 0}
+            onClick={() => {
+              if (props.artifacts().length) {
+                toast.warning('请先清空参考文件或链接')
+                return
+              }
+              setMemoCapsule(!memoCapsule())
+              setNetworkingStatus(false)
+              memoCapsule()
+                ? toast.success('记忆胶囊⚡️⚡️', {
+                    duration: 2000,
+                    position: 'top-1/3'
+                  })
+                : toast.success('已关闭记忆胶囊')
+            }}
+          >
+            <span class="text-[12px]">记忆胶囊</span>
           </ToolWrap>
           <ToolWrap
             onClick={() => {

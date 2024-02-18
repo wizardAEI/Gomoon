@@ -1,11 +1,11 @@
 import Input from '@renderer/components/MainInput'
 import Message from '@renderer/components/Message'
-import { genAns, answerStore, clearAns, ansStatus } from '../../store/answer'
+import { genAns, answerStore, ansStatus } from '../../store/answer'
 import { Show, createSignal, onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
 import { useSearchParams } from '@solidjs/router'
 import { getCurrentAssistantForAnswer } from '@renderer/store/assistants'
-import SystemHeader from '@renderer/components/SystemHeader'
+import SystemHeader from '@renderer/components/MainSelections'
 import SelectAssistantModal from './SelectAssistantModel'
 import Capsule from '@renderer/components/Capsule'
 import { inputText, setInputText } from '@renderer/store/input'
@@ -39,13 +39,12 @@ export default function Answer() {
       setShowModal(true)
     })
     onCleanup(() => {
-      clearAns()
       removeListener()
     })
   })
 
   return (
-    <div class="flex h-full flex-col gap-4 overflow-auto pb-48 pt-10">
+    <div class="flex h-[calc(100vh-124px)] flex-col gap-4 overflow-auto pb-48 pt-10">
       <Show when={showModal()}>
         <SelectAssistantModal
           onConfirm={() => {
@@ -87,9 +86,10 @@ export default function Answer() {
           botName={getCurrentAssistantForAnswer().name}
         />
       </Show>
-
+      <div class="fixed bottom-0 left-0 right-0 h-28 bg-transparent backdrop-blur-xl"></div>
       <div class="fixed bottom-10 z-20 w-full px-4">
         <Input
+          showClearButton
           disable={showModal()}
           send={genAns}
           // 自动聚焦
@@ -98,7 +98,7 @@ export default function Answer() {
           }}
           // onShow自动聚焦
           autoFocusWhenShow
-          type="ans"
+          type="question"
         />
       </div>
     </div>

@@ -1,6 +1,12 @@
 import { app } from 'electron'
 import { JSONSyncPreset } from 'lowdb/node'
-import { AssistantModel, CreateAssistantModel, CreateMemoModel, HistoryModel } from './model'
+import {
+  AssistantModel,
+  CreateAssistantModel,
+  CreateMemoModel,
+  HistoryModel,
+  MemoModel
+} from './model'
 import { SettingModel } from './model'
 import {
   getDefaultConfig,
@@ -208,34 +214,31 @@ export function useMemo(id: string) {
   memoDB.write()
 }
 
-// export function updateAssistant(a: AssistantModel) {
-//   const index = assistantsDB.data.findIndex((item) => item.id === a.id)
-//   if (index === -1) {
-//     assistantsDB.data = [
-//       ...assistantsDB.data,
-//       {
-//         ...a,
-//         version: 1,
-//         id: ulid()
-//       }
-//     ]
-//   } else {
-//     assistantsDB.data[index] = {
-//       ...a,
-//       version:
-//         assistantsDB.data[index].version < a.version
-//           ? a.version
-//           : assistantsDB.data[index].version + 1
-//     }
-//   }
-//   assistantsDB.write()
-// }
+export function updateMemo(m: MemoModel) {
+  const index = memoDB.data.findIndex((item) => item.id === m.id)
+  if (index === -1) {
+    memoDB.data = [
+      ...memoDB.data,
+      {
+        ...m,
+        version: 1,
+        id: ulid()
+      }
+    ]
+  } else {
+    memoDB.data[index] = {
+      ...m,
+      version: memoDB.data[index].version < m.version ? m.version : memoDB.data[index].version + 1
+    }
+  }
+  memoDB.write()
+}
 
-// export function deleteAssistant(id: string) {
-//   const index = assistantsDB.data.findIndex((item) => item.id === id)
-//   if (index === -1) {
-//     return
-//   }
-//   assistantsDB.data.splice(index, 1)
-//   assistantsDB.write()
-// }
+export function deleteMemo(id: string) {
+  const index = memoDB.data.findIndex((item) => item.id === id)
+  if (index === -1) {
+    return
+  }
+  memoDB.data.splice(index, 1)
+  memoDB.write()
+}

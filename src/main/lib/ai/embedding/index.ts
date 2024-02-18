@@ -1,29 +1,33 @@
 import { readFileSync } from 'fs'
-import MemoryFragment from '../../../models/model'
+import { MemoFragmentData, MemoFragment } from '../../../models/model'
 import { createTreeFromMarkdown, getChunkFromNodes } from './splitter'
 import { embedding } from './embedding'
-import { getData, saveData, saveIndex } from '../../../models/memo'
+import {
+  deleteDataAndIndex,
+  getData,
+  getMemoDataAndIndexes,
+  saveData,
+  saveIndexes
+} from '../../../models/memo'
 import { ulid } from 'ulid'
-import { createMemo } from '../../../models'
+import { createMemo, deleteMemo, updateMemo } from '../../../models'
 
 export interface EditFragmentOption {
   id: string
-  fragment: MemoryFragment
+  fragment: MemoFragment
   type: 'add' | 'remove'
-  useLM: boolean
+  useLM?: boolean
 }
 
 const fragmentsMap: {
-  [key in string]: MemoryFragment[] | undefined
+  [key in string]: MemoFragment[] | undefined
 } = {}
 
 let dataMap: {
-  [key in string]:
-    | { id: string; name: string; data: string; vectors: Float32Array[]; indexes: string[] }[]
-    | undefined
+  [key in string]: MemoFragmentData[] | undefined
 } = {}
 
-async function readFile(fragment: MemoryFragment): Promise<{
+async function readFile(fragment: MemoFragment): Promise<{
   suc: boolean
   content?: string
   reason?: string
@@ -79,31 +83,36 @@ export async function editFragment(option: EditFragmentOption): Promise<{
       (fragment) => fragment.name !== option.fragment.name
     )
     dataMap[option.id] = dataMap[option.id]?.filter((index) => index.name !== option.fragment.name)
+    return { suc: true }
   }
   return { suc: false, reason: '未匹配到操作类型' }
 }
-
 export interface SaveMemoParams {
   id: string
   memoName: string
   introduce?: string
+  version?: number
+}
+export async function editMemo(memoId: string, fragments: MemoFragment[]) {
+  fragmentsMap[memoId] = fragments
+  dataMap[memoId] = await getMemoDataAndIndexes(memoId)
 }
 export async function saveMemo(params: SaveMemoParams) {
   const data = dataMap[params.id]
-  const memoId = ulid()
   if (params.id === 'creating') {
+    const memoId = ulid()
     saveData(
       memoId,
-      (data || []).map((item) => ({
+      (data ?? []).map((item) => ({
         id: item.id,
         content: item.data,
         indexes: item.indexes,
         fileName: item.name
       }))
     )
-    await saveIndex(
+    await saveIndexes(
       memoId,
-      (data || []).map((item) => ({
+      (data ?? []).map((item) => ({
         id: item.id,
         vectors: item.vectors
       }))
@@ -112,13 +121,43 @@ export async function saveMemo(params: SaveMemoParams) {
       id: memoId,
       name: params.memoName,
       introduce: params.introduce,
-      fragment: fragmentsMap[params.id] || []
+      fragment: fragmentsMap[params.id] ?? []
+    })
+  } else {
+    await deleteDataAndIndex(params.id)
+    saveData(
+      params.id,
+      (data ?? []).map((item) => ({
+        id: item.id,
+        content: item.data,
+        indexes: item.indexes,
+        fileName: item.name
+      }))
+    )
+    await saveIndexes(
+      params.id,
+      (data ?? []).map((item) => ({
+        id: item.id,
+        vectors: item.vectors
+      }))
+    )
+    updateMemo({
+      id: params.id,
+      name: params.memoName,
+      version: params.version ?? 0,
+      introduce: params.introduce,
+      fragment: fragmentsMap[params.id] ?? []
     })
   }
   fragmentsMap[params.id] = undefined
   dataMap[params.id] = undefined
 }
-
+export async function dropMemo(memoId: string) {
+  deleteDataAndIndex(memoId)
+  deleteMemo(memoId)
+  fragmentsMap[memoId] = undefined
+  dataMap[memoId] = undefined
+}
 export interface GetMemoParams {
   id: string
   content: string
