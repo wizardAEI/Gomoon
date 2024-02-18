@@ -1,9 +1,11 @@
 import CrossMark from '@renderer/assets/icon/base/CrossMark'
 import Plus from '@renderer/assets/icon/base/Plus'
 import BaseFileIcon from '@renderer/assets/icon/file/baseFileIcon'
+import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
 import { useLoading } from '@renderer/components/ui/DynamicLoading'
 import Switch from '@renderer/components/ui/SwitchItem'
 import { useToast } from '@renderer/components/ui/Toast'
+import { cloneDeep } from 'lodash'
 import { For, createSignal } from 'solid-js'
 import { MemoModel } from 'src/main/models/model'
 
@@ -59,7 +61,25 @@ export default function (props: {
                 <BaseFileIcon height={20} width={20} />
                 {file.name}
               </div>
-              <CrossMark class="cursor-pointer hover:text-active" height={20} width={20} />
+              <DoubleConfirm
+                label="确认删除"
+                position="right-[-10px] top-[-46px]"
+                onConfirm={async () => {
+                  const res = await window.api.editFragment({
+                    id: m().id,
+                    fragment: cloneDeep(file),
+                    type: 'remove'
+                  })
+                  if (res.suc) {
+                    setField(
+                      'fragment',
+                      m().fragment.filter((f) => f.name !== file.name)
+                    )
+                  }
+                }}
+              >
+                <CrossMark class="cursor-pointer hover:text-active" height={20} width={20} />
+              </DoubleConfirm>
             </div>
           )}
         </For>

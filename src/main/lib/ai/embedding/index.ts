@@ -16,7 +16,7 @@ export interface EditFragmentOption {
   id: string
   fragment: MemoFragment
   type: 'add' | 'remove'
-  useLM: boolean
+  useLM?: boolean
 }
 
 const fragmentsMap: {
@@ -124,7 +124,7 @@ export async function saveMemo(params: SaveMemoParams) {
       fragment: fragmentsMap[params.id] ?? []
     })
   } else {
-    deleteDataAndIndex(params.id)
+    await deleteDataAndIndex(params.id)
     saveData(
       params.id,
       (data ?? []).map((item) => ({
