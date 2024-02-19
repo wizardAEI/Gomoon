@@ -1,10 +1,10 @@
 import * as zagSwitch from '@zag-js/switch'
 import { normalizeProps, useMachine } from '@zag-js/solid'
-import { createMemo, createUniqueId } from 'solid-js'
+import { JSXElement, createMemo, createUniqueId } from 'solid-js'
 import QuestionMention from './QuestionMention'
 
 export default function Switch(props: {
-  label: string
+  label: string | JSXElement
   hint?: string
   size?: 'sm' | 'md'
   checked: boolean
@@ -23,7 +23,7 @@ export default function Switch(props: {
   return (
     <label {...api().rootProps} class="group flex items-center justify-between">
       <input {...api().hiddenInputProps} />
-      <span {...api().labelProps} class={'flex items-center gap-1'}>
+      <span {...api().labelProps} class={'flex items-center gap-1 pr-1'}>
         {props.label}
         {props.hint && <QuestionMention content={props.hint} />}
       </span>
