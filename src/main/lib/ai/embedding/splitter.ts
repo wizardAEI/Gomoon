@@ -260,7 +260,6 @@ export async function getChunkFromNodes(
       })
       if (node.title !== node.content) chunk[chunk.length - 1].indexes.push({ value: node.content })
       if (node.title !== node.total) chunk[chunk.length - 1].indexes.push({ value: node.total })
-      // TODO: 这里使用大模型，由于时间问题后续需要加上进度功能
       if (options.useLM) {
         const index = chunk.length - 1
         chunkTask.push(index)
@@ -310,7 +309,6 @@ export async function getChunkFromNodes(
           if (options.useLM) {
             const index = chunk.length - 1
             chunkTask.push(index)
-            // TODO: 这里使用大模型，由于时间问题后续需要加上进度功能
             getQuestionsByLM(content).then((questions) => {
               questions.forEach((question) => {
                 chunk[index].indexes.push({ value: question })

@@ -21,7 +21,7 @@ module.exports = {
       },
       colors: {
         active: '#a57bea', // 激活色 亮紫色
-        'active-con': '#7857ad', // 激活色 深紫
+        'active-con': '#7c56ba', // 激活色 深紫
         gray: '#869d9d', // 非激活色 淡紫灰色
         'gray-pro': '#93a5a6', // 非激活色↑ 浅紫灰色
         'dark-con': '#436565', // 暗色稍微亮一点
