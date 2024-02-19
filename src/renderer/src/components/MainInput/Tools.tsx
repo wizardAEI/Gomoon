@@ -17,6 +17,7 @@ import {
 import { userData } from '@renderer/store/user'
 import { ContentDisplay } from '@renderer/lib/ai/parseString'
 import CrossMarkRound from '@renderer/assets/icon/base/CrossMarkRound'
+import { initMemories, memories } from '@renderer/store/memo'
 export type Artifacts = ContentDisplay & { val: string }
 
 function ToolWrap(props: { children: JSXElement; onClick?: () => void; active?: boolean }) {
@@ -263,7 +264,7 @@ export default function Tools(props: {
           </ToolWrap>
           <ToolWrap
             active={memoCapsule() && props.artifacts().length === 0}
-            onClick={() => {
+            onClick={async () => {
               if (props.artifacts().length) {
                 toast.warning('请先清空参考文件或链接')
                 return
@@ -276,6 +277,21 @@ export default function Tools(props: {
                     position: 'top-1/3'
                   })
                 : toast.success('已关闭记忆胶囊')
+              if (memoCapsule() && memories.length === 0) {
+                dynamicLoading.show('功能初始化中...')
+                const remove = window.api.receiveMsg(async (_, msg: string) => {
+                  if (msg.includes('progress')) {
+                    const progress = msg.split(' ')[1]
+                    if (progress === '100%') {
+                      remove()
+                      return
+                    }
+                    dynamicLoading.show(`功能初始化中...${progress}`)
+                  }
+                })
+                await initMemories()
+                dynamicLoading.hide()
+              }
             }}
           >
             <span class="text-[12px]">记忆胶囊</span>

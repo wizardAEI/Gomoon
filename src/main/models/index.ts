@@ -18,6 +18,7 @@ import {
 import { join } from 'path'
 import { ulid } from 'ulid'
 import { merge } from 'lodash'
+import { importDataAndIndexes } from './memo'
 
 const appDataPath = app.getPath('userData')
 const configDB = JSONSyncPreset(join(appDataPath, 'config.json'), getDefaultConfig())
@@ -137,7 +138,7 @@ export function createAssistant(a: CreateAssistantModel): AssistantModel {
   const newA = {
     ...a,
     id: ulid(),
-    version: 1
+    version: a.version || 1
   }
   assistantsDB.data.unshift(newA)
   assistantsDB.write()
@@ -189,14 +190,23 @@ export function getLines() {
 /**
  * FEAT: 记忆相关 Memo
  */
-const memoDB = JSONSyncPreset(join(appDataPath, 'memories.json'), getDefaultMemories())
+const memoDB = JSONSyncPreset<MemoModel[]>(join(appDataPath, 'memories.json'), [])
 export function getMemories() {
   return memoDB.data || []
 }
+
+export async function initMemories() {
+  memoDB.data = getDefaultMemories().map((m) => m.memo)
+  for (const m of getDefaultMemories()) {
+    await importDataAndIndexes(m.memo.id, m.data)
+  }
+  memoDB.write()
+}
+
 export function createMemo(m: CreateMemoModel): CreateMemoModel {
   const newM = {
     ...m,
-    version: 1
+    version: m.version || 1
   }
   memoDB.data.unshift(newM)
   memoDB.write()

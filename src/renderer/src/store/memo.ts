@@ -17,7 +17,10 @@ export async function loadMemories() {
     creating: 'creating'
   })
 }
-
+export async function initMemories() {
+  await window.api.initMemories()
+  await loadMemories()
+}
 export const getCurrentMemo = createMemo<MemoModel>(() => {
   return (
     memories.find((a) => a.id === userData.selectedMemo) || {
@@ -82,10 +85,15 @@ export async function useMemo(id: string) {
   await window.api.useMemory(id)
   await loadMemories()
 }
-
 export async function deleteMemo(id: string) {
   await window.api.deleteMemory(id)
   loadMemories()
 }
-
+export async function importMemo(path: string) {
+  if (!(await window.api.importMemory(path))) {
+    return false
+  }
+  loadMemories()
+  return true
+}
 export { memories, memoriesStatus }

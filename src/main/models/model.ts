@@ -34,7 +34,7 @@ export type AssistantModel = (
   tools?: ToolEnum[]
 }
 
-export type CreateAssistantModel = Omit<AssistantModel, 'id' | 'version'>
+export type CreateAssistantModel = Omit<AssistantModel, 'id' | 'version'> & { version?: number }
 
 export interface HistoryModel {
   id: string
@@ -57,6 +57,7 @@ export interface MemoFragmentData {
   id: string
   name: string
   data: string
+  embeddingModel: string
   vectors: Float32Array[]
   indexes: string[]
 }
@@ -67,7 +68,7 @@ export interface MemoModel {
   introduce?: string
   fragment: MemoFragment[]
 }
-export type CreateMemoModel = Omit<MemoModel, 'version'>
+export type CreateMemoModel = Omit<MemoModel, 'version'> & { version?: number }
 export interface SettingModel {
   isOnTop: boolean
   canMultiCopy: boolean

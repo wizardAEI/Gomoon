@@ -73,6 +73,9 @@ export const api = {
   deleteMemory: (memoId: string) => ipcRenderer.invoke('delete-memory', memoId),
   editMemory: (memoId: string, fragments: MemoFragment[]) =>
     ipcRenderer.invoke('edit-memory', memoId, fragments),
+  initMemories: () => ipcRenderer.invoke('init-memories'),
+  exportMemory: (memo: MemoModel): Promise<string> => ipcRenderer.invoke('export-memory', memo),
+  importMemory: (path: string): Promise<boolean> => ipcRenderer.invoke('import-memory', path),
 
   // 文件相关
   parseFile: (

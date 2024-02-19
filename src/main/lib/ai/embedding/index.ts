@@ -1,16 +1,17 @@
 import { readFileSync } from 'fs'
-import { MemoFragmentData, MemoFragment } from '../../../models/model'
+import { MemoFragmentData, MemoFragment, MemoModel } from '../../../models/model'
 import { createTreeFromMarkdown, getChunkFromNodes } from './splitter'
-import { embedding } from './embedding'
+import { embedding, getEmbeddingModel } from './embedding'
 import {
   deleteDataAndIndex,
   getData,
   getMemoDataAndIndexes,
+  importDataAndIndexes,
   saveData,
   saveIndexes
 } from '../../../models/memo'
 import { ulid } from 'ulid'
-import { createMemo, deleteMemo, updateMemo } from '../../../models'
+import { createMemo, deleteMemo, getMemories, updateMemo } from '../../../models'
 
 export interface EditFragmentOption {
   id: string
@@ -72,7 +73,8 @@ export async function editFragment(option: EditFragmentOption): Promise<{
           name: option.fragment.name,
           data: chunk.document.content,
           vectors,
-          indexes: chunk.indexes.map((index) => index.value)
+          indexes: chunk.indexes.map((index) => index.value),
+          embeddingModel: getEmbeddingModel()
         })
       }
       fragmentsMap[option.id]?.push(option.fragment)
@@ -165,8 +167,44 @@ export interface GetMemoParams {
 export function getMemo(data: GetMemoParams) {
   return getData(data)
 }
-
 export function cancelSaveMemo(id: string) {
   fragmentsMap[id] = undefined
   dataMap[id] = undefined
+}
+export async function exportMemo(memo: MemoModel) {
+  const data = await getMemoDataAndIndexes(memo.id)
+  memo.fragment.forEach((f) => (f.from = undefined))
+  return (
+    `gomoon-memo: ${memo.name}\n` +
+    JSON.stringify({
+      memo: memo,
+      data: data.reduce((item, curr) => {
+        return {
+          ...item,
+          [curr.id]: {
+            content: curr.data,
+            indexes: curr.indexes,
+            fileName: curr.name,
+            vectors: curr.vectors,
+            embeddingModel: curr.embeddingModel
+          }
+        }
+      }, {})
+    })
+  )
+}
+export async function importMemo(path: string) {
+  // 取出第一行
+  const data = readFileSync(path, 'utf-8')
+  const [meta, memoContent] = data.split('\n')
+  if (meta.startsWith('gomoon-memo: ')) {
+    const { memo, data } = JSON.parse(memoContent)
+    if (!memo || !data) {
+      return false
+    }
+    getMemories().find((m) => m.id === memo.id) ? updateMemo(memo) : createMemo(memo)
+    await importDataAndIndexes(memo.id, data)
+    return true
+  }
+  return false
 }

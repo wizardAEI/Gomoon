@@ -162,7 +162,7 @@ export async function checkUpdate(): Promise<boolean> {
 }
 
 export async function postMsgToMainWindow(msg: string) {
-  return await mainWindow?.webContents.send('post-message', msg)
+  return mainWindow?.webContents.send('post-message', msg)
 }
 
 export function createWindow(): void {

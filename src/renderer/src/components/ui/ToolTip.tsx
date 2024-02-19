@@ -18,7 +18,7 @@ export default function (props: {
       openDelay: 200,
       closeDelay: 300,
       positioning: props.position || {
-        placement: 'right'
+        placement: 'top'
       }
     })
   )
