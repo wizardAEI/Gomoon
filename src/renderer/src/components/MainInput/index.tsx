@@ -209,7 +209,7 @@ export default function Input(props: {
                   }
                 })
               }}
-              class="group/refresh ml-1 h-8 w-8 rounded-full p-[7px] hover:bg-active-bac"
+              class="group/refresh ml-1 h-8 w-8 rounded-full p-[7px] hover:bg-dark-plus"
             >
               <RefreshIcon
                 width={18}

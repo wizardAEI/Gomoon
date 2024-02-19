@@ -25,10 +25,8 @@ function ToolWrap(props: { children: JSXElement; onClick?: () => void; active?: 
     <div
       onClick={props.onClick}
       class={
-        'flex cursor-pointer select-none rounded-lg border border-solid  px-1 py-[1px] text-[12px] hover:text-white ' +
-        (props.active
-          ? 'border-dark-plus bg-dark-con text-text1'
-          : 'border-dark-con bg-dark-plus hover:border-active')
+        'flex cursor-pointer select-none rounded-lg border border-solid  border-dark-con px-1 py-[1px] text-[12px] hover:text-white ' +
+        (props.active ? 'bg-active-con  text-text1' : 'bg-dark-plus hover:border-active')
       }
     >
       {props.children}
