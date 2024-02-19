@@ -59,7 +59,7 @@ export default function Tools(props: {
   type: 'chat' | 'ans'
 }) {
   const toast = useToast()
-  const dynamicLoading = useLoading()
+  const load = useLoading()
   let toolsDiv: HTMLDivElement | undefined
   let [url, setUrl] = createSignal('')
   const scroll = (position: 'left' | 'right') => {
@@ -183,7 +183,7 @@ export default function Tools(props: {
                   if (file) {
                     try {
                       const content = await recognizeText(file, (m) => {
-                        dynamicLoading.show(m?.status || '正在识别图片中的文字')
+                        load.show(m?.status || '正在识别图片中的文字')
                       })
                       props.onInput(content)
                     } catch (error: any) {
@@ -192,7 +192,7 @@ export default function Tools(props: {
                         position: 'top-1/3'
                       })
                     } finally {
-                      dynamicLoading.hide()
+                      load.hide()
                     }
                   }
                 }}
@@ -215,7 +215,7 @@ export default function Tools(props: {
                 </div>
               )
               if (confirm) {
-                dynamicLoading.show('正在解析网页中的链接')
+                load.show('正在解析网页中的链接')
                 try {
                   const content = await parsePageForUrl(url())
                   addArtifact({
@@ -232,7 +232,7 @@ export default function Tools(props: {
                 } finally {
                   setUrl('')
                 }
-                dynamicLoading.hide()
+                load.hide()
               }
             }}
           >
@@ -278,19 +278,19 @@ export default function Tools(props: {
                   })
                 : toast.success('已关闭记忆胶囊')
               if (memoCapsule() && memories.length === 0) {
-                dynamicLoading.show('功能初始化中...')
+                load.show('功能初始化中...')
                 const remove = window.api.receiveMsg(async (_, msg: string) => {
                   if (msg.includes('progress')) {
-                    const progress = msg.split(' ')[1]
+                    const progress = msg.replace(/^progress /, '')
                     if (progress === '100%') {
                       remove()
                       return
                     }
-                    dynamicLoading.show(`功能初始化中...${progress}`)
+                    load.show(`功能初始化中...${progress}`)
                   }
                 })
                 await initMemories()
-                dynamicLoading.hide()
+                load.hide()
               }
             }}
           >

@@ -78,12 +78,12 @@ export default function () {
                     // TODO: 观察是否需要进度功能
                     // const remove = window.api.receiveMsg(async (_, msg: string) => {
                     //   if (msg.includes('progress')) {
-                    //     const progress = msg.split(' ')[1]
+                    //     const progress = msg.replace(/^progress /, '')
                     //     if (progress === '100%') {
                     //       remove()
                     //       return
                     //     }
-                    //     loading.show(`功能初始化中...${progress}`)
+                    //     load.show(`功能初始化中...${progress}`)
                     //   }
                     // })
                     loading.hide()

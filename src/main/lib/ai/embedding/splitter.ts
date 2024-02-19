@@ -1,5 +1,6 @@
 import markdownIt, { Token } from 'markdown-it'
 import { lmInvoke } from '../langchain'
+import { postMsgToMainWindow } from '../../../window'
 
 const md = markdownIt()
 
@@ -190,7 +191,7 @@ export async function getChunkFromNodes(
     useLM?: boolean
     from?: string
   } = {
-    chunkSize: 500,
+    chunkSize: 700,
     chunkOverlap: 2 // 左右两个节点
   }
 ): Promise<Chunk[]> {
@@ -341,7 +342,7 @@ export async function getChunkFromNodes(
   // 等待所有任务完成,或超时（60s）
   let timeout = 60 * 1000
   while (chunkTask.length && timeout > 0) {
-    console.log('wait', timeout, chunkTask)
+    postMsgToMainWindow(`progress 执行优化任务，剩余${chunkTask.length}个`)
     await new Promise((resolve) => setTimeout(resolve, 1000))
     timeout -= 1000
   }

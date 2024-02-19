@@ -12,6 +12,7 @@ import {
 } from '../../../models/memo'
 import { ulid } from 'ulid'
 import { createMemo, deleteMemo, getMemories, updateMemo } from '../../../models'
+import { postMsgToMainWindow } from '../../../window'
 
 export interface EditFragmentOption {
   id: string
@@ -61,8 +62,10 @@ export async function editFragment(option: EditFragmentOption): Promise<{
         chunkOverlap: 2,
         useLM: option.useLM
       })
-      for (let chunk of chunks) {
+      for (let i = 0; i < chunks.length; i++) {
         const vectors: Float32Array[] = []
+        const chunk = chunks[i]
+        postMsgToMainWindow(`progress 存储知识中 ${i}/${chunks.length}`)
         for (let index of chunk.indexes) {
           const vector = await embedding(index.value)
           vectors.push(vector)
@@ -77,6 +80,7 @@ export async function editFragment(option: EditFragmentOption): Promise<{
           embeddingModel: getEmbeddingModel()
         })
       }
+      postMsgToMainWindow('progress suc')
       fragmentsMap[option.id]?.push(option.fragment)
     }
     return { suc: true }

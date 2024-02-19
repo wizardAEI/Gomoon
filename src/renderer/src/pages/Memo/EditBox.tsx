@@ -104,6 +104,16 @@ export default function (props: {
               e.target.value = ''
               if (file) {
                 load.show('解析文件中')
+                const remove = window.api.receiveMsg(async (_, msg: string) => {
+                  if (msg.includes('progress')) {
+                    const progress = msg.replace(/^progress /, '')
+                    if (progress === 'suc') {
+                      remove()
+                      return
+                    }
+                    load.show(progress)
+                  }
+                })
                 try {
                   const res = await window.api.editFragment({
                     id: m().id,
@@ -127,6 +137,7 @@ export default function (props: {
                     ])
                   }
                 } catch (error: any) {
+                  remove()
                   toast.error(error?.message || '解析失败')
                 }
                 load.hide()
