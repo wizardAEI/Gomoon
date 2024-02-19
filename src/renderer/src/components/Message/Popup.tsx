@@ -108,9 +108,6 @@ export function MsgPopupForUser(props: { id: string; content: string; type: MsgT
           />
         }
         content="重新编辑"
-        position={{
-          placement: 'left'
-        }}
       />
       <ToolTip
         label={compWithTip(
@@ -127,9 +124,6 @@ export function MsgPopupForUser(props: { id: string; content: string; type: MsgT
           'right'
         )}
         content="复制到剪贴板"
-        position={{
-          placement: 'left'
-        }}
       />
     </div>
   )

@@ -25,8 +25,14 @@ export default function (props: { type: 'chat' | 'ans' }) {
   const [modelList, setModelList] = createSignal<AssistantModel[]>([])
   const [memoList, setMemoList] = createSignal<MemoModel[]>([])
   createEffect((b) => {
-    if (!assistants.length || !memories.length || b) return b
+    if (!assistants.length || b) return b
     setModelList(assistants.filter((a) => a.type === props.type).slice(0, 5))
+    setMemoList(memories.slice(0, 5))
+    return true
+  }, false)
+  // memories 可能为空（初始化之前）
+  createEffect((b) => {
+    if (!memories.length || b) return b
     setMemoList(memories.slice(0, 5))
     return true
   }, false)

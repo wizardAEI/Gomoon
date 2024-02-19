@@ -3,6 +3,7 @@ import {
   createNewMemo,
   deleteMemo,
   getCurrentMemo,
+  importMemo,
   memories,
   memoriesStatus,
   onCancelEditMemo,
@@ -19,24 +20,73 @@ import CrossMark from '@renderer/assets/icon/base/CrossMark'
 import { MemoModel } from 'src/main/models/model'
 import { setSelectedMemo } from '@renderer/store/user'
 import { useNavigate } from '@solidjs/router'
+import UploadIcon from '@renderer/assets/icon/base/UploadIcon'
+import ToolTip from '@renderer/components/ui/ToolTip'
+import { cloneDeep } from 'lodash'
+import DownloadIcon from '@renderer/assets/icon/base/DownloadIcon'
+import { useLoading } from '@renderer/components/ui/DynamicLoading'
 
 export default function () {
   const toast = useToast()
+  const loading = useLoading()
   const nav = useNavigate()
 
   return (
     <div class="max-w-[100%] overflow-hidden">
       <div class="mb-5 animate-scale-down-entrance select-none p-2">
-        <div
-          class="group/create relative m-4 flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-dark p-4"
-          onClick={createNewMemo}
-        >
-          <Plus
-            height={30}
-            width={30}
-            class="cursor-pointer text-gray duration-100 group-hover/create:text-active"
-          />
-          <span class="text-base">添加一个记忆胶囊 💊</span>
+        <div class="m-4 flex gap-2">
+          <div
+            class="group/create relative flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-dark p-4"
+            onClick={createNewMemo}
+          >
+            <Plus
+              height={24}
+              width={24}
+              class="cursor-pointer text-gray duration-100 group-hover/create:text-active"
+            />
+            <span>添加记忆胶囊 💊</span>
+          </div>
+
+          <label for="import-assistants" class="flex-1">
+            <div class="group/create relative flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-dark p-4">
+              <DownloadIcon
+                height={24}
+                width={24}
+                class="cursor-pointer text-gray duration-100 group-hover/create:text-active"
+              />
+              <span>导入记忆胶囊 💊</span>
+              <input
+                id="import-assistants"
+                type="file"
+                class="hidden"
+                accept=".gomoon"
+                multiple={false}
+                onChange={async (e) => {
+                  const file = e.target.files![0]
+                  e.target.value = ''
+                  if (file) {
+                    console.log(file)
+                    loading.show('正在导入')
+                    // TODO: 观察是否需要进度功能
+                    // const remove = window.api.receiveMsg(async (_, msg: string) => {
+                    //   if (msg.includes('progress')) {
+                    //     const progress = msg.split(' ')[1]
+                    //     if (progress === '100%') {
+                    //       remove()
+                    //       return
+                    //     }
+                    //     loading.show(`功能初始化中...${progress}`)
+                    //   }
+                    // })
+                    loading.hide()
+                    ;(await importMemo(file.path))
+                      ? toast.success('导入成功')
+                      : toast.error('导入失败')
+                  }
+                }}
+              />
+            </div>
+          </label>
         </div>
         <For each={memories}>
           {(m) => (
@@ -84,6 +134,21 @@ export default function () {
                     <div class="font-medium">{m.name}</div>
                   </div>
                   <div class="flex h-6 gap-1">
+                    <ToolTip
+                      content="导出记忆"
+                      label={
+                        <UploadIcon
+                          height={20}
+                          width={20}
+                          onClick={async (e) => {
+                            e.stopPropagation()
+                            const data = await window.api.exportMemory(cloneDeep(m))
+                            await window.api.saveFile(`${m.name}.gomoon`, data)
+                          }}
+                          class="cursor-pointer text-gray duration-100 hover:text-active"
+                        />
+                      }
+                    />
                     <EditIcon
                       height={20}
                       width={20}

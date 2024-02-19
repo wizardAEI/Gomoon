@@ -3,8 +3,9 @@ import { join } from 'path'
 import { JSONSyncPreset } from 'lowdb/node'
 import { Connection, connect } from 'vectordb'
 import { existsSync, mkdirSync, unlinkSync } from 'fs'
-import { embedding } from '../lib/ai/embedding/embedding'
+import { embedding, getEmbeddingModel } from '../lib/ai/embedding/embedding'
 import { MemoFragmentData, MemoResult } from './model'
+import { postMsgToMainWindow } from '../window'
 
 const appDataPath = app.getPath('userData')
 const memoPath = join(appDataPath, 'memo')
@@ -17,6 +18,14 @@ async function connectDB() {
 
 mkdirSync(memoPath, { recursive: true })
 
+interface MemoData {
+  [id: string]: {
+    content: string
+    indexes: string[]
+    fileName: string
+  }
+}
+
 export function saveData(
   memoId: string,
   data: {
@@ -27,13 +36,7 @@ export function saveData(
   }[]
 ) {
   const path = join(memoPath, memoId)
-  const db = JSONSyncPreset<{
-    [id: string]: {
-      content: string
-      indexes: string[]
-      fileName: string
-    }
-  }>(path, {})
+  const db = JSONSyncPreset<MemoData>(path, {})
   data.forEach((d) => {
     db.data[d.id] = {
       content: d.content,
@@ -41,6 +44,49 @@ export function saveData(
       indexes: d.indexes
     }
   })
+  db.write()
+}
+
+export interface ImportMemoDataModel {
+  content: string
+  indexes: string[]
+  fileName: string
+  embeddingModel: string
+  vectors?: Float32Array[]
+}
+
+export async function importDataAndIndexes(
+  memoId: string,
+  data: {
+    [id: string]: ImportMemoDataModel
+  }
+) {
+  const path = join(memoPath, memoId)
+  const db = JSONSyncPreset<MemoData>(path, data)
+  await deleteDataAndIndex(memoId)
+  const indexes: {
+    [key in string]: Float32Array[] | undefined
+  } = {}
+  for (let i = 0; i < Object.keys(data).length; i++) {
+    const key = Object.keys(data)[i]
+    const item = data[key]
+    for (let j = 0; j < item.indexes.length; j++) {
+      if (item.vectors?.[j] && item.embeddingModel === getEmbeddingModel()) {
+        indexes[key] ? indexes[key]?.push(item.vectors[j]) : (indexes[key] = [item.vectors[j]])
+        continue
+      }
+      const v = await embedding(item.indexes[j])
+      indexes[key] ? indexes[key]?.push(v) : (indexes[key] = [v])
+    }
+    postMsgToMainWindow(`progress ${(i / Object.keys(data).length) * 100}%`)
+  }
+  await saveIndexes(
+    memoId,
+    Object.keys(indexes).map((key) => ({
+      id: key,
+      vectors: indexes[key] ?? []
+    }))
+  )
   db.write()
 }
 
@@ -93,13 +139,7 @@ export async function getData(data: { id: string; content: string }): Promise<Ar
     id: string
   }[]
   const path = join(memoPath, data.id)
-  const fileDB = JSONSyncPreset<{
-    [id: string]: {
-      content: string
-      indexes: string[]
-      fileName: string
-    }
-  }>(path, {})
+  const fileDB = JSONSyncPreset<MemoData>(path, {})
   const contents: {
     content: string
   }[] = []
@@ -115,13 +155,7 @@ export async function getData(data: { id: string; content: string }): Promise<Ar
 
 export async function getMemoDataAndIndexes(memoId: string): Promise<MemoFragmentData[]> {
   const path = join(memoPath, memoId)
-  const jsonDb = JSONSyncPreset<{
-    [id: string]: {
-      content: string
-      indexes: string[]
-      fileName: string
-    }
-  }>(path, {})
+  const jsonDb = JSONSyncPreset<MemoData>(path, {})
   const arr: MemoFragmentData[] = []
   for (let key in jsonDb.data) {
     await connectDB()
@@ -136,7 +170,8 @@ export async function getMemoDataAndIndexes(memoId: string): Promise<MemoFragmen
       name: jsonDb.data[key].fileName,
       data: jsonDb.data[key].content,
       vectors: res.map((item) => item.vector as Float32Array),
-      indexes: jsonDb.data[key].indexes
+      indexes: jsonDb.data[key].indexes,
+      embeddingModel: getEmbeddingModel()
     })
   }
   return arr

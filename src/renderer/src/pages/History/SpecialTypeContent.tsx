@@ -53,9 +53,9 @@ export default function (meta: ContentDisplay, role = '我', index: number) {
         <span class="flex items-start break-words">
           {index === 0 && <span class="mr-1">我:</span>}
           <CapsuleIcon
-            class="shrink-0 grow-0 translate-y-[1px] text-text2"
-            width={18}
-            height={18}
+            class="shrink-0 grow-0 translate-y-[1px] pr-[2px] text-text2"
+            width={17}
+            height={17}
           />
           <span class="text-text2">{decorateContent(meta.question)}</span>
         </span>

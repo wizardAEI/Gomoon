@@ -18,13 +18,15 @@ import {
   useAssistant,
   getLines,
   getMemories,
-  useMemo
+  useMemo,
+  initMemories
 } from './models/index'
 import {
   AssistantModel,
   CreateAssistantModel,
   HistoryModel,
   MemoFragment,
+  MemoModel,
   SettingModel,
   UserDataModel
 } from './models/model'
@@ -51,7 +53,9 @@ import {
   dropMemo,
   editFragment,
   editMemo,
+  exportMemo,
   getMemo,
+  importMemo,
   saveMemo
 } from './lib/ai/embedding/index'
 
@@ -144,6 +148,9 @@ export function initAppEventsHandler() {
   ipcMain.handle('cancel-save-memory', (_, id: string) => cancelSaveMemo(id))
   ipcMain.handle('use-memory', (_, id: string) => useMemo(id))
   ipcMain.handle('get-memory-data', (_, data: GetMemoParams) => getMemo(data))
+  ipcMain.handle('init-memories', () => initMemories())
+  ipcMain.handle('export-memory', (_, memo: MemoModel) => exportMemo(memo))
+  ipcMain.handle('import-memory', (_, path: string) => importMemo(path))
 
   // 文件相关
   ipcMain.handle('parse-file', (_, files) => parseFile(files))

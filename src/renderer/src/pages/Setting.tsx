@@ -194,11 +194,20 @@ export default function Setting() {
           <a href="https://github.com/wizardAEI/Gomoon" target="_blank">
             GitHub
           </a>
-          <span> 。您的 Star 和建议是对该项目最大的支持！</span>
+          <span>，您的 Star 和建议是对该项目最大的支持。</span>
         </div>
-        <div></div>
-        <div class="mt-1 flex items-center gap-2 text-text2">
-          <span>版本号：v1.0.5</span>
+        <div class="mt-2 text-sm text-text2">
+          <span>哈喽👋，我在</span>
+          <a
+            href="https://space.bilibili.com/434118077/channel/collectiondetail?sid=2235600"
+            target="_blank"
+          >
+            哔哩哔哩
+          </a>
+          发布了教学视频，可以让你更加有效的使用 Gomoon，解锁更多功能！
+        </div>
+        <div class="mt-2 flex items-center gap-2 text-text2">
+          <span>版本号：v1.0.6</span>
           <a
             class="cursor-pointer text-text-link hover:text-active"
             onClick={async () => {

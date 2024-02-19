@@ -2,6 +2,7 @@ import { readFileSync } from 'fs'
 import { getResourcesPath } from '../lib'
 import { AssistantModel, Line, MemoModel, UserDataModel } from './model'
 import { SettingModel } from './model'
+import { ImportMemoDataModel } from './memo'
 
 export function getDefaultAssistants(): AssistantModel[] {
   const a = readFileSync(getResourcesPath('assistants.json'), 'utf-8')
@@ -59,7 +60,12 @@ export function getDefaultUserData(): UserDataModel {
   }
 }
 
-export function getDefaultMemories(): MemoModel[] {
+export function getDefaultMemories(): {
+  memo: MemoModel
+  data: {
+    [id: string]: ImportMemoDataModel
+  }
+}[] {
   const memo = readFileSync(getResourcesPath('memories.json'), 'utf-8')
   const { memories } = JSON.parse(memo)
   return memories
