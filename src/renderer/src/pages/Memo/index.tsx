@@ -10,7 +10,7 @@ import {
   onEditMemo,
   saveMemo
 } from '@renderer/store/memo'
-import { For, Show } from 'solid-js'
+import { For, Show, onCleanup, onMount } from 'solid-js'
 import EditBox from './EditBox'
 import CapitalIcon from '@renderer/components/ui/CapitalIcon'
 import EditIcon from '@renderer/assets/icon/base/EditIcon'
@@ -30,6 +30,14 @@ export default function () {
   const toast = useToast()
   const loading = useLoading()
   const nav = useNavigate()
+
+  onMount(() => {
+    onCleanup(() => {
+      memories.forEach((a) => {
+        onCancelEditMemo(a.id)
+      })
+    })
+  })
 
   return (
     <div class="max-w-[100%] overflow-hidden">
