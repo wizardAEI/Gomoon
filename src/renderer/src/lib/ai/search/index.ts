@@ -79,5 +79,5 @@ export async function searchByBaidu(question: string, logger: (content: string) 
   res.map((r, i) => {
     content += `\n\n\n第${i + 1}个网页信息：${r}`
   })
-  return `<gomoon-search/><gomoon-question>${question}</gomoon-question><gomoon-val>${content}</gomoon-val></gomoon-search>`
+  return `<gomoon-search><gomoon-question>${question}</gomoon-question><gomoon-val>${content}</gomoon-val></gomoon-search>`
 }

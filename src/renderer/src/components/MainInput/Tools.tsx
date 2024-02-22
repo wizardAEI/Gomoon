@@ -84,7 +84,7 @@ export default function Tools(props: {
     props.setArtifacts((arr) => arr.filter((_, i) => index !== i))
   }
   return (
-    <div>
+    <div class="">
       <div class="flex flex-wrap gap-1 px-1 py-2">
         <For each={props.artifacts()}>
           {(artifact, index) => {
@@ -118,7 +118,7 @@ export default function Tools(props: {
         {/* 文件上传按钮 */}
         <div
           ref={toolsDiv}
-          class="no-scroll-bar flex items-center gap-2 overflow-x-auto overflow-y-visible whitespace-nowrap"
+          class="no-scroll-bar flex items-center justify-center gap-2 overflow-x-auto overflow-y-visible whitespace-nowrap"
         >
           <ToolWrap>
             <label for="file" style={{ cursor: 'pointer' }}>
