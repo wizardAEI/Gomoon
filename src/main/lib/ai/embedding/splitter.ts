@@ -1,5 +1,6 @@
 import markdownIt, { Token } from 'markdown-it'
 import { lmInvoke } from '../langchain'
+import { postMsgToMainWindow } from '../../../window'
 
 const md = markdownIt()
 
@@ -12,6 +13,7 @@ interface Node {
 }
 
 const splice = (a: string, b: string) => {
+  b = b || ''
   if (a.length) {
     return a + '\n' + b
   }
@@ -26,9 +28,9 @@ export function createTreeFromMarkdown(
 ): Node[] {
   const tree: Node[] = []
   const tokens: Token[] = md.parse(markdown, {})
-  let i = 0
+  let tokenIndex = 0
   const isType = (tokenType: string) => {
-    return tokens[i].type === tokenType
+    return tokens[tokenIndex].type === tokenType
   }
   const getTitle = (str: string) => {
     str = str.trim().split('\n')[0]
@@ -37,26 +39,26 @@ export function createTreeFromMarkdown(
   const contentProcess = (): string => {
     if (isType('list_item_open')) {
       let content = ''
-      content += '\n' + tokens[i].info + tokens[i].markup + ' '
-      while (i < tokens.length && !isType('list_item_close')) {
-        i++
-        content += tokens[i].content ? tokens[i].content + '\n' : ''
+      content += '\n' + tokens[tokenIndex].info + tokens[tokenIndex].markup + ' '
+      while (tokenIndex < tokens.length && !isType('list_item_close')) {
+        tokenIndex++
+        content += tokens[tokenIndex].content ? tokens[tokenIndex].content + '\n' : ''
       }
       return content.slice(0, -1)
     }
-    if (isType('inline')) return '\n' + tokens[i].content
+    if (isType('inline')) return '\n' + tokens[tokenIndex].content
     if (isType('fence')) {
-      const fence = tokens[i]
+      const fence = tokens[tokenIndex]
       return '\n' + fence.markup + fence.info + '\n' + fence.content + fence.markup
     }
-    if (tokens[i].type === 'table_open') {
+    if (tokens[tokenIndex].type === 'table_open') {
       let isInsideRow = false,
         currentRow = '',
         tableMarkdown = '',
         isHeader = false,
         headerNum = 0
-      for (i = 0; i < tokens.length; i++) {
-        const token = tokens[i]
+      for (; tokenIndex < tokens.length; tokenIndex++) {
+        const token = tokens[tokenIndex]
         if (token.type === 'table_close') break
         if (token.type === 'tr_open') {
           isInsideRow = true
@@ -66,7 +68,7 @@ export function createTreeFromMarkdown(
           tableMarkdown += currentRow.trim() + '\n'
           if (!isHeader) {
             isHeader = true
-            for (let j = 0; j < headerNum; j++) tableMarkdown += '|-'
+            for (let i = 0; i < headerNum; i++) tableMarkdown += '|-'
             tableMarkdown += '|\n'
           }
         } else if (isInsideRow && (token.type === 'th_open' || token.type === 'td_open')) {
@@ -82,9 +84,9 @@ export function createTreeFromMarkdown(
     return ''
   }
   let beforeContent = ''
-  while (i < tokens.length && !isType('heading_open')) {
+  while (tokenIndex < tokens.length && !isType('heading_open')) {
     beforeContent += contentProcess()
-    i++
+    tokenIndex++
   }
   beforeContent &&
     tree.push({
@@ -96,22 +98,22 @@ export function createTreeFromMarkdown(
     })
   const buildTree = (options: { nodes: Node[]; level: number; totalBefore: string }) => {
     let { nodes, level, totalBefore } = options
-    while (i < tokens.length) {
+    while (tokenIndex < tokens.length) {
       if (!isType('heading_open')) {
-        i++
+        tokenIndex++
         continue
       }
-      const markup = tokens[i].markup
+      const markup = tokens[tokenIndex].markup
       let content = ''
-      while (i < tokens.length && !isType('heading_close')) {
-        i++
-        content += tokens[i].content
+      while (tokenIndex < tokens.length && !isType('heading_close')) {
+        tokenIndex++
+        content += tokens[tokenIndex].content
       }
       const title = content
       content = markup + ' ' + content
-      while (i < tokens.length && !isType('heading_open')) {
+      while (tokenIndex < tokens.length && !isType('heading_open')) {
         content += contentProcess()
-        i++
+        tokenIndex++
       }
       const node = {
         markup,
@@ -121,11 +123,11 @@ export function createTreeFromMarkdown(
         children: []
       }
       nodes.push(node)
-      if (i === tokens.length) {
+      if (tokenIndex >= tokens.length) {
         node.total = content
         return splice(totalBefore, content)
       }
-      const levelNext = parseInt(tokens[i].tag.slice(1))
+      const levelNext = parseInt(tokens[tokenIndex].tag.slice(1))
       if (levelNext > level) {
         node.total = buildTree({
           nodes: node.children,
@@ -144,10 +146,10 @@ export function createTreeFromMarkdown(
     }
     return totalBefore
   }
-  while (i < tokens.length) {
+  while (tokenIndex < tokens.length) {
     buildTree({
       nodes: tree,
-      level: parseInt(tokens[i].tag.slice(1)),
+      level: parseInt(tokens[tokenIndex].tag.slice(1)),
       totalBefore: ''
     })
   }
@@ -169,7 +171,7 @@ async function getQuestionsByLM(total: string): Promise<string[]> {
     // 判断是否以序号开头，如果是则认为该行是问题，去除序号
     if (line.match(/^[0-9]+\./)) {
       line = line.replace(/^[0-9]+\./, '')
-      line && lines.push(line)
+      line && lines.push(line.trim())
     }
   })
   return lines
@@ -190,7 +192,7 @@ export async function getChunkFromNodes(
     useLM?: boolean
     from?: string
   } = {
-    chunkSize: 500,
+    chunkSize: 700,
     chunkOverlap: 2 // 左右两个节点
   }
 ): Promise<Chunk[]> {
@@ -258,7 +260,6 @@ export async function getChunkFromNodes(
       })
       if (node.title !== node.content) chunk[chunk.length - 1].indexes.push({ value: node.content })
       if (node.title !== node.total) chunk[chunk.length - 1].indexes.push({ value: node.total })
-      // TODO: 这里使用大模型，由于时间问题后续需要加上进度功能
       if (options.useLM) {
         const index = chunk.length - 1
         chunkTask.push(index)
@@ -308,7 +309,6 @@ export async function getChunkFromNodes(
           if (options.useLM) {
             const index = chunk.length - 1
             chunkTask.push(index)
-            // TODO: 这里使用大模型，由于时间问题后续需要加上进度功能
             getQuestionsByLM(content).then((questions) => {
               questions.forEach((question) => {
                 chunk[index].indexes.push({ value: question })
@@ -341,7 +341,7 @@ export async function getChunkFromNodes(
   // 等待所有任务完成,或超时（60s）
   let timeout = 60 * 1000
   while (chunkTask.length && timeout > 0) {
-    console.log('wait', timeout, chunkTask)
+    postMsgToMainWindow(`progress 执行优化任务，剩余${chunkTask.length}个`)
     await new Promise((resolve) => setTimeout(resolve, 1000))
     timeout -= 1000
   }

@@ -10,7 +10,7 @@ import {
   onEditMemo,
   saveMemo
 } from '@renderer/store/memo'
-import { For, Show } from 'solid-js'
+import { For, Show, onCleanup, onMount } from 'solid-js'
 import EditBox from './EditBox'
 import CapitalIcon from '@renderer/components/ui/CapitalIcon'
 import EditIcon from '@renderer/assets/icon/base/EditIcon'
@@ -30,6 +30,14 @@ export default function () {
   const toast = useToast()
   const loading = useLoading()
   const nav = useNavigate()
+
+  onMount(() => {
+    onCleanup(() => {
+      memories.forEach((a) => {
+        onCancelEditMemo(a.id)
+      })
+    })
+  })
 
   return (
     <div class="max-w-[100%] overflow-hidden">
@@ -70,12 +78,12 @@ export default function () {
                     // TODO: 观察是否需要进度功能
                     // const remove = window.api.receiveMsg(async (_, msg: string) => {
                     //   if (msg.includes('progress')) {
-                    //     const progress = msg.split(' ')[1]
+                    //     const progress = msg.replace(/^progress /, '')
                     //     if (progress === '100%') {
                     //       remove()
                     //       return
                     //     }
-                    //     loading.show(`功能初始化中...${progress}`)
+                    //     load.show(`功能初始化中...${progress}`)
                     //   }
                     // })
                     loading.hide()

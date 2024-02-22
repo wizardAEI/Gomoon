@@ -1,6 +1,6 @@
 import { parseFile } from '@renderer/lib/ai/file'
 import { useToast } from '../ui/Toast'
-import { Accessor, For, JSXElement, Setter, createSignal } from 'solid-js'
+import { Accessor, For, JSXElement, Setter, Show, createSignal, onMount } from 'solid-js'
 import LeftArrow from '@renderer/assets/icon/base/arrow/LeftArrow'
 import RightArrow from '@renderer/assets/icon/base/arrow/RightArrow'
 import { recognizeText } from '@renderer/lib/ai/ocr'
@@ -25,10 +25,8 @@ function ToolWrap(props: { children: JSXElement; onClick?: () => void; active?: 
     <div
       onClick={props.onClick}
       class={
-        'flex cursor-pointer select-none rounded-lg border border-solid  px-1 py-[1px] text-[12px] hover:text-white ' +
-        (props.active
-          ? 'border-dark-plus bg-dark-con text-text1'
-          : 'border-dark-con bg-dark-plus hover:border-active')
+        'flex cursor-pointer select-none rounded-lg border border-solid  border-dark-con px-1 py-[1px] text-[12px] hover:text-white ' +
+        (props.active ? 'bg-active-con  text-text1' : 'bg-dark-plus hover:border-active')
       }
     >
       {props.children}
@@ -59,7 +57,7 @@ export default function Tools(props: {
   type: 'chat' | 'ans'
 }) {
   const toast = useToast()
-  const dynamicLoading = useLoading()
+  const load = useLoading()
   let toolsDiv: HTMLDivElement | undefined
   let [url, setUrl] = createSignal('')
   const scroll = (position: 'left' | 'right') => {
@@ -85,6 +83,20 @@ export default function Tools(props: {
   const removeArtifact = (index: number) => {
     props.setArtifacts((arr) => arr.filter((_, i) => index !== i))
   }
+  const [showArrow, setShowArrow] = createSignal(false)
+  onMount(() => {
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        // 出现滚动条时，显示左右箭头
+        if (entry.target.scrollWidth > entry.target.clientWidth) {
+          setShowArrow(true)
+        } else {
+          setShowArrow(false)
+        }
+      }
+    })
+    resizeObserver.observe(toolsDiv!)
+  })
   return (
     <div>
       <div class="flex flex-wrap gap-1 px-1 py-2">
@@ -111,16 +123,21 @@ export default function Tools(props: {
         </For>
       </div>
       <div class="group/tools relative select-none px-1">
-        <LeftArrow
-          class="absolute left-[-16px] top-1/2 -translate-y-1/2 transform cursor-pointer opacity-0 delay-200 duration-200 hover:text-active group-hover/tools:opacity-100"
-          width={18}
-          height={18}
-          onClick={() => scroll('left')}
-        />
+        <Show when={showArrow()}>
+          <LeftArrow
+            class="absolute left-[-16px] top-1/2 -translate-y-1/2 transform cursor-pointer opacity-0 delay-200 duration-200 hover:text-active group-hover/tools:opacity-100"
+            width={18}
+            height={18}
+            onClick={() => scroll('left')}
+          />
+        </Show>
         {/* 文件上传按钮 */}
         <div
           ref={toolsDiv}
-          class="no-scroll-bar flex items-center gap-2 overflow-x-auto overflow-y-visible whitespace-nowrap"
+          class={
+            (showArrow() ? '' : 'justify-center ') +
+            'no-scroll-bar flex items-center gap-2 overflow-x-auto overflow-y-visible whitespace-nowrap'
+          }
         >
           <ToolWrap>
             <label for="file" style={{ cursor: 'pointer' }}>
@@ -183,7 +200,7 @@ export default function Tools(props: {
                   if (file) {
                     try {
                       const content = await recognizeText(file, (m) => {
-                        dynamicLoading.show(m?.status || '正在识别图片中的文字')
+                        load.show(m?.status || '正在识别图片中的文字')
                       })
                       props.onInput(content)
                     } catch (error: any) {
@@ -192,7 +209,7 @@ export default function Tools(props: {
                         position: 'top-1/3'
                       })
                     } finally {
-                      dynamicLoading.hide()
+                      load.hide()
                     }
                   }
                 }}
@@ -215,7 +232,7 @@ export default function Tools(props: {
                 </div>
               )
               if (confirm) {
-                dynamicLoading.show('正在解析网页中的链接')
+                load.show('正在解析网页中的链接')
                 try {
                   const content = await parsePageForUrl(url())
                   addArtifact({
@@ -232,7 +249,7 @@ export default function Tools(props: {
                 } finally {
                   setUrl('')
                 }
-                dynamicLoading.hide()
+                load.hide()
               }
             }}
           >
@@ -278,19 +295,19 @@ export default function Tools(props: {
                   })
                 : toast.success('已关闭记忆胶囊')
               if (memoCapsule() && memories.length === 0) {
-                dynamicLoading.show('功能初始化中...')
+                load.show('功能初始化中...')
                 const remove = window.api.receiveMsg(async (_, msg: string) => {
                   if (msg.includes('progress')) {
-                    const progress = msg.split(' ')[1]
+                    const progress = msg.replace(/^progress /, '')
                     if (progress === '100%') {
                       remove()
                       return
                     }
-                    dynamicLoading.show(`功能初始化中...${progress}`)
+                    load.show(`功能初始化中...${progress}`)
                   }
                 })
                 await initMemories()
-                dynamicLoading.hide()
+                load.hide()
               }
             }}
           >
@@ -334,12 +351,14 @@ export default function Tools(props: {
         <ToolWrap onClick={() => toast.warning('还没做捏💦')}>代码开发 (开发者选项)</ToolWrap>
         <ToolWrap onClick={() => toast.warning('还没做捏💦')}>图表制作</ToolWrap> */}
         </div>
-        <RightArrow
-          class="absolute right-[-16px] top-1/2 -translate-y-1/2 transform cursor-pointer opacity-0 delay-200 duration-200 hover:text-active group-hover/tools:opacity-100"
-          width={18}
-          height={18}
-          onClick={() => scroll('right')}
-        />
+        <Show when={showArrow()}>
+          <RightArrow
+            class="absolute right-[-16px] top-1/2 -translate-y-1/2 transform cursor-pointer opacity-0 delay-200 duration-200 hover:text-active group-hover/tools:opacity-100"
+            width={18}
+            height={18}
+            onClick={() => scroll('right')}
+          />
+        </Show>
       </div>
     </div>
   )

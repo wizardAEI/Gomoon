@@ -21,11 +21,11 @@ module.exports = {
       },
       colors: {
         active: '#a57bea', // 激活色 亮紫色
-        'active-pro': '#c08eaf', // 激活色↑ 罗兰紫
-        'active-bac': '#253241', // 激活色的背景色 深灰蓝
+        'active-con': '#7c56ba', // 激活色 深紫
         gray: '#869d9d', // 非激活色 淡紫灰色
         'gray-pro': '#93a5a6', // 非激活色↑ 浅紫灰色
         'dark-con': '#436565', // 暗色稍微亮一点
+        'home-top': '#16353e', // 首页顶部渐变色
         dark: '#254852', // 暗色 深蓝绿
         'dark-plus': '#1f3d48', // 暗色稍微深一点
         'dark-pro': '#152431', // 暗色↑

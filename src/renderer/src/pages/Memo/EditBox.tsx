@@ -5,6 +5,7 @@ import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
 import { useLoading } from '@renderer/components/ui/DynamicLoading'
 import Switch from '@renderer/components/ui/SwitchItem'
 import { useToast } from '@renderer/components/ui/Toast'
+import { userData } from '@renderer/store/user'
 import { cloneDeep } from 'lodash'
 import { For, createSignal } from 'solid-js'
 import { MemoModel } from 'src/main/models/model'
@@ -43,10 +44,15 @@ export default function (props: {
       <div class="my-1 mb-3">
         <div class="mb-2 flex justify-between">
           <span>记忆片段</span>
-          <div class="w-28">
+          <div>
             <Switch
               size="sm"
-              label="大模型优化"
+              label={
+                <span>
+                  大模型优化
+                  <span class="text-xs text-gray"> (当前模型: {userData.selectedModel})</span>
+                </span>
+              }
               checked={useLM()}
               onCheckedChange={() => {
                 setUseLM(!useLM())
@@ -104,6 +110,16 @@ export default function (props: {
               e.target.value = ''
               if (file) {
                 load.show('解析文件中')
+                const remove = window.api.receiveMsg(async (_, msg: string) => {
+                  if (msg.includes('progress')) {
+                    const progress = msg.replace(/^progress /, '')
+                    if (progress === 'suc') {
+                      remove()
+                      return
+                    }
+                    load.show(progress)
+                  }
+                })
                 try {
                   const res = await window.api.editFragment({
                     id: m().id,
@@ -127,6 +143,7 @@ export default function (props: {
                     ])
                   }
                 } catch (error: any) {
+                  remove()
                   toast.error(error?.message || '解析失败')
                 }
                 load.hide()

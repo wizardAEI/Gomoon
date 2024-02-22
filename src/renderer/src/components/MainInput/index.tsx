@@ -177,7 +177,7 @@ export default function Input(props: {
         onInput={(c) => setInputText(c)}
         type={typeDict[props.type]}
       />
-      <div class="over relative flex w-full gap-1">
+      <div class="over relative flex w-full justify-center gap-1">
         <Show when={props.showClearButton && !props.isGenerating && !inputText()?.length}>
           <div class="-ml-3 mr-[2px] flex cursor-pointer flex-col items-center justify-center">
             <div
@@ -209,7 +209,7 @@ export default function Input(props: {
                   }
                 })
               }}
-              class="group/refresh ml-1 h-8 w-8 rounded-full p-[7px] hover:bg-active-bac"
+              class="group/refresh ml-1 h-8 w-8 rounded-full p-[7px] hover:bg-dark-plus"
             >
               <RefreshIcon
                 width={18}
@@ -222,7 +222,10 @@ export default function Input(props: {
             </div>
           </div>
         </Show>
-        <div ref={textAreaContainerDiv} class="cyber-box relative flex flex-1 backdrop-blur-md">
+        <div
+          ref={textAreaContainerDiv}
+          class="cyber-box relative flex flex-1 backdrop-blur-md md:max-w-xl lg:max-w-3xl"
+        >
           <div class="absolute bottom-0 right-3 select-none leading-8 text-text3">
             {tokenConsumeDisplay()}
           </div>
