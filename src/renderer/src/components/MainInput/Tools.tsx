@@ -1,6 +1,15 @@
 import { parseFile } from '@renderer/lib/ai/file'
 import { useToast } from '../ui/Toast'
-import { Accessor, For, JSXElement, Setter, createSignal } from 'solid-js'
+import {
+  Accessor,
+  For,
+  JSXElement,
+  Setter,
+  Show,
+  createMemo,
+  createSignal,
+  onMount
+} from 'solid-js'
 import LeftArrow from '@renderer/assets/icon/base/arrow/LeftArrow'
 import RightArrow from '@renderer/assets/icon/base/arrow/RightArrow'
 import { recognizeText } from '@renderer/lib/ai/ocr'
@@ -83,8 +92,22 @@ export default function Tools(props: {
   const removeArtifact = (index: number) => {
     props.setArtifacts((arr) => arr.filter((_, i) => index !== i))
   }
+  const [showArrow, setShowArrow] = createSignal(false)
+  onMount(() => {
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        // 出现滚动条时，显示左右箭头
+        if (entry.target.scrollWidth > entry.target.clientWidth) {
+          setShowArrow(true)
+        } else {
+          setShowArrow(false)
+        }
+      }
+    })
+    resizeObserver.observe(toolsDiv!)
+  })
   return (
-    <div class="">
+    <div>
       <div class="flex flex-wrap gap-1 px-1 py-2">
         <For each={props.artifacts()}>
           {(artifact, index) => {
@@ -109,16 +132,21 @@ export default function Tools(props: {
         </For>
       </div>
       <div class="group/tools relative select-none px-1">
-        <LeftArrow
-          class="absolute left-[-16px] top-1/2 -translate-y-1/2 transform cursor-pointer opacity-0 delay-200 duration-200 hover:text-active group-hover/tools:opacity-100"
-          width={18}
-          height={18}
-          onClick={() => scroll('left')}
-        />
+        <Show when={showArrow()}>
+          <LeftArrow
+            class="absolute left-[-16px] top-1/2 -translate-y-1/2 transform cursor-pointer opacity-0 delay-200 duration-200 hover:text-active group-hover/tools:opacity-100"
+            width={18}
+            height={18}
+            onClick={() => scroll('left')}
+          />
+        </Show>
         {/* 文件上传按钮 */}
         <div
           ref={toolsDiv}
-          class="no-scroll-bar flex items-center justify-center gap-2 overflow-x-auto overflow-y-visible whitespace-nowrap"
+          class={
+            (showArrow() ? '' : 'justify-center ') +
+            'no-scroll-bar flex items-center gap-2 overflow-x-auto overflow-y-visible whitespace-nowrap'
+          }
         >
           <ToolWrap>
             <label for="file" style={{ cursor: 'pointer' }}>
@@ -332,12 +360,14 @@ export default function Tools(props: {
         <ToolWrap onClick={() => toast.warning('还没做捏💦')}>代码开发 (开发者选项)</ToolWrap>
         <ToolWrap onClick={() => toast.warning('还没做捏💦')}>图表制作</ToolWrap> */}
         </div>
-        <RightArrow
-          class="absolute right-[-16px] top-1/2 -translate-y-1/2 transform cursor-pointer opacity-0 delay-200 duration-200 hover:text-active group-hover/tools:opacity-100"
-          width={18}
-          height={18}
-          onClick={() => scroll('right')}
-        />
+        <Show when={showArrow()}>
+          <RightArrow
+            class="absolute right-[-16px] top-1/2 -translate-y-1/2 transform cursor-pointer opacity-0 delay-200 duration-200 hover:text-active group-hover/tools:opacity-100"
+            width={18}
+            height={18}
+            onClick={() => scroll('right')}
+          />
+        </Show>
       </div>
     </div>
   )
