@@ -1,3 +1,4 @@
+import { useToast } from '@renderer/components/ui/Toast'
 import { createSignal } from 'solid-js'
 import { AssistantModel } from 'src/main/models/model'
 
@@ -7,6 +8,7 @@ export default function (props: {
   onSave: (a: AssistantModel) => void
 }) {
   const [a, setA] = createSignal(props.assistant)
+  const toast = useToast()
   function setField(key: keyof AssistantModel, value: any) {
     setA({
       ...a(),
@@ -48,6 +50,14 @@ export default function (props: {
         <button
           class="duration-300 hover:bg-active"
           onClick={() => {
+            if (!a().name) {
+              toast.warning('助手名称不能为空')
+              return
+            }
+            if (!a().prompt) {
+              toast.warning('提示不能为空')
+              return
+            }
             props.onSave(a())
           }}
         >

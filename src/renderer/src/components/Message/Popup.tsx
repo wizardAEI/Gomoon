@@ -63,9 +63,6 @@ export default function MsgPopup(props: { id: string; content: string; type: Msg
             />
           }
           content="重新编辑"
-          position={{
-            placement: 'left'
-          }}
         />
       </Show>
       <ToolTip
