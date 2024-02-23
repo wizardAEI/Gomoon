@@ -102,6 +102,8 @@ export async function hasFirstTimeFor(key: keyof UserDataModel['firstTimeFor']) 
   loadUserData()
 }
 
-// TODO: 看一下是否需要为MEMO新增方法
+const [pageData, setPageData] = createStore({
+  isSpeech: false
+})
 
-export { userData }
+export { userData, pageData, setPageData }

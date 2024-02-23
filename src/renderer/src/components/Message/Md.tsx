@@ -5,6 +5,7 @@ import mdHighlight from 'markdown-it-highlightjs'
 import SpeechIcon from '@renderer/assets/icon/SpeechIcon'
 import FindIcon from '@renderer/assets/icon/FindIcon'
 import { load } from 'cheerio'
+import { setPageData } from '@renderer/store/user'
 
 export default function Md(props: { class: string; content: string }) {
   let selectContent = ''
@@ -14,9 +15,16 @@ export default function Md(props: { class: string; content: string }) {
   const [showSelectBtn, setShowSelectBtn] = createSignal(false)
   let btn: HTMLDivElement | undefined
   function speakText() {
+    // TODO: TTS
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(selectContent)
       utterance.lang = 'zh-CN'
+      utterance.onstart = () => {
+        console.log('start')
+        setPageData('isSpeech', true)
+      }
+      utterance.onend = () => setPageData('isSpeech', false)
+      utterance.onerror = () => setPageData('isSpeech', false)
       window.speechSynthesis.speak(utterance)
     } else {
       console.error('Your browser does not support speech synthesis')
