@@ -69,7 +69,7 @@ export default function (props: {
               </div>
               <DoubleConfirm
                 label="确认删除"
-                position="right-[-10px] top-[-46px]"
+                position="right-[-10px] top-3"
                 onConfirm={async () => {
                   const res = await window.api.editFragment({
                     id: m().id,

@@ -134,7 +134,7 @@ export default function () {
                   /> */}
                     <DoubleConfirm
                       label="确认删除"
-                      position="right-[-10px] top-[-46px]"
+                      position="right-[-10px] top-3"
                       onConfirm={() => deleteAssistant(a.id)}
                       preConfirm={() => {
                         const canDel =

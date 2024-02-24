@@ -54,6 +54,10 @@ module.exports = {
           '0%': { opacity: 0 },
           '100%': { transform: 'translateY(-12px)', opacity: 1 }
         },
+        dropdown: {
+          '0%': { opacity: 0 },
+          '100%': { transform: 'translateY(12px)', opacity: 1 }
+        },
         'scale-down-entrance': {
           '0%': { transform: 'scale(1.1)', opacity: 0.5 },
           '100%': { transform: 'scale(1)' }
@@ -66,6 +70,7 @@ module.exports = {
       animation: {
         click: 'click 0.2s ease-in-out',
         popup: 'popup 0.2s ease-in-out forwards',
+        dropdown: 'dropdown 0.2s ease-in-out forwards',
         'scale-down-entrance': 'scale-down-entrance 0.3s ease-in-out forwards',
         'rotate-180': 'rotate-180 0.3s ease-in-out forwards'
       },

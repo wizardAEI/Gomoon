@@ -6,8 +6,12 @@ export default function (props: {
   position?: string
   onConfirm: () => void
   preConfirm?: () => boolean
+  popup?: boolean
 }) {
   const [show, setShow] = createSignal(false)
+  const animation = () => {
+    return props.popup ? 'animate-popup' : 'animate-dropdown'
+  }
   return (
     <div
       class="relative"
@@ -28,7 +32,7 @@ export default function (props: {
       <Show when={show()}>
         <div
           class={
-            'absolute flex animate-popup flex-col gap-2 overflow-visible rounded-md bg-dark-plus px-2 py-1 shadow-center ' +
+            `absolute flex ${animation()} flex-col gap-2 overflow-visible rounded-md bg-dark-plus px-2 py-1 shadow-center ` +
             props.position
           }
         >
