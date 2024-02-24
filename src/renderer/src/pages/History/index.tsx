@@ -71,7 +71,7 @@ export default function () {
                 <div class="absolute right-2 top-1 z-20 flex items-center gap-3">
                   <DoubleConfirm
                     label="确认删除"
-                    position="right-[-10px] top-3"
+                    position="-right-2 top-3"
                     onConfirm={() => {
                       removeHistory(h.id)
                     }}

@@ -111,6 +111,7 @@
 
 .markdown table tbody tr:last-of-type {
   border-bottom: 2px solid #64748b40;
+  color: #254852;
 }
 
 .markdown code:not(.hljs) {

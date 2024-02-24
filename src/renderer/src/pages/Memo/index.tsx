@@ -168,7 +168,7 @@ export default function () {
                     />
                     <DoubleConfirm
                       label="确认删除"
-                      position="right-[-10px] top-3"
+                      position="-right-2 top-3"
                       onConfirm={() => deleteMemo(m.id)}
                       preConfirm={() => {
                         const canDel = m.id !== getCurrentMemo()?.id
