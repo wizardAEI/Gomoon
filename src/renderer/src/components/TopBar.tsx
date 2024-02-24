@@ -11,8 +11,18 @@ import MinimizeIcon from '@renderer/assets/icon/base/win/MinimizeIcon'
 function Entries() {
   const nav = useNavigate()
   const location = useLocation()
+  const pathname = createMemo(() => {
+    const name = location.pathname
+    const dict = {
+      '/history': 'history',
+      '/answer': 'answer',
+      '/chat': 'chat',
+      '/': 'chat',
+      '/setting': 'setting'
+    }
+    return dict[name] || 'chat'
+  })
 
-  const pathname = createMemo(() => location.pathname)
   return (
     <>
       <ToolTip
@@ -25,7 +35,7 @@ function Entries() {
             }}
             class={
               'cursor-pointer duration-100 hover:text-active ' +
-              (pathname() === '/history' ? 'text-active' : 'text-gray')
+              (pathname() === 'history' ? 'text-active' : 'text-gray')
             }
           />
         }
@@ -45,7 +55,7 @@ function Entries() {
             }}
             class={
               'translate-y-[-1px] cursor-pointer duration-100 hover:text-active ' +
-              (pathname() === '/answer' ? 'text-active' : 'text-gray')
+              (pathname() === 'answer' ? 'text-active' : 'text-gray')
             }
           />
         }
@@ -65,7 +75,7 @@ function Entries() {
             }}
             class={
               'cursor-pointer duration-100 hover:text-active ' +
-              (pathname() === '/' || pathname() === '/chat' ? 'text-active' : 'text-gray')
+              (pathname() === 'chat' ? 'text-active' : 'text-gray')
             }
           />
         }
@@ -88,7 +98,7 @@ function Entries() {
                 }}
                 class={
                   'ml-[-0.0625rem] translate-y-[-0.5px] cursor-pointer duration-100 hover:text-active ' +
-                  (pathname() === '/setting' ? 'text-active' : 'text-gray')
+                  (pathname() === 'setting' ? 'text-active' : 'text-gray')
                 }
               />
             }
@@ -101,7 +111,7 @@ function Entries() {
               }}
               class={
                 'ml-[-0.0625rem] cursor-pointer duration-100 hover:text-active ' +
-                (pathname() === '/setting' ? 'text-active' : 'text-gray')
+                (pathname() === 'setting' ? 'text-active' : 'text-gray')
               }
             />
           </Show>
