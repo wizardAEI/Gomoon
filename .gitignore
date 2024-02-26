@@ -90,3 +90,7 @@ src/renderer/src/lib/config.json
 other
 resources
 extents
+
+app-update.yml
+dev-app-update.yml
+electron-builder.yml
