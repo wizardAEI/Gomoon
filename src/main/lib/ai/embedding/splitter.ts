@@ -205,7 +205,7 @@ export async function getChunkFromNodes(
 ): Promise<Chunk[]> {
   const chunk: Chunk[] = []
   const { chunkSize, chunkOverlap } = options
-  const chunkTask: number[] = []
+  const chunkTask: (number | Error)[] = []
   const split = (total: string, size: number) => {
     if (total.match(/```/)) {
       return [total]
@@ -271,12 +271,16 @@ export async function getChunkFromNodes(
       if (options.useLM) {
         const index = chunk.length - 1
         chunkTask.push(index)
-        getQuestionsByLM(content).then((questions) => {
-          questions.forEach((question) => {
-            chunk[index].indexes.push({ value: question })
+        getQuestionsByLM(content)
+          .then((questions) => {
+            questions.forEach((question) => {
+              chunk[index].indexes.push({ value: question })
+            })
+            chunkTask.splice(chunkTask.indexOf(index), 1)
           })
-          chunkTask.splice(chunkTask.indexOf(index), 1)
-        })
+          .catch((err) => {
+            chunkTask.splice(chunkTask.indexOf(index), 1, err)
+          })
       }
       // TODO: 尝试加上 chunkOverlap 是否有效果
       let lapLNum = 0,
@@ -317,12 +321,16 @@ export async function getChunkFromNodes(
           if (options.useLM) {
             const index = chunk.length - 1
             chunkTask.push(index)
-            getQuestionsByLM(content).then((questions) => {
-              questions.forEach((question) => {
-                chunk[index].indexes.push({ value: question })
+            getQuestionsByLM(content)
+              .then((questions) => {
+                questions.forEach((question) => {
+                  chunk[index].indexes.push({ value: question })
+                })
+                chunkTask.splice(chunkTask.indexOf(index), 1)
               })
-              chunkTask.splice(chunkTask.indexOf(index), 1)
-            })
+              .catch((err) => {
+                chunkTask.splice(chunkTask.indexOf(index), 1, err)
+              })
           }
         }
       }
@@ -349,6 +357,9 @@ export async function getChunkFromNodes(
   // 等待所有任务完成,或超时（60s）
   let timeout = 60 * 1000
   while (chunkTask.length && timeout > 0) {
+    // 如果有error，则直接退出
+    const error = chunkTask.find((index) => typeof index !== 'number')
+    if (error) throw error
     postMsgToMainWindow(`progress 执行优化任务，剩余${chunkTask.length}个`)
     await new Promise((resolve) => setTimeout(resolve, 1000))
     timeout -= 1000

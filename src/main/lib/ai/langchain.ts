@@ -11,9 +11,14 @@ function getLMConfig() {
 export async function lmInvoke(option: { system?: string; content: string }): Promise<string> {
   const lm = loadLMMap(getLMConfig().models)[getLMConfig().current]
   if (!lm) {
-    throw new Error('no model')
+    throw new Error('llm not found')
   }
   const msgs = [msgDict['human'](option.content)]
   if (option.system) msgs.unshift(msgDict['system'](option.system))
-  return (await lm.invoke(msgs)).content as string
+  try {
+    const res = await lm.invoke(msgs)
+    return res.content as string
+  } catch (e) {
+    throw new Error('llm error')
+  }
 }

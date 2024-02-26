@@ -186,7 +186,7 @@ export default function () {
                     </DoubleConfirm>
                   </div>
                 </div>
-                <div class="">{m.introduce ?? '暂无介绍'}</div>
+                <div class="">{m.introduce || '暂无介绍'}</div>
               </div>
             </Show>
           )}
