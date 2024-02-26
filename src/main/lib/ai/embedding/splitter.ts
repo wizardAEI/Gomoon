@@ -159,10 +159,17 @@ export function createTreeFromMarkdown(
 async function getQuestionsByLM(total: string): Promise<string[]> {
   const content = (
     await lmInvoke({
-      system: `我将会给你一段文字，请你根据内容提出几个问题，使用序号标出。例如我给出『小明是一个学生，他喜欢打羽毛球。』，你将回复：
-  1. 小明是什么职业 
-  2. 小明的爱好是什么。
-  提出问题时不要延伸提问，并且确保内容可以明确的回答提出的问题；回复除了问题外不要添加任何其他内容。`,
+      system: `我将会给你一段markdown文档，请你根据内容提出几个问题，使用序号标出。例如我给出：
+\`\`\`
+# A平台操作指南
+## 登录与注册
+### 登录
+登录平台需要输入账号和从B平台获取到的密码
+\`\`\`
+你将回复我：
+1. A平台怎么登录？ 
+2. A平台登录密码怎么获取？
+提出问题时不要延伸提问，确保内容可以明确的回答提出的问题；回复除了问题外不要添加任何其他内容。`,
       content: total
     })
   ).trim()
@@ -198,7 +205,7 @@ export async function getChunkFromNodes(
 ): Promise<Chunk[]> {
   const chunk: Chunk[] = []
   const { chunkSize, chunkOverlap } = options
-  const chunkTask: number[] = []
+  const chunkTask: (number | Error)[] = []
   const split = (total: string, size: number) => {
     if (total.match(/```/)) {
       return [total]
@@ -253,9 +260,10 @@ export async function getChunkFromNodes(
       node.markup + ' ' + node.title
     )
     if (node.total.length < chunkSize) {
+      const content = splice(data?.titleBefore ?? '', node.total)
       chunk.push({
         indexes: [{ value: processTitle(totalTitle) }],
-        document: { content: splice(data?.titleBefore ?? '', node.total) },
+        document: { content },
         from: options.from
       })
       if (node.title !== node.content) chunk[chunk.length - 1].indexes.push({ value: node.content })
@@ -263,12 +271,16 @@ export async function getChunkFromNodes(
       if (options.useLM) {
         const index = chunk.length - 1
         chunkTask.push(index)
-        getQuestionsByLM(node.total).then((questions) => {
-          questions.forEach((question) => {
-            chunk[index].indexes.push({ value: question })
+        getQuestionsByLM(content)
+          .then((questions) => {
+            questions.forEach((question) => {
+              chunk[index].indexes.push({ value: question })
+            })
+            chunkTask.splice(chunkTask.indexOf(index), 1)
           })
-          chunkTask.splice(chunkTask.indexOf(index), 1)
-        })
+          .catch((err) => {
+            chunkTask.splice(chunkTask.indexOf(index), 1, err)
+          })
       }
       // TODO: 尝试加上 chunkOverlap 是否有效果
       let lapLNum = 0,
@@ -309,12 +321,16 @@ export async function getChunkFromNodes(
           if (options.useLM) {
             const index = chunk.length - 1
             chunkTask.push(index)
-            getQuestionsByLM(content).then((questions) => {
-              questions.forEach((question) => {
-                chunk[index].indexes.push({ value: question })
+            getQuestionsByLM(content)
+              .then((questions) => {
+                questions.forEach((question) => {
+                  chunk[index].indexes.push({ value: question })
+                })
+                chunkTask.splice(chunkTask.indexOf(index), 1)
               })
-              chunkTask.splice(chunkTask.indexOf(index), 1)
-            })
+              .catch((err) => {
+                chunkTask.splice(chunkTask.indexOf(index), 1, err)
+              })
           }
         }
       }
@@ -341,6 +357,9 @@ export async function getChunkFromNodes(
   // 等待所有任务完成,或超时（60s）
   let timeout = 60 * 1000
   while (chunkTask.length && timeout > 0) {
+    // 如果有error，则直接退出
+    const error = chunkTask.find((index) => typeof index !== 'number')
+    if (error) throw error
     postMsgToMainWindow(`progress 执行优化任务，剩余${chunkTask.length}个`)
     await new Promise((resolve) => setTimeout(resolve, 1000))
     timeout -= 1000

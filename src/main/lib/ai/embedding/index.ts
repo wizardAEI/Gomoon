@@ -57,31 +57,41 @@ export async function editFragment(option: EditFragmentOption): Promise<{
       if (!res.suc) return { suc: false, reason: res.reason }
       // memory
       const nodes = createTreeFromMarkdown(res.content || '')
-      const chunks = await getChunkFromNodes(nodes, {
-        chunkSize: 700,
-        chunkOverlap: 2,
-        useLM: option.useLM
-      })
-      for (let i = 0; i < chunks.length; i++) {
-        const vectors: Float32Array[] = []
-        const chunk = chunks[i]
-        postMsgToMainWindow(`progress 存储知识中 ${i}/${chunks.length}`)
-        for (let index of chunk.indexes) {
-          const vector = await embedding(index.value)
-          vectors.push(vector)
-        }
-        dataMap[option.id] === undefined && (dataMap[option.id] = [])
-        dataMap[option.id]?.push({
-          id: ulid(),
-          name: option.fragment.name,
-          data: chunk.document.content,
-          vectors,
-          indexes: chunk.indexes.map((index) => index.value),
-          embeddingModel: getEmbeddingModel()
+      try {
+        const chunks = await getChunkFromNodes(nodes, {
+          chunkSize: 700,
+          chunkOverlap: 2,
+          useLM: option.useLM
         })
+        for (let i = 0; i < chunks.length; i++) {
+          const vectors: Float32Array[] = []
+          const chunk = chunks[i]
+          postMsgToMainWindow(`progress 存储知识中 ${i}/${chunks.length}`)
+          for (let index of chunk.indexes) {
+            const vector = await embedding(index.value)
+            vectors.push(vector)
+          }
+          dataMap[option.id] === undefined && (dataMap[option.id] = [])
+          dataMap[option.id]?.push({
+            id: ulid(),
+            name: option.fragment.name,
+            data: chunk.document.content,
+            vectors,
+            indexes: chunk.indexes.map((index) => index.value),
+            embeddingModel: getEmbeddingModel()
+          })
+        }
+        postMsgToMainWindow('progress suc')
+        fragmentsMap[option.id]?.push(option.fragment)
+      } catch (e: Error | any) {
+        if (e.message === 'llm error') {
+          return { suc: false, reason: '大模型调用异常' }
+        }
+        if (e.message === 'llm not found') {
+          return { suc: false, reason: '大模型未加载' }
+        }
+        return { suc: false, reason: '创建记忆胶囊失败' }
       }
-      postMsgToMainWindow('progress suc')
-      fragmentsMap[option.id]?.push(option.fragment)
     }
     return { suc: true }
   } else if (option.type === 'remove') {
