@@ -40,7 +40,7 @@ export default function () {
   })
 
   return (
-    <div class="max-w-[100%] overflow-hidden">
+    <div class="mx-auto w-full overflow-hidden lg:max-w-4xl">
       <div class="mb-5 animate-scale-down-entrance select-none p-2">
         <div class="m-4 flex gap-2">
           <div
@@ -168,7 +168,7 @@ export default function () {
                     />
                     <DoubleConfirm
                       label="确认删除"
-                      position="right-[-10px] top-[-46px]"
+                      position="-right-2 top-3"
                       onConfirm={() => deleteMemo(m.id)}
                       preConfirm={() => {
                         const canDel = m.id !== getCurrentMemo()?.id

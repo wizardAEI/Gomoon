@@ -43,7 +43,7 @@ export default function () {
   })
 
   return (
-    <div class="max-w-[100%] overflow-hidden">
+    <div class="mx-auto w-full overflow-hidden lg:max-w-4xl">
       <div class="mb-5 animate-scale-down-entrance select-none p-2">
         <div
           class="group/create relative m-4 flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-dark p-4"
@@ -134,7 +134,7 @@ export default function () {
                   /> */}
                     <DoubleConfirm
                       label="确认删除"
-                      position="right-[-10px] top-[-46px]"
+                      position="-right-2 top-3"
                       onConfirm={() => deleteAssistant(a.id)}
                       preConfirm={() => {
                         const canDel =

@@ -26,7 +26,7 @@ module.exports = {
         'gray-pro': '#93a5a6', // 非激活色↑ 浅紫灰色
         'dark-con': '#436565', // 暗色稍微亮一点
         'home-top': '#16353e', // 首页顶部渐变色
-        dark: '#254852', // 暗色 深蓝绿
+        dark: '#22444e', // 暗色 深蓝绿
         'dark-plus': '#1f3d48', // 暗色稍微深一点
         'dark-pro': '#152431', // 暗色↑
         light: '#e2e1e4', // 亮色 芡食白
@@ -54,6 +54,10 @@ module.exports = {
           '0%': { opacity: 0 },
           '100%': { transform: 'translateY(-12px)', opacity: 1 }
         },
+        dropdown: {
+          '0%': { opacity: 0 },
+          '100%': { transform: 'translateY(12px)', opacity: 1 }
+        },
         'scale-down-entrance': {
           '0%': { transform: 'scale(1.1)', opacity: 0.5 },
           '100%': { transform: 'scale(1)' }
@@ -66,6 +70,7 @@ module.exports = {
       animation: {
         click: 'click 0.2s ease-in-out',
         popup: 'popup 0.2s ease-in-out forwards',
+        dropdown: 'dropdown 0.2s ease-in-out forwards',
         'scale-down-entrance': 'scale-down-entrance 0.3s ease-in-out forwards',
         'rotate-180': 'rotate-180 0.3s ease-in-out forwards'
       },
