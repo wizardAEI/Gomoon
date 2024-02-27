@@ -226,7 +226,8 @@ export default function Input(props: {
           ref={textAreaContainerDiv}
           class="cyber-box relative flex flex-1 backdrop-blur-md md:max-w-xl lg:max-w-3xl"
         >
-          <div class="absolute bottom-0 right-3 select-none leading-8 text-text3">
+          <div class="absolute bottom-0 left-0 right-0 top-0 -z-10 rounded-2xl bg-dark-pro"></div>
+          <div class="absolute bottom-8 right-3 -z-10 h-0 select-none overflow-visible leading-8 text-text3">
             {tokenConsumeDisplay()}
           </div>
           <textarea
@@ -263,7 +264,7 @@ export default function Input(props: {
                   : 'Ctrl + Enter 发送'
                 : 'Enter 发送，Shift+Enter 换行')
             }
-            class="font-sans max-h-48 flex-1 resize-none rounded-2xl border-none bg-dark-pro px-4 py-[6px] text-sm text-text1 caret-text2 transition-none focus:outline-none"
+            class="font-sans max-h-48 flex-1 resize-none rounded-2xl border-none bg-transparent px-4 py-[6px] text-sm text-text1 caret-text2 transition-none focus:outline-none"
           />
           {/* <button class="absolute bottom-1 right-1 h-8 w-8 cursor-pointer overflow-hidden rounded-full bg-cyber px-0 py-1">
           <ChatIcon class="duration-150 hover:text-active" width={24} height={24} />
