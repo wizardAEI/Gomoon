@@ -1305,6 +1305,13 @@
   resolved "https://registry.npmjs.org/@ungap/structured-clone/-/structured-clone-1.2.0.tgz"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
+"@vscode/markdown-it-katex@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@vscode/markdown-it-katex/-/markdown-it-katex-1.0.3.tgz#5364e4dbcb0f7e7fd2fdab3847ba5d6b0c3ce9d9"
+  integrity sha512-a8ppdac0CG2lAQC6E6lT8dxmXkUk9gRtYNtILx31FyrPEwj875AAHc6tpRGeJBpWMpiMtcvz7ymWYBwYgxuFmw==
+  dependencies:
+    katex "^0.16.4"
+
 "@xenova/transformers@^2.14.2":
   version "2.14.2"
   resolved "https://registry.yarnpkg.com/@xenova/transformers/-/transformers-2.14.2.tgz#dd6458da2c6c4e79a1776fc87ba69f7cc7269172"
@@ -2246,6 +2253,11 @@ commander@^5.0.0:
   version "5.1.0"
   resolved "https://registry.npmjs.org/commander/-/commander-5.1.0.tgz"
   integrity sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==
+
+commander@^8.3.0:
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-8.3.0.tgz#4837ea1b2da67b9c616a67afbb0fafee567bca66"
+  integrity sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==
 
 compare-version@^0.1.2:
   version "0.1.2"
@@ -4145,6 +4157,13 @@ jsx-ast-utils@^3.3.3:
     object.assign "^4.1.4"
     object.values "^1.1.6"
 
+katex@^0.16.4:
+  version "0.16.9"
+  resolved "https://registry.yarnpkg.com/katex/-/katex-0.16.9.tgz#bc62d8f7abfea6e181250f85a56e4ef292dcb1fa"
+  integrity sha512-fsSYjWS0EEOwvy81j3vRA8TEAhQhKiqO+FQaKWp0m39qwOzHVBgAUBIXWj1pB+O2W3fIpNa6Y9KSKCVbfPhyAQ==
+  dependencies:
+    commander "^8.3.0"
+
 kebab-case@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/kebab-case/-/kebab-case-1.0.2.tgz"
@@ -4336,6 +4355,11 @@ make-dir@^1.0.0:
   integrity sha512-2w31R7SJtieJJnQtGc7RVL2StM2vGYVfqUOvUDxH6bC6aJTxPxTF0GnIgCyu7tjockiUWAYQRbxa7vKn34s5sQ==
   dependencies:
     pify "^3.0.0"
+
+markdown-it-emoji@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/markdown-it-emoji/-/markdown-it-emoji-3.0.0.tgz#8475a04d671d7c93f931b76fb90c582768b7f0b5"
+  integrity sha512-+rUD93bXHubA4arpEZO3q80so0qgoFJEKRkRbjKX8RTdca89v2kfyF+xR3i2sQTwql9tpPZPOQN5B+PunspXRg==
 
 markdown-it-highlightjs@^4.0.1:
   version "4.0.1"
