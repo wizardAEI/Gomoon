@@ -2,6 +2,8 @@ import MarkdownIt from 'markdown-it'
 import { Show, createMemo, createSignal, onCleanup, onMount } from 'solid-js'
 import { useClipboard, useEventListener } from 'solidjs-use'
 import mdHighlight from 'markdown-it-highlightjs'
+import katex from '@vscode/markdown-it-katex'
+import { full as emoji } from 'markdown-it-emoji'
 import SpeechIcon from '@renderer/assets/icon/SpeechIcon'
 import FindIcon from '@renderer/assets/icon/FindIcon'
 import { load } from 'cheerio'
@@ -89,7 +91,10 @@ export default function Md(props: { class: string; content: string }) {
     const md = MarkdownIt({
       linkify: true,
       breaks: true
-    }).use(mdHighlight)
+    })
+      .use(mdHighlight)
+      .use(katex)
+      .use(emoji)
 
     // FEAT: 限制图片宽度
     md.renderer.rules.image = (tokens, idx) => {
