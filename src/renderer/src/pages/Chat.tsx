@@ -157,7 +157,7 @@ export default function Chat() {
           )}
         </For>
       </Show>
-      <div class="fixed bottom-0 left-0 right-0 h-28 bg-transparent backdrop-blur-xl"></div>
+      <div class="fixed bottom-0 left-0 right-0 h-[118px] bg-transparent backdrop-blur-xl"></div>
       <div class="fixed bottom-10 z-20 w-full px-4">
         <Input
           showClearButton

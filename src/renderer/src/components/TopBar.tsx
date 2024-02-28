@@ -18,7 +18,7 @@ function Entries() {
     const query = location.query
     const dict = {
       '/history': 'history',
-      '/answer': 'ans',
+      '/ans': 'ans',
       '/chat': 'chat',
       '/': 'chat',
       '/setting': 'setting',
@@ -56,7 +56,7 @@ function Entries() {
             width={18}
             height={18}
             onClick={() => {
-              nav('/answer')
+              nav('/ans')
             }}
             class={
               'translate-y-[-1px] cursor-pointer duration-100 hover:text-active ' +

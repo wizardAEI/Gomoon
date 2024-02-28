@@ -170,7 +170,7 @@ export default function Input(props: {
   }
 
   return (
-    <div class="flex flex-col gap-2">
+    <div class="mx-auto flex flex-col gap-2 md:max-w-xl lg:max-w-3xl">
       <Tools
         artifacts={artifacts}
         setArtifacts={setArtifacts}
@@ -222,10 +222,7 @@ export default function Input(props: {
             </div>
           </div>
         </Show>
-        <div
-          ref={textAreaContainerDiv}
-          class="cyber-box relative flex flex-1 backdrop-blur-md md:max-w-xl lg:max-w-3xl"
-        >
+        <div ref={textAreaContainerDiv} class="cyber-box relative flex flex-1 backdrop-blur-md">
           <div class="absolute bottom-0 left-0 right-0 top-0 -z-10 rounded-2xl bg-dark-pro"></div>
           <div class="absolute bottom-8 right-3 -z-10 h-0 select-none overflow-visible leading-8 text-text3">
             {tokenConsumeDisplay()}
