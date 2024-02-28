@@ -25,7 +25,7 @@ export default function (props: { type: 'chat' | 'ans'; botName: string }) {
         <Show when={memoCapsule()}>
           <div
             onClick={() => {
-              nav('/memo')
+              nav('/memories?type=' + props.type)
             }}
             class="my-[-2px] ml-[-2px] flex h-7 cursor-pointer items-center gap-[2px] border-2 border-solid border-transparent px-1 text-text2 hover:border-active hover:text-text1"
           >

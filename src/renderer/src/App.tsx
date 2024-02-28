@@ -90,7 +90,7 @@ const App = () => {
                 <Route path="/setting" component={Setting} />
                 <Route path="/assistants" component={Assistants} />
                 <Route path="/history" component={History} />
-                <Route path="/memo" component={Memo} />
+                <Route path="/memories" component={Memo} />
                 <Route path="*" component={Chat} />
               </Routes>
             </Show>

@@ -100,7 +100,7 @@ export default function (props: { type: 'chat' | 'ans' }) {
           <div
             class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-2 border-solid border-transparent bg-dark px-4 py-1 hover:border-active "
             onClick={() => {
-              nav('/memo?type=' + props.type)
+              nav('/memories?type=' + props.type)
             }}
           >
             <span class="text-text1 ">更多记忆...</span>
