@@ -22,7 +22,6 @@ export default function Md(props: { class: string; content: string }) {
       const utterance = new SpeechSynthesisUtterance(selectContent)
       utterance.lang = 'zh-CN'
       utterance.onstart = () => {
-        console.log('start')
         setPageData('isSpeech', true)
       }
       utterance.onend = () => setPageData('isSpeech', false)

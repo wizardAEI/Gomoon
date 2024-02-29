@@ -62,7 +62,7 @@ export default function Setting() {
                 <QuestionMention
                   content={
                     <a
-                      class="text-small"
+                      class="text-xs"
                       href="https://console.bce.baidu.com/qianfan/ais/console/applicationConsole/application"
                     >
                       密钥注册地址
@@ -97,7 +97,7 @@ export default function Setting() {
                 千问系列
                 <QuestionMention
                   content={
-                    <a class="text-small" href="https://dashscope.console.aliyun.com/apiKey">
+                    <a class="text-xs" href="https://dashscope.console.aliyun.com/apiKey">
                       密钥注册地址
                     </a>
                   }

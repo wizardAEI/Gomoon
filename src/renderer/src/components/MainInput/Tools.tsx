@@ -306,7 +306,11 @@ export default function Tools(props: {
                     load.show(`功能初始化中...${progress}`)
                   }
                 })
-                await initMemories()
+                try {
+                  await initMemories()
+                } catch (err: any) {
+                  toast.error(err)
+                }
                 load.hide()
               }
             }}

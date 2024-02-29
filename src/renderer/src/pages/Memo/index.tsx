@@ -73,7 +73,6 @@ export default function () {
                   const file = e.target.files![0]
                   e.target.value = ''
                   if (file) {
-                    console.log(file)
                     loading.show('正在导入')
                     // TODO: 观察是否需要进度功能
                     // const remove = window.api.receiveMsg(async (_, msg: string) => {

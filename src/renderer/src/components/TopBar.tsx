@@ -11,8 +11,6 @@ import MinimizeIcon from '@renderer/assets/icon/base/win/MinimizeIcon'
 function Entries() {
   const nav = useNavigate()
   const location = useLocation()
-  const history = window.history.length
-  console.log(history)
   const pathname = createMemo(() => {
     const name = location.pathname
     const query = location.query

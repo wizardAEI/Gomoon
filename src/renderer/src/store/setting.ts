@@ -64,6 +64,7 @@ export async function updateModelsToFile() {
   if (isEqual(config.models, config.oldModels)) return
   await window.api.setModels(config.models)
   event.emit('updateModels', config.models)
+  loadConfig()
 }
 
 export { settingStore, setSettingStore }
