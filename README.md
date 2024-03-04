@@ -46,9 +46,7 @@ Gomoon 的名字来源于 _赛博朋克：边缘行者_ 的中 Lucy 的愿望：
 
 ## 交流
 
-如果你有任何问题或者想交流一下使用体验，分享自己的助手，欢迎加入[Gomoon超级群](https://imdodo.com/s/263031?inv=VERBM)（后续 Gomoon 更新通知也会发布在群内）：
-
-<img order-radius="100px"  height="250px" src="https://github.com/wizardAEI/blog-images/blob/main/groupcode.jpg" alt=""/>
+如果你有任何问题或者想交流一下使用体验，分享自己的助手，欢迎加入QQ群:758015092（后续 Gomoon 更新通知也会发布在群内）。
 
 ## 鸣谢
 
@@ -60,3 +58,25 @@ Gomoon 的名字来源于 _赛博朋克：边缘行者_ 的中 Lucy 的愿望：
 | [![zhengxs2018](https://github.com/zhengxs2018.png?size=50)](https://github.com/zhengxs2018)    | 支持通义千问模型                  |
 
 如果你也想一起共建 Gomoon，欢迎进群畅聊、提交 PR 或者 Issue。
+
+## 贡献指南
+
+由于仓库大小限制，默认的资源没有上传到 Github，开发者可以在本地安装的 Gomoon 中找到`resources`文件夹（mac用户可以通过 Finder，右键点击应用，选择“显示包内容”来浏览到`Contents`目录，`resource`文件夹存储于`Contents/Resource/app.asar.unpacked/resources`; windows用户这个路径会根据你在安装程序中指定的安装位置而变化，通常是在“Program Files”文件夹下的你的应用名称文件夹内，例如 C:\Program Files\Gomoon\app.asar.unpacked\resources\），将里面的资源文件复制到项目根目录的`resources`文件夹中。
+
+`resources` 文件夹结构如下：
+
+```bash
+resources/
+├── assistants.json # 默认助手配置文件
+├── eventTracker # 事件追踪文件，根据系统不同也可能为 `eventTracker.exe` 或者 `eventTracker-x86`
+├── icon.png # 应用图标
+├── icon@20.png # 应用图标
+├── lines.json # 默认标题栏配置文件
+├── memories.json # 默认记忆文件
+└── models # 模型配置文件
+    └── Xenova
+        └── jina-embeddings-v2-base-zh
+            └── ....
+```
+
+后续就可以正常启动项目进行开发了。
