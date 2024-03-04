@@ -42,6 +42,7 @@
     "libreoffice-convert": "^1.5.1",
     "lodash": "^4.17.21",
     "lowdb": "^6.1.1",
+    "mammoth": "^1.7.0",
     "markdown-it": "^13.0.2",
     "markdown-it-emoji": "^3.0.0",
     "markdown-it-highlightjs": "^4.0.1",
