@@ -13,12 +13,15 @@ function Entries() {
   const location = useLocation()
   const pathname = createMemo(() => {
     const name = location.pathname
+    const query = location.query
     const dict = {
       '/history': 'history',
-      '/answer': 'answer',
+      '/ans': 'ans',
       '/chat': 'chat',
       '/': 'chat',
-      '/setting': 'setting'
+      '/setting': 'setting',
+      '/assistants': query.type || 'assistants',
+      '/memories': query.type || 'memories'
     }
     return dict[name] || 'chat'
   })
@@ -51,11 +54,11 @@ function Entries() {
             width={18}
             height={18}
             onClick={() => {
-              nav('/answer')
+              nav('/ans')
             }}
             class={
               'translate-y-[-1px] cursor-pointer duration-100 hover:text-active ' +
-              (pathname() === 'answer' ? 'text-active' : 'text-gray')
+              (pathname() === 'ans' ? 'text-active' : 'text-gray')
             }
           />
         }

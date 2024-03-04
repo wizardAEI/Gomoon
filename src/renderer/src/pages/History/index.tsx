@@ -60,7 +60,7 @@ export default function () {
                     setAnswerStore('question', h.contents[0].content)
                     setAnswerStore('answer', h.contents[1].content)
                     h.assistantId && setSelectedAssistantForAns(h.assistantId)
-                    nav('/answer')
+                    nav('/ans')
                   } else if (h.type === 'chat') {
                     setMsgs(h.contents as Msg[])
                     h.assistantId && setSelectedAssistantForChat(h.assistantId)

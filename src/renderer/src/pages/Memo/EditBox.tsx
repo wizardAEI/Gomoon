@@ -3,6 +3,7 @@ import Plus from '@renderer/assets/icon/base/Plus'
 import BaseFileIcon from '@renderer/assets/icon/file/baseFileIcon'
 import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
 import { useLoading } from '@renderer/components/ui/DynamicLoading'
+import QuestionMention from '@renderer/components/ui/QuestionMention'
 import Switch from '@renderer/components/ui/SwitchItem'
 import { useToast } from '@renderer/components/ui/Toast'
 import { userData } from '@renderer/store/user'
@@ -42,8 +43,20 @@ export default function (props: {
         placeholder="可不填"
       />
       <div class="my-1 mb-3">
-        <div class="mb-2 flex justify-between">
-          <span>记忆片段</span>
+        <div class="mb-2 flex items-center justify-between">
+          <span class="flex items-center gap-1">
+            记忆片段
+            <QuestionMention
+              content={
+                <span class="text-xs">
+                  文件类型支持.md, 文件转换见
+                  <a class="text-xs" href="https://gomoon.top/guide/tools">
+                    文件类型转换方案
+                  </a>
+                </span>
+              }
+            />
+          </span>
           <div>
             <Switch
               size="sm"

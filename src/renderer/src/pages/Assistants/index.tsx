@@ -78,7 +78,7 @@ export default function () {
                   switch (type) {
                     case 'ans':
                       await setSelectedAssistantForAns(a.id)
-                      nav('/answer')
+                      nav('/ans')
                       break
                     case 'chat':
                       await setSelectedAssistantForChat(a.id)

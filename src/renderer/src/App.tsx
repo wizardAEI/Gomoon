@@ -45,7 +45,7 @@ const App = () => {
 
     // FEAT: 快捷键触发操作
     const removeListener = window.api.multiCopy(async (_: IpcRendererEvent, msg: string) => {
-      nav('/answer?q=' + msg)
+      nav('/ans?q=' + msg)
     })
     onCleanup(() => removeListener())
 
@@ -86,11 +86,11 @@ const App = () => {
             <Show when={settingStore.isLoaded} fallback={<Loading />}>
               <Routes>
                 <Route path="/" component={Chat} />
-                <Route path="/answer" component={Answer} />
+                <Route path="/ans" component={Answer} />
                 <Route path="/setting" component={Setting} />
                 <Route path="/assistants" component={Assistants} />
                 <Route path="/history" component={History} />
-                <Route path="/memo" component={Memo} />
+                <Route path="/memories" component={Memo} />
                 <Route path="*" component={Chat} />
               </Routes>
             </Show>
