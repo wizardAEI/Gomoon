@@ -102,7 +102,7 @@ export function parseDisplayArr(str: string): ContentDisplay[] {
   str.match(regForUrl)?.forEach((match) => {
     arr.push({
       type: 'url',
-      src: match.replace(/<gomoon-url .*?src="(.+?)".*?>/, '$1')
+      src: match.match(/<gomoon-url .*?src="(.+?)".*?>/)?.[1] || ''
     })
   })
   str.match(regForSearch)?.forEach((match) => {
