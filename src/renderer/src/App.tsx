@@ -44,6 +44,13 @@ const App = () => {
     loadMemories()
 
     // FEAT: 快捷键触发操作
+    const removeListener2 = window.api.showWindow(() => {
+      nav('/')
+    })
+    onCleanup(() => {
+      removeListener2()
+    })
+
     const removeListener = window.api.multiCopy(async (_: IpcRendererEvent, msg: string) => {
       nav('/ans?q=' + msg)
     })

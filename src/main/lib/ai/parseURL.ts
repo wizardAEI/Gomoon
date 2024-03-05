@@ -1,34 +1,16 @@
 import puppeteer from 'puppeteer'
 import fetch from 'node-fetch'
-import { Cheerio, Element, load } from 'cheerio'
+import { load } from 'cheerio'
+import { Readability } from '@mozilla/readability'
+import { JSDOM } from 'jsdom'
 // TODO: 转md
 export async function parseURL2Str(url: string) {
   const html = await fetch(url).then((res) => res.text())
   const $ = load(html)
-  $('script').remove()
-  const title = $('title').text()
-  // 去除回车和空格
-  const bodyContent = $('body').text().replace(/\s+/g, '')
-  function mainContent(node: Cheerio<Element>) {
-    for (let i = 0; i < node.contents().length; i++) {
-      const child = node.contents()[i]
-      if (child.type === 'text') {
-        // 如果是文本节点，则替换文本
-        return $(child).text()
-      } else if (
-        child.type === 'tag' &&
-        !['script', 'style', 'svg'].includes(child.tagName.toLowerCase()) &&
-        $(child).text().length > $('body').text().length * 0.8
-      ) {
-        return mainContent($(child))
-      }
-    }
-    return node.text()
+  const doc = new Readability(new JSDOM($.html()).window.document).parse()
+  if (doc && doc?.content.length > 50) {
+    return `${doc.title}\n\n` + doc.textContent
   }
-  if (bodyContent.length > 50) {
-    return `${title}\n\n` + mainContent($('body'))
-  }
-
   // 如果内容过少，则怀疑为单页面应用或遇到安全验证，使用puppeteer解析
   try {
     const page = await (await puppeteer.launch()).newPage()
@@ -88,7 +70,11 @@ export async function parseURL2Str(url: string) {
     await page.close()
     return mainContent
   } catch (e) {
-    if ((e as Error).message.includes('timeout')) return '页面解析超时'
-    return `${title}\n\n` + mainContent($('body'))
+    if ((e as Error).message.includes('timeout')) throw new Error('页面解析超时')
+    if (doc) {
+      return `${doc.title}\n\n` + doc.content
+    } else {
+      throw new Error('页面解析超时')
+    }
   }
 }

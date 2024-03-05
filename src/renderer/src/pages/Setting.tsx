@@ -208,7 +208,7 @@ export default function Setting() {
             发布了教学视频，可以让你更加有效的使用 Gomoon，解锁更多功能！
           </div>
           <div class="mt-2 flex items-center gap-2 text-text2">
-            <span>版本号：v1.0.6</span>
+            <span>版本号：v1.0.7</span>
             <a
               class="cursor-pointer text-text-link hover:text-active"
               onClick={async () => {

@@ -49,9 +49,9 @@ export default function (props: {
             <QuestionMention
               content={
                 <span class="text-xs">
-                  文件类型支持.md, 文件转换见
-                  <a class="text-xs" href="https://gomoon.top/guide/tools">
-                    文件类型转换方案
+                  文件类型支持.md,<span> </span>
+                  <a class="text-xs" href="https://127.0.0.1:3000/guide/tools">
+                    如何创建一个.md文件?
                   </a>
                 </span>
               }

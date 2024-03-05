@@ -59,9 +59,9 @@ Gomoon 的名字来源于 _赛博朋克：边缘行者_ 的中 Lucy 的愿望：
 
 如果你也想一起共建 Gomoon，欢迎进群畅聊、提交 PR 或者 Issue。
 
-## 贡献指南
+## 开发指南
 
-由于仓库大小限制，默认的资源没有上传到 Github，开发者可以在本地安装的 Gomoon 中找到`resources`文件夹（mac用户可以通过 Finder，右键点击应用，选择“显示包内容”来浏览到`Contents`目录，`resource`文件夹存储于`Contents/Resource/app.asar.unpacked/resources`; windows用户这个路径会根据你在安装程序中指定的安装位置而变化，通常是在“Program Files”文件夹下的你的应用名称文件夹内，例如 C:\Program Files\Gomoon\app.asar.unpacked\resources\），将里面的资源文件复制到项目根目录的`resources`文件夹中。
+由于仓库大小限制，默认的资源没有上传到 Github，开发者可以在本地安装的 Gomoon 中找到`resources`文件夹（mac用户可以通过 Finder，右键点击应用，选择“显示包内容”来浏览到`Contents`目录，`resource`文件夹存储于`Contents/Resource/app.asar.unpacked/resources`; windows用户这个路径会根据你在安装程序中指定的安装位置而变化，通常是在“Program Files”文件夹下的你的应用名称文件夹内，例如 `C:\Users\Lenovo\AppData\Local\Programs\gomoon\resources\app.asar.unpacked\resources`），将里面的资源文件复制到项目根目录的`resources`文件夹中。
 
 `resources` 文件夹结构如下：
 

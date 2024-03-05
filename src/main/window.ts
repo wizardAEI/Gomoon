@@ -224,7 +224,6 @@ export function createWindow(): void {
       if (`${data}` === 'multi-copy') {
         const copyText = clipboard.readText()
         mainWindow?.webContents.send('multi-copy', copyText)
-        mainWindow?.webContents.send('show-window')
         mainWindow?.show()
         mainWindow?.focus()
       }
