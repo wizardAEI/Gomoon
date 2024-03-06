@@ -194,17 +194,21 @@ export interface Chunk {
 export async function getChunkFromNodes(
   nodes: Node[],
   options: {
-    chunkSize: number
-    chunkOverlap: number
+    chunkSize?: number
+    chunkOverlap?: number
     useLM?: boolean
-    from?: string
-  } = {
-    chunkSize: 700,
-    chunkOverlap: 2 // 左右两个节点
+    nodesFrom?: string
+    skipOnlyTitleContent?: boolean
   }
 ): Promise<Chunk[]> {
   const chunk: Chunk[] = []
-  const { chunkSize, chunkOverlap } = options
+  const {
+    chunkSize = 1500,
+    chunkOverlap = 2,
+    skipOnlyTitleContent = true,
+    useLM = false,
+    nodesFrom
+  } = options
   const chunkTask: (number | Error)[] = []
   const split = (total: string, size: number) => {
     if (total.match(/```/)) {
@@ -264,11 +268,11 @@ export async function getChunkFromNodes(
       chunk.push({
         indexes: [{ value: processTitle(totalTitle) }],
         document: { content },
-        from: options.from
+        from: nodesFrom
       })
       if (node.title !== node.content) chunk[chunk.length - 1].indexes.push({ value: node.content })
       if (node.title !== node.total) chunk[chunk.length - 1].indexes.push({ value: node.total })
-      if (options.useLM) {
+      if (useLM) {
         const index = chunk.length - 1
         chunkTask.push(index)
         getQuestionsByLM(content)
@@ -313,12 +317,18 @@ export async function getChunkFromNodes(
           const content = contents[i].startsWith(node.markup + ' ')
             ? splice(data?.titleBefore ?? '', contents[i])
             : splice(totalTitle, contents[i])
+          if (
+            skipOnlyTitleContent &&
+            content.indexOf('\n') === -1 &&
+            content.replace(/^#+\s/, '').trim() === node.title.trim()
+          )
+            continue
           chunk.push({
             indexes: [{ value: content }, { value: processTitle(totalTitle) }],
             document: { content },
-            from: options.from
+            from: nodesFrom
           })
-          if (options.useLM) {
+          if (useLM) {
             const index = chunk.length - 1
             chunkTask.push(index)
             getQuestionsByLM(content)
