@@ -5,7 +5,13 @@ import { Readability } from '@mozilla/readability'
 import { JSDOM } from 'jsdom'
 // TODO: 转md
 export async function parseURL2Str(url: string) {
-  const html = await fetch(url).then((res) => res.text())
+  const html = await fetch(url, {
+    timeout: 10000
+  })
+    .then((res) => res.text())
+    .catch((e) => {
+      return e.message
+    })
   const $ = load(html)
   const doc = new Readability(new JSDOM($.html()).window.document).parse()
   if (doc && doc?.content.length > 50) {

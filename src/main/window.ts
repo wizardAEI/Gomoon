@@ -83,16 +83,7 @@ function csp(items?: {
     'default-src': [],
     'script-src': ['https://jsd.cdn.zzko.cn', "'unsafe-eval'"],
     'style-src': ["'unsafe-inline'"],
-    'connect-src': [
-      // 'https://dashscope.aliyuncs.com',
-      // 'https://api.openai.com',
-      // 'https://tiktoken.pages.dev',
-      // 'https://aip.baidubce.com',
-      // 'https://jsd.cdn.zzko.cn',
-      'https:',
-      'http://www.baidu.com',
-      'data:'
-    ],
+    'connect-src': ['https:', 'http://www.baidu.com', 'data:'],
     'img-src': ['https:', 'http:', 'data:', 'blob:'],
     'worker-src': ['blob:']
   }

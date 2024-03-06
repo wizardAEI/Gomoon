@@ -75,8 +75,8 @@ export default function (props: {
         </div>
         <For each={m().fragment}>
           {(file) => (
-            <div class="flex select-none justify-between">
-              <div class="mt-2 flex gap-1">
+            <div class="mt-2 flex select-none justify-between">
+              <div class="flex gap-1">
                 <BaseFileIcon height={20} width={20} />
                 {file.name}
               </div>

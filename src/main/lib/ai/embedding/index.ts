@@ -59,8 +59,6 @@ export async function editFragment(option: EditFragmentOption): Promise<{
       const nodes = createTreeFromMarkdown(res.content || '')
       try {
         const chunks = await getChunkFromNodes(nodes, {
-          chunkSize: 700,
-          chunkOverlap: 2,
           useLM: option.useLM
         })
         for (let i = 0; i < chunks.length; i++) {

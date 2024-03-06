@@ -34,7 +34,14 @@ export default function Setting() {
       </div>
       <div class="mx-auto flex w-full flex-col gap-3 overflow-auto pb-3 lg:max-w-4xl">
         <Card title="模型引擎配置" noPadding>
-          <Expand title="ChatGPT系列">
+          <Expand
+            title={
+              <div class="flex items-center gap-1">
+                ChatGPT系列
+                <QuestionMention content="baseURL 通常需要在域名后添加 /v1 后缀" />
+              </div>
+            }
+          >
             <EditInput
               label="apiKey"
               value={settingStore.models.OpenAI.apiKey}
