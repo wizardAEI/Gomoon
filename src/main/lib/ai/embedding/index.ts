@@ -18,7 +18,7 @@ export interface EditFragmentOption {
   id: string
   fragment: MemoFragment
   type: 'add' | 'remove'
-  useLM?: boolean
+  useLLM?: boolean
 }
 
 const fragmentsMap: {
@@ -59,7 +59,7 @@ export async function editFragment(option: EditFragmentOption): Promise<{
       const nodes = createTreeFromMarkdown(res.content || '')
       try {
         const chunks = await getChunkFromNodes(nodes, {
-          useLM: option.useLM
+          useLLM: option.useLLM
         })
         for (let i = 0; i < chunks.length; i++) {
           const vectors: Float32Array[] = []

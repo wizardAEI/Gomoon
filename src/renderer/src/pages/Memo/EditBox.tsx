@@ -17,7 +17,7 @@ export default function (props: {
   onSave: (m: MemoModel) => void
 }) {
   const [m, setM] = createSignal(props.memo)
-  const [useLM, setUseLM] = createSignal(true)
+  const [useLLM, setUseLLM] = createSignal(true)
   const load = useLoading()
   const toast = useToast()
   function setField(key: keyof MemoModel, value: any) {
@@ -66,9 +66,9 @@ export default function (props: {
                   <span class="text-xs text-gray"> (当前模型: {userData.selectedModel})</span>
                 </span>
               }
-              checked={useLM()}
+              checked={useLLM()}
               onCheckedChange={() => {
-                setUseLM(!useLM())
+                setUseLLM(!useLLM())
               }}
             />
           </div>
@@ -142,7 +142,7 @@ export default function (props: {
                       type: file.name.split('.').pop() as 'md' | 'xlsx'
                     },
                     type: 'add',
-                    useLM: useLM()
+                    useLLM: useLLM()
                   })
                   if (!res.suc) {
                     toast.error(res.reason || '解析失败')

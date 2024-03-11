@@ -33,21 +33,17 @@ export type AssistantModel = (
   deleted?: boolean
   tools?: ToolEnum[]
 }
-
 export type CreateAssistantModel = Omit<AssistantModel, 'id' | 'version'> & { version?: number }
-
 export interface HistoryModel {
   id: string
   type: 'chat' | 'ans'
   assistantId?: string
   contents: { id?: string; role: 'human' | 'system' | 'ai' | 'ans' | 'question'; content: string }[]
 }
-
 export interface Line {
   content: string
   from: string
 }
-
 export interface MemoFragment {
   type: 'md' | 'xlsx'
   name: string
@@ -76,7 +72,6 @@ export interface SettingModel {
   sendWithCmdOrCtrl: boolean
   models: Models
 }
-
 export interface MemoResult {
   content: string
 }
