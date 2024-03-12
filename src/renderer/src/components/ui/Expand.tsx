@@ -1,27 +1,33 @@
-import DownwardArrow from '@renderer/assets/icon/base/arrow/DownwardArrow'
-import UpwardArrow from '@renderer/assets/icon/base/arrow/UpwardArrow'
 import { JSX, JSXElement, Show, createSignal } from 'solid-js'
-export default function Expand(props: { title: string | JSX.Element; children: JSXElement }) {
-  const [expanded, setExpanded] = createSignal(false)
 
+export default function (props: {
+  title?: string | JSX.Element
+  foldTitle?: string | JSX.Element
+  children: JSXElement
+}) {
+  const [expanded, setExpanded] = createSignal(false)
   return (
     <div>
-      <div
-        onClick={() => setExpanded(!expanded())}
-        class={` ${
-          expanded() ? '' : 'hover:bg-dark-con'
-        } group/expand mx-2 my-1 flex cursor-pointer justify-between rounded-lg bg-dark px-2 py-1 text-sm duration-200`}
+      <Show
+        when={expanded()}
+        fallback={
+          <div>
+            <div
+              class="flex cursor-pointer justify-center rounded-lg p-1 px-2 py-1 hover:bg-dark-con"
+              onClick={() => setExpanded(true)}
+            >
+              {props.title || '展开'}
+            </div>
+          </div>
+        }
       >
-        <div>{props.title}</div>
-        <Show
-          when={expanded()}
-          fallback={<DownwardArrow height={16} width={16} class="pt-[2px]" />}
+        {props.children}
+        <div
+          class="flex cursor-pointer justify-center rounded-lg p-1 px-2 py-1 hover:bg-dark-con"
+          onClick={() => setExpanded(false)}
         >
-          <UpwardArrow height={16} width={16} class="pt-[2px]" />
-        </Show>
-      </div>
-      <Show when={expanded()}>
-        <div class="px-5">{props.children}</div>
+          {props.foldTitle || '收起'}
+        </div>
       </Show>
     </div>
   )

@@ -11,7 +11,7 @@ import {
   updateStatusLabel
 } from '../store/setting'
 import Switch from '@renderer/components/ui/SwitchItem'
-import Expand from '@renderer/components/ui/Expand'
+import Collapse from '@renderer/components/ui/Collapse'
 import EditInput from '@renderer/components/ui/EditInput'
 import { onCleanup, onMount } from 'solid-js'
 import { unwrap } from 'solid-js/store'
@@ -19,6 +19,7 @@ import SettingIcon from '@renderer/assets/icon/base/SettingIcon'
 import { useLoading } from '@renderer/components/ui/DynamicLoading'
 import { useToast } from '@renderer/components/ui/Toast'
 import QuestionMention from '@renderer/components/ui/QuestionMention'
+import Expand from '@renderer/components/ui/Expand'
 export default function Setting() {
   onMount(() => {
     onCleanup(() => {
@@ -34,94 +35,164 @@ export default function Setting() {
       </div>
       <div class="mx-auto flex w-full flex-col gap-3 overflow-auto pb-3 lg:max-w-4xl">
         <Card title="模型引擎配置" noPadding>
-          <Expand
-            title={
-              <div class="flex items-center gap-1">
-                ChatGPT系列
-                <QuestionMention content="baseURL 通常需要在域名后添加 /v1 后缀" />
-              </div>
-            }
-          >
-            <EditInput
-              label="apiKey"
-              value={settingStore.models.OpenAI.apiKey}
-              onSave={(v) => {
-                const m = unwrap(settingStore.models)
-                m.OpenAI.apiKey = v
-                setModels(m)
-              }}
-            />
-            <EditInput
-              optional
-              label="baseURL"
-              value={settingStore.models.OpenAI.baseURL}
-              onSave={(v) => {
-                const m = unwrap(settingStore.models)
-                m.OpenAI.baseURL = v
-                setModels(m)
-              }}
-            />
-          </Expand>
-          <Expand
-            title={
-              <div class="flex items-center gap-1">
-                文心系列
-                <QuestionMention
-                  content={
-                    <a
-                      class="text-xs"
-                      href="https://console.bce.baidu.com/qianfan/ais/console/applicationConsole/application"
-                    >
-                      密钥注册地址
-                    </a>
-                  }
+          <div class="px-2">
+            <Collapse
+              title={
+                <div class="flex items-center gap-1">
+                  ChatGPT系列
+                  <QuestionMention content="baseURL 通常需要在域名后添加 /v1 后缀" />
+                </div>
+              }
+            >
+              <EditInput
+                label="apiKey"
+                value={settingStore.models.OpenAI.apiKey}
+                onSave={(v) => {
+                  const m = unwrap(settingStore.models)
+                  m.OpenAI.apiKey = v
+                  setModels(m)
+                }}
+              />
+              <EditInput
+                optional
+                label="baseURL"
+                value={settingStore.models.OpenAI.baseURL}
+                onSave={(v) => {
+                  const m = unwrap(settingStore.models)
+                  m.OpenAI.baseURL = v
+                  setModels(m)
+                }}
+              />
+            </Collapse>
+            <Collapse
+              title={
+                <div class="flex items-center gap-1">
+                  文心系列
+                  <QuestionMention
+                    content={
+                      <a
+                        class="text-xs"
+                        href="https://console.bce.baidu.com/qianfan/ais/console/applicationConsole/application"
+                      >
+                        密钥注册地址
+                      </a>
+                    }
+                  />
+                </div>
+              }
+            >
+              <EditInput
+                label="apiKey"
+                value={settingStore.models.BaiduWenxin.apiKey}
+                onSave={(v) => {
+                  const m = unwrap(settingStore.models)
+                  m.BaiduWenxin.apiKey = v
+                  setModels(m)
+                }}
+              />
+              <EditInput
+                value={settingStore.models.BaiduWenxin.secretKey}
+                label="secretKey"
+                onSave={(v) => {
+                  const m = unwrap(settingStore.models)
+                  m.BaiduWenxin.secretKey = v
+                  setModels(m)
+                }}
+              />
+            </Collapse>
+            <Expand title="显示更多">
+              <Collapse
+                title={
+                  <div class="flex items-center gap-1">
+                    千问系列
+                    <QuestionMention
+                      content={
+                        <a class="text-xs" href="https://dashscope.console.aliyun.com/apiKey">
+                          密钥注册地址
+                        </a>
+                      }
+                    />
+                  </div>
+                }
+              >
+                <EditInput
+                  label="apiKey"
+                  value={settingStore.models.AliQWen.apiKey}
+                  onSave={(v) => {
+                    const m = unwrap(settingStore.models)
+                    m.AliQWen.apiKey = v
+                    setModels(m)
+                  }}
                 />
-              </div>
-            }
-          >
-            <EditInput
-              label="apiKey"
-              value={settingStore.models.BaiduWenxin.apiKey}
-              onSave={(v) => {
-                const m = unwrap(settingStore.models)
-                m.BaiduWenxin.apiKey = v
-                setModels(m)
-              }}
-            />
-            <EditInput
-              value={settingStore.models.BaiduWenxin.secretKey}
-              label="secretKey"
-              onSave={(v) => {
-                const m = unwrap(settingStore.models)
-                m.BaiduWenxin.secretKey = v
-                setModels(m)
-              }}
-            />
-          </Expand>
-          <Expand
-            title={
-              <div class="flex items-center gap-1">
-                千问系列
-                <QuestionMention
-                  content={
-                    <a class="text-xs" href="https://dashscope.console.aliyun.com/apiKey">
-                      密钥注册地址
-                    </a>
-                  }
+              </Collapse>
+              <Collapse
+                title={
+                  <div class="flex items-center gap-1">
+                    Gemini
+                    <QuestionMention
+                      content={
+                        <a class="text-xs" href="https://dashscope.console.aliyun.com/apiKey">
+                          密钥注册地址
+                        </a>
+                      }
+                    />
+                  </div>
+                }
+              >
+                <EditInput
+                  label="本地模型地址"
+                  // value={settingStore.models.AliQWen.apiKey}
+                  onSave={(v) => {
+                    const m = unwrap(settingStore.models)
+                    m.AliQWen.apiKey = v
+                    setModels(m)
+                  }}
                 />
-              </div>
-            }
-          >
-            <EditInput
-              label="apiKey"
-              value={settingStore.models.AliQWen.apiKey}
-              onSave={(v) => {
-                const m = unwrap(settingStore.models)
-                m.AliQWen.apiKey = v
-                setModels(m)
-              }}
-            />
-          </Expand>
+                <EditInput
+                  label="高级配置"
+                  // value={settingStore.models.AliQWen.apiKey}
+                  onSave={(v) => {
+                    const m = unwrap(settingStore.models)
+                    m.AliQWen.apiKey = v
+                    setModels(m)
+                  }}
+                />
+              </Collapse>
+              <Collapse
+                title={
+                  <div class="flex items-center gap-1">
+                    Llama
+                    <QuestionMention
+                      content={
+                        <a class="text-xs" href="https://dashscope.console.aliyun.com/apiKey">
+                          密钥注册地址
+                        </a>
+                      }
+                    />
+                  </div>
+                }
+              >
+                <EditInput
+                  label="本地模型地址"
+                  // value={settingStore.models.AliQWen.apiKey}
+                  onSave={(v) => {
+                    const m = unwrap(settingStore.models)
+                    m.AliQWen.apiKey = v
+                    setModels(m)
+                  }}
+                />
+                <EditInput
+                  label="高级配置"
+                  // value={settingStore.models.AliQWen.apiKey}
+                  onSave={(v) => {
+                    const m = unwrap(settingStore.models)
+                    m.AliQWen.apiKey = v
+                    setModels(m)
+                  }}
+                />
+              </Collapse>
+            </Expand>
+          </div>
         </Card>
         <Card title="应用设置">
           <div class="flex flex-col gap-2">
