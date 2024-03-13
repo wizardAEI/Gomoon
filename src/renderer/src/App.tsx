@@ -1,25 +1,19 @@
-import { Route, Routes, useNavigate } from '@solidjs/router'
+import { useNavigate } from '@solidjs/router'
 import TopBar from './components/TopBar'
-import Chat from './pages/Chat'
-import Answer from './pages/Answer'
-import { Show, onCleanup, onMount } from 'solid-js'
+import { JSXElement, Show, onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
-import Setting from './pages/Setting'
 import { loadConfig, setUpdaterStatus, settingStore } from './store/setting'
 import Loading from './pages/Loading'
 import { loadUserData, userData, userHasUse } from './store/user'
-import Assistants from './pages/Assistants'
-import History from './pages/History'
 import { loadAssistants } from './store/assistants'
 import { loadHistories } from './store/history'
 import { ToastProvider } from './components/ui/Toast'
 import { LoadingProvider } from './components/ui/DynamicLoading'
 import { init as OCRInit } from './lib/ai/ocr'
 import System from './pages/System'
-import Memo from './pages/Memo'
 import { loadMemories } from './store/memo'
 
-const App = () => {
+const App = (props) => {
   const nav = useNavigate()
 
   onMount(async () => {
@@ -91,15 +85,7 @@ const App = () => {
           <TopBar />
           <div class="flex-1 overflow-auto">
             <Show when={settingStore.isLoaded} fallback={<Loading />}>
-              <Routes>
-                <Route path="/" component={Chat} />
-                <Route path="/ans" component={Answer} />
-                <Route path="/setting" component={Setting} />
-                <Route path="/assistants" component={Assistants} />
-                <Route path="/history" component={History} />
-                <Route path="/memories" component={Memo} />
-                <Route path="*" component={Chat} />
-              </Routes>
+              {props.children}
             </Show>
           </div>
         </div>

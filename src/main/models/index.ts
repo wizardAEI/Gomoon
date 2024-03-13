@@ -1,5 +1,5 @@
 import { app } from 'electron'
-import { JSONSyncPreset } from 'lowdb/node'
+import { JSONFileSyncPreset } from 'lowdb/node'
 import {
   AssistantModel,
   CreateAssistantModel,
@@ -21,7 +21,7 @@ import { merge } from 'lodash'
 import { importDataAndIndexes } from './memo'
 
 const appDataPath = app.getPath('userData')
-const configDB = JSONSyncPreset(join(appDataPath, 'config.json'), getDefaultConfig())
+const configDB = JSONFileSyncPreset(join(appDataPath, 'config.json'), getDefaultConfig())
 
 /**
  * FEAT: 配置相关(特指配置页的信息)
@@ -86,7 +86,7 @@ export function setSendWithCmdOrCtrl(sendWithCmdOrCtrl: SettingModel['sendWithCm
 /**
  * FEAT: 用户数据相关
  */
-const userDataDB = JSONSyncPreset(join(appDataPath, 'user-data.json'), getDefaultUserData())
+const userDataDB = JSONFileSyncPreset(join(appDataPath, 'user-data.json'), getDefaultUserData())
 export function getUserData() {
   return merge(getDefaultUserData(), userDataDB.data)
 }
@@ -98,7 +98,10 @@ export function updateUserData(data: Partial<typeof userDataDB.data>) {
 /**
  * FEAT: assistants 相关
  */
-const assistantsDB = JSONSyncPreset(join(appDataPath, 'assistants.json'), getDefaultAssistants())
+const assistantsDB = JSONFileSyncPreset(
+  join(appDataPath, 'assistants.json'),
+  getDefaultAssistants()
+)
 export function getAssistants() {
   return assistantsDB.data || []
 }
@@ -160,7 +163,7 @@ export function useAssistant(id: string) {
 /**
  * FEAT: Histories 相关
  */
-const historiesDB = JSONSyncPreset<HistoryModel[]>(join(appDataPath, 'histories.json'), [])
+const historiesDB = JSONFileSyncPreset<HistoryModel[]>(join(appDataPath, 'histories.json'), [])
 
 export function getHistories() {
   return historiesDB.data || []
@@ -190,7 +193,7 @@ export function getLines() {
 /**
  * FEAT: 记忆相关 Memo
  */
-const memoDB = JSONSyncPreset<MemoModel[]>(join(appDataPath, 'memories.json'), [])
+const memoDB = JSONFileSyncPreset<MemoModel[]>(join(appDataPath, 'memories.json'), [])
 export function getMemories() {
   return memoDB.data || []
 }

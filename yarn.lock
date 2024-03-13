@@ -925,10 +925,10 @@
   resolved "https://registry.npmjs.org/@solidjs-use/solid-to-vue/-/solid-to-vue-2.3.0.tgz"
   integrity sha512-I2onRwzdYl2eq20M3hcTkVIeYq4hNoBpHvRJB9yzoyXRDSyp7R2glIbvdBzpsXqnTvX7HJhB2KePfxYXFvyJxw==
 
-"@solidjs/router@^0.9.1":
-  version "0.9.1"
-  resolved "https://registry.npmjs.org/@solidjs/router/-/router-0.9.1.tgz"
-  integrity sha512-kRY75piOQsyoH75E/RP6lr7uVGFCjeeCCCJx7Z2D1Vc6+I1yFQjLCvE+6agXGwqDoWi6vbETP1g7gmp/L1mNLg==
+"@solidjs/router@^0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@solidjs/router/-/router-0.13.0.tgz#244536cb596bca649215ec0be468c66497d670d0"
+  integrity sha512-YHLbFv9J53+iG4yVrh0vVdYiyXPTk892UyZ1jiMPsUXn2dYkX4552N+8SjvlKWWsmNmYxaoefM6jZn1YtVIUUg==
 
 "@szmarczak/http-timer@^4.0.5":
   version "4.0.6"
@@ -4430,12 +4430,12 @@ lop@^0.4.1:
     option "~0.2.1"
     underscore "^1.13.1"
 
-lowdb@^6.1.1:
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/lowdb/-/lowdb-6.1.1.tgz#fb3c66a116b0ef799641f677676071661f6804f4"
-  integrity sha512-HO13FCxI8SCwfj2JRXOKgXggxnmfSc+l0aJsZ5I34X3pwzG/DPBSKyKu3Zkgg/pNmx854SVgE2la0oUeh6wzNw==
+lowdb@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/lowdb/-/lowdb-7.0.1.tgz#7354a684547d76206b1c730b9434604235b125e5"
+  integrity sha512-neJAj8GwF0e8EpycYIDFqEPcx9Qz4GUho20jWFR7YiFeXzF1YMLdxB36PypcTSPMA+4+LvgyMacYhlr18Zlymw==
   dependencies:
-    steno "^3.1.1"
+    steno "^4.0.2"
 
 lowercase-keys@^2.0.0:
   version "2.0.0"
@@ -5884,10 +5884,10 @@ stat-mode@^1.0.0:
   resolved "https://registry.npmjs.org/stat-mode/-/stat-mode-1.0.0.tgz"
   integrity sha512-jH9EhtKIjuXZ2cWxmXS8ZP80XyC3iasQxMDV8jzhNJpfDb7VbQLVW4Wvsxz9QZvzV+G4YoSfBUVKDOyxLzi/sg==
 
-steno@^3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/steno/-/steno-3.1.1.tgz#713dad214ec673f7a3cbb7c0f318dba4be398490"
-  integrity sha512-B7c6EVH7oEiaMRW36SjUnktkDwp/qd4pQiduylyiqvcZEZDeX0IIFZRBZdwO/RaVo60M0wkDwC0e8yeKaR4VGg==
+steno@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/steno/-/steno-4.0.2.tgz#9bd9b0ffc226a1f9436f29132c8b8e7199d22c50"
+  integrity sha512-yhPIQXjrlt1xv7dyPQg2P17URmXbuM5pdGkpiMB3RenprfiBlvK415Lctfe0eshk90oA7/tNq7WEiMK8RSP39A==
 
 stream-read-all@^3.0.1:
   version "3.0.1"

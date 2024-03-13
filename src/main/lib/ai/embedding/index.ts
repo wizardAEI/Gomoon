@@ -33,12 +33,13 @@ async function readFile(fragment: MemoFragment): Promise<{
   suc: boolean
   content?: string
   reason?: string
+  fileName?: string
 }> {
   if (fragment.type !== 'md') {
     return { suc: false, reason: '不支持的文件类型' }
   }
   const content = readFileSync(fragment.from!)
-  return { suc: true, content: content.toString() }
+  return { suc: true, content: content.toString(), fileName: fragment.name }
 }
 
 export async function editFragment(option: EditFragmentOption): Promise<{
@@ -59,7 +60,8 @@ export async function editFragment(option: EditFragmentOption): Promise<{
       const nodes = createTreeFromMarkdown(res.content || '')
       try {
         const chunks = await getChunkFromNodes(nodes, {
-          useLLM: option.useLLM
+          useLLM: option.useLLM,
+          nodesFrom: res.fileName
         })
         for (let i = 0; i < chunks.length; i++) {
           const vectors: Float32Array[] = []

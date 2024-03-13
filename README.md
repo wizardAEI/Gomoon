@@ -26,15 +26,9 @@
 
 ### 安装指南
 
-[官网下载地址](https://gomoon.top) (自己买的服务器比较小，下载速度慢还请见谅)
-
-- **windows** 用户请选择：gomoon-版本号-setup.exe
-- m系列芯片（arm架构） **mac** 用户请选择：gomoon-版本号-arm64.dmg
-- x86_64 架构 **mac** 用户请选择：gomoon-版本号-x64.dmg
+[官网下载地址](https://gomoon.top)
 
 **Tips:**mac 用户由于没有上架 mac 应用市场，需要在『**访达**→应用』中找到 Gomoon 右键打开并二次确认才可以使用。『Command + C +C 双击复制』和『发送文件』功能需要用户允许 Gomoon 的权限请求，并且**重启**应用。
-
-另外，如果本地开启了 VPN 等功能，可以直接打开 Github 网站，也可以尝试在 Gomoon 设置页面点击检查更新来安装最新版本。
 
 ## 灵感来源
 
