@@ -1,6 +1,7 @@
+// TODO: db.data = xxx and db.write() -> db.update(data => data = xxx )
 import { app } from 'electron'
 import { join } from 'path'
-import { JSONSyncPreset } from 'lowdb/node'
+import { JSONFileSyncPreset } from 'lowdb/node'
 import { Connection, connect } from 'vectordb'
 import { existsSync, mkdirSync, unlinkSync } from 'fs'
 import { embedding, getEmbeddingModel } from '../lib/ai/embedding/embedding'
@@ -36,7 +37,7 @@ export function saveData(
   }[]
 ) {
   const path = join(memoPath, memoId)
-  const db = JSONSyncPreset<MemoData>(path, {})
+  const db = JSONFileSyncPreset<MemoData>(path, {})
   data.forEach((d) => {
     db.data[d.id] = {
       content: d.content,
@@ -62,7 +63,7 @@ export async function importDataAndIndexes(
   }
 ) {
   const path = join(memoPath, memoId)
-  const db = JSONSyncPreset<MemoData>(path, data)
+  const db = JSONFileSyncPreset<MemoData>(path, data)
   await deleteDataAndIndex(memoId)
   const indexes: {
     [key in string]: Float32Array[] | undefined
@@ -139,7 +140,7 @@ export async function getData(data: { id: string; content: string }): Promise<Ar
     id: string
   }[]
   const path = join(memoPath, data.id)
-  const fileDB = JSONSyncPreset<MemoData>(path, {})
+  const fileDB = JSONFileSyncPreset<MemoData>(path, {})
   const contents: {
     content: string
   }[] = []
@@ -155,7 +156,7 @@ export async function getData(data: { id: string; content: string }): Promise<Ar
 
 export async function getMemoDataAndIndexes(memoId: string): Promise<MemoFragmentData[]> {
   const path = join(memoPath, memoId)
-  const jsonDb = JSONSyncPreset<MemoData>(path, {})
+  const jsonDb = JSONFileSyncPreset<MemoData>(path, {})
   const arr: MemoFragmentData[] = []
   for (let key in jsonDb.data) {
     await connectDB()

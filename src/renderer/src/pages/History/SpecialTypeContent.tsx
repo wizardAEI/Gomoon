@@ -1,7 +1,7 @@
 import BaseFileIcon from '@renderer/assets/icon/file/baseFileIcon'
 import { ContentDisplay } from '@renderer/lib/ai/parseString'
 import { decorateContent } from './utils'
-import NetworkIcon from '@renderer/assets/icon/NetworkIcon'
+import NetworkIcon from '@renderer/assets/icon/BrowserIcon'
 import LinkIcon from '@renderer/assets/icon/LinkIcon'
 import CapsuleIcon from '@renderer/assets/icon/CapsuleIcon'
 
