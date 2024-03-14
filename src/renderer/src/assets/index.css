@@ -135,3 +135,8 @@
 .markdown a:hover {
   color: #a57bea;
 }
+.markdown blockquote {
+  border-left: 0.2rem solid #64748b;
+  padding: 1rem 0.5rem;
+  margin: 0.5rem 0;
+}
