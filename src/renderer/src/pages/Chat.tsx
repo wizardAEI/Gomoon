@@ -160,13 +160,16 @@ export default function Chat() {
       <div class="fixed bottom-0 left-0 right-0 h-[118px] bg-transparent backdrop-blur-xl"></div>
       <div class="fixed bottom-10 z-20 w-full px-4">
         <Input
-          showClearButton
+          showClearButton={previousMsg().state === 'complete'}
+          onClear={() => {
+            setPreviousMsg({ ...previousMsg(), state: 'complete' })
+            setEditId('')
+          }}
           send={async (v: string) => {
             // 将上一条消息设置为完成状态
             if (previousMsg().state === 'pending') {
               setPreviousMsg({ ...previousMsg(), state: 'complete' })
             }
-
             if (editId()) {
               // 重新编辑某一条消息
               editMsg({ content: inputText() }, editId())

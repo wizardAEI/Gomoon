@@ -8,6 +8,7 @@ export interface Models {
   OpenAI: {
     apiKey: string
     baseURL: string
+    customModel: string
     temperature: number
   }
   BaiduWenxin: {
@@ -16,6 +17,19 @@ export interface Models {
     temperature: number
   }
   AliQWen: {
+    apiKey: string
+    temperature: number
+  }
+  Gemini: {
+    apiKey: string
+    temperature: number
+  }
+  Llama: {
+    src: string
+    temperature: number
+  }
+  // kimi
+  Moonshot: {
     apiKey: string
     temperature: number
   }

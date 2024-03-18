@@ -33,6 +33,7 @@ export default function Input(props: {
   isGenerating?: boolean
   autoFocusWhenShow?: boolean
   placeholder?: string
+  onClear?: () => void
 }) {
   let textAreaDiv: HTMLTextAreaElement | undefined
   let textAreaContainerDiv: HTMLDivElement | undefined
@@ -186,6 +187,7 @@ export default function Input(props: {
                 setTimeout(() => {
                   setRefreshing(false)
                 }, 600)
+                props.onClear?.()
                 toast.info(`${navigator.userAgent.includes('Mac') ? 'command' : 'ctrl'} + z 撤销`, {
                   duration: 1000,
                   position: 'top-3/4'

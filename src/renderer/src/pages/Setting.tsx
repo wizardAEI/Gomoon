@@ -73,6 +73,29 @@ export default function Setting() {
                   setModels(m)
                 }}
               />
+              <EditInput
+                optional
+                label="自定义模型"
+                value={settingStore.models.OpenAI.customModel}
+                onSave={(v) => {
+                  const m = unwrap(settingStore.models)
+                  m.OpenAI.customModel = v
+                  setModels(m)
+                }}
+              />
+              <div class="mb-1 flex h-7 items-center gap-4">
+                <span class="font-bold">创造性/随机性</span>
+                <div class="w-60">
+                  <Slider
+                    percentage
+                    onChange={(v) => {
+                      const m = unwrap(settingStore.models)
+                      m.OpenAI.temperature = v
+                      setModels(m)
+                    }}
+                  />
+                </div>
+              </div>
             </Collapse>
             <Collapse
               title={
@@ -110,6 +133,19 @@ export default function Setting() {
                   setModels(m)
                 }}
               />
+              <div class="mb-1 flex h-7 items-center gap-4">
+                <span class="font-bold">创造性/随机性</span>
+                <div class="w-60">
+                  <Slider
+                    percentage
+                    onChange={(v) => {
+                      const m = unwrap(settingStore.models)
+                      m.BaiduWenxin.temperature = v
+                      setModels(m)
+                    }}
+                  />
+                </div>
+              </div>
             </Collapse>
             <Expand
               title={
@@ -148,18 +184,24 @@ export default function Setting() {
                     setModels(m)
                   }}
                 />
+                <div class="mb-1 flex h-7 items-center gap-4">
+                  <span class="font-bold">创造性/随机性</span>
+                  <div class="w-60">
+                    <Slider
+                      percentage
+                      onChange={(v) => {
+                        const m = unwrap(settingStore.models)
+                        m.AliQWen.temperature = v
+                        setModels(m)
+                      }}
+                    />
+                  </div>
+                </div>
               </Collapse>
               <Collapse
                 title={
                   <div class="flex items-center gap-2">
                     <GeminiIcon width={20} height={20} class="rounded-md" /> Gemini ( Google ) 系列
-                    <QuestionMention
-                      content={
-                        <a class="text-xs" href="https://ai.google.dev/tutorials/setup?hl=zh-cn">
-                          密钥注册地址
-                        </a>
-                      }
-                    />
                   </div>
                 }
               >
@@ -172,13 +214,18 @@ export default function Setting() {
                     setModels(m)
                   }}
                 />
-                <div class="flex justify-between">
+                <div class="mb-1 flex h-7 items-center gap-4">
                   <span class="font-bold">创造性/随机性</span>
-                  <Slider
-                    onChange={(v) => {
-                      console.log(v)
-                    }}
-                  />
+                  <div class="w-60">
+                    <Slider
+                      percentage
+                      onChange={(v) => {
+                        const m = unwrap(settingStore.models)
+                        m.Gemini.temperature = v
+                        setModels(m)
+                      }}
+                    />
+                  </div>
                 </div>
               </Collapse>
               <Collapse
@@ -207,15 +254,19 @@ export default function Setting() {
                     setModels(m)
                   }}
                 />
-                <EditInput
-                  label="高级配置"
-                  // value={settingStore.models.AliQWen.apiKey}
-                  onSave={(v) => {
-                    const m = unwrap(settingStore.models)
-                    m.AliQWen.apiKey = v
-                    setModels(m)
-                  }}
-                />
+                <div class="mb-1 flex h-7 items-center gap-4">
+                  <span class="font-bold">创造性/随机性</span>
+                  <div class="w-60">
+                    <Slider
+                      percentage
+                      onChange={(v) => {
+                        const m = unwrap(settingStore.models)
+                        m.Llama.temperature = v
+                        setModels(m)
+                      }}
+                    />
+                  </div>
+                </div>
               </Collapse>
               <Collapse
                 title={
@@ -240,6 +291,19 @@ export default function Setting() {
                     setModels(m)
                   }}
                 />
+                <div class="mb-1 flex h-7 items-center gap-4">
+                  <span class="font-bold">创造性/随机性</span>
+                  <div class="w-60">
+                    <Slider
+                      percentage
+                      onChange={(v) => {
+                        const m = unwrap(settingStore.models)
+                        m.Moonshot.temperature = v
+                        setModels(m)
+                      }}
+                    />
+                  </div>
+                </div>
               </Collapse>
             </Expand>
           </div>
