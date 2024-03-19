@@ -26,7 +26,7 @@ const createModel = (chat: ModelInterfaceType) => {
       }
     ) {
       const { systemTemplate, humanTemplate } = msg
-      const msgs = [new SystemMessage(systemTemplate), new HumanMessage(humanTemplate)]
+      const msgs = [new SystemMessage(systemTemplate), new HumanMessage(humanTemplate)] as any
       return chat.invoke(msgs, {
         signal: option.pauseSignal,
         timeout: 1000 * 20,

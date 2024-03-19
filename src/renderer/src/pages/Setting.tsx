@@ -87,6 +87,7 @@ export default function Setting() {
                 <span class="font-bold">创造性/随机性</span>
                 <div class="w-60">
                   <Slider
+                    defaultValue={settingStore.models.OpenAI.temperature}
                     percentage
                     onChange={(v) => {
                       const m = unwrap(settingStore.models)
@@ -138,6 +139,7 @@ export default function Setting() {
                 <div class="w-60">
                   <Slider
                     percentage
+                    defaultValue={settingStore.models.BaiduWenxin.temperature}
                     onChange={(v) => {
                       const m = unwrap(settingStore.models)
                       m.BaiduWenxin.temperature = v
@@ -188,6 +190,7 @@ export default function Setting() {
                   <span class="font-bold">创造性/随机性</span>
                   <div class="w-60">
                     <Slider
+                      defaultValue={settingStore.models.AliQWen.temperature}
                       percentage
                       onChange={(v) => {
                         const m = unwrap(settingStore.models)
@@ -207,10 +210,10 @@ export default function Setting() {
               >
                 <EditInput
                   label="apiKey"
-                  // value={settingStore.models.AliQWen.apiKey}
+                  value={settingStore.models.Gemini.apiKey}
                   onSave={(v) => {
                     const m = unwrap(settingStore.models)
-                    m.AliQWen.apiKey = v
+                    m.Gemini.apiKey = v
                     setModels(m)
                   }}
                 />
@@ -218,6 +221,7 @@ export default function Setting() {
                   <span class="font-bold">创造性/随机性</span>
                   <div class="w-60">
                     <Slider
+                      defaultValue={settingStore.models.Gemini.temperature}
                       percentage
                       onChange={(v) => {
                         const m = unwrap(settingStore.models)
@@ -250,7 +254,7 @@ export default function Setting() {
                   // value={settingStore.models.AliQWen.apiKey}
                   onSave={(v) => {
                     const m = unwrap(settingStore.models)
-                    m.AliQWen.apiKey = v
+                    m.Llama.src = v
                     setModels(m)
                   }}
                 />
@@ -258,6 +262,7 @@ export default function Setting() {
                   <span class="font-bold">创造性/随机性</span>
                   <div class="w-60">
                     <Slider
+                      defaultValue={settingStore.models.Llama.temperature}
                       percentage
                       onChange={(v) => {
                         const m = unwrap(settingStore.models)
@@ -284,10 +289,10 @@ export default function Setting() {
               >
                 <EditInput
                   label="apiKey"
-                  value={settingStore.models.AliQWen.apiKey}
+                  value={settingStore.models.Moonshot.apiKey}
                   onSave={(v) => {
                     const m = unwrap(settingStore.models)
-                    m.AliQWen.apiKey = v
+                    m.Moonshot.apiKey = v
                     setModels(m)
                   }}
                 />
@@ -295,6 +300,7 @@ export default function Setting() {
                   <span class="font-bold">创造性/随机性</span>
                   <div class="w-60">
                     <Slider
+                      defaultValue={settingStore.models.Moonshot.temperature}
                       percentage
                       onChange={(v) => {
                         const m = unwrap(settingStore.models)

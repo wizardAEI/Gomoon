@@ -112,6 +112,7 @@ export default function Input(props: {
   })
 
   const tokenConsumeDisplay = createMemo(() => {
+    if (tokens().maxToken === 0) return ''
     if (props.type === 'ans' || props.type === 'question') {
       return `${tokens().consumedTokenForAns(inputTokenNum() + artifactTokenNum())} / ${
         tokens().maxToken

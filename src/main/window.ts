@@ -64,7 +64,9 @@ const cors: {
     'http://www.baidu.com/*',
     'https://dashscope.aliyuncs.com/*',
     'https://aip.baidubce.com/*',
-    'https://api.openai.com/*'
+    'https://api.openai.com/*',
+    'https://api.moonshot.cn/*',
+    'https://generativelanguage.googleapis.com/*'
   ],
   handler: (details, callback) => {
     const { origin, host } = new URL(details.url)
@@ -139,7 +141,6 @@ export function updateRespHeaders(
         details.responseHeaders['access-control-allow-methods']?.length
           ? (details.responseHeaders['access-control-allow-methods'] = ['*'])
           : (details.responseHeaders['Access-Control-Allow-Methods'] = ['*'])
-
         details.responseHeaders['Content-Security-Policy'] = [csp(conf?.cspItems)]
       }
       callback({ responseHeaders: details.responseHeaders })

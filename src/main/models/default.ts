@@ -17,7 +17,8 @@ export function getDefaultConfig(): SettingModel {
       OpenAI: {
         apiKey: '',
         baseURL: '',
-        temperature: 0.7
+        temperature: 0.7,
+        customModel: ''
       },
       BaiduWenxin: {
         apiKey: '',
@@ -25,6 +26,18 @@ export function getDefaultConfig(): SettingModel {
         temperature: 0.5
       },
       AliQWen: {
+        apiKey: '',
+        temperature: 0.7
+      },
+      Gemini: {
+        apiKey: '',
+        temperature: 0.7
+      },
+      Llama: {
+        src: '',
+        temperature: 0.7
+      },
+      Moonshot: {
         apiKey: '',
         temperature: 0.7
       }

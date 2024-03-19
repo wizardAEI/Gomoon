@@ -1,6 +1,6 @@
 import { useNavigate } from '@solidjs/router'
 import TopBar from './components/TopBar'
-import { JSXElement, Show, onCleanup, onMount } from 'solid-js'
+import { Show, onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
 import { loadConfig, setUpdaterStatus, settingStore } from './store/setting'
 import Loading from './pages/Loading'
@@ -67,7 +67,7 @@ const App = (props) => {
       }
     })
 
-    // 避免 ctrl + r 刷新页面 (生产环境)
+    // FEAT: 避免 ctrl + r 刷新页面 (生产环境)
     if (process.env.NODE_ENV === 'production') {
       window.addEventListener('keydown', (e) => {
         if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
@@ -75,6 +75,14 @@ const App = (props) => {
         }
       })
     }
+
+    // FEAT: 覆写复制事件，防止复制携带格式
+    document.addEventListener('copy', (event) => {
+      if (!window.getSelection) return
+      const selectedText = window!.getSelection()!.toString()
+      event!.clipboardData!.setData('text/plain', selectedText)
+      event.preventDefault() // 阻止默认复制行为
+    })
   })
 
   return (

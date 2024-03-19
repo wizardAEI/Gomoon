@@ -1,4 +1,4 @@
-import { Show, createSignal, onMount } from 'solid-js'
+import { Show, createEffect, createSignal } from 'solid-js'
 
 export default function (props: {
   onChange: (value: number) => void
@@ -9,23 +9,25 @@ export default function (props: {
 }) {
   let container: HTMLDivElement | undefined
   let range: HTMLInputElement | undefined
-  const [value, setValue] = createSignal(props.defaultValue || 70)
-  const changeWidth = () => {
+  const [value, setValue] = createSignal(
+    props.defaultValue !== undefined
+      ? props.percentage
+        ? props.defaultValue * 100
+        : props.defaultValue
+      : 70
+  )
+  createEffect(() => {
     const containerWidth = container?.getBoundingClientRect().width
     range!.style.width = `${
       (containerWidth! - 34) *
       ((value() - (props.min || 0)) / ((props.max || 100) - (props.min || 0)))
     }px`
-  }
-  onMount(() => {
-    changeWidth()
   })
   const updateValue = (e: any) => {
     const value = e.target.value
     setValue(Number(value))
-    const num = props.percentage ? Number(value) / 100 : Number(value)
+    const num = props.percentage ? parseFloat((Number(value) / 100).toFixed(2)) : Number(value)
     props.onChange(num)
-    changeWidth()
   }
   return (
     <div class="relative flex w-full items-center gap-2" ref={container}>
@@ -33,7 +35,7 @@ export default function (props: {
       <input
         class="range-slider__range flex-1"
         type="range"
-        value={props.defaultValue || 70}
+        value={value()}
         min={props.min || 0}
         max={props.max || 100}
         onInput={updateValue}

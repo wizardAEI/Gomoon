@@ -35,16 +35,16 @@ export default function Chat() {
   const [linesContent, setLinesContent] = createSignal('')
   const [linesFrom, setLinesFrom] = createSignal('')
   // onMount 由于可能还没 load 完数据，导致没有 lines，所以使用 createEffect
-  createEffect(() => {
-    if (!currentLines().length) return
+  createEffect((b) => {
+    if (!currentLines().length || b) return
     const index = Math.floor(Math.random() * currentLines().length)
     const linesFull = (currentLines()[index]?.content ?? '') + ' — '
     setLinesContent(linesFull.slice(0, 1))
     // 打字机效果,逐渐显示introduce
     const timer = setInterval(() => {
-      if (linesFull.length === linesContent().length) {
+      if (linesFull.length <= linesContent().length) {
         clearInterval(timer)
-        setLinesFrom(currentLines()[index].from)
+        setLinesFrom(currentLines()[index]?.from ?? '')
       } else {
         setLinesContent((i) => {
           return i + linesFull[i.length]
@@ -52,7 +52,7 @@ export default function Chat() {
       }
     }, 70)
     return true
-  })
+  }, false)
 
   // FEAT: 记录用户点击编辑后如果没有发送，则取消编辑
   const [previousMsg, setPreviousMsg] = createSignal<{
