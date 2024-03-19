@@ -12,11 +12,17 @@ const modelDict: {
   ERNIE4: {
     maxToken: 9600
   },
+  ERNIE128K: {
+    maxToken: 128000
+  },
   GPT3: {
     maxToken: 16385
   },
   GPT4: {
     maxToken: 128000
+  },
+  GPTCustom: {
+    maxToken: 0
   },
   QWenTurbo: {
     maxToken: 6000
@@ -26,6 +32,21 @@ const modelDict: {
   },
   QWenMax: {
     maxToken: 6000
+  },
+  GeminiPro: {
+    maxToken: 30720
+  },
+  Moonshot128k: {
+    maxToken: 128000
+  },
+  Moonshot8k: {
+    maxToken: 8000
+  },
+  Moonshot32k: {
+    maxToken: 32000
+  },
+  Llama: {
+    maxToken: 0
   }
 }
 

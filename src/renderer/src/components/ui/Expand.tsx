@@ -1,5 +1,16 @@
 import { JSX, JSXElement, Show, createSignal } from 'solid-js'
 
+function ExpandWrapper(props: { children: JSXElement; onChange: () => void }) {
+  return (
+    <div
+      class="border-1 mt-2 flex cursor-pointer justify-center rounded-lg border-solid border-gray p-1 px-2 py-1 duration-200 hover:border-dark-con hover:bg-dark-con"
+      onClick={props.onChange}
+    >
+      {props.children}
+    </div>
+  )
+}
+
 export default function (props: {
   title?: string | JSX.Element
   foldTitle?: string | JSX.Element
@@ -11,23 +22,13 @@ export default function (props: {
       <Show
         when={expanded()}
         fallback={
-          <div>
-            <div
-              class="flex cursor-pointer justify-center rounded-lg p-1 px-2 py-1 hover:bg-dark-con"
-              onClick={() => setExpanded(true)}
-            >
-              {props.title || '展开'}
-            </div>
-          </div>
+          <ExpandWrapper onChange={() => setExpanded(true)}>{props.title || '展开'}</ExpandWrapper>
         }
       >
         {props.children}
-        <div
-          class="flex cursor-pointer justify-center rounded-lg p-1 px-2 py-1 hover:bg-dark-con"
-          onClick={() => setExpanded(false)}
-        >
+        <ExpandWrapper onChange={() => setExpanded(false)}>
           {props.foldTitle || '收起'}
-        </div>
+        </ExpandWrapper>
       </Show>
     </div>
   )

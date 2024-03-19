@@ -51,3 +51,45 @@
     transform: rotate(450deg);
   }
 }
+
+/* Range Slider */
+.range-slider {
+  width: 100%;
+}
+
+.range-slider__range {
+  -webkit-appearance: none;
+  height: 10px;
+  border-radius: 5px;
+  background: #d7dcdf;
+  outline: none;
+  padding: 0;
+  margin: 0;
+}
+
+.range-slider__range::-webkit-slider-thumb {
+  @apply bg-white;
+  position: relative;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  /* background: #2c3e50; */
+  cursor: pointer;
+  transition: background 0.15s ease-in-out;
+  z-index: 1;
+}
+
+.range-slider__range::-webkit-slider-thumb:hover {
+  @apply bg-active;
+}
+
+.range-slider__range:active::-webkit-slider-thumb {
+  @apply bg-active;
+}
+
+/* .range-slider__range:focus::-webkit-slider-thumb {
+  box-shadow:
+    0 0 0 2px #fff,
+    0 0 0 4px #1abc9c;
+} */

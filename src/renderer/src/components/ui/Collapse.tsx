@@ -21,7 +21,7 @@ export default function Collapse(props: { title: string | JSX.Element; children:
         </Show>
       </div>
       <Show when={!collapsed()}>
-        <div class="px-5">{props.children}</div>
+        <div class="px-3">{props.children}</div>
       </Show>
     </div>
   )

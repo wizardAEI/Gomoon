@@ -5,6 +5,9 @@ import { setSelectedModel, userData } from '@renderer/store/user'
 import { createMemo, createSignal, For, JSXElement, onCleanup, Show } from 'solid-js'
 import { settingStore } from '@renderer/store/setting'
 import { ModelsType } from '@lib/langchain'
+import GeminiIcon from '@renderer/assets/icon/models/GeminiIcon'
+import KimiIcon from '@renderer/assets/icon/models/KimiIcon'
+import LlamaIcon from '@renderer/assets/icon/models/LlamaIcon'
 
 export default function (props: { position: string; size?: number; translate?: string }) {
   const options: {
@@ -39,6 +42,19 @@ export default function (props: { position: string; size?: number; translate?: s
       value: 'ERNIE4'
     },
     {
+      label: <span class="text-sm text-current">文心 128K</span>,
+      icon(size: number) {
+        return (
+          <WenxinIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'ERNIE128K'
+    },
+    {
       label: <span class="text-base text-current">GPT 3.5</span>,
       icon(size: number) {
         return (
@@ -65,6 +81,22 @@ export default function (props: { position: string; size?: number; translate?: s
       value: 'GPT4'
     }
   ]
+
+  if (settingStore.models.OpenAI.customModel) {
+    options.push({
+      label: <span class="text-base text-current">ChatGPT</span>,
+      icon(size: number) {
+        return (
+          <ChatGptIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'GPTCustom'
+    })
+  }
 
   if (settingStore.models.AliQWen.apiKey) {
     options.push(
@@ -110,6 +142,82 @@ export default function (props: { position: string; size?: number; translate?: s
     )
   }
 
+  if (settingStore.models.Gemini.apiKey) {
+    options.push({
+      label: <span class="text-sm leading-6 text-current">Gemini Pro</span>,
+      icon(size: number) {
+        return (
+          <GeminiIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'GeminiPro'
+    })
+  }
+
+  if (settingStore.models.Moonshot.apiKey) {
+    options.push(
+      {
+        label: <span class="text-sm leading-6 text-current">KIMI 8k</span>,
+        icon(size: number) {
+          return (
+            <KimiIcon
+              width={size}
+              height={size}
+              class="cursor-pointer overflow-hidden rounded-md"
+            />
+          )
+        },
+        value: 'Moonshot8k'
+      },
+      {
+        label: <span class="text-sm leading-6 text-current">KIMI 32k</span>,
+        icon(size: number) {
+          return (
+            <KimiIcon
+              width={size}
+              height={size}
+              class="cursor-pointer overflow-hidden rounded-md"
+            />
+          )
+        },
+        value: 'Moonshot32k'
+      },
+      {
+        label: <span class="text-sm leading-6 text-current">KIMI 128k</span>,
+        icon(size: number) {
+          return (
+            <KimiIcon
+              width={size}
+              height={size}
+              class="cursor-pointer overflow-hidden rounded-md"
+            />
+          )
+        },
+        value: 'Moonshot128k'
+      }
+    )
+  }
+
+  if (settingStore.models.Llama.src) {
+    options.push({
+      label: <span class="text-base leading-6 text-current">Llama</span>,
+      icon(size: number) {
+        return (
+          <LlamaIcon
+            width={size - 1}
+            height={size - 1}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'Llama'
+    })
+  }
+
   // 使用 createSignal 来管理下拉菜单的显示状态
   const [isOpen, setIsOpen] = createSignal(false)
   // 使用 createSignal 来管理选中的值
@@ -149,12 +257,12 @@ export default function (props: { position: string; size?: number; translate?: s
         <div
           class={`absolute z-10 mt-3 flex  flex-wrap gap-1 rounded-md bg-dark-plus p-2 shadow-center ${
             props.position
-          } ${props.translate || ''} ${options.length > 4 ? 'w-[312px]' : 'w-[212px]'}`}
+          } ${props.translate || ''} ${options.length > 4 ? 'w-[324px]' : 'w-[220px]'}`}
         >
           <For each={options}>
             {(option) => (
               <div
-                class={`w-24 cursor-pointer break-words rounded-lg py-1 pl-1 pr-0 ${
+                class={`w-[100px] cursor-pointer break-words rounded-lg py-1 pl-1 pr-0 ${
                   userData.selectedModel === option.value ? 'bg-active-gradient' : ''
                 } hover:bg-gray
                 `}

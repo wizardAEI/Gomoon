@@ -17,13 +17,13 @@ export default function EditInput(props: {
   }
 
   return (
-    <div class="flex flex-col">
-      <label class="text-gray-500 mb-2 text-sm font-bold">{props.label}</label>
+    <div class="mb-1 flex items-center gap-3">
+      <div class="text-gray-500 text-sm font-bold">{props.label}</div>
       <Show
         when={isEditing()}
         fallback={
           <div
-            class="relative flex cursor-pointer items-center rounded-md p-1 hover:bg-dark-con"
+            class="flex max-w-lg flex-1 cursor-pointer items-center overflow-hidden rounded-md p-1 hover:bg-dark-con"
             onClick={() => {
               setIsEditing(true)
               inputRef?.focus()
@@ -35,9 +35,8 @@ export default function EditInput(props: {
           </div>
         }
       >
-        <div class="relative">
+        <div class="relative max-w-lg flex-1">
           <input
-            class="pr-8"
             spellcheck={props.spellcheck || false}
             ref={inputRef}
             type="text"

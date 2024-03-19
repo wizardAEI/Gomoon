@@ -33,6 +33,7 @@ export default function Input(props: {
   isGenerating?: boolean
   autoFocusWhenShow?: boolean
   placeholder?: string
+  onClear?: () => void
 }) {
   let textAreaDiv: HTMLTextAreaElement | undefined
   let textAreaContainerDiv: HTMLDivElement | undefined
@@ -111,6 +112,7 @@ export default function Input(props: {
   })
 
   const tokenConsumeDisplay = createMemo(() => {
+    if (tokens().maxToken === 0) return ''
     if (props.type === 'ans' || props.type === 'question') {
       return `${tokens().consumedTokenForAns(inputTokenNum() + artifactTokenNum())} / ${
         tokens().maxToken
@@ -186,6 +188,7 @@ export default function Input(props: {
                 setTimeout(() => {
                   setRefreshing(false)
                 }, 600)
+                props.onClear?.()
                 toast.info(`${navigator.userAgent.includes('Mac') ? 'command' : 'ctrl'} + z 撤销`, {
                   duration: 1000,
                   position: 'top-3/4'

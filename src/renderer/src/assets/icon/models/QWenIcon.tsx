@@ -1,6 +1,6 @@
 import { SvgProps } from '../type'
 
-export default function WenxinIcon(props: SvgProps) {
+export default function QWenIcon(props: SvgProps) {
   return (
     <div class="flex items-center justify-center rounded-md bg-sky-100 p-[1px]">
       <svg

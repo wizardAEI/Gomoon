@@ -20,6 +20,15 @@ import { useLoading } from '@renderer/components/ui/DynamicLoading'
 import { useToast } from '@renderer/components/ui/Toast'
 import QuestionMention from '@renderer/components/ui/QuestionMention'
 import Expand from '@renderer/components/ui/Expand'
+import MoreIcon from '@renderer/assets/icon/base/MoreIcon'
+import UpwardArrow from '@renderer/assets/icon/base/arrow/UpwardArrow'
+import Slider from '@renderer/components/ui/Slider'
+import ChatGptICon from '@renderer/assets/icon/models/ChatGptIcon'
+import WenxinIcon from '@renderer/assets/icon/models/WenxinIcon'
+import QWenIcon from '@renderer/assets/icon/models/QWenIcon'
+import GeminiIcon from '@renderer/assets/icon/models/GeminiIcon'
+import LlamaIcon from '@renderer/assets/icon/models/LlamaIcon'
+import KimiIcon from '@renderer/assets/icon/models/KimiIcon'
 export default function Setting() {
   onMount(() => {
     onCleanup(() => {
@@ -38,7 +47,8 @@ export default function Setting() {
           <div class="px-2">
             <Collapse
               title={
-                <div class="flex items-center gap-1">
+                <div class="flex items-center gap-2">
+                  <ChatGptICon class="rounded-md" height={20} width={20} />
                   ChatGPT系列
                   <QuestionMention content="baseURL 通常需要在域名后添加 /v1 后缀" />
                 </div>
@@ -63,10 +73,35 @@ export default function Setting() {
                   setModels(m)
                 }}
               />
+              <EditInput
+                optional
+                label="自定义模型"
+                value={settingStore.models.OpenAI.customModel}
+                onSave={(v) => {
+                  const m = unwrap(settingStore.models)
+                  m.OpenAI.customModel = v
+                  setModels(m)
+                }}
+              />
+              <div class="mb-1 flex h-7 items-center gap-4">
+                <span class="font-bold">创造性/随机性</span>
+                <div class="w-60">
+                  <Slider
+                    defaultValue={settingStore.models.OpenAI.temperature}
+                    percentage
+                    onChange={(v) => {
+                      const m = unwrap(settingStore.models)
+                      m.OpenAI.temperature = v
+                      setModels(m)
+                    }}
+                  />
+                </div>
+              </div>
             </Collapse>
             <Collapse
               title={
-                <div class="flex items-center gap-1">
+                <div class="flex items-center gap-2">
+                  <WenxinIcon class="rounded-md" height={20} width={20} />
                   文心系列
                   <QuestionMention
                     content={
@@ -99,12 +134,39 @@ export default function Setting() {
                   setModels(m)
                 }}
               />
+              <div class="mb-1 flex h-7 items-center gap-4">
+                <span class="font-bold">创造性/随机性</span>
+                <div class="w-60">
+                  <Slider
+                    percentage
+                    defaultValue={settingStore.models.BaiduWenxin.temperature}
+                    onChange={(v) => {
+                      const m = unwrap(settingStore.models)
+                      m.BaiduWenxin.temperature = v
+                      setModels(m)
+                    }}
+                  />
+                </div>
+              </div>
             </Collapse>
-            <Expand title="显示更多">
+            <Expand
+              title={
+                <div class="flex items-center justify-center gap-2">
+                  <MoreIcon height={16} width={16} />
+                  <span>更多模型引擎</span>
+                </div>
+              }
+              foldTitle={
+                <div class="flex items-center justify-center gap-2">
+                  <UpwardArrow height={16} width={16} />
+                  <span>收起模型引擎</span>
+                </div>
+              }
+            >
               <Collapse
                 title={
-                  <div class="flex items-center gap-1">
-                    千问系列
+                  <div class="flex items-center gap-2">
+                    <QWenIcon class="rounded-md" height={18} width={18} /> 千问系列
                     <QuestionMention
                       content={
                         <a class="text-xs" href="https://dashscope.console.aliyun.com/apiKey">
@@ -124,15 +186,63 @@ export default function Setting() {
                     setModels(m)
                   }}
                 />
+                <div class="mb-1 flex h-7 items-center gap-4">
+                  <span class="font-bold">创造性/随机性</span>
+                  <div class="w-60">
+                    <Slider
+                      defaultValue={settingStore.models.AliQWen.temperature}
+                      percentage
+                      onChange={(v) => {
+                        const m = unwrap(settingStore.models)
+                        m.AliQWen.temperature = v
+                        setModels(m)
+                      }}
+                    />
+                  </div>
+                </div>
               </Collapse>
               <Collapse
                 title={
-                  <div class="flex items-center gap-1">
-                    Gemini
+                  <div class="flex items-center gap-2">
+                    <GeminiIcon width={20} height={20} class="rounded-md" /> Gemini ( Google ) 系列
+                  </div>
+                }
+              >
+                <EditInput
+                  label="apiKey"
+                  value={settingStore.models.Gemini.apiKey}
+                  onSave={(v) => {
+                    const m = unwrap(settingStore.models)
+                    m.Gemini.apiKey = v
+                    setModels(m)
+                  }}
+                />
+                <div class="mb-1 flex h-7 items-center gap-4">
+                  <span class="font-bold">创造性/随机性</span>
+                  <div class="w-60">
+                    <Slider
+                      defaultValue={settingStore.models.Gemini.temperature}
+                      percentage
+                      onChange={(v) => {
+                        const m = unwrap(settingStore.models)
+                        m.Gemini.temperature = v
+                        setModels(m)
+                      }}
+                    />
+                  </div>
+                </div>
+              </Collapse>
+              <Collapse
+                title={
+                  <div class="flex items-center gap-2">
+                    <LlamaIcon class="rounded-md" width={20} height={20} /> Llama ( Meta ) 本地模型
                     <QuestionMention
                       content={
-                        <a class="text-xs" href="https://dashscope.console.aliyun.com/apiKey">
-                          密钥注册地址
+                        <a
+                          class="text-xs"
+                          href="https://huggingface.co/meta-llama/Llama-2-70b-chat-hf"
+                        >
+                          模型获取地址
                         </a>
                       }
                     />
@@ -144,27 +254,32 @@ export default function Setting() {
                   // value={settingStore.models.AliQWen.apiKey}
                   onSave={(v) => {
                     const m = unwrap(settingStore.models)
-                    m.AliQWen.apiKey = v
+                    m.Llama.src = v
                     setModels(m)
                   }}
                 />
-                <EditInput
-                  label="高级配置"
-                  // value={settingStore.models.AliQWen.apiKey}
-                  onSave={(v) => {
-                    const m = unwrap(settingStore.models)
-                    m.AliQWen.apiKey = v
-                    setModels(m)
-                  }}
-                />
+                <div class="mb-1 flex h-7 items-center gap-4">
+                  <span class="font-bold">创造性/随机性</span>
+                  <div class="w-60">
+                    <Slider
+                      defaultValue={settingStore.models.Llama.temperature}
+                      percentage
+                      onChange={(v) => {
+                        const m = unwrap(settingStore.models)
+                        m.Llama.temperature = v
+                        setModels(m)
+                      }}
+                    />
+                  </div>
+                </div>
               </Collapse>
               <Collapse
                 title={
-                  <div class="flex items-center gap-1">
-                    Llama
+                  <div class="flex items-center gap-2">
+                    <KimiIcon class="rounded-md" height={20} width={20} /> Kimi ( Moonshot AI ) 系列
                     <QuestionMention
                       content={
-                        <a class="text-xs" href="https://dashscope.console.aliyun.com/apiKey">
+                        <a class="text-xs" href="https://platform.moonshot.cn/console/api-keys">
                           密钥注册地址
                         </a>
                       }
@@ -173,23 +288,28 @@ export default function Setting() {
                 }
               >
                 <EditInput
-                  label="本地模型地址"
-                  // value={settingStore.models.AliQWen.apiKey}
+                  label="apiKey"
+                  value={settingStore.models.Moonshot.apiKey}
                   onSave={(v) => {
                     const m = unwrap(settingStore.models)
-                    m.AliQWen.apiKey = v
+                    m.Moonshot.apiKey = v
                     setModels(m)
                   }}
                 />
-                <EditInput
-                  label="高级配置"
-                  // value={settingStore.models.AliQWen.apiKey}
-                  onSave={(v) => {
-                    const m = unwrap(settingStore.models)
-                    m.AliQWen.apiKey = v
-                    setModels(m)
-                  }}
-                />
+                <div class="mb-1 flex h-7 items-center gap-4">
+                  <span class="font-bold">创造性/随机性</span>
+                  <div class="w-60">
+                    <Slider
+                      defaultValue={settingStore.models.Moonshot.temperature}
+                      percentage
+                      onChange={(v) => {
+                        const m = unwrap(settingStore.models)
+                        m.Moonshot.temperature = v
+                        setModels(m)
+                      }}
+                    />
+                  </div>
+                </div>
               </Collapse>
             </Expand>
           </div>

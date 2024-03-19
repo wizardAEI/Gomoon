@@ -46,7 +46,7 @@ export async function loadConfig() {
   const config = await window.api.loadConfig()
   // 从 data 中读取配置
   setSettingStore('isOnTop', config.isOnTop)
-  setSettingStore('models', config.models)
+  setSettingStore('models', merge(unwrap(settingStore.models), config.models))
   setSettingStore('oldModels', cloneDeep(config.models))
   setSettingStore('canMultiCopy', config.canMultiCopy)
   setSettingStore('quicklyWakeUpKeys', config.quicklyWakeUpKeys)
