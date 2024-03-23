@@ -69,7 +69,7 @@ export const defaultModels = () =>
     },
     BaiduWenxin: {
       apiKey: '',
-      secretKey: 'secret-key',
+      secretKey: '',
       temperature: 0.3
     },
     AliQWen: {
@@ -159,27 +159,18 @@ export const newMoonshotModal = (
 
 // 判断当前是node环境还是浏览器环境
 export const newChatLlama = (config: { src: string; temperature: number }) => {
-  console.log('newChatLlama', config, window)
-  if (typeof window === 'undefined' && typeof process !== 'undefined') {
-    const { ChatLlamaCpp } = require('@langchain/community/chat_models/llama_cpp')
-    return new ChatLlamaCpp({
-      modelPath: config.src,
-      temperature: config.temperature
-    })
-  } else {
-    return {
-      invoke() {
-        throw new Error('Llama is not supported in browser')
-      }
+  return {
+    invoke() {
+      throw new Error('Llama is not supported in browser')
     }
   }
 }
 
-export const loadLMMap = (
+export const loadLMMap = async (
   model: Models
-): {
+): Promise<{
   [key in ModelsType]: ModelInterfaceType
-} => ({
+}> => ({
   ERNIE3: newERNIEModal(model.BaiduWenxin, 'ERNIE-Speed-8K'),
   ERNIE4: newERNIEModal(model.BaiduWenxin, 'ERNIE-Bot-4'),
   ERNIE128K: newERNIEModal(model.BaiduWenxin, 'ERNIE-Speed-128K'),

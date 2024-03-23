@@ -14,7 +14,8 @@ export async function parseURL2Str(url: string) {
     })
   const $ = load(html)
   const doc = new Readability(new JSDOM($.html()).window.document).parse()
-  if (doc && doc?.content.length > 50) {
+  console.log('>>>', doc)
+  if (doc && doc?.textContent.length > 50 && doc.siteName !== '微信公众平台') {
     return `${doc.title}\n\n` + doc.textContent
   }
   // 如果内容过少，则怀疑为单页面应用或遇到安全验证，使用puppeteer解析
@@ -78,6 +79,7 @@ export async function parseURL2Str(url: string) {
   } catch (e) {
     if ((e as Error).message.includes('timeout')) throw new Error('页面解析超时')
     if (doc) {
+      console.log(`${doc.title}\n\n` + doc.content)
       return `${doc.title}\n\n` + doc.content
     } else {
       throw new Error('页面解析超时')
