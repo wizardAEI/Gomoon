@@ -1,5 +1,6 @@
 import { WebSocket } from 'ws'
 import { randomBytes } from 'crypto'
+import { PostBuffToMainWindow } from '../../window'
 export class Service {
   private ws: WebSocket | null = null
 
@@ -215,8 +216,10 @@ function createSSML(text, voiceName) {
   return ssml
 }
 
-export const speak = (content: string, newBufferHandler: (buffer: Buffer) => void) => {
-  const service = new Service(newBufferHandler)
+export const speak = (content: string) => {
+  const service = new Service((buff) => {
+    PostBuffToMainWindow(buff)
+  })
   let ssml = createSSML(content, 'zh-CN-XiaoxiaoNeural')
   service
     .convert(ssml, 'webm-24khz-16bit-mono-opus')
