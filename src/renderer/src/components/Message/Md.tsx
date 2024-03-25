@@ -17,20 +17,38 @@ export default function Md(props: { class: string; content: string }) {
   const [showSelectBtn, setShowSelectBtn] = createSignal(false)
   let btn: HTMLDivElement | undefined
   function speakText() {
-    // TODO: TTS
-    if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(selectContent)
-      utterance.lang = 'zh-CN'
-      utterance.onstart = () => {
-        setPageData('isSpeech', true)
-      }
-      utterance.onend = () => setPageData('isSpeech', false)
-      utterance.onerror = () => setPageData('isSpeech', false)
-      window.speechSynthesis.speak(utterance)
-    } else {
-      console.error('Your browser does not support speech synthesis')
+    const voices: Buffer[] = []
+    let playStatus = false
+    // speak(selectContent, (buf) => {
+    //   voices.push(buf)
+    //   play()
+    // })
+    const play = async () => {
+      if (!voices.length || playStatus) return
+      playStatus = true
+      const blob = new Blob([voices[0]], { type: 'audio/mp3' })
+      const audio = new Audio()
+      audio.src = URL.createObjectURL(blob)
+      await audio.play()
+      // 播放完之后，删除第一个
+      voices.shift()
+      playStatus = false
+      play()
     }
-    setShowSelectBtn(false)
+    // // TODO: TTS
+    // if ('speechSynthesis' in window) {
+    //   const utterance = new SpeechSynthesisUtterance(selectContent)
+    //   utterance.lang = 'zh-CN'
+    //   utterance.onstart = () => {
+    //     setPageData('isSpeech', true)
+    //   }
+    //   utterance.onend = () => setPageData('isSpeech', false)
+    //   utterance.onerror = () => setPageData('isSpeech', false)
+    //   window.speechSynthesis.speak(utterance)
+    // } else {
+    //   console.error('Your browser does not support speech synthesis')
+    // }
+    // setShowSelectBtn(false)
   }
   function findText() {
     setFindContent(selectContent)

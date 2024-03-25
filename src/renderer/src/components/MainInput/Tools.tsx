@@ -202,7 +202,13 @@ export default function Tools(props: {
                       const content = await recognizeText(file, (m) => {
                         load.show(m?.status || '正在识别图片中的文字')
                       })
-                      props.onInput(content)
+                      // 去掉中文的空格
+                      function removeChineseSpaces(str) {
+                        return str
+                          .replace(/([\u4e00-\u9fa5])\s+/g, '$1')
+                          .replace(/\s+([\u4e00-\u9fa5])/g, '$1')
+                      }
+                      props.onInput(removeChineseSpaces(content))
                     } catch (error: any) {
                       toast.error(error, {
                         duration: 3000,
@@ -245,6 +251,7 @@ export default function Tools(props: {
                     toast.error('链接连接超时')
                     return
                   }
+                  console.error(err)
                   toast.error('链接解析失败')
                 } finally {
                   setUrl('')

@@ -84,6 +84,7 @@ export async function editFragment(option: EditFragmentOption): Promise<{
         postMsgToMainWindow('progress suc')
         fragmentsMap[option.id]?.push(option.fragment)
       } catch (e: Error | any) {
+        console.log(e)
         if (e.message === 'llm error') {
           return { suc: false, reason: '大模型调用异常' }
         }

@@ -11,7 +11,7 @@ import { msgDict } from '@lib/langchain'
 
 export type Roles = 'human' | 'system' | 'ai'
 
-const createModel = (chat: ModelInterfaceType) => {
+const createModel = (model: ModelInterfaceType) => {
   return {
     async answer(
       msg: {
@@ -27,7 +27,7 @@ const createModel = (chat: ModelInterfaceType) => {
     ) {
       const { systemTemplate, humanTemplate } = msg
       const msgs = [new SystemMessage(systemTemplate), new HumanMessage(humanTemplate)] as any
-      return chat.invoke(msgs, {
+      return model.invoke(msgs, {
         signal: option.pauseSignal,
         timeout: 1000 * 20,
         callbacks: [
@@ -57,7 +57,7 @@ const createModel = (chat: ModelInterfaceType) => {
         pauseSignal: AbortSignal
       }
     ) {
-      return chat.invoke(
+      return model.invoke(
         msgs.map((msg) => msgDict[msg.role](msg.content || '...')),
         {
           callbacks: [

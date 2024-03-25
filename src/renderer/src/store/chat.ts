@@ -99,6 +99,10 @@ export function removeGeneratingStatus(id: string) {
   )
 }
 
+export function isGenerating(id: string) {
+  return msgStatus.generatingList.includes(id)
+}
+
 export function reActiveGeneratingStatus(id: string) {
   setMsgStatus(
     produce((msgStatus) => {
@@ -107,42 +111,47 @@ export function reActiveGeneratingStatus(id: string) {
   )
 }
 
-export function genMsg(id: string) {
+export async function genMsg(id: string) {
   const currentMsgs = msgs.slice(
     0,
     msgs.findIndex((msg) => msg.id === id)
   )
   const controller = new AbortController()
-  chatAssistant(
-    currentMsgs.map((m, i) => ({
-      ...m,
-      content: extractMeta(m.content, i === currentMsgs.length - 1)
-    })),
-    {
-      newTokenCallback(content: string) {
-        editMsgByAdd(content, id)
-      },
-      endCallback(res) {
-        let consumedToken = res.llmOutput?.estimatedTokenUsage?.totalTokens ?? 0
-        !consumedToken && (consumedToken = res.llmOutput?.tokenUsage?.totalTokens)
-        !consumedToken && (consumedToken = 0)
-        setConsumedTokenForChat(consumedToken)
-        removeGeneratingStatus(id)
-      },
-      errorCallback(err: Error) {
-        editMsgByAdd(ErrorDict(err), id)
-        removeGeneratingStatus(id)
-      },
-      pauseSignal: controller.signal
-    }
-  )
   abortMap.set(id, () => controller.abort())
+  try {
+    await chatAssistant(
+      currentMsgs.map((m, i) => ({
+        ...m,
+        content: extractMeta(m.content, i === currentMsgs.length - 1)
+      })),
+      {
+        newTokenCallback(content: string) {
+          editMsgByAdd(content, id)
+        },
+        endCallback(res) {
+          let consumedToken = res.llmOutput?.estimatedTokenUsage?.totalTokens ?? 0
+          !consumedToken && (consumedToken = res.llmOutput?.tokenUsage?.totalTokens)
+          !consumedToken && (consumedToken = 0)
+          setConsumedTokenForChat(consumedToken)
+          removeGeneratingStatus(id)
+        },
+        errorCallback(err: Error) {
+          editMsgByAdd(ErrorDict(err), id)
+          removeGeneratingStatus(id)
+        },
+        pauseSignal: controller.signal
+      }
+    )
+  } catch (err) {
+    if (!isGenerating(id)) return
+    editMsgByAdd(ErrorDict(err as Error), id)
+    abortMap.delete(id)
+  }
 }
 
 export async function stopGenMsg(id: string) {
   abortMap.get(id)?.()
   abortMap.delete(id)
-  removeGeneratingStatus(id)
 
   // 自行计算token消费
   const currentMsgs = msgs.reduce((acc, msg) => {

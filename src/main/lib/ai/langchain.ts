@@ -1,4 +1,5 @@
-import { loadLMMap, msgDict } from '../../../lib/langchain'
+import { msgDict } from '../../../lib/langchain'
+import { loadLMMapForNode } from '../../../lib/utils'
 import { getUserData, loadAppConfig } from '../../models'
 
 function getLMConfig() {
@@ -9,7 +10,7 @@ function getLMConfig() {
 }
 
 export async function lmInvoke(option: { system?: string; content: string }): Promise<string> {
-  const lm = loadLMMap(getLMConfig().models)[getLMConfig().current]
+  const lm = (await loadLMMapForNode(getLMConfig().models))[getLMConfig().current]
   if (!lm) {
     throw new Error('llm not found')
   }

@@ -26,7 +26,7 @@ const [answerStore, setAnswerStore] = createStore({
 })
 let controller: AbortController
 let ansID: string
-export function genAns(q: string) {
+export async function genAns(q: string) {
   controller = new AbortController()
   setAnswerStore('answer', '......')
   setAnswerStore('question', q)
@@ -34,32 +34,37 @@ export function genAns(q: string) {
   const ID = ulid()
   ansID = ID
   let haveAnswer = false
-  ansAssistant({
-    question: extractMeta(q, true),
-    newTokenCallback(content) {
-      ID === ansID &&
-        setAnswerStore('answer', (ans) => {
-          if (!haveAnswer) {
-            haveAnswer = true
-            return content
-          }
-          return ans + content
-        })
-    },
-    endCallback(res) {
-      let consumedToken = res.llmOutput?.estimatedTokenUsage?.totalTokens ?? 0
-      !consumedToken && (consumedToken = res.llmOutput?.tokenUsage?.totalTokens)
-      !consumedToken && (consumedToken = 0)
-      ID === ansID && setGeneratingStatus(false)
-      setConsumedTokenForAns(consumedToken)
-    },
-    errorCallback(err) {
-      if (ID !== ansID) return
-      setAnswerStore('answer', (ans) => ans + ErrorDict(err))
-      setGeneratingStatus(false)
-    },
-    pauseSignal: controller.signal
-  })
+  try {
+    await ansAssistant({
+      question: extractMeta(q, true),
+      newTokenCallback(content) {
+        ID === ansID &&
+          setAnswerStore('answer', (ans) => {
+            if (!haveAnswer) {
+              haveAnswer = true
+              return content
+            }
+            return ans + content
+          })
+      },
+      endCallback(res) {
+        let consumedToken = res.llmOutput?.estimatedTokenUsage?.totalTokens ?? 0
+        !consumedToken && (consumedToken = res.llmOutput?.tokenUsage?.totalTokens)
+        !consumedToken && (consumedToken = 0)
+        ID === ansID && setGeneratingStatus(false)
+        setConsumedTokenForAns(consumedToken)
+      },
+      errorCallback(err) {
+        if (ID !== ansID) return
+        setAnswerStore('answer', (ans) => ans + ErrorDict(err))
+        setGeneratingStatus(false)
+      },
+      pauseSignal: controller.signal
+    })
+  } catch (err) {
+    if (!ansStatus.isGenerating) return
+    setAnswerStore('answer', (ans) => ans + ErrorDict(err as Error))
+  }
 }
 export async function stopGenAns() {
   controller?.abort()

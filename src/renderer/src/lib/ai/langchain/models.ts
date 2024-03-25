@@ -3,11 +3,12 @@ import { defaultModels } from '@lib/langchain'
 import { loadLMMap } from '@lib/langchain'
 
 export const models = {
-  ...loadLMMap(defaultModels())
+  ...(await loadLMMap(defaultModels()))
 }
 
-event.on('updateModels', (model) => {
-  Object.keys(models).forEach((key: string) => {
-    models[key] = loadLMMap(model)[key]
-  })
+event.on('updateModels', async (model) => {
+  const loadedModels = await loadLMMap(model)
+  for (const key in models) {
+    models[key] = loadedModels[key]
+  }
 })
