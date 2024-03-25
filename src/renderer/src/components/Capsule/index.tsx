@@ -43,7 +43,7 @@ export default function (props: { type: 'chat' | 'ans'; botName: string }) {
               width={22}
               height={22}
               onClick={() => {
-                window.speechSynthesis.cancel()
+                // TODO: 取消播放
               }}
               class="absolute -left-[1px] text-active opacity-0 group-hover/playing:opacity-100"
             />

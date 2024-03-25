@@ -158,7 +158,7 @@ export async function postMsgToMainWindow(msg: string) {
 }
 
 export async function PostBuffToMainWindow(buff: Buffer) {
-  return mainWindow?.webContents.send('post-message', buff)
+  return mainWindow?.webContents.send('post-buf', buff)
 }
 
 export function createWindow(): void {

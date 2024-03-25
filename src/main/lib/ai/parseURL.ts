@@ -27,7 +27,6 @@ export async function parseURL2Str(url: string) {
     }
     // 释放资源
     await page.close()
-    console.log(doc)
     return `${doc.title}\n\n` + doc.textContent
   } catch (e) {
     if ((e as Error).message.includes('timeout')) throw new Error('页面解析超时')

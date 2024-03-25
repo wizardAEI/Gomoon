@@ -16,25 +16,44 @@ export default function Md(props: { class: string; content: string }) {
   const { copy, copied } = useClipboard({ source, copiedDuring: 1000 })
   const [showSelectBtn, setShowSelectBtn] = createSignal(false)
   let btn: HTMLDivElement | undefined
+  let audio: HTMLAudioElement | undefined
   function speakText() {
-    const voices: Buffer[] = []
+    const mediaSource = new MediaSource()
+    const buffers: ArrayBuffer[] = []
+    audio!.src = URL.createObjectURL(mediaSource)
     let playStatus = false
-    // speak(selectContent, (buf) => {
-    //   voices.push(buf)
-    //   play()
-    // })
-    const play = async () => {
-      if (!voices.length || playStatus) return
-      playStatus = true
-      const blob = new Blob([voices[0]], { type: 'audio/mp3' })
-      const audio = new Audio()
-      audio.src = URL.createObjectURL(blob)
-      await audio.play()
-      // 播放完之后，删除第一个
-      voices.shift()
-      playStatus = false
-      play()
+    const mime = 'audio/webm; codecs="opus"'
+    mediaSource.addEventListener('sourceopen', sourceOpen, false)
+    function sourceOpen() {
+      const sourceBuffer = mediaSource.addSourceBuffer(mime)
+      const cancelReceive = window.api.receiveBuf(async (_, buf) => {
+        buffers.push(buf.buffer)
+        if (!playStatus) {
+          audio!.play()
+          playStatus = true
+          // append()
+        }
+      })
+      function append() {
+        while (playStatus) {
+          if (buffers.length === 0) continue
+          if (!sourceBuffer.updating && mediaSource.readyState === 'open') {
+            console.log('appendBuffer')
+            sourceBuffer.appendBuffer(buffers[0])
+            buffers.shift()
+          }
+        }
+      }
+      window.api.speak(selectContent).then((buf) => {
+        cancelReceive()
+        if (!sourceBuffer.updating && mediaSource.readyState === 'open') {
+          console.log('appendBuffer')
+          sourceBuffer.appendBuffer(buf.buffer)
+        }
+        audio?.play()
+      })
     }
+
     // // TODO: TTS
     // if ('speechSynthesis' in window) {
     //   const utterance = new SpeechSynthesisUtterance(selectContent)
@@ -190,6 +209,7 @@ export default function Md(props: { class: string; content: string }) {
 
   return (
     <>
+      <audio ref={audio} controls></audio>
       <div ref={contentDom} class={props.class} innerHTML={htmlString()} />
       <Show when={showSelectBtn()}>
         <div ref={btn} class="fixed flex gap-1 rounded-[10px] bg-dark-plus px-1 py-[2px]">
