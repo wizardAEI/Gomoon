@@ -50,17 +50,12 @@ export class Service {
         if (!isBinary) {
           let data = message.toString()
           if (data.includes('Path:turn.start')) {
-            // 开始传输
             let matches = data.match(pattern)
             let requestId = matches!.groups!.id
-            // TODO: 开始传输音频片段
+            console.info(`开始传输：${requestId}`)
           } else if (data.includes('Path:turn.end')) {
-            // 结束传输
-            let matches = data.match(pattern)
-            let requestId = matches!.groups!.id
-            // this.newBufferHandler(this.buffer)
             this.convertPromise.resolve(this.buffer)
-            // TODO: 结束传输音频片段
+            this.ws?.close(1000)
           }
         } else if (isBinary) {
           let separator = 'Path:audio\r\n'
@@ -105,8 +100,6 @@ export class Service {
       'Content-Type:application/json; charset=utf-8\r\n' +
       'Path:speech.config\r\n\r\n' +
       JSON.stringify(configData)
-    console.info(`开始转换：${requestId}……`)
-    console.debug(`准备发送配置请求：${requestId}\n`, configMessage)
     this.ws?.send(configMessage, (configError) => {
       if (configError) {
         console.error(`配置请求发送失败：${requestId}\n`, configError)
@@ -118,7 +111,6 @@ export class Service {
         `Content-Type:application/ssml+xml\r\n` +
         `Path:ssml\r\n\r\n` +
         ssml
-      console.debug(`准备发送SSML消息：${requestId}\n`, ssmlMessage)
       this.ws!.send(ssmlMessage, (ssmlError) => {
         if (ssmlError) {
           console.error(`SSML消息发送失败：${requestId}\n`, ssmlError)
@@ -131,7 +123,6 @@ export class Service {
       clearTimeout(this.timer)
     }
     // 设置定时器，超过10秒没有收到请求，主动断开连接
-    console.debug('创建新的超时定时器')
     this.timer = setTimeout(() => {
       if (this.ws && this.ws.readyState == WebSocket.OPEN) {
         console.debug('已经 10 秒没有请求，主动关闭连接')

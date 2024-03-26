@@ -7,6 +7,7 @@ import { getCurrentMemo } from '@renderer/store/memo'
 import { pageData } from '@renderer/store/user'
 import PlayingIcon from '@renderer/assets/icon/base/PlayingIcon'
 import CrossMarkRound from '@renderer/assets/icon/base/CrossMarkRound'
+import { event } from '@renderer/lib/util'
 
 export default function (props: { type: 'chat' | 'ans'; botName: string }) {
   const nav = useNavigate()
@@ -43,7 +44,7 @@ export default function (props: { type: 'chat' | 'ans'; botName: string }) {
               width={22}
               height={22}
               onClick={() => {
-                // TODO: 取消播放
+                event.emit('stopSpeak')
               }}
               class="absolute -left-[1px] text-active opacity-0 group-hover/playing:opacity-100"
             />
