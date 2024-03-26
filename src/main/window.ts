@@ -157,6 +157,10 @@ export async function postMsgToMainWindow(msg: string) {
   return mainWindow?.webContents.send('post-message', msg)
 }
 
+export async function PostBuffToMainWindow(buff: Buffer) {
+  return mainWindow?.webContents.send('post-buf', buff)
+}
+
 export function createWindow(): void {
   const userConfig = loadAppConfig()
 

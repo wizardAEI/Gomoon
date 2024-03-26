@@ -98,10 +98,17 @@ export const api = {
   getLines: (): Promise<Partial<Line>[]> => ipcRenderer.invoke('get-lines'),
   parsePageToString: (url: string): Promise<string> =>
     ipcRenderer.invoke('parse-page-to-string', url),
+  speak: (content: string): Promise<Buffer> => ipcRenderer.invoke('speak', content),
   receiveMsg: (callback: (event: IpcRendererEvent, msg: string) => Promise<void>) => {
     ipcRenderer.on('post-message', callback)
     return () => {
       ipcRenderer.removeListener('post-message', callback)
+    }
+  },
+  receiveBuf: (callback: (event: IpcRendererEvent, buf: Buffer) => Promise<void>) => {
+    ipcRenderer.on('post-buf', callback)
+    return () => {
+      ipcRenderer.removeListener('post-buf', callback)
     }
   }
 } as const

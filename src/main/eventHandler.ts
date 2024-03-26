@@ -58,6 +58,7 @@ import {
   importMemo,
   saveMemo
 } from './lib/ai/embedding/index'
+import { speak } from './lib/ai/tts'
 
 export function initAppEventsHandler() {
   /**
@@ -196,4 +197,5 @@ export function initAppEventsHandler() {
   ipcMain.handle('minimize-window', () => minimize())
   ipcMain.handle('get-lines', () => getLines())
   ipcMain.handle('parse-page-to-string', (_, url: string) => parseURL2Str(url))
+  ipcMain.handle('speak', (_, text: string) => speak(text))
 }

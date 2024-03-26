@@ -73,4 +73,6 @@ resources/
             └── ....
 ```
 
+同时也可以使用[云盘](https://www.123pan.com/s/Cwttjv-VASXv.html)下载
+
 后续就可以正常启动项目进行开发了。
