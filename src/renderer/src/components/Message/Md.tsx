@@ -191,6 +191,5 @@ export function mdToText(content: string) {
     .use(mdHighlight)
     .use(katex)
     .use(emoji)
-  console.log(load(md.render(content)).text())
   return load(md.render(content)).text()
 }

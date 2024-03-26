@@ -30,6 +30,7 @@ export default function Message(props: {
   content: string
   botName?: string
   isEmpty?: boolean
+  onRemove?: () => void
 }) {
   const meta = createMemo(() => {
     return parseDisplayArr(props.content)
@@ -55,7 +56,6 @@ export default function Message(props: {
   const audio = new Audio()
   audio.autoplay = true
   audio.onended = () => {
-    console.log('ended')
     setPageData('isSpeech', false)
     audio.removeAttribute('src')
     audio.load()
@@ -78,27 +78,32 @@ export default function Message(props: {
     audio.src = sourceURL
     setPageData('isSpeech', true)
     mediaSource.addEventListener('sourceopen', function () {
-      const sourceBuffer = mediaSource.addSourceBuffer('audio/webm; codecs=opus')
-      const append = () => {
-        if (buffers.length === 0 || sourceBuffer.updating) return
-        sourceBuffer.appendBuffer(buffers[0])
-        buffers.shift()
-        sourceBuffer.onupdateend = append
+      try {
+        const sourceBuffer = mediaSource.addSourceBuffer('audio/webm; codecs=opus')
+        const append = () => {
+          if (buffers.length === 0 || sourceBuffer.updating || mediaSource.readyState !== 'open')
+            return
+          sourceBuffer.appendBuffer(buffers[0])
+          buffers.shift()
+          sourceBuffer.onupdateend = append
+        }
+        const cancelReceive = window.api.receiveBuf(async (_, buf) => {
+          // FEAT: Buffer有用的数据可能只是部分，这里使用偏移量来确保获取到正确数据而不是整个ArrayBuffer
+          buffers.push(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength))
+          append()
+        })
+        window.api.speak(content).then((_) => {
+          cancelReceive()
+          timer = setInterval(() => {
+            if (!buffers.length && !sourceBuffer.updating) {
+              mediaSource.endOfStream()
+              clearInterval(timer!)
+            }
+          }, 300)
+        })
+      } catch (e) {
+        console.error(e)
       }
-      const cancelReceive = window.api.receiveBuf(async (_, buf) => {
-        // FEAT: Buffer有用的数据可能只是部分，这里使用偏移量来确保获取到正确数据而不是整个ArrayBuffer
-        buffers.push(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength))
-        append()
-      })
-      window.api.speak(content).then((_) => {
-        cancelReceive()
-        timer = setInterval(() => {
-          if (!buffers.length && !sourceBuffer.updating) {
-            mediaSource.endOfStream()
-            clearInterval(timer!)
-          }
-        }, 300)
-      })
     })
   }
   function speakMd() {
@@ -136,7 +141,12 @@ export default function Message(props: {
           />
         </Show>
         <Show when={showCompsByUser()}>
-          <MsgPopupForUser type={props.type} id={props.id || ''} content={props.content} />
+          <MsgPopupForUser
+            type={props.type}
+            id={props.id || ''}
+            content={props.content}
+            onRemove={props.onRemove || (() => {})}
+          />
         </Show>
       </Show>
       <div class={style[props.type] + ' relative m-4 rounded-2xl p-3'}>

@@ -34,6 +34,7 @@ export default function Input(props: {
   autoFocusWhenShow?: boolean
   placeholder?: string
   onClear?: () => void
+  onInput?: (e: InputEvent) => void
 }) {
   let textAreaDiv: HTMLTextAreaElement | undefined
   let textAreaContainerDiv: HTMLDivElement | undefined
@@ -164,6 +165,7 @@ export default function Input(props: {
   })
 
   async function onInput(e) {
+    props.onInput?.(e)
     e.preventDefault()
     cleanupForRestoreMsgs?.()
     setInputText(e.target.value)
@@ -240,6 +242,7 @@ export default function Input(props: {
               isCompositing = false
             }}
             onKeyDown={(e) => {
+              e.stopPropagation()
               if (e.key === 'Enter' && isCompositing) return
               if (settingStore.sendWithCmdOrCtrl) {
                 if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {

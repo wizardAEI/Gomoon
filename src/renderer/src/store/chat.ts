@@ -50,8 +50,21 @@ export function clearMsgs() {
   setConsumedTokenForChat(0)
 }
 
+export function removeMsg(id: string) {
+  trash = {
+    msgs: cloneDeep(msgs),
+    consumedToken: consumedToken().chat
+  }
+  const index = msgs.findIndex((item) => item.id === id)
+  setMsgs(
+    produce((msgs) => {
+      msgs.splice(index, 2)
+    })
+  )
+}
+
 export function restoreMsgs() {
-  if (!trash.consumedToken) return
+  if (!trash.msgs.length) return
   setMsgs(trash.msgs)
   setConsumedTokenForChat(trash.consumedToken)
   initTrash()

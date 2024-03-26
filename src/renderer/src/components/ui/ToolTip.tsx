@@ -32,7 +32,7 @@ export default function (props: {
       >
         {props.label}
       </button>
-      <Show when={api().isOpen}>
+      <Show when={api().isOpen && props.content}>
         <div {...api().positionerProps}>
           <div
             {...api().contentProps}

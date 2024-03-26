@@ -6,7 +6,9 @@ import {
   msgStatus,
   editMsg,
   reActiveGeneratingStatus,
-  genMsg
+  genMsg,
+  removeMsg,
+  restoreMsgs
 } from '../store/chat'
 import Message from '@renderer/components/Message'
 import { For, Show, createEffect, createSignal, onCleanup, onMount } from 'solid-js'
@@ -17,6 +19,8 @@ import SystemHeader from '@renderer/components/MainSelections'
 import Capsule from '@renderer/components/Capsule'
 import { currentLines } from '@renderer/store/user'
 import { inputText, setInputText } from '@renderer/store/input'
+import { useToast } from '@renderer/components/ui/Toast'
+import { useEventListener } from 'solidjs-use'
 const scrollToBottom = (el: HTMLDivElement, index: number) => {
   if (index === msgs.length - 1) {
     requestAnimationFrame(() => {
@@ -29,8 +33,7 @@ const scrollToBottom = (el: HTMLDivElement, index: number) => {
 }
 
 export default function Chat() {
-  const [editId, setEditId] = createSignal('')
-
+  const toast = useToast()
   // FEAT: 打字机效果
   const [linesContent, setLinesContent] = createSignal('')
   const [linesFrom, setLinesFrom] = createSignal('')
@@ -60,6 +63,7 @@ export default function Chat() {
     id: string
     state: 'pending' | 'complete'
   }>({ content: '', id: '', state: 'complete' })
+  const [editId, setEditId] = createSignal('')
   onMount(() => {
     requestAnimationFrame(() => {
       const chatContainer = document.querySelector('.chat-container')
@@ -80,6 +84,7 @@ export default function Chat() {
       setEditId(id)
       if (!id) {
         setInputText('')
+        setPreviousMsg({ content: '', id, state: 'complete' })
         return
       }
       editMsg({ content: '' }, id)
@@ -96,6 +101,22 @@ export default function Chat() {
       event.off('editUserMsg', editUserMsg)
     })
   })
+
+  let cleanupForRestoreMsgs: (() => void) | undefined
+  function handleRemoveMsg(id: string) {
+    removeMsg(id)
+    toast.info(`${navigator.userAgent.includes('Mac') ? 'command' : 'ctrl'} + z 撤销`, {
+      duration: 1000,
+      position: 'top-3/4'
+    })
+    cleanupForRestoreMsgs?.()
+    cleanupForRestoreMsgs = useEventListener(document, 'keydown', (e) => {
+      if ((e.key === 'z' && e.ctrlKey) || (e.key === 'z' && e.metaKey)) {
+        restoreMsgs()
+        cleanupForRestoreMsgs?.()
+      }
+    })
+  }
 
   return (
     <div class="chat-container relative flex h-[calc(100vh-124px)] flex-col overflow-auto pb-24 pt-10">
@@ -151,6 +172,7 @@ export default function Chat() {
                   content={msg.content}
                   type={msg.role}
                   botName={getCurrentAssistantForChat().name}
+                  onRemove={() => handleRemoveMsg(msg.id)}
                 />
               </div>
             </Show>
@@ -160,6 +182,9 @@ export default function Chat() {
       <div class="fixed bottom-0 left-0 right-0 h-[118px] bg-transparent backdrop-blur-xl"></div>
       <div class="fixed bottom-10 z-20 w-full px-4">
         <Input
+          onInput={() => {
+            cleanupForRestoreMsgs?.()
+          }}
           showClearButton={previousMsg().state === 'complete'}
           onClear={() => {
             setPreviousMsg({ ...previousMsg(), state: 'complete' })

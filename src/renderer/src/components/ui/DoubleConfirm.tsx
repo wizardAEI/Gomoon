@@ -5,6 +5,7 @@ export default function (props: {
   children: JSX.Element
   position?: string
   onConfirm: () => void
+  onCancel?: () => void
   preConfirm?: () => boolean
   popup?: boolean
 }) {
@@ -43,6 +44,7 @@ export default function (props: {
               onClick={(e) => {
                 e.stopPropagation()
                 setShow(false)
+                props.onCancel?.()
               }}
             >
               取消
