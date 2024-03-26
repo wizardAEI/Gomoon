@@ -1,10 +1,33 @@
 import { WebSocket } from 'ws'
 import { randomBytes } from 'crypto'
 import { PostBuffToMainWindow } from '../../window'
-export class Service {
-  private ws: WebSocket | null = null
 
-  private timer: NodeJS.Timeout | null = null
+function createSSML(text, voiceName) {
+  text = text
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll("'", '&apos;')
+    .replaceAll('"', '&quot;')
+  let ssml =
+    '\
+        <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">\
+          <voice name="' +
+    voiceName +
+    '">\
+              <prosody rate="0%" pitch="0%">\
+                  ' +
+    text +
+    '\
+              </prosody >\
+          </voice >\
+        </speak > '
+
+  return ssml
+}
+
+class Service {
+  private ws: WebSocket | null = null
 
   public newBufferHandler: (buffer: Buffer) => void
 
@@ -13,14 +36,15 @@ export class Service {
     reject: (reason?: any) => void
   }
 
-  private buffer: Buffer
+  private buffers: Buffer
+  private requestId = ''
 
   constructor(newBufferHandler: (buffer: Buffer) => void) {
     this.convertPromise = {
       resolve: () => {},
       reject: () => {}
     }
-    this.buffer = Buffer.from([])
+    this.buffers = Buffer.from([])
     this.newBufferHandler = newBufferHandler
   }
 
@@ -37,36 +61,34 @@ export class Service {
     })
     return new Promise((resolve, reject) => {
       ws.on('close', (code, reason) => {
-        // 服务器会自动断开空闲超过30秒的连接
         this.ws = null
-        if (this.timer) {
-          clearTimeout(this.timer)
-          this.timer = null
-        }
         console.info(`连接已关闭： ${reason} ${code}`)
       })
       ws.on('message', (message, isBinary) => {
-        let pattern = /X-RequestId:(?<id>[a-z|0-9]*)/
+        const pattern = /X-RequestId:(?<id>[a-z|0-9]*)/
         if (!isBinary) {
-          let data = message.toString()
+          const data = message.toString()
           if (data.includes('Path:turn.start')) {
-            let matches = data.match(pattern)
-            let requestId = matches!.groups!.id
-            console.info(`开始传输：${requestId}`)
+            const matches = data.match(pattern)
+            this.requestId = matches!.groups!.id
+            this.buffers = Buffer.from([])
           } else if (data.includes('Path:turn.end')) {
-            this.convertPromise.resolve(this.buffer)
-            this.ws?.close(1000)
+            this.convertPromise.resolve(this.buffers)
+            // this.ws?.close(1000)
           }
         } else if (isBinary) {
-          let separator = 'Path:audio\r\n'
-          let data = message as string | Buffer
-          let contentIndex = data.indexOf(separator) + separator.length
-          let content = data.slice(contentIndex) as Buffer
-          this.buffer = Buffer.concat([this.buffer, content])
+          const matches = message.toString().match(pattern)
+          if (this.requestId !== matches!.groups!.id) return
+          const separator = 'Path:audio\r\n'
+          const data = message as string | Buffer
+          const contentIndex = data.indexOf(separator) + separator.length
+          const content = data.slice(contentIndex) as Buffer
+          this.buffers = Buffer.concat([this.buffers, content])
           this.newBufferHandler(content as Buffer)
         }
       })
       ws.on('error', (error) => {
+        this.ws = null
         reject(`连接失败： ${error}`)
       })
       ws.on('open', () => {
@@ -76,8 +98,7 @@ export class Service {
   }
 
   public async convert(ssml: string, format: string) {
-    if (this.ws == null || this.ws.readyState != WebSocket.OPEN) {
-      console.info('准备连接服务器……')
+    if (this.ws === null || this.ws.readyState != WebSocket.OPEN) {
       let connection = await this.connect()
       this.ws = connection
     }
@@ -117,19 +138,6 @@ export class Service {
         }
       })
     })
-    // 收到请求，清除超时定时器
-    if (this.timer) {
-      console.debug('收到新的请求，清除超时定时器')
-      clearTimeout(this.timer)
-    }
-    // 设置定时器，超过10秒没有收到请求，主动断开连接
-    this.timer = setTimeout(() => {
-      if (this.ws && this.ws.readyState == WebSocket.OPEN) {
-        console.debug('已经 10 秒没有请求，主动关闭连接')
-        this.ws.close(1000)
-        this.timer = null
-      }
-    }, 10000)
     return new Promise((resolve, reject) => {
       this.convertPromise.resolve = resolve
       this.convertPromise.reject = reject
@@ -137,34 +145,11 @@ export class Service {
   }
 }
 
-function createSSML(text, voiceName) {
-  text = text
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll("'", '&apos;')
-    .replaceAll('"', '&quot;')
-  let ssml =
-    '\
-        <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">\
-          <voice name="' +
-    voiceName +
-    '">\
-              <prosody rate="0%" pitch="0%">\
-                  ' +
-    text +
-    '\
-              </prosody >\
-          </voice >\
-        </speak > '
-
-  return ssml
-}
+const service = new Service((buff) => {
+  PostBuffToMainWindow(buff)
+})
 
 export const speak = async (content: string) => {
-  const service = new Service((buff) => {
-    PostBuffToMainWindow(buff)
-  })
   let ssml = createSSML(content, 'zh-CN-XiaoxiaoNeural')
   return await service.convert(ssml, 'webm-24khz-16bit-mono-opus')
 }

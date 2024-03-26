@@ -12,8 +12,14 @@ import WithdrawalIcon from '@renderer/assets/icon/base/WithdrawalICon'
 import PauseIcon from '@renderer/assets/icon/base/PauseIcon'
 import { saveMsgsBeforeID, stopGenMsg } from '@renderer/store/chat'
 import { compWithTip } from '../ui/compWithTip'
+import SpeechIcon from '@renderer/assets/icon/SpeechIcon'
 
-export default function MsgPopup(props: { id: string; content: string; type: MsgTypes }) {
+export default function MsgPopup(props: {
+  id: string
+  content: string
+  type: MsgTypes
+  onSpeak: () => void
+}) {
   const [source] = createSignal('')
   const { copy } = useClipboard({ source })
 
@@ -49,6 +55,17 @@ export default function MsgPopup(props: { id: string; content: string; type: Msg
           />
         ))}
         content={`${props.type === 'ai' ? '保存此前内容' : '保存'}`}
+      />
+      <ToolTip
+        label={
+          <SpeechIcon
+            height={22}
+            width={22}
+            class="cursor-pointer text-gray duration-100 hover:text-active"
+            onClick={props.onSpeak}
+          />
+        }
+        content="朗读"
       />
       <Show when={props.type !== 'ans'}>
         <ToolTip
