@@ -4,7 +4,8 @@ export const newChatLlamaForNode = async (config: { src: string; temperature: nu
   const { ChatLlamaCpp } = await import('@langchain/community/chat_models/llama_cpp')
   return new ChatLlamaCpp({
     modelPath: config.src,
-    temperature: config.temperature
+    temperature: config.temperature,
+    gpuLayers: 64,
   })
 }
 

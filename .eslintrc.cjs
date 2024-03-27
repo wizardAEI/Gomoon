@@ -27,6 +27,7 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': [0],
     '@typescript-eslint/ban-ts-comment': [0],
     'prefer-const': [1],
+    "prettier/prettier": [0],
     'import/no-extraneous-dependencies': [2],
     'import/order': [
       'warn',
