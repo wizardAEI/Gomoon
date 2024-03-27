@@ -1,6 +1,7 @@
-import { event } from '../../util'
 import { defaultModels } from '@lib/langchain'
 import { loadLMMap } from '@lib/langchain'
+
+import { event } from '../../util'
 
 export const models = {
   ...(await loadLMMap(defaultModels()))

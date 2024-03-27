@@ -7,65 +7,18 @@ import { full as emoji } from 'markdown-it-emoji'
 import SpeechIcon from '@renderer/assets/icon/SpeechIcon'
 import FindIcon from '@renderer/assets/icon/FindIcon'
 import { load } from 'cheerio'
-import { setPageData } from '@renderer/store/user'
-import { event } from '@renderer/lib/util'
 
-export default function Md(props: { class: string; content: string }) {
+export default function Md(props: {
+  class: string
+  content: string
+  onSpeak?: (c: string) => void
+}) {
   let selectContent = ''
-  let [findContent, setFindContent] = createSignal('')
+  const [findContent, setFindContent] = createSignal('')
   const [source] = createSignal('')
   const { copy, copied } = useClipboard({ source, copiedDuring: 1000 })
   const [showSelectBtn, setShowSelectBtn] = createSignal(false)
   let btn: HTMLDivElement | undefined
-  const audio = new Audio()
-  audio.autoplay = true
-  audio.onended = () => {
-    console.log('ended')
-    setPageData('isSpeech', false)
-    audio.removeAttribute('src')
-    audio.load()
-  }
-  audio.onerror = (e) => {
-    console.error(e)
-    setPageData('isSpeech', false)
-    audio.removeAttribute('src')
-  }
-  event.on('stopSpeak', () => {
-    audio.pause()
-    setPageData('isSpeech', false)
-    audio.removeAttribute('src')
-  })
-  function speakText() {
-    let buffers: ArrayBuffer[] = []
-    let timer: NodeJS.Timeout | null = null
-    const mediaSource = new MediaSource()
-    const sourceURL = URL.createObjectURL(mediaSource)
-    audio.src = sourceURL
-    setPageData('isSpeech', true)
-    setShowSelectBtn(false)
-    mediaSource.addEventListener('sourceopen', function () {
-      const sourceBuffer = mediaSource.addSourceBuffer('audio/webm; codecs=opus')
-      const append = () => {
-        if (buffers.length === 0 || sourceBuffer.updating) return
-        sourceBuffer.appendBuffer(buffers[0])
-        buffers.shift()
-        sourceBuffer.onupdateend = append
-      }
-      const cancelReceive = window.api.receiveBuf(async (_, buf) => {
-        buffers.push(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength))
-        append()
-      })
-      window.api.speak(selectContent).then((_) => {
-        cancelReceive()
-        timer = setInterval(() => {
-          if (!buffers.length && !sourceBuffer.updating) {
-            mediaSource.endOfStream()
-            clearInterval(timer!)
-          }
-        }, 300)
-      })
-    })
-  }
   function findText() {
     setFindContent(selectContent)
     setShowSelectBtn(false)
@@ -119,7 +72,7 @@ export default function Md(props: { class: string; content: string }) {
   })
 
   const htmlString = createMemo(() => {
-    let content = props.content
+    const content = props.content
 
     const md = MarkdownIt({
       linkify: true,
@@ -163,7 +116,7 @@ export default function Md(props: { class: string; content: string }) {
     md.renderer.rules.fence = (...args) => {
       const [tokens, idx] = args
       const token = tokens[idx]
-      let rawCode = fence(...args)
+      const rawCode = fence(...args)
       return `<div class="relative mt-1 w-full text-text1">
           <div data-code=${encodeURIComponent(
             token.content
@@ -206,11 +159,19 @@ export default function Md(props: { class: string; content: string }) {
 
   return (
     <>
-      <div ref={contentDom} class={props.class} innerHTML={htmlString()} />
+      <div
+        ref={contentDom}
+        class={props.class + ' markdown break-words'}
+        // eslint-disable-next-line solid/no-innerhtml
+        innerHTML={htmlString()}
+      />
       <Show when={showSelectBtn()}>
         <div ref={btn} class="fixed flex gap-1 rounded-[10px] bg-dark-plus px-1 py-[2px]">
           <SpeechIcon
-            onClick={speakText}
+            onClick={() => {
+              props.onSpeak?.(selectContent)
+              setShowSelectBtn(false)
+            }}
             height={22}
             width={22}
             class="cursor-pointer text-gray duration-100 hover:text-active"
@@ -225,4 +186,15 @@ export default function Md(props: { class: string; content: string }) {
       </Show>
     </>
   )
+}
+
+export function mdToText(content: string) {
+  const md = MarkdownIt({
+    linkify: true,
+    breaks: true
+  })
+    .use(mdHighlight)
+    .use(katex)
+    .use(emoji)
+  return load(md.render(content)).text()
 }

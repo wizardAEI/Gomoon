@@ -1,14 +1,16 @@
 import Input from '@renderer/components/MainInput'
 import Message from '@renderer/components/Message'
-import { genAns, answerStore, ansStatus } from '../../store/answer'
 import { Show, createSignal, onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
 import { useSearchParams } from '@solidjs/router'
 import { getCurrentAssistantForAnswer } from '@renderer/store/assistants'
 import SystemHeader from '@renderer/components/MainSelections'
-import SelectAssistantModal from './SelectAssistantModel'
 import Capsule from '@renderer/components/Capsule'
 import { inputText, setInputText } from '@renderer/store/input'
+
+import { genAns, answerStore, ansStatus } from '../../store/answer'
+
+import SelectAssistantModal from './SelectAssistantModel'
 
 export default function Answer() {
   const [showModal, setShowModal] = createSignal(false)
@@ -86,7 +88,7 @@ export default function Answer() {
           botName={getCurrentAssistantForAnswer().name}
         />
       </Show>
-      <div class="fixed bottom-0 left-0 right-0 h-[118px] bg-transparent backdrop-blur-xl"></div>
+      <div class="fixed bottom-0 left-0 right-0 h-[118px] bg-transparent backdrop-blur-xl" />
       <div class="fixed bottom-10 z-20 w-full px-4">
         <Input
           showClearButton

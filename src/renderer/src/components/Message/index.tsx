@@ -2,11 +2,14 @@ import { Roles } from '@renderer/lib/ai/langchain'
 import { For, Show, createMemo } from 'solid-js'
 import 'highlight.js/styles/atom-one-dark.css'
 import { msgStatus, msgs } from '@renderer/store/chat'
-import MsgPopup, { MsgPopupForUser, Pause, WithDrawal } from './Popup'
 import { ansStatus } from '@renderer/store/answer'
 import { parseDisplayArr } from '@renderer/lib/ai/parseString'
+import { setPageData } from '@renderer/store/user'
+import { event } from '@renderer/lib/util'
+
 import SpecialTypeContent from './SpecialTypeContent'
-import Md from './Md'
+import Md, { mdToText } from './Md'
+import MsgPopup, { MsgPopupForUser, Pause, WithDrawal } from './Popup'
 export type MsgTypes = Roles | 'ans' | 'question'
 export const style: Record<MsgTypes, string> = {
   ai: 'bg-dark',
@@ -28,6 +31,7 @@ export default function Message(props: {
   content: string
   botName?: string
   isEmpty?: boolean
+  onRemove?: () => void
 }) {
   const meta = createMemo(() => {
     return parseDisplayArr(props.content)
@@ -50,6 +54,67 @@ export default function Message(props: {
     return false
   })
 
+  const audio = new Audio()
+  audio.autoplay = true
+  audio.onended = () => {
+    setPageData('isSpeech', false)
+    audio.removeAttribute('src')
+    audio.load()
+  }
+  audio.onerror = (e) => {
+    console.error(e)
+    setPageData('isSpeech', false)
+    audio.removeAttribute('src')
+  }
+  event.on('stopSpeak', () => {
+    audio.pause()
+    setPageData('isSpeech', false)
+    audio.removeAttribute('src')
+  })
+  function speakText(content: string) {
+    const buffers: ArrayBuffer[] = []
+    let timer: NodeJS.Timeout | null = null
+    const mediaSource = new MediaSource()
+    const sourceURL = URL.createObjectURL(mediaSource)
+    audio.src = sourceURL
+    setPageData('isSpeech', true)
+    mediaSource.addEventListener('sourceopen', function () {
+      try {
+        const sourceBuffer = mediaSource.addSourceBuffer('audio/webm; codecs=opus')
+        const append = () => {
+          if (buffers.length === 0 || sourceBuffer.updating || mediaSource.readyState !== 'open')
+            return
+          sourceBuffer.appendBuffer(buffers[0])
+          buffers.shift()
+          sourceBuffer.onupdateend = append
+        }
+        const cancelReceive = window.api.receiveBuf(async (_, buf) => {
+          // FEAT: Buffer有用的数据可能只是部分，这里使用偏移量来确保获取到正确数据而不是整个ArrayBuffer
+          buffers.push(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength))
+          append()
+        })
+        window.api.speak(content).then((_) => {
+          cancelReceive()
+          timer = setInterval(() => {
+            if (!buffers.length && !sourceBuffer.updating) {
+              mediaSource.endOfStream()
+              clearInterval(timer!)
+            }
+          }, 300)
+        })
+      } catch (e) {
+        console.error(e)
+      }
+    })
+  }
+  function speakMd() {
+    const contents = meta()
+      .filter((item) => item.type === 'text')
+      .map((item: any) => item.content)
+      .join('\n')
+    speakText(mdToText(contents))
+  }
+
   return (
     <div class="group relative max-w-full">
       <Show
@@ -69,44 +134,32 @@ export default function Message(props: {
         }
       >
         <Show when={showComps()}>
-          <MsgPopup type={props.type} id={props.id || ''} content={props.content} />
+          <MsgPopup
+            type={props.type}
+            id={props.id || ''}
+            content={props.content}
+            onSpeak={speakMd}
+          />
         </Show>
         <Show when={showCompsByUser()}>
-          <MsgPopupForUser type={props.type} id={props.id || ''} content={props.content} />
+          <MsgPopupForUser
+            type={props.type}
+            id={props.id || ''}
+            content={props.content}
+            onRemove={props.onRemove || (() => {})}
+          />
         </Show>
       </Show>
       <div class={style[props.type] + ' relative m-4 rounded-2xl p-3'}>
         <For each={meta()}>
           {(m) =>
             m.type === 'text' ? (
-              <Md class={mdStyle[props.type] + ' markdown break-words'} content={m.content} />
+              <Md class={mdStyle[props.type]} content={m.content} onSpeak={speakText} />
             ) : (
               SpecialTypeContent(m, mdStyle[props.type])
             )
           }
         </For>
-        {/* 交互问题，取消使用右下角的小组件，后续可能重新使用 */}
-        {/* <Show when={showComps()}>
-          <div class="-mb-2 -mr-1 mt-1 flex justify-end gap-1 pl-32">
-            <Show when={userData.firstTimeFor.assistantSelect}>
-              <div class="absolute bottom-[10px] right-[60px] animate-bounce select-none text-[12px]">
-                点击图标可以切换助手 👉
-              </div>
-            </Show>
-
-            <Show when={props.botName}>
-              <div
-                onClick={() => {
-                  userData.firstTimeFor.assistantSelect && hasFirstTimeFor('assistantSelect')
-                  nav(`/assistants?type=${props.type === 'ai' ? 'chat' : props.type}`)
-                }}
-              >
-                <CapitalIcon size={20} content={props.botName!} />
-              </div>
-            </Show>
-            <ModelSelect position="right-1" />
-          </div>
-        </Show> */}
       </div>
     </div>
   )

@@ -7,9 +7,10 @@ export default function (props: {
   onCancel: () => void
   onSave: (a: AssistantModel) => void
 }) {
+  // eslint-disable-next-line solid/reactivity
   const [a, setA] = createSignal(props.assistant)
   const toast = useToast()
-  function setField(key: keyof AssistantModel, value: any) {
+  function setField(key: keyof AssistantModel, value: unknown) {
     setA({
       ...a(),
       [key]: value

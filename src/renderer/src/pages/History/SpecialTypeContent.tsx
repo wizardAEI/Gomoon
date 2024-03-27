@@ -1,10 +1,13 @@
+/* eslint-disable solid/components-return-once */
 import BaseFileIcon from '@renderer/assets/icon/file/baseFileIcon'
 import { ContentDisplay } from '@renderer/lib/ai/parseString'
-import { decorateContent } from './utils'
 import NetworkIcon from '@renderer/assets/icon/BrowserIcon'
 import LinkIcon from '@renderer/assets/icon/LinkIcon'
 import CapsuleIcon from '@renderer/assets/icon/CapsuleIcon'
 
+import { decorateContent } from './utils'
+
+// 祝渲染一遍，不考虑响应式
 export default function (meta: ContentDisplay, role = '我', index: number) {
   if (meta.type === 'file') {
     return (

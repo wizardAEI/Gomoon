@@ -1,10 +1,8 @@
 import { parseFile } from '@renderer/lib/ai/file'
-import { useToast } from '../ui/Toast'
 import { Accessor, For, JSXElement, Setter, Show, createSignal, onMount } from 'solid-js'
 import LeftArrow from '@renderer/assets/icon/base/arrow/LeftArrow'
 import RightArrow from '@renderer/assets/icon/base/arrow/RightArrow'
 import { recognizeText } from '@renderer/lib/ai/ocr'
-import { useLoading } from '../ui/DynamicLoading'
 import exportRecord from '@renderer/lib/md/exportRecord'
 import { exportAssistants, importAssistants } from '@renderer/store/assistants'
 import { parsePageForUrl } from '@renderer/lib/ai/url'
@@ -18,6 +16,9 @@ import { userData } from '@renderer/store/user'
 import { ContentDisplay } from '@renderer/lib/ai/parseString'
 import CrossMarkRound from '@renderer/assets/icon/base/CrossMarkRound'
 import { initMemories, memories } from '@renderer/store/memo'
+
+import { useLoading } from '../ui/DynamicLoading'
+import { useToast } from '../ui/Toast'
 export type Artifacts = ContentDisplay & { val: string }
 
 function ToolWrap(props: { children: JSXElement; onClick?: () => void; active?: boolean }) {
@@ -59,7 +60,7 @@ export default function Tools(props: {
   const toast = useToast()
   const load = useLoading()
   let toolsDiv: HTMLDivElement | undefined
-  let [url, setUrl] = createSignal('')
+  const [url, setUrl] = createSignal('')
   const scroll = (position: 'left' | 'right') => {
     if (!toolsDiv) return
     const scrollLeft = toolsDiv.scrollLeft
@@ -86,7 +87,7 @@ export default function Tools(props: {
   const [showArrow, setShowArrow] = createSignal(false)
   onMount(() => {
     const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         // 出现滚动条时，显示左右箭头
         if (entry.target.scrollWidth > entry.target.clientWidth) {
           setShowArrow(true)
@@ -197,17 +198,17 @@ export default function Tools(props: {
                 onChange={async (e) => {
                   const file = e.target.files![0]
                   e.target.value = ''
+                  // 去掉中文的空格
+                  function removeChineseSpaces(str) {
+                    return str
+                      .replace(/([\u4e00-\u9fa5])\s+/g, '$1')
+                      .replace(/\s+([\u4e00-\u9fa5])/g, '$1')
+                  }
                   if (file) {
                     try {
                       const content = await recognizeText(file, (m) => {
                         load.show(m?.status || '正在识别图片中的文字')
                       })
-                      // 去掉中文的空格
-                      function removeChineseSpaces(str) {
-                        return str
-                          .replace(/([\u4e00-\u9fa5])\s+/g, '$1')
-                          .replace(/\s+([\u4e00-\u9fa5])/g, '$1')
-                      }
                       props.onInput(removeChineseSpaces(content))
                     } catch (error: any) {
                       toast.error(error, {
@@ -223,6 +224,7 @@ export default function Tools(props: {
             </label>
           </ToolWrap>
           <ToolWrap
+            // eslint-disable-next-line solid/reactivity
             onClick={async () => {
               const confirm = await toast.confirm(
                 <div class="flex w-60 flex-col gap-1">
@@ -288,6 +290,7 @@ export default function Tools(props: {
           </ToolWrap>
           <ToolWrap
             active={memoCapsule() && props.artifacts().length === 0}
+            // eslint-disable-next-line solid/reactivity
             onClick={async () => {
               if (props.artifacts().length) {
                 toast.warning('请先清空参考文件或链接')

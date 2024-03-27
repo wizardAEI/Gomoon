@@ -1,19 +1,28 @@
 import { Show, createSignal } from 'solid-js'
-import ToolTip from '../ui/ToolTip'
 import CopyIcon from '@renderer/assets/icon/base/CopyIcon'
 import { useClipboard } from 'solidjs-use'
 import SaveIcon from '@renderer/assets/icon/base/SaveIcon'
 import RetryIcon from '@renderer/assets/icon/base/RetryIcon'
 import { reGenAns, saveAns, stopGenAns } from '@renderer/store/answer'
-import { MsgTypes } from '.'
 import EditIcon from '@renderer/assets/icon/base/EditIcon'
 import { event } from '@renderer/lib/util'
 import WithdrawalIcon from '@renderer/assets/icon/base/WithdrawalICon'
 import PauseIcon from '@renderer/assets/icon/base/PauseIcon'
 import { saveMsgsBeforeID, stopGenMsg } from '@renderer/store/chat'
-import { compWithTip } from '../ui/compWithTip'
+import SpeechIcon from '@renderer/assets/icon/SpeechIcon'
+import TrashIcon from '@renderer/assets/icon/TrashIcon'
 
-export default function MsgPopup(props: { id: string; content: string; type: MsgTypes }) {
+import { compWithTip } from '../ui/compWithTip'
+import ToolTip from '../ui/ToolTip'
+
+import { MsgTypes } from '.'
+
+export default function MsgPopup(props: {
+  id: string
+  content: string
+  type: MsgTypes
+  onSpeak: () => void
+}) {
   const [source] = createSignal('')
   const { copy } = useClipboard({ source })
 
@@ -49,6 +58,17 @@ export default function MsgPopup(props: { id: string; content: string; type: Msg
           />
         ))}
         content={`${props.type === 'ai' ? '保存此前内容' : '保存'}`}
+      />
+      <ToolTip
+        label={
+          <SpeechIcon
+            height={22}
+            width={22}
+            class="cursor-pointer text-gray duration-100 hover:text-active"
+            onClick={props.onSpeak}
+          />
+        }
+        content="朗读"
       />
       <Show when={props.type !== 'ans'}>
         <ToolTip
@@ -88,7 +108,12 @@ export default function MsgPopup(props: { id: string; content: string; type: Msg
   )
 }
 
-export function MsgPopupForUser(props: { id: string; content: string; type: MsgTypes }) {
+export function MsgPopupForUser(props: {
+  id: string
+  content: string
+  type: MsgTypes
+  onRemove: () => void
+}) {
   const [source] = createSignal('')
   const { copy } = useClipboard({ source })
   return (
@@ -105,6 +130,17 @@ export function MsgPopupForUser(props: { id: string; content: string; type: MsgT
           />
         }
         content="重新编辑"
+      />
+      <ToolTip
+        label={
+          <TrashIcon
+            height={19}
+            width={19}
+            class="cursor-pointer text-gray duration-100 hover:text-active"
+            onClick={props.onRemove}
+          />
+        }
+        content="删除此轮对话"
       />
       <ToolTip
         label={compWithTip(

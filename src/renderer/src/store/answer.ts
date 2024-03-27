@@ -1,10 +1,11 @@
 import { ansAssistant } from '@renderer/lib/ai/langchain'
 import { createStore, produce } from 'solid-js/store'
 import { ulid } from 'ulid'
-import { addHistory } from './history'
 import { ErrorDict } from '@renderer/lib/constant'
-import { getCurrentAssistantForAnswer } from './assistants'
 import { extractMeta } from '@renderer/lib/ai/parseString'
+
+import { addHistory } from './history'
+import { getCurrentAssistantForAnswer } from './assistants'
 import { consumedToken, setConsumedTokenForAns } from './input'
 
 let trash = {
@@ -24,8 +25,20 @@ const [answerStore, setAnswerStore] = createStore({
   answer: '',
   question: ''
 })
+const [ansStatus, setAnsStatus] = createStore({
+  isGenerating: false
+})
 let controller: AbortController
 let ansID: string
+
+export function setGeneratingStatus(status: boolean) {
+  setAnsStatus(
+    produce((ansStatus) => {
+      ansStatus.isGenerating = status
+    })
+  )
+}
+
 export async function genAns(q: string) {
   controller = new AbortController()
   setAnswerStore('answer', '......')
@@ -76,18 +89,6 @@ export function reGenAns() {
   setAnswerStore('answer', '')
   setGeneratingStatus(true)
   genAns(answerStore.question)
-}
-
-const [ansStatus, setAnsStatus] = createStore({
-  isGenerating: false
-})
-
-export function setGeneratingStatus(status: boolean) {
-  setAnsStatus(
-    produce((ansStatus) => {
-      ansStatus.isGenerating = status
-    })
-  )
 }
 
 export async function saveAns() {

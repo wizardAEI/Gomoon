@@ -1,12 +1,15 @@
 // TODO: db.data = xxx and db.write() -> db.update(data => data = xxx )
-import { app } from 'electron'
 import { join } from 'path'
+import { existsSync, mkdirSync, unlinkSync } from 'fs'
+
+import { app } from 'electron'
 import { JSONFileSyncPreset } from 'lowdb/node'
 import { Connection, connect } from 'vectordb'
-import { existsSync, mkdirSync, unlinkSync } from 'fs'
+
 import { embedding, getEmbeddingModel } from '../lib/ai/embedding/embedding'
-import { MemoFragmentData, MemoResult } from './model'
 import { postMsgToMainWindow } from '../window'
+
+import { MemoFragmentData, MemoResult } from './model'
 
 const appDataPath = app.getPath('userData')
 const memoPath = join(appDataPath, 'memo')
@@ -158,7 +161,7 @@ export async function getMemoDataAndIndexes(memoId: string): Promise<MemoFragmen
   const path = join(memoPath, memoId)
   const jsonDb = JSONFileSyncPreset<MemoData>(path, {})
   const arr: MemoFragmentData[] = []
-  for (let key in jsonDb.data) {
+  for (const key in jsonDb.data) {
     await connectDB()
     const tables = await dbl!.tableNames()
     if (!tables.includes(memoId)) {

@@ -10,6 +10,7 @@ import { setSelectedAssistantForAns, setSelectedAssistantForChat } from '@render
 import { useNavigate } from '@solidjs/router'
 import { For, Show } from 'solid-js'
 import { HistoryModel } from 'src/main/models/model'
+
 import SpecialTypeContent from './SpecialTypeContent'
 import { decorateContent } from './utils'
 const map = {
@@ -96,12 +97,13 @@ export default function () {
                                   {index() === 0 && `${map[c.role]}`} {decorateContent(m.content)}
                                 </>
                               ) : (
+                                // eslint-disable-next-line solid/reactivity
                                 SpecialTypeContent(m, map[c.role], index())
                               )
                             }}
                           </For>
                         </div>
-                        <div class="border-b-0 border-t border-dashed border-gray"></div>
+                        <div class="border-b-0 border-t border-dashed border-gray" />
                       </div>
                     )
                   }}

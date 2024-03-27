@@ -1,6 +1,8 @@
 import { app, BrowserWindow, Menu, globalShortcut } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
+
 import icon from '../../resources/icon.png?asset'
+
 import { initAppEventsHandler } from './eventHandler'
 import { createWindow, showWindow } from './window'
 import { quitApp } from './lib'

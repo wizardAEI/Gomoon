@@ -1,6 +1,5 @@
-import { LLMResult } from '@langchain/core/outputs'
+import { type LLMResult } from 'langchain/schema'
 import { BaseMessageChunk, HumanMessage, SystemMessage } from '@langchain/core/messages'
-import { models } from './models'
 import { ModelInterfaceType } from '@lib/langchain'
 import { userData } from '@renderer/store/user'
 import {
@@ -8,6 +7,8 @@ import {
   getCurrentAssistantForChat
 } from '@renderer/store/assistants'
 import { msgDict } from '@lib/langchain'
+
+import { models } from './models'
 
 export type Roles = 'human' | 'system' | 'ai'
 
@@ -21,12 +22,12 @@ const createModel = (model: ModelInterfaceType) => {
       option: {
         newTokenCallback: (content: string) => void
         endCallback?: (res: LLMResult) => void
-        errorCallback?: (err: any) => void
+        errorCallback?: (err: unknown) => void
         pauseSignal: AbortSignal
       }
     ) {
       const { systemTemplate, humanTemplate } = msg
-      const msgs = [new SystemMessage(systemTemplate), new HumanMessage(humanTemplate)] as any
+      const msgs = [new SystemMessage(systemTemplate), new HumanMessage(humanTemplate)] as unknown
       return model.invoke(msgs, {
         signal: option.pauseSignal,
         timeout: 1000 * 20,
@@ -53,7 +54,7 @@ const createModel = (model: ModelInterfaceType) => {
       option: {
         newTokenCallback: (content: string) => void
         endCallback?: (output: LLMResult) => void
-        errorCallback?: (err: any) => void
+        errorCallback?: (err: unknown) => void
         pauseSignal: AbortSignal
       }
     ) {
@@ -91,7 +92,7 @@ export const ansAssistant = async (option: {
   question: string
   newTokenCallback: (content: string) => void
   endCallback?: (result: LLMResult) => void
-  errorCallback?: (err: any) => void
+  errorCallback?: (err: unknown) => void
   pauseSignal: AbortSignal
 }): Promise<BaseMessageChunk> => {
   const a = getCurrentAssistantForAnswer()
@@ -118,11 +119,14 @@ export const chatAssistant = async (
   option: {
     newTokenCallback: (content: string) => void
     endCallback?: (result: LLMResult) => void
-    errorCallback?: (err: any) => void
+    errorCallback?: (err: unknown) => void
     pauseSignal: AbortSignal
   }
-): Promise<BaseMessageChunk> =>
-  createModel(models[userData.selectedModel]).chat(
+) => {
+  if (userData.selectedModel === 'Llama') {
+    return
+  }
+  return createModel(models[userData.selectedModel]).chat(
     [
       {
         role: 'system',
@@ -132,6 +136,7 @@ export const chatAssistant = async (
     ],
     option
   )
+}
 
 export const nonStreamingAssistant = async (question: string): Promise<BaseMessageChunk> => {
   return models[userData.selectedModel].invoke([msgDict['human'](question)])

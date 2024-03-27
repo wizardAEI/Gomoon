@@ -1,8 +1,9 @@
 import { createStore, produce } from 'solid-js/store'
 import { AssistantModel } from 'src/main/models/model'
-import { userData } from './user'
 import { createMemo } from 'solid-js'
 import { cloneDeep } from 'lodash'
+
+import { userData } from './user'
 
 const [assistants, setAssistants] = createStore<AssistantModel[]>([])
 
@@ -117,6 +118,7 @@ export const importAssistants = async (content: string) => {
   try {
     const importA = JSON.parse(content)
     if (!Array.isArray(importA)) return false
+    // eslint-disable-next-line solid/reactivity
     importA.forEach(async (a: AssistantModel) => {
       if (
         typeof a.id === 'string' &&

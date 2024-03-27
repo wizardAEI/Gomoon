@@ -1,6 +1,4 @@
 import { useNavigate } from '@solidjs/router'
-import ModelSelect from '../MainSelections/ModelSelect'
-import CapitalIcon from '../ui/CapitalIcon'
 import { memoCapsule } from '@renderer/store/input'
 import { Show } from 'solid-js'
 import { getCurrentMemo } from '@renderer/store/memo'
@@ -8,6 +6,9 @@ import { pageData } from '@renderer/store/user'
 import PlayingIcon from '@renderer/assets/icon/base/PlayingIcon'
 import CrossMarkRound from '@renderer/assets/icon/base/CrossMarkRound'
 import { event } from '@renderer/lib/util'
+
+import CapitalIcon from '../ui/CapitalIcon'
+import ModelSelect from '../MainSelections/ModelSelect'
 
 export default function (props: { type: 'chat' | 'ans'; botName: string }) {
   const nav = useNavigate()

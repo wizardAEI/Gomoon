@@ -1,5 +1,6 @@
 import { IpcRendererEvent, contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+
 import {
   AssistantModel,
   CreateAssistantModel,

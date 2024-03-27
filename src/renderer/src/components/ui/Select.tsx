@@ -1,4 +1,4 @@
-import { Component, createMemo, createSignal, For, JSXElement, Show } from 'solid-js'
+import { type Component, createMemo, createSignal, For, type JSXElement, Show } from 'solid-js'
 
 // 选项类型，可以是字符串或 JSXElement 元素
 type OptionType = {
@@ -18,6 +18,7 @@ type SelectProps = {
 const Select: Component<SelectProps> = (props) => {
   // 使用 createSignal 来管理下拉菜单的显示状态
   const [isOpen, setIsOpen] = createSignal(false)
+  // eslint-disable-next-line solid/reactivity
   const options = props.options.map((option) => ({
     value: option.value,
     get label() {

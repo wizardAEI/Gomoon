@@ -1,4 +1,4 @@
-import { JSXElement } from 'solid-js'
+import { type JSXElement } from 'solid-js'
 import { PositioningOptions } from '@zag-js/popper'
 import * as tooltip from '@zag-js/tooltip'
 import { normalizeProps, useMachine } from '@zag-js/solid'
@@ -17,6 +17,7 @@ export default function (props: {
       id: createUniqueId(),
       openDelay: 200,
       closeDelay: 300,
+      // eslint-disable-next-line solid/reactivity
       positioning: props.position || {
         placement: 'top'
       }
@@ -32,7 +33,7 @@ export default function (props: {
       >
         {props.label}
       </button>
-      <Show when={api().isOpen}>
+      <Show when={api().isOpen && props.content}>
         <div {...api().positionerProps}>
           <div
             {...api().contentProps}

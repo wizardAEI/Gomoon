@@ -2,10 +2,11 @@ import { ErrorDict } from '@renderer/lib/constant'
 import { Roles, chatAssistant } from '@renderer/lib/ai/langchain'
 import { createStore, produce } from 'solid-js/store'
 import { ulid } from 'ulid'
-import { addHistory } from './history'
 import { cloneDeep } from 'lodash'
-import { assistants, getCurrentAssistantForChat } from './assistants'
 import { extractMeta } from '@renderer/lib/ai/parseString'
+
+import { addHistory } from './history'
+import { assistants, getCurrentAssistantForChat } from './assistants'
 import { consumedToken, setConsumedTokenForChat } from './input'
 import { userData } from './user'
 export interface Msg {
@@ -50,8 +51,21 @@ export function clearMsgs() {
   setConsumedTokenForChat(0)
 }
 
+export function removeMsg(id: string) {
+  trash = {
+    msgs: cloneDeep(msgs),
+    consumedToken: consumedToken().chat
+  }
+  const index = msgs.findIndex((item) => item.id === id)
+  setMsgs(
+    produce((msgs) => {
+      msgs.splice(index, 2)
+    })
+  )
+}
+
 export function restoreMsgs() {
-  if (!trash.consumedToken) return
+  if (!trash.msgs.length) return
   setMsgs(trash.msgs)
   setConsumedTokenForChat(trash.consumedToken)
   initTrash()
