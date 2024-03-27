@@ -1,6 +1,7 @@
 import * as zagSwitch from '@zag-js/switch'
 import { normalizeProps, useMachine } from '@zag-js/solid'
-import { JSXElement, createMemo, createUniqueId } from 'solid-js'
+import { type JSXElement, createMemo, createUniqueId } from 'solid-js'
+
 import QuestionMention from './QuestionMention'
 
 export default function Switch(props: {
@@ -13,6 +14,7 @@ export default function Switch(props: {
   const [state, send] = useMachine(
     zagSwitch.machine({
       id: createUniqueId(),
+      // eslint-disable-next-line solid/reactivity
       checked: props.checked,
       onCheckedChange: (v) => props.onCheckedChange(v.checked as boolean)
     })

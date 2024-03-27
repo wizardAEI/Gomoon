@@ -1,4 +1,8 @@
+import { writeFile } from 'fs'
+
 import { BrowserWindow, app, dialog, ipcMain, shell } from 'electron'
+import { autoUpdater } from 'electron-updater'
+
 import {
   addHistory,
   createAssistant,
@@ -39,10 +43,8 @@ import {
   updateSendHeaders
 } from './window'
 import parseFile from './lib/ai/fileLoader'
-import { writeFile } from 'fs'
 import { parseURL2Str } from './lib/ai/parseURL'
 import { isValidUrl } from './lib/utils'
-import { autoUpdater } from 'electron-updater'
 import { quitApp } from './lib'
 import { tokenize } from './lib/ai/embedding/embedding'
 import {

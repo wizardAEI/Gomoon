@@ -1,4 +1,4 @@
-import { JSXElement, Show, createSignal } from 'solid-js'
+import { type JSXElement, Show, createSignal } from 'solid-js'
 
 // FEAT: 让点击可以有反馈
 export const compWithTip = (

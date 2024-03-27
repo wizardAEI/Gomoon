@@ -2,10 +2,11 @@ import { ErrorDict } from '@renderer/lib/constant'
 import { Roles, chatAssistant } from '@renderer/lib/ai/langchain'
 import { createStore, produce } from 'solid-js/store'
 import { ulid } from 'ulid'
-import { addHistory } from './history'
 import { cloneDeep } from 'lodash'
-import { assistants, getCurrentAssistantForChat } from './assistants'
 import { extractMeta } from '@renderer/lib/ai/parseString'
+
+import { addHistory } from './history'
+import { assistants, getCurrentAssistantForChat } from './assistants'
 import { consumedToken, setConsumedTokenForChat } from './input'
 import { userData } from './user'
 export interface Msg {

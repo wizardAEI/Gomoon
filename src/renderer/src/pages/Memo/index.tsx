@@ -11,7 +11,6 @@ import {
   saveMemo
 } from '@renderer/store/memo'
 import { For, Show, onCleanup, onMount } from 'solid-js'
-import EditBox from './EditBox'
 import CapitalIcon from '@renderer/components/ui/CapitalIcon'
 import EditIcon from '@renderer/assets/icon/base/EditIcon'
 import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
@@ -25,6 +24,8 @@ import ToolTip from '@renderer/components/ui/ToolTip'
 import { cloneDeep } from 'lodash'
 import DownloadIcon from '@renderer/assets/icon/base/DownloadIcon'
 import { useLoading } from '@renderer/components/ui/DynamicLoading'
+
+import EditBox from './EditBox'
 
 export default function () {
   const toast = useToast()
@@ -105,6 +106,7 @@ export default function () {
                   onCancel={() => {
                     onCancelEditMemo(m.id)
                   }}
+                  // eslint-disable-next-line solid/reactivity
                   onSave={async (m: MemoModel) => {
                     if (m.fragment.length === 0) {
                       toast.error('至少要有一个片段')
@@ -147,6 +149,7 @@ export default function () {
                         <UploadIcon
                           height={20}
                           width={20}
+                          // eslint-disable-next-line solid/reactivity
                           onClick={async (e) => {
                             e.stopPropagation()
                             const data = await window.api.exportMemory(cloneDeep(m))

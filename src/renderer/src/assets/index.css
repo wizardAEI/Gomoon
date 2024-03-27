@@ -70,21 +70,25 @@
 /* markdown 专属css */
 .markdown h1 {
   font-size: 1.5em;
-  margin: 0.3em 0 0.3em;
+  margin: 0.5em 0 0.5em;
 }
 .markdown h2 {
   font-size: 1.32em;
-  margin: 0.2em 0 0.2em;
+  margin: 0.5em 0 0.3em;
 }
 
 .markdown h3 {
   font-size: 1.2em;
-  margin: 0.2em 0 0.2em;
+  margin: 0.5em 0 0.3em;
 }
 
 .markdown h4 {
   font-size: 1.1em;
-  margin: 0.2em 0 0.2em;
+  margin: 0.5em 0 0.3em;
+}
+
+.markdown img {
+  margin-top: 12px;
 }
 
 .markdown ol,

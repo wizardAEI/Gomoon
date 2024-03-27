@@ -1,15 +1,4 @@
 import Card from '@renderer/components/ui/Card'
-import {
-  settingStore,
-  setIsOnTop,
-  setModels,
-  updateModelsToFile,
-  setSendWithCmdOrCtrl,
-  setCanMultiCopy,
-  setQuicklyWakeUpKeys,
-  updateVersion,
-  updateStatusLabel
-} from '../store/setting'
 import Switch from '@renderer/components/ui/SwitchItem'
 import Collapse from '@renderer/components/ui/Collapse'
 import EditInput from '@renderer/components/ui/EditInput'
@@ -29,6 +18,18 @@ import QWenIcon from '@renderer/assets/icon/models/QWenIcon'
 import GeminiIcon from '@renderer/assets/icon/models/GeminiIcon'
 import LlamaIcon from '@renderer/assets/icon/models/LlamaIcon'
 import KimiIcon from '@renderer/assets/icon/models/KimiIcon'
+
+import {
+  settingStore,
+  setIsOnTop,
+  setModels,
+  updateModelsToFile,
+  setSendWithCmdOrCtrl,
+  setCanMultiCopy,
+  setQuicklyWakeUpKeys,
+  updateVersion,
+  updateStatusLabel
+} from '../store/setting'
 export default function Setting() {
   onMount(() => {
     onCleanup(() => {
@@ -251,7 +252,7 @@ export default function Setting() {
               >
                 <EditInput
                   label="本地模型地址"
-                  // value={settingStore.models.AliQWen.apiKey}
+                  value={settingStore.models.Llama.src}
                   onSave={(v) => {
                     const m = unwrap(settingStore.models)
                     m.Llama.src = v

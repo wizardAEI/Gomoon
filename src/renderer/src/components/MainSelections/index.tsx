@@ -1,5 +1,4 @@
 import { useNavigate } from '@solidjs/router'
-import ModelSelect from './ModelSelect'
 import {
   assistants,
   getCurrentAssistantForAnswer,
@@ -16,6 +15,8 @@ import {
 import { AssistantModel, MemoModel } from 'src/main/models/model'
 import { getCurrentMemo, memories } from '@renderer/store/memo'
 import { memoCapsule } from '@renderer/store/input'
+
+import ModelSelect from './ModelSelect'
 
 export default function (props: { type: 'chat' | 'ans' }) {
   const nav = useNavigate()

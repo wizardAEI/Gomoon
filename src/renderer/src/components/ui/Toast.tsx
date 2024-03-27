@@ -2,11 +2,11 @@ import ErrorIcon from '@renderer/assets/icon/base/Toast/ErrorIcon'
 import SuccessIcon from '@renderer/assets/icon/base/Toast/SuccessIcon'
 import WarningIcon from '@renderer/assets/icon/base/Toast/WarningIcon'
 import {
-  Accessor,
+  type Accessor,
   For,
-  JSX,
-  JSXElement,
-  Setter,
+  type JSX,
+  type JSXElement,
+  type Setter,
   Show,
   createContext,
   createSignal,
@@ -20,7 +20,7 @@ export interface ToastType {
   type: string
   duration: number
   position: string
-  callback?: (res: any) => any
+  callback?: (res: boolean | PromiseLike<boolean>) => unknown
 }
 
 interface ToastConf {

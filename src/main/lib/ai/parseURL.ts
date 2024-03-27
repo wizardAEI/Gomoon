@@ -4,7 +4,7 @@ import { load } from 'cheerio'
 import { Readability } from '@mozilla/readability'
 import { JSDOM } from 'jsdom'
 // TODO: 转md
-export async function parseURL2Str(url: string) {
+export async function parseURL2Str(url: string): Promise<string> {
   const html = await fetch(url, {
     timeout: 10000
   })

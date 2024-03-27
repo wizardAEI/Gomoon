@@ -1,7 +1,8 @@
 import { readFileSync } from 'fs'
+
+import { ulid } from 'ulid'
+
 import { MemoFragmentData, MemoFragment, MemoModel } from '../../../models/model'
-import { createTreeFromMarkdown, getChunkFromNodes } from './splitter'
-import { embedding, getEmbeddingModel } from './embedding'
 import {
   deleteDataAndIndex,
   getData,
@@ -10,9 +11,11 @@ import {
   saveData,
   saveIndexes
 } from '../../../models/memo'
-import { ulid } from 'ulid'
 import { createMemo, deleteMemo, getMemories, updateMemo } from '../../../models'
 import { postMsgToMainWindow } from '../../../window'
+
+import { embedding, getEmbeddingModel } from './embedding'
+import { createTreeFromMarkdown, getChunkFromNodes } from './splitter'
 
 export interface EditFragmentOption {
   id: string
@@ -25,7 +28,7 @@ const fragmentsMap: {
   [key in string]: MemoFragment[] | undefined
 } = {}
 
-let dataMap: {
+const dataMap: {
   [key in string]: MemoFragmentData[] | undefined
 } = {}
 
@@ -67,7 +70,7 @@ export async function editFragment(option: EditFragmentOption): Promise<{
           const vectors: Float32Array[] = []
           const chunk = chunks[i]
           postMsgToMainWindow(`progress 存储知识中 ${i}/${chunks.length}`)
-          for (let index of chunk.indexes) {
+          for (const index of chunk.indexes) {
             const vector = await embedding(index.value)
             vectors.push(vector)
           }

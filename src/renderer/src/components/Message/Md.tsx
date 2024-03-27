@@ -11,10 +11,10 @@ import { load } from 'cheerio'
 export default function Md(props: {
   class: string
   content: string
-  onSpeak: (c: string) => void
+  onSpeak?: (c: string) => void
 }) {
   let selectContent = ''
-  let [findContent, setFindContent] = createSignal('')
+  const [findContent, setFindContent] = createSignal('')
   const [source] = createSignal('')
   const { copy, copied } = useClipboard({ source, copiedDuring: 1000 })
   const [showSelectBtn, setShowSelectBtn] = createSignal(false)
@@ -72,7 +72,7 @@ export default function Md(props: {
   })
 
   const htmlString = createMemo(() => {
-    let content = props.content
+    const content = props.content
 
     const md = MarkdownIt({
       linkify: true,
@@ -116,7 +116,7 @@ export default function Md(props: {
     md.renderer.rules.fence = (...args) => {
       const [tokens, idx] = args
       const token = tokens[idx]
-      let rawCode = fence(...args)
+      const rawCode = fence(...args)
       return `<div class="relative mt-1 w-full text-text1">
           <div data-code=${encodeURIComponent(
             token.content
@@ -159,12 +159,17 @@ export default function Md(props: {
 
   return (
     <>
-      <div ref={contentDom} class={props.class} innerHTML={htmlString()} />
+      <div
+        ref={contentDom}
+        class={props.class + ' markdown break-words'}
+        // eslint-disable-next-line solid/no-innerhtml
+        innerHTML={htmlString()}
+      />
       <Show when={showSelectBtn()}>
         <div ref={btn} class="fixed flex gap-1 rounded-[10px] bg-dark-plus px-1 py-[2px]">
           <SpeechIcon
             onClick={() => {
-              props.onSpeak(selectContent)
+              props.onSpeak?.(selectContent)
               setShowSelectBtn(false)
             }}
             height={22}

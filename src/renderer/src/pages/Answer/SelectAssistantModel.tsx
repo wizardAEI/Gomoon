@@ -18,7 +18,7 @@ const SelectKey = {
       <path
         d="M170.666667 384v170.666667h682.666666V384h85.333334v213.333333a42.666667 42.666667 0 0 1-42.666667 42.666667H128a42.666667 42.666667 0 0 1-42.666667-42.666667V384h85.333334z"
         p-id="5732"
-      ></path>
+      />
     </svg>
   ),
   1: (
@@ -94,7 +94,7 @@ export default function (props: { onConfirm: () => void; onCancel: () => void })
           )}
         </For>
         <div
-          onClick={props.onCancel}
+          onClick={() => props.onCancel()}
           class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-solid border-transparent bg-dark px-4 py-1 hover:border-active"
         >
           <span>退出 (ESC)</span>

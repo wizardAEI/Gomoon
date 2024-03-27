@@ -1,5 +1,7 @@
-import { WebSocket } from 'ws'
 import { randomBytes } from 'crypto'
+
+import { WebSocket } from 'ws'
+
 import { PostBuffToMainWindow } from '../../window'
 
 function createSSML(text, voiceName) {
@@ -9,7 +11,7 @@ function createSSML(text, voiceName) {
     .replaceAll('>', '&gt;')
     .replaceAll("'", '&apos;')
     .replaceAll('"', '&quot;')
-  let ssml =
+  const ssml =
     '\
         <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">\
           <voice name="' +
@@ -50,8 +52,8 @@ class Service {
 
   private async connect(): Promise<WebSocket> {
     const connectionId = randomBytes(16).toString('hex').toLowerCase()
-    let url = `wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&ConnectionId=${connectionId}`
-    let ws = new WebSocket(url, {
+    const url = `wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&ConnectionId=${connectionId}`
+    const ws = new WebSocket(url, {
       host: 'speech.platform.bing.com',
       origin: 'chrome-extension://jdiccldimpdaibmpdkjnbmckianbfold',
       headers: {
@@ -99,11 +101,11 @@ class Service {
 
   public async convert(ssml: string, format: string) {
     if (this.ws === null || this.ws.readyState != WebSocket.OPEN) {
-      let connection = await this.connect()
+      const connection = await this.connect()
       this.ws = connection
     }
     const requestId = randomBytes(16).toString('hex').toLowerCase()
-    let configData = {
+    const configData = {
       context: {
         synthesis: {
           audio: {
@@ -116,7 +118,7 @@ class Service {
         }
       }
     }
-    let configMessage =
+    const configMessage =
       `X-Timestamp:${Date()}\r\n` +
       'Content-Type:application/json; charset=utf-8\r\n' +
       'Path:speech.config\r\n\r\n' +
@@ -126,7 +128,7 @@ class Service {
         console.error(`配置请求发送失败：${requestId}\n`, configError)
       }
       // 发送SSML消息
-      let ssmlMessage =
+      const ssmlMessage =
         `X-Timestamp:${Date()}\r\n` +
         `X-RequestId:${requestId}\r\n` +
         `Content-Type:application/ssml+xml\r\n` +
@@ -150,6 +152,6 @@ const service = new Service((buff) => {
 })
 
 export const speak = async (content: string) => {
-  let ssml = createSSML(content, 'zh-CN-XiaoxiaoNeural')
+  const ssml = createSSML(content, 'zh-CN-XiaoxiaoNeural')
   return await service.convert(ssml, 'webm-24khz-16bit-mono-opus')
 }

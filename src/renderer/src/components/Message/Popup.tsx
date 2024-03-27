@@ -1,19 +1,21 @@
 import { Show, createSignal } from 'solid-js'
-import ToolTip from '../ui/ToolTip'
 import CopyIcon from '@renderer/assets/icon/base/CopyIcon'
 import { useClipboard } from 'solidjs-use'
 import SaveIcon from '@renderer/assets/icon/base/SaveIcon'
 import RetryIcon from '@renderer/assets/icon/base/RetryIcon'
 import { reGenAns, saveAns, stopGenAns } from '@renderer/store/answer'
-import { MsgTypes } from '.'
 import EditIcon from '@renderer/assets/icon/base/EditIcon'
 import { event } from '@renderer/lib/util'
 import WithdrawalIcon from '@renderer/assets/icon/base/WithdrawalICon'
 import PauseIcon from '@renderer/assets/icon/base/PauseIcon'
 import { saveMsgsBeforeID, stopGenMsg } from '@renderer/store/chat'
-import { compWithTip } from '../ui/compWithTip'
 import SpeechIcon from '@renderer/assets/icon/SpeechIcon'
 import TrashIcon from '@renderer/assets/icon/TrashIcon'
+
+import { compWithTip } from '../ui/compWithTip'
+import ToolTip from '../ui/ToolTip'
+
+import { MsgTypes } from '.'
 
 export default function MsgPopup(props: {
   id: string

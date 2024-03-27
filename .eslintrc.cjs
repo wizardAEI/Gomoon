@@ -1,15 +1,18 @@
 module.exports = {
-  plugins: ['solid'],
+  plugins: ['solid', 'import'],
   extends: [
     'eslint:recommended',
     'plugin:solid/typescript',
     '@electron-toolkit/eslint-config-ts/recommended',
     '@electron-toolkit/eslint-config-prettier'
   ],
-  ignorePatterns: ['**/{node_modules,lib,es,examples,output}', '**/*.d.ts', '**/tsconfig.json'],
-  'import/parsers': {
-    '@typescript-eslint/parser': ['.ts', '.tsx']
-  },
+  ignorePatterns: [
+    '**/{node_modules,lib,es,examples,output}',
+    '**/*.d.ts',
+    '**/tsconfig.json',
+    'src/renderer/public/**.js'
+  ],
+
   rules: {
     '@typescript-eslint/no-explicit-any': [1],
     'import/no-unresolved': [0],
@@ -21,6 +24,10 @@ module.exports = {
     '@typescript-eslint/init-declarations': [0],
     'max-statements-per-line': [0],
     '@typescript-eslint/no-use-before-define': [1],
+    '@typescript-eslint/explicit-function-return-type': [0],
+    '@typescript-eslint/ban-ts-comment': [0],
+    'prefer-const': [1],
+    'import/no-extraneous-dependencies': [2],
     'import/order': [
       'warn',
       {

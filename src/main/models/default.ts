@@ -1,5 +1,7 @@
 import { readFileSync } from 'fs'
+
 import { getResourcesPath } from '../lib'
+
 import { AssistantModel, Line, MemoModel, UserDataModel } from './model'
 import { SettingModel } from './model'
 import { ImportMemoDataModel } from './memo'

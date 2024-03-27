@@ -1,5 +1,10 @@
+import { join } from 'path'
+
 import { app } from 'electron'
 import { JSONFileSyncPreset } from 'lowdb/node'
+import { ulid } from 'ulid'
+import { merge } from 'lodash'
+
 import {
   AssistantModel,
   CreateAssistantModel,
@@ -15,9 +20,6 @@ import {
   getDefaultUserData,
   getDefaultMemories
 } from './default'
-import { join } from 'path'
-import { ulid } from 'ulid'
-import { merge } from 'lodash'
 import { importDataAndIndexes } from './memo'
 
 const appDataPath = app.getPath('userData')

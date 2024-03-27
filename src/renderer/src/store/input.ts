@@ -1,7 +1,8 @@
 import { createMemo } from 'solid-js'
 import { createStore } from 'solid-js/store'
-import { userData } from './user'
 import { ModelsType } from '@lib/langchain'
+
+import { userData } from './user'
 
 const modelDict: {
   [key in ModelsType]: { maxToken: number }

@@ -11,7 +11,8 @@ export default function (props: {
   let range: HTMLInputElement | undefined
   const [value, setValue] = createSignal(
     props.defaultValue !== undefined
-      ? props.percentage
+      ? // eslint-disable-next-line solid/reactivity
+        props.percentage
         ? props.defaultValue * 100
         : props.defaultValue
       : 70
@@ -23,8 +24,8 @@ export default function (props: {
       ((value() - (props.min || 0)) / ((props.max || 100) - (props.min || 0)))
     }px`
   })
-  const updateValue = (e: any) => {
-    const value = e.target.value
+  const updateValue = (e: unknown) => {
+    const value = ((e as { target: unknown }).target as HTMLInputElement).value
     setValue(Number(value))
     const num = props.percentage ? parseFloat((Number(value) / 100).toFixed(2)) : Number(value)
     props.onChange(num)

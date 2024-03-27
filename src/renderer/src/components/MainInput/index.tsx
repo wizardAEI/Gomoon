@@ -1,16 +1,18 @@
 import { Show, createEffect, createMemo, createSignal, onCleanup, onMount } from 'solid-js'
-import { clearMsgs, msgs, restoreMsgs } from '../../store/chat'
-import { useToast } from '../ui/Toast'
 import { useEventListener } from 'solidjs-use'
 import { settingStore } from '@renderer/store/setting'
 import RefreshIcon from '@renderer/assets/icon/base/RefreshIcon'
-import Tools, { Artifacts } from './Tools'
 import { inputText, isNetworking, memoCapsule, setInputText, tokens } from '@renderer/store/input'
-import { useLoading } from '../ui/DynamicLoading'
 import { searchByBaidu } from '@renderer/lib/ai/search'
 import { userData } from '@renderer/store/user'
 import { processMemo } from '@renderer/lib/ai/memo'
 import { clearAns, restoreAns } from '@renderer/store/answer'
+
+import { useLoading } from '../ui/DynamicLoading'
+import { useToast } from '../ui/Toast'
+import { clearMsgs, msgs, restoreMsgs } from '../../store/chat'
+
+import Tools, { Artifacts } from './Tools'
 
 const typeDict: {
   [key: string]: 'chat' | 'ans'
@@ -227,7 +229,7 @@ export default function Input(props: {
           </div>
         </Show>
         <div ref={textAreaContainerDiv} class="cyber-box relative flex flex-1 backdrop-blur-md">
-          <div class="absolute bottom-0 left-0 right-0 top-0 -z-10 rounded-2xl bg-dark-pro"></div>
+          <div class="absolute bottom-0 left-0 right-0 top-0 -z-10 rounded-2xl bg-dark-pro" />
           <div class="absolute bottom-8 right-3 -z-10 h-0 select-none overflow-visible leading-8 text-text3">
             {tokenConsumeDisplay()}
           </div>

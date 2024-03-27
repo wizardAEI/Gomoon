@@ -16,9 +16,10 @@ import {
 import { setSelectedAssistantForAns, setSelectedAssistantForChat } from '@renderer/store/user'
 import { useNavigate, useSearchParams } from '@solidjs/router'
 import { For, Show, onCleanup, onMount } from 'solid-js'
-import EditBox from './EditBox'
 import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
 import { useToast } from '@renderer/components/ui/Toast'
+
+import EditBox from './EditBox'
 
 const map = {
   ans: '问答',

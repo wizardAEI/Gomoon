@@ -1,7 +1,8 @@
 import { useNavigate } from '@solidjs/router'
-import TopBar from './components/TopBar'
 import { Show, onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
+
+import TopBar from './components/TopBar'
 import { loadConfig, setUpdaterStatus, settingStore } from './store/setting'
 import Loading from './pages/Loading'
 import { loadUserData, userData, userHasUse } from './store/user'

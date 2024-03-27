@@ -1,7 +1,8 @@
-import QuestionMention from './QuestionMention'
 import * as checkbox from '@zag-js/checkbox'
 import { normalizeProps, useMachine } from '@zag-js/solid'
 import { createMemo, createUniqueId } from 'solid-js'
+
+import QuestionMention from './QuestionMention'
 
 export function CheckItem(props: {
   label: string
@@ -43,7 +44,7 @@ export function CheckItem(props: {
               <path
                 d="M1002.88 321.92L405.76 935.04a32 32 0 0 1-45.76 0L21.12 612.48a32 32 0 0 1 0-44.8L160 433.6a32 32 0 0 1 45.76 0L359.04 576 796.16 120.64a32 32 0 0 1 46.08 0l160 156.48a32 32 0 0 1 0.64 44.8z"
                 p-id="13302"
-              ></path>
+              />
             </svg>
           </div>
         )}

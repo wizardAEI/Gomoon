@@ -1,15 +1,4 @@
 import Input from '@renderer/components/MainInput'
-import {
-  msgs,
-  pushMsg,
-  pushGeneratingStatus,
-  msgStatus,
-  editMsg,
-  reActiveGeneratingStatus,
-  genMsg,
-  removeMsg,
-  restoreMsgs
-} from '../store/chat'
 import Message from '@renderer/components/Message'
 import { For, Show, createEffect, createSignal, onCleanup, onMount } from 'solid-js'
 import { ulid } from 'ulid'
@@ -21,6 +10,18 @@ import { currentLines } from '@renderer/store/user'
 import { inputText, setInputText } from '@renderer/store/input'
 import { useToast } from '@renderer/components/ui/Toast'
 import { useEventListener } from 'solidjs-use'
+
+import {
+  msgs,
+  pushMsg,
+  pushGeneratingStatus,
+  msgStatus,
+  editMsg,
+  reActiveGeneratingStatus,
+  genMsg,
+  removeMsg,
+  restoreMsgs
+} from '../store/chat'
 const scrollToBottom = (el: HTMLDivElement, index: number) => {
   if (index === msgs.length - 1) {
     requestAnimationFrame(() => {
@@ -179,7 +180,7 @@ export default function Chat() {
           )}
         </For>
       </Show>
-      <div class="fixed bottom-0 left-0 right-0 h-[118px] bg-transparent backdrop-blur-xl"></div>
+      <div class="fixed bottom-0 left-0 right-0 h-[118px] bg-transparent backdrop-blur-xl" />
       <div class="fixed bottom-10 z-20 w-full px-4">
         <Input
           onInput={() => {
@@ -190,6 +191,7 @@ export default function Chat() {
             setPreviousMsg({ ...previousMsg(), state: 'complete' })
             setEditId('')
           }}
+          // eslint-disable-next-line solid/reactivity
           send={async (v: string) => {
             // 将上一条消息设置为完成状态
             if (previousMsg().state === 'pending') {

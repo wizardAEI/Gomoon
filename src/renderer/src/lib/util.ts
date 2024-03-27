@@ -1,6 +1,7 @@
 import { Models } from 'src/lib/langchain'
 
 // 消息中心 （发布订阅）
+// eslint-disable-next-line @typescript-eslint/ban-types
 const Events = new Map<string, Set<Function>>()
 
 export type Events = {

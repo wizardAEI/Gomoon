@@ -1,3 +1,6 @@
+import { join } from 'path'
+import { spawn } from 'child_process'
+
 import {
   app,
   shell,
@@ -10,14 +13,14 @@ import {
   BeforeSendResponse,
   session
 } from 'electron'
-import { join } from 'path'
 import { is } from '@electron-toolkit/utils'
+import { autoUpdater } from 'electron-updater'
+
 import icon from '../../resources/icon.png?asset'
 import trayIcon from '../../resources/icon@20.png?asset'
+
 import { loadAppConfig } from './models'
 import { getResourcesPath, quitApp } from './lib'
-import { spawn } from 'child_process'
-import { autoUpdater } from 'electron-updater'
 
 let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
@@ -106,7 +109,7 @@ function csp(items?: {
     })
     return item.join(' ')
   }
-  for (let item in defaultItem) {
+  for (const item in defaultItem) {
     cspStr +=
       item +
       " 'self' " +

@@ -1,9 +1,10 @@
 import { createStore } from 'solid-js/store'
 import { Line, UserDataModel } from 'src/main/models/model'
-import { assistants, useAssistant } from './assistants'
 import { ModelsType } from '@lib/langchain'
-import { memories, useMemo } from './memo'
 import { createMemo } from 'solid-js'
+
+import { assistants, useAssistant } from './assistants'
+import { memories, useMemo } from './memo'
 
 /**
  * @abstract 所有不在设置页面的数据

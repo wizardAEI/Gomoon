@@ -1,9 +1,10 @@
 import { createMemo } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 import { MemoModel } from 'src/main/models/model'
-import { userData } from './user'
 import { cloneDeep } from 'lodash'
 import { SaveMemoParams } from 'src/main/lib/ai/embedding'
+
+import { userData } from './user'
 
 const [memories, setMemories] = createStore<MemoModel[]>([])
 const [memoriesStatus, setMemoriesStatus] = createStore<{

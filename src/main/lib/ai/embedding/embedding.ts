@@ -22,8 +22,8 @@ export async function tokenize(text: string) {
   env.localModelPath = getResourcesPath('models/')
   env.backends.onnx.wasm.numThreads = 1
   env.backends.onnx.logLevel = 'info'
-  let tokenizer = await AutoTokenizer.from_pretrained(getEmbeddingModel())
+  const tokenizer = await AutoTokenizer.from_pretrained(getEmbeddingModel())
   // Run tokenization
-  let text_inputs = tokenizer.encode(text)
+  const text_inputs = tokenizer.encode(text)
   return text_inputs
 }

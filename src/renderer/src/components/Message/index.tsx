@@ -2,13 +2,14 @@ import { Roles } from '@renderer/lib/ai/langchain'
 import { For, Show, createMemo } from 'solid-js'
 import 'highlight.js/styles/atom-one-dark.css'
 import { msgStatus, msgs } from '@renderer/store/chat'
-import MsgPopup, { MsgPopupForUser, Pause, WithDrawal } from './Popup'
 import { ansStatus } from '@renderer/store/answer'
 import { parseDisplayArr } from '@renderer/lib/ai/parseString'
-import SpecialTypeContent from './SpecialTypeContent'
-import Md, { mdToText } from './Md'
 import { setPageData } from '@renderer/store/user'
 import { event } from '@renderer/lib/util'
+
+import SpecialTypeContent from './SpecialTypeContent'
+import Md, { mdToText } from './Md'
+import MsgPopup, { MsgPopupForUser, Pause, WithDrawal } from './Popup'
 export type MsgTypes = Roles | 'ans' | 'question'
 export const style: Record<MsgTypes, string> = {
   ai: 'bg-dark',
@@ -71,7 +72,7 @@ export default function Message(props: {
     audio.removeAttribute('src')
   })
   function speakText(content: string) {
-    let buffers: ArrayBuffer[] = []
+    const buffers: ArrayBuffer[] = []
     let timer: NodeJS.Timeout | null = null
     const mediaSource = new MediaSource()
     const sourceURL = URL.createObjectURL(mediaSource)
@@ -153,11 +154,7 @@ export default function Message(props: {
         <For each={meta()}>
           {(m) =>
             m.type === 'text' ? (
-              <Md
-                class={mdStyle[props.type] + ' markdown break-words'}
-                content={m.content}
-                onSpeak={speakText}
-              />
+              <Md class={mdStyle[props.type]} content={m.content} onSpeak={speakText} />
             ) : (
               SpecialTypeContent(m, mdStyle[props.type])
             )

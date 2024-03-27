@@ -1,5 +1,6 @@
-import { app } from 'electron'
 import { join } from 'path'
+
+import { app } from 'electron'
 
 export function getResourcesPath(filename: string): string {
   return app.isPackaged

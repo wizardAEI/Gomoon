@@ -1,3 +1,7 @@
+import { readFile } from 'fs/promises'
+import { basename, join } from 'path'
+import { copyFileSync, mkdirSync } from 'fs'
+
 import { TextLoader } from 'langchain/document_loaders/fs/text'
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf'
 import { DocxLoader } from 'langchain/document_loaders/fs/docx'
@@ -6,10 +10,7 @@ import { CSVLoader } from 'langchain/document_loaders/fs/csv'
 import xlsx from 'xlsx'
 import { Document } from 'langchain/document'
 // import { OpenAIWhisperAudio } from 'langchain/document_loaders/fs/openai_whisper_audio'
-import { readFile } from 'fs/promises'
 import { app } from 'electron'
-import { basename, join } from 'path'
-import { copyFileSync, mkdirSync } from 'fs'
 import moment from 'moment'
 
 export interface FileLoaderRes {
@@ -106,7 +107,7 @@ export default async function parseFile(
   const today = moment().format('YYYY-MM-DD')
   const targetPath = join(filesPath, `/${today}`)
   // 适配win端
-  const targetFile = join(targetPath,  basename(files[0].path))
+  const targetFile = join(targetPath, basename(files[0].path))
   mkdirSync(targetPath, { recursive: true })
   copyFileSync(files[0].path, targetFile)
   const file = await readFile(targetFile)

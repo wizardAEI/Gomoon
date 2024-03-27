@@ -1,9 +1,10 @@
 import BaseFileIcon from '@renderer/assets/icon/file/baseFileIcon'
 import { ContentDisplay } from '@renderer/lib/ai/parseString'
-import Md from './Md'
 import NetworkIcon from '@renderer/assets/icon/BrowserIcon'
 import LinkIcon from '@renderer/assets/icon/LinkIcon'
 import CapsuleIcon from '@renderer/assets/icon/CapsuleIcon'
+
+import Md from './Md'
 
 export default function (meta: ContentDisplay, mdStyle: string) {
   if (meta.type === 'file') {
@@ -40,7 +41,7 @@ export default function (meta: ContentDisplay, mdStyle: string) {
     return (
       <div class="flex gap-1 py-[2px]">
         <NetworkIcon class="shrink-0 grow-0 text-text-dark2" width={20} height={20} />
-        <Md class={mdStyle + ' markdown break-words text-text-dark2'} content={meta.question} />
+        <Md class={mdStyle + ' text-text-dark2'} content={meta.question} />
       </div>
     )
   }
@@ -48,7 +49,7 @@ export default function (meta: ContentDisplay, mdStyle: string) {
     return (
       <div class="flex gap-1 py-[2px]">
         <CapsuleIcon class="shrink-0 grow-0 text-text-dark2" width={18} height={18} />
-        <Md class={mdStyle + ' markdown break-words text-text-dark2'} content={meta.question} />
+        <Md class={mdStyle + ' text-text-dark2'} content={meta.question} />
       </div>
     )
   }

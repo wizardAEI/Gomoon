@@ -5,8 +5,9 @@ import SettingIcon from '@renderer/assets/icon/base/SettingIcon'
 import CrossIcon from '@renderer/assets/icon/base/win/WinCrossIcon'
 import { useLocation, useNavigate } from '@solidjs/router'
 import { Show, createMemo } from 'solid-js'
-import ToolTip from './ui/ToolTip'
 import MinimizeIcon from '@renderer/assets/icon/base/win/MinimizeIcon'
+
+import ToolTip from './ui/ToolTip'
 
 function Entries() {
   const nav = useNavigate()
@@ -147,7 +148,7 @@ export default function TopBar() {
         style={{
           '-webkit-app-region': 'drag'
         }}
-      ></div>
+      />
       <Show
         // mac
         when={navigator.userAgent.includes('Mac')}

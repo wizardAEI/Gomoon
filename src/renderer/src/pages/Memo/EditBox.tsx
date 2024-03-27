@@ -16,11 +16,12 @@ export default function (props: {
   onCancel: () => void
   onSave: (m: MemoModel) => void
 }) {
+  // eslint-disable-next-line solid/reactivity
   const [m, setM] = createSignal(props.memo)
   const [useLLM, setUseLLM] = createSignal(true)
   const load = useLoading()
   const toast = useToast()
-  function setField(key: keyof MemoModel, value: any) {
+  function setField(key: keyof MemoModel, value: unknown) {
     setM({
       ...m(),
       [key]: value
@@ -50,7 +51,7 @@ export default function (props: {
               content={
                 <span class="text-xs">
                   文件类型支持.md,<span> </span>
-                  <a class="text-xs" href="https://127.0.0.1:3000/guide/tools">
+                  <a class="text-xs" href="https://127.0.0.1:3000/guide/快速使用记忆胶囊💊">
                     如何创建一个.md文件?
                   </a>
                 </span>
@@ -83,6 +84,7 @@ export default function (props: {
               <DoubleConfirm
                 label="确认删除"
                 position="-right-2 top-3"
+                // eslint-disable-next-line solid/reactivity
                 onConfirm={async () => {
                   const res = await window.api.editFragment({
                     id: m().id,
@@ -155,9 +157,9 @@ export default function (props: {
                       }
                     ])
                   }
-                } catch (error: any) {
+                } catch (error: unknown) {
                   remove()
-                  toast.error(error?.message || '解析失败')
+                  toast.error((error as Error | undefined)?.message || '解析失败')
                 }
                 load.hide()
               }
