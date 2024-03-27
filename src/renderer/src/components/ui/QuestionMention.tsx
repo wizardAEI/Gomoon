@@ -1,7 +1,7 @@
 import QuestionMarkIcon from '@renderer/assets/icon/base/QuestionMarkIcon'
 import * as tooltip from '@zag-js/tooltip'
 import { normalizeProps, useMachine } from '@zag-js/solid'
-import { createMemo, createUniqueId, JSX, Show } from 'solid-js'
+import { createMemo, createUniqueId, type JSX, Show } from 'solid-js'
 
 export default function QuestionMention(props: {
   size?: number

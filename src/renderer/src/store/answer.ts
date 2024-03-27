@@ -69,7 +69,7 @@ export async function genAns(q: string) {
       },
       errorCallback(err) {
         if (ID !== ansID) return
-        setAnswerStore('answer', (ans) => ans + ErrorDict(err))
+        setAnswerStore('answer', (ans) => ans + ErrorDict(err as Error))
         setGeneratingStatus(false)
       },
       pauseSignal: controller.signal

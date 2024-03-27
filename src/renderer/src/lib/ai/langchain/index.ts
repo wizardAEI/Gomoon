@@ -96,13 +96,15 @@ export const ansAssistant = async (option: {
   pauseSignal: AbortSignal
 }): Promise<BaseMessageChunk> => {
   const a = getCurrentAssistantForAnswer()
-  // TODO: 后期拓展，支持 preContent 和 postContent
-  const preContent = a.type === 'ans' ? a.preContent ?? '' : ''
-  const postContent = a.type === 'ans' ? a.postContent ?? '' : ''
+  // TODO: 后期拓展，支持prompts
+  const question = option.question
+  if (a.type === 'ans' && a.prompts?.length) {
+    // TODO: 支持和prompts进行结合得出最终的question
+  }
   return createModel(models[userData.selectedModel]).answer(
     {
       systemTemplate: a.prompt,
-      humanTemplate: `${preContent}${option.question}${postContent}`
+      humanTemplate: `${question}`
     },
     option
   )

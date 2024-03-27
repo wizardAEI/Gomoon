@@ -14,6 +14,7 @@ import {
 } from '../main/models/model'
 import { FileLoaderRes } from '../main/lib/ai/fileLoader'
 import { EditFragmentOption, GetMemoParams, SaveMemoParams } from '../main/lib/ai/embedding/index'
+import { CallLLmOption } from '../main/lib/ai/langchain'
 
 // Custom APIs for renderer
 export const api = {
@@ -94,6 +95,9 @@ export const api = {
   checkUpdate: (): Promise<boolean> => ipcRenderer.invoke('check-update'),
   quitForUpdate: () => ipcRenderer.invoke('quit-for-update'),
   downloadUpdate: (): Promise<string[]> => ipcRenderer.invoke('download-update'),
+
+  // 大模型调用
+  callLLM: (option: CallLLmOption): Promise<string> => ipcRenderer.invoke('call-llm', option),
 
   // 其他
   getLines: (): Promise<Partial<Line>[]> => ipcRenderer.invoke('get-lines'),

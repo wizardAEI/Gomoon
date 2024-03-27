@@ -149,8 +149,8 @@ export async function genMsg(id: string) {
           setConsumedTokenForChat(consumedToken)
           removeGeneratingStatus(id)
         },
-        errorCallback(err: Error) {
-          editMsgByAdd(ErrorDict(err), id)
+        errorCallback(err) {
+          editMsgByAdd(ErrorDict(err as Error), id)
           removeGeneratingStatus(id)
         },
         pauseSignal: controller.signal
