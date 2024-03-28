@@ -19,5 +19,5 @@ export function ErrorDict(err: Error): string {
   } else if (err.message.includes('maximum')) {
     return `${stringError(err)}\n这通常是由于您的总字数超过了模型的限制。`
   }
-  return `${stringError(err)}\n这通常是由于密钥没有配置正确或网络出现问题。`
+  return `${stringError(err)}`
 }

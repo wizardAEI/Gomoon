@@ -158,7 +158,7 @@ export const newMoonshotModal = (
   })
 
 // 判断当前是node环境还是浏览器环境
-export const newChatLlama = () => {
+export const newChatLlama = (config: { src: string; temperature: number }) => {
   return {
     invoke() {
       throw new Error('Llama is not supported in browser')

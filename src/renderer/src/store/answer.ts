@@ -41,7 +41,8 @@ export function setGeneratingStatus(status: boolean) {
 
 export async function genAns(q: string) {
   controller = new AbortController()
-  setAnswerStore('answer', '......')
+  const initialContent = '......'
+  setAnswerStore('answer', initialContent)
   setAnswerStore('question', q)
   setGeneratingStatus(true)
   const ID = ulid()
@@ -76,7 +77,10 @@ export async function genAns(q: string) {
     })
   } catch (err) {
     if (!ansStatus.isGenerating) return
-    setAnswerStore('answer', (ans) => ans + ErrorDict(err as Error))
+    setAnswerStore('answer', (ans) => {
+      return ans === initialContent ? ErrorDict(err as Error) : ans + ErrorDict(err as Error)
+    })
+    setGeneratingStatus(false)
   }
 }
 export async function stopGenAns() {

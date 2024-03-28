@@ -159,6 +159,8 @@ export async function genMsg(id: string) {
   } catch (err) {
     if (!isGenerating(id)) return
     editMsgByAdd(ErrorDict(err as Error), id)
+  } finally {
+    removeGeneratingStatus(id)
     abortMap.delete(id)
   }
 }
