@@ -149,8 +149,8 @@ export async function genMsg(id: string) {
           setConsumedTokenForChat(consumedToken)
           removeGeneratingStatus(id)
         },
-        errorCallback(err: Error) {
-          editMsgByAdd(ErrorDict(err), id)
+        errorCallback(err) {
+          editMsgByAdd(ErrorDict(err as Error), id)
           removeGeneratingStatus(id)
         },
         pauseSignal: controller.signal
@@ -159,6 +159,8 @@ export async function genMsg(id: string) {
   } catch (err) {
     if (!isGenerating(id)) return
     editMsgByAdd(ErrorDict(err as Error), id)
+  } finally {
+    removeGeneratingStatus(id)
     abortMap.delete(id)
   }
 }

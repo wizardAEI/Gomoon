@@ -51,8 +51,11 @@ export default function (props: {
               content={
                 <span class="text-xs">
                   文件类型支持.md,<span> </span>
-                  <a class="text-xs" href="https://127.0.0.1:3000/guide/快速使用记忆胶囊💊">
-                    如何创建一个.md文件?
+                  <a
+                    class="text-xs"
+                    href="https://gomoon.top/guide/%E5%BF%AB%E9%80%9F%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BF%86%E8%83%B6%E5%9B%8A"
+                  >
+                    快速使用记忆胶囊
                   </a>
                 </span>
               }

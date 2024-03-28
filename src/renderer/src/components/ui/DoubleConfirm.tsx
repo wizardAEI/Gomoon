@@ -30,10 +30,22 @@ export default function (props: {
         })
       }}
     >
+      <div
+        onClick={(e) => {
+          e.stopPropagation()
+          if (props.preConfirm && !props.preConfirm()) {
+            setShow(false)
+            return
+          }
+          setShow(true)
+        }}
+      >
+        {props.children}
+      </div>
       <Show when={show()}>
         <div
           class={
-            `absolute flex ${animation()} flex-col gap-2 overflow-visible rounded-md bg-dark-plus px-2 py-1 shadow-center ` +
+            `absolute flex ${animation()} flex-col gap-2 overflow-visible rounded-md bg-dark-plus px-2 py-1 shadow-center z-10 ` +
             props.position
           }
         >
@@ -62,18 +74,6 @@ export default function (props: {
           </div>
         </div>
       </Show>
-      <div
-        onClick={(e) => {
-          e.stopPropagation()
-          if (props.preConfirm && !props.preConfirm()) {
-            setShow(false)
-            return
-          }
-          setShow(true)
-        }}
-      >
-        {props.children}
-      </div>
     </div>
   )
 }

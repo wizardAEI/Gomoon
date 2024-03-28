@@ -20,8 +20,7 @@ export type AssistantModel = (
     }
   | {
       type: 'ans'
-      preContent?: string
-      postContent?: string
+      prompts?: string[]
     }
 ) & {
   id: string

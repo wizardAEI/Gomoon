@@ -61,6 +61,7 @@ import {
   saveMemo
 } from './lib/ai/embedding/index'
 import { speak } from './lib/ai/tts'
+import { callLLm, CallLLmOption } from './lib/ai/langchain'
 
 export function initAppEventsHandler() {
   /**
@@ -192,6 +193,9 @@ export function initAppEventsHandler() {
   ipcMain.handle('download-update', async () => {
     return await autoUpdater.downloadUpdate()
   })
+
+  // 大模型调用
+  ipcMain.handle('call-llm', (_, options: CallLLmOption) => callLLm(options))
 
   // 其他
   app.on('browser-window-created', () => {})

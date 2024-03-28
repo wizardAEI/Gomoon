@@ -47,6 +47,7 @@ export default function MsgPopup(props: {
             height={22}
             width={22}
             class="cursor-pointer text-gray duration-100 hover:text-active"
+            // eslint-disable-next-line solid/reactivity
             onClick={async () => {
               if (props.type === 'ai') {
                 await saveMsgsBeforeID(props.id)

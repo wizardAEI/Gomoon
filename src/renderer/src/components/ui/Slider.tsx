@@ -32,7 +32,7 @@ export default function (props: {
   }
   return (
     <div class="relative flex w-full items-center gap-2" ref={container}>
-      <div class="absolute left-[1px] h-2 rounded-l-full rounded-r-full bg-active" ref={range} />
+      <div class="absolute left-[0.5px] h-[9px] rounded-l-full bg-active" ref={range} />
       <input
         class="range-slider__range flex-1"
         type="range"
