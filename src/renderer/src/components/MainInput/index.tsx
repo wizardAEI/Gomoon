@@ -98,7 +98,7 @@ export default function Input(props: {
     onCleanup(() => cleanupForRestoreMsgs?.())
   })
 
-  createEffect(async () => {
+  createEffect(() => {
     const content = artifactContent()
     if (!content) {
       setArtifactTokenNum(0)
@@ -108,21 +108,18 @@ export default function Input(props: {
     const timer = setTimeout(() => {
       dynamicLoading.show('正在计算Token，这取决于电脑运行本地模型的速度')
     }, 300)
-    const num = await window.api.getTokenNum(content)
-    clearTimeout(timer)
-    setArtifactTokenNum(num)
-    dynamicLoading.hide()
+    window.api.getTokenNum(content).then((num) => {
+      clearTimeout(timer)
+      setArtifactTokenNum(num)
+      dynamicLoading.hide()
+    })
   })
 
   const tokenConsumeDisplay = createMemo(() => {
     if (props.type === 'ans' || props.type === 'question') {
-      return `${tokens().consumedTokenForAns(inputTokenNum() + artifactTokenNum())} ${
-        tokens().maxToken === 0 ? '' : '/ ' + tokens().maxToken
-      }`
+      return  tokens().maxToken === 0 ? '' : `${tokens().consumedTokenForAns(inputTokenNum() + artifactTokenNum())} ${'/ ' + tokens().maxToken}`
     }
-    return `${tokens().consumedTokenForChat(inputTokenNum() + artifactTokenNum())} ${
-      tokens().maxToken === 0 ? '' : '/ ' + tokens().maxToken
-    }`
+    return  tokens().maxToken === 0 ? '' : `${tokens().consumedTokenForChat(inputTokenNum() + artifactTokenNum())} ${'/ ' + tokens().maxToken}`
   })
 
   onMount(() => {

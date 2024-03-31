@@ -76,3 +76,13 @@ resources/
 同时也可以使用[云盘](https://www.123pan.com/s/Cwttjv-VASXv.html)下载
 
 后续就可以正常启动项目进行开发了。
+
+
+## LLAMA 模型支持 CUDA（NVIDIA 显卡调用）
+
+1. 确保你的显卡支持 CUDA，并且已经安装了 CUDA 驱动和 CUDA Toolkit（版本12以上）
+2. 克隆该项目，获取 resource 文件，并放在项目根目录
+3. 在根目录执行 `yarn`（确保电脑已经安装 node 和 全局依赖 yarn），安装项目所需依赖
+4. 在根目录执行 `npx --no node-llama-cpp download --cuda` 安装 `node-llama-cpp` CUDA 支持依赖
+5. 如需修改显卡使用大小，可以修改`src/lib/utils.ts`中`ChatLlamaCpp`的`gpuLayers`参数
+6. 执行 `yarn dev` 测试效果没有问题后，执行 `yarn build` 打包项目，在 dist 目录可以看到 `setup.exe` 软件安装文件

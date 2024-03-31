@@ -98,6 +98,7 @@ export const api = {
 
   // 大模型调用
   callLLM: (option: CallLLmOption): Promise<string> => ipcRenderer.invoke('call-llm', option),
+  stopLLM: () => ipcRenderer.invoke('stop-llm'),
 
   // 其他
   getLines: (): Promise<Partial<Line>[]> => ipcRenderer.invoke('get-lines'),
