@@ -220,11 +220,14 @@ export function createWindow(): void {
     }
     const eventTracker = spawn(getResourcesPath(filename))
     eventTracker.stdout.on('data', (data) => {
-      if (`${data}` === 'multi-copy') {
+      if (`${data}` === 'multi-copy' && mainWindow) {
         const copyText = clipboard.readText()
-        mainWindow?.webContents.send('multi-copy', copyText)
+        mainWindow.webContents.send('multi-copy', copyText)
+        if (process.platform === 'win32') {
+          // FEAT: 兼容win使用show方法不会获取焦点的问题
+          mainWindow.minimize()
+        }
         mainWindow?.show()
-        mainWindow?.focus()
       }
     })
     // 应用程序退出时，关闭子进程

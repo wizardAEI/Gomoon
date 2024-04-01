@@ -61,7 +61,7 @@ import {
   saveMemo
 } from './lib/ai/embedding/index'
 import { speak } from './lib/ai/tts'
-import { callLLm, CallLLmOption } from './lib/ai/langchain'
+import { callLLM, CallLLmOption, stopLLM } from './lib/ai/langchain'
 
 export function initAppEventsHandler() {
   /**
@@ -195,10 +195,10 @@ export function initAppEventsHandler() {
   })
 
   // 大模型调用
-  ipcMain.handle('call-llm', (_, options: CallLLmOption) => callLLm(options))
+  ipcMain.handle('call-llm', (_, options: CallLLmOption) => callLLM(options))
+  ipcMain.handle('stop-llm', () => stopLLM())
 
   // 其他
-  app.on('browser-window-created', () => {})
   ipcMain.handle('hide-window', () => hideWindow())
   ipcMain.handle('minimize-window', () => minimize())
   ipcMain.handle('get-lines', () => getLines())

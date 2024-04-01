@@ -166,6 +166,7 @@ export async function genMsg(id: string) {
 }
 
 export async function stopGenMsg(id: string) {
+  window.api.stopLLM()
   abortMap.get(id)?.()
   abortMap.delete(id)
 

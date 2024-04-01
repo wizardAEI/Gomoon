@@ -1,9 +1,14 @@
+import EventEmitter from 'events'
+
 import { ChatLlamaCpp } from '@langchain/community/chat_models/llama_cpp'
 
 import { msgDict } from '../../../lib/langchain'
 import { loadLMMapForNode } from '../../../lib/utils'
 import { getUserData, loadAppConfig } from '../../models'
 import { postMsgToMainWindow } from '../../window'
+
+
+const emit = new EventEmitter()
 
 function getLMConfig() {
   return {
@@ -21,15 +26,36 @@ export interface CallLLmOption {
   }[]
   type: 'ans' | 'chat'
 }
-export async function callLLm(options: CallLLmOption) {
+
+export async function callLLM(options: CallLLmOption) {
   if (options.llm === 'Llama') {
+    const controller = new AbortController()
+    emit.once('abort', () => {
+      console.log('abort')
+      controller.abort()
+    })
     const llm = (await loadLMMapForNode(getLMConfig().models))['Llama'] as ChatLlamaCpp
-    const stream = await llm.stream(options.msgs.map((msg) => msgDict[msg.role](msg.content)))
+    const stream = await llm.stream(options.msgs.map((msg) => msgDict[msg.role](msg.content)), {
+      callbacks: [
+        {
+          handleLLMEnd(output) {
+            console.log(output.generations[0][0])
+          },
+          handleLLMError(error) {
+            throw error
+          }
+        }
+      ],
+      signal: controller.signal,
+    })
     for await (const chunk of stream) {
       postMsgToMainWindow(`new content: ${chunk.content}`)
-      console.log(chunk.content)
     }
   }
+}
+
+export async function stopLLM() {
+  emit.emit('abort')
 }
 
 export async function lmInvoke(option: { system?: string; content: string }): Promise<string> {
