@@ -18,6 +18,7 @@ import QWenIcon from '@renderer/assets/icon/models/QWenIcon'
 import GeminiIcon from '@renderer/assets/icon/models/GeminiIcon'
 import LlamaIcon from '@renderer/assets/icon/models/LlamaIcon'
 import KimiIcon from '@renderer/assets/icon/models/KimiIcon'
+import FilePicker from '@renderer/components/ui/FilePicker'
 
 import {
   settingStore,
@@ -250,15 +251,19 @@ export default function Setting() {
                   </div>
                 }
               >
-                <EditInput
-                  label="本地模型地址"
-                  value={settingStore.models.Llama.src}
-                  onSave={(v) => {
-                    const m = unwrap(settingStore.models)
-                    m.Llama.src = v
-                    setModels(m)
-                  }}
-                />
+                <div class="flex max-w-full gap-3">
+                  <span>本地模型地址</span>
+                  <div class="flex-1 overflow-hidden">
+                    <FilePicker
+                      onChange={(path) => {
+                        const m = unwrap(settingStore.models)
+                        m.Llama.src = path
+                        setModels(m)
+                      }}
+                      path={settingStore.models.Llama.src || '选择文件地址'}
+                    />
+                  </div>
+                </div>
                 <div class="mb-1 flex h-7 items-center gap-4">
                   <span class="font-bold">创造性/随机性</span>
                   <div class="w-60">

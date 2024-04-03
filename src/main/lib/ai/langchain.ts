@@ -7,7 +7,6 @@ import { loadLMMapForNode } from '../../../lib/utils'
 import { getUserData, loadAppConfig } from '../../models'
 import { postMsgToMainWindow } from '../../window'
 
-
 const emit = new EventEmitter()
 
 function getLMConfig() {
@@ -35,22 +34,23 @@ export async function callLLM(options: CallLLmOption) {
       controller.abort()
     })
     const llm = (await loadLMMapForNode(getLMConfig().models))['Llama'] as ChatLlamaCpp
-    const stream = await llm.stream(options.msgs.map((msg) => msgDict[msg.role](msg.content)), {
-      callbacks: [
-        {
-          handleLLMEnd(output) {
-            console.log(output.generations[0][0])
-          },
-          handleLLMError(error) {
-            throw error
+    await llm.invoke(
+      options.msgs.map((msg) => msgDict[msg.role](msg.content)),
+      {
+        callbacks: [
+          {
+            handleLLMNewToken(output) {
+              postMsgToMainWindow(`new content: ${output}`)
+            },
+
+            handleLLMError(error) {
+              throw error
+            }
           }
-        }
-      ],
-      signal: controller.signal,
-    })
-    for await (const chunk of stream) {
-      postMsgToMainWindow(`new content: ${chunk.content}`)
-    }
+        ],
+        signal: controller.signal
+      }
+    )
   }
 }
 
