@@ -23,7 +23,7 @@
   "dependencies": {
     "@electron-toolkit/preload": "^2.0.0",
     "@electron-toolkit/utils": "^2.0.0",
-    "@langchain/community": "^0.0.41",
+    "@langchain/community": "^0.0.44",
     "@langchain/core": "^0.1.12",
     "@langchain/google-genai": "^0.0.10",
     "@langchain/openai": "^0.0.10",

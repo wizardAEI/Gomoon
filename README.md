@@ -53,7 +53,7 @@ Gomoon 的名字来源于 _赛博朋克：边缘行者_ 的中 Lucy 的愿望：
 
 如果你也想一起共建 Gomoon，欢迎进群畅聊、提交 PR 或者 Issue。
 
-## 开发指南
+## 开发/贡献指南
 
 由于仓库大小限制，默认的资源没有上传到 Github，开发者可以在本地安装的 Gomoon 中找到`resources`文件夹（mac用户可以通过 Finder，右键点击应用，选择“显示包内容”来浏览到`Contents`目录，`resource`文件夹存储于`Contents/Resource/app.asar.unpacked/resources`; windows系统中，这个路径通常是在用户数据资源内，例如 `C:\Users\Lenovo\AppData\Local\Programs\gomoon\resources\app.asar.unpacked\resources`），将里面的资源文件复制到项目根目录的`resources`文件夹中。
 
@@ -76,7 +76,6 @@ resources/
 同时也可以使用[云盘](https://www.123pan.com/s/Cwttjv-VASXv.html)下载
 
 后续就可以正常启动项目进行开发了。
-
 
 ## LLAMA 模型支持 CUDA（NVIDIA 显卡调用）
 
