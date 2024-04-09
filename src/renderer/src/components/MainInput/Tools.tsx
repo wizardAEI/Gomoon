@@ -1,5 +1,6 @@
 import { parseFile } from '@renderer/lib/ai/file'
-import { Accessor, For, JSXElement, Setter, Show, createSignal, onMount } from 'solid-js'
+import { For, Show, createSignal, onMount } from 'solid-js'
+import type { Accessor, Setter, JSXElement } from 'solid-js'
 import LeftArrow from '@renderer/assets/icon/base/arrow/LeftArrow'
 import RightArrow from '@renderer/assets/icon/base/arrow/RightArrow'
 import { recognizeText } from '@renderer/lib/ai/ocr'
