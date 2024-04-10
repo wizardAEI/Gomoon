@@ -8,6 +8,7 @@ export default function EditInput(props: {
   onSave: (value: string) => void
   optional?: boolean
 }) {
+  // eslint-disable-next-line solid/reactivity
   const [value, setValue] = createSignal(props.value || '')
   const [isEditing, setIsEditing] = createSignal(false)
   let inputRef: HTMLInputElement | undefined
