@@ -1,6 +1,6 @@
 import { writeFile } from 'fs'
 
-import { BrowserWindow, app, dialog, ipcMain, shell } from 'electron'
+import { BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import { autoUpdater } from 'electron-updater'
 
 import {

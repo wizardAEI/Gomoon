@@ -1,4 +1,5 @@
-import { Accessor, Show, JSX, Setter, createContext, createSignal, useContext } from 'solid-js'
+import { Show, createContext, createSignal, useContext } from 'solid-js'
+import type { Accessor, Setter, JSX } from 'solid-js'
 
 import Loading from './Loading'
 interface LoadingConf {
