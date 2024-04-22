@@ -3,6 +3,7 @@ import type { ChatLlamaCpp } from '@langchain/community/chat_models/llama_cpp'
 import { ChatBaiduWenxin } from '@langchain/community/chat_models/baiduwenxin'
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
 import { HumanMessage, SystemMessage, AIMessage } from '@langchain/core/messages'
+import type { MessageContent } from 'langchain/schema'
 import { ChatOpenAI } from '@langchain/openai'
 
 export type ModelInterfaceType =
@@ -189,9 +190,18 @@ export const loadLMMap = async (
 })
 
 export const msgDict: {
-  [key in 'human' | 'system' | 'ai']: (s: string) => any
+  [key in 'human' | 'system' | 'ai']: (c: MessageContent) => any
 } = {
-  human: (s: string) => new HumanMessage(s),
-  system: (s: string) => new SystemMessage(s),
-  ai: (s: string) => new AIMessage(s)
+  human: (c: MessageContent) =>
+    new HumanMessage({
+      content: c
+    }),
+  system: (c: MessageContent) =>
+    new SystemMessage({
+      content: c
+    }),
+  ai: (c: MessageContent) =>
+    new AIMessage({
+      content: c
+    })
 }

@@ -60,6 +60,10 @@ export default function Input(props: {
   async function submit() {
     setInputTokenNum(0)
     if (artifactContent().length) {
+      if (/<gomoon-image (.*?)>/.test(artifactContent()) && userData.selectedModel !== 'GPT4') {
+        toast.error('仅GPT4模型支持图片输出')
+        return
+      }
       props.send(artifactContent() + inputText())
       setInputText(''), setArtifacts([])
       return
@@ -117,9 +121,17 @@ export default function Input(props: {
 
   const tokenConsumeDisplay = createMemo(() => {
     if (props.type === 'ans' || props.type === 'question') {
-      return  tokens().maxToken === 0 ? '' : `${tokens().consumedTokenForAns(inputTokenNum() + artifactTokenNum())} ${'/ ' + tokens().maxToken}`
+      return tokens().maxToken === 0
+        ? ''
+        : `${tokens().consumedTokenForAns(inputTokenNum() + artifactTokenNum())} ${
+            '/ ' + tokens().maxToken
+          }`
     }
-    return  tokens().maxToken === 0 ? '' : `${tokens().consumedTokenForChat(inputTokenNum() + artifactTokenNum())} ${'/ ' + tokens().maxToken}`
+    return tokens().maxToken === 0
+      ? ''
+      : `${tokens().consumedTokenForChat(inputTokenNum() + artifactTokenNum())} ${
+          '/ ' + tokens().maxToken
+        }`
   })
 
   onMount(() => {

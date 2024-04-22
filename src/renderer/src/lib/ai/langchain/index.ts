@@ -7,6 +7,7 @@ import {
   getCurrentAssistantForChat
 } from '@renderer/store/assistants'
 import { msgDict } from '@lib/langchain'
+import type { MessageContent } from 'langchain/schema'
 
 import { models } from './models'
 
@@ -17,7 +18,7 @@ const createModel = (model: ModelInterfaceType) => {
     async answer(
       msg: {
         systemTemplate: string
-        humanTemplate: string
+        humanTemplate: MessageContent
       },
       option: {
         newTokenCallback: (content: string) => void
@@ -27,7 +28,12 @@ const createModel = (model: ModelInterfaceType) => {
       }
     ) {
       const { systemTemplate, humanTemplate } = msg
-      const msgs = [new SystemMessage(systemTemplate), new HumanMessage(humanTemplate)] as unknown
+      const msgs = [
+        new SystemMessage(systemTemplate),
+        new HumanMessage({
+          content: humanTemplate
+        })
+      ] as unknown
       return model.invoke(msgs, {
         signal: option.pauseSignal,
         timeout: 1000 * 20,
@@ -49,7 +55,7 @@ const createModel = (model: ModelInterfaceType) => {
     async chat(
       msgs: {
         role: Roles
-        content: string
+        content: MessageContent
       }[],
       option: {
         newTokenCallback: (content: string) => void
@@ -91,7 +97,7 @@ const createModel = (model: ModelInterfaceType) => {
 const callLLMFromNode = (
   msgs: {
     role: Roles
-    content: string
+    content: MessageContent
   }[],
   option: {
     newTokenCallback: (content: string) => void
@@ -111,7 +117,10 @@ const callLLMFromNode = (
       .callLLM({
         type: 'chat',
         llm: 'Llama',
-        msgs
+        msgs: msgs.map((msg) => ({
+          role: msg.role,
+          content: msg.content as string
+        }))
       })
       .then((res) => {
         option.endCallback?.({
@@ -127,7 +136,7 @@ const callLLMFromNode = (
  * FEAT: Answer Assistant
  */
 export const ansAssistant = async (option: {
-  question: string
+  question: MessageContent
   newTokenCallback: (content: string) => void
   endCallback?: (result: LLMResult) => void
   errorCallback?: (err: unknown) => void
@@ -148,7 +157,7 @@ export const ansAssistant = async (option: {
         },
         {
           role: 'human',
-          content: question
+          content: question as string
         }
       ],
       option
@@ -169,7 +178,7 @@ export const ansAssistant = async (option: {
 export const chatAssistant = async (
   msgs: {
     role: Roles
-    content: string
+    content: MessageContent
   }[],
   option: {
     newTokenCallback: (content: string) => void

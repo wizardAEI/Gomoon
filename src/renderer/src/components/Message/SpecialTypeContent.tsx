@@ -1,3 +1,4 @@
+/* eslint-disable solid/components-return-once */
 import BaseFileIcon from '@renderer/assets/icon/file/baseFileIcon'
 import { ContentDisplay } from '@renderer/lib/ai/parseString'
 import NetworkIcon from '@renderer/assets/icon/BrowserIcon'
@@ -50,6 +51,13 @@ export default function (meta: ContentDisplay, mdStyle: string) {
       <div class="flex gap-1 py-[2px]">
         <CapsuleIcon class="shrink-0 grow-0 text-text-dark2" width={18} height={18} />
         <Md class={mdStyle + ' text-text-dark2'} content={meta.question} />
+      </div>
+    )
+  }
+  if (meta.type === 'image') {
+    return (
+      <div class="w-[100%] cursor-pointer" onClick={() => window.api.openPath(meta.src)}>
+        <img src={meta.val} alt="" width="100%" class="rounded-md" />
       </div>
     )
   }
