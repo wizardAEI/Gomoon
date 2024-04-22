@@ -17,13 +17,34 @@ export async function parseFile(file: File): Promise<
       type: 'file'
     }
   }
-  const fileLoader = await window.api.parseFile([
-    {
-      path: file.path,
-      type: file.type || 'text/plain'
-    }
-  ])
-
+  let fileLoader: FileLoaderRes
+  if (!file.path) {
+    fileLoader = await new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = async function (event) {
+        resolve(
+          await window.api.parseFile([
+            {
+              path: file.name,
+              type: file.type || 'text/plain',
+              data: event.target?.result as string
+            }
+          ])
+        )
+      }
+      reader.onerror = function (event) {
+        reject(event.target?.error)
+      }
+      reader.readAsDataURL(file) // 读取文件内容为 Data URL
+    })
+  } else {
+    fileLoader = await window.api.parseFile([
+      {
+        path: file.path,
+        type: file.type || 'text/plain'
+      }
+    ])
+  }
   try {
     let content = ''
     if (fileLoader.type === 'file') {

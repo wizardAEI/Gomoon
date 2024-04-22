@@ -12,7 +12,7 @@ import {
   SettingModel,
   UserDataModel
 } from '../main/models/model'
-import { FileLoaderRes } from '../main/lib/ai/fileLoader'
+import { FileLoaderRes, FilePayload } from '../main/lib/ai/fileLoader'
 import { EditFragmentOption, GetMemoParams, SaveMemoParams } from '../main/lib/ai/embedding/index'
 import { CallLLmOption } from '../main/lib/ai/langchain'
 
@@ -80,12 +80,8 @@ export const api = {
   importMemory: (path: string): Promise<boolean> => ipcRenderer.invoke('import-memory', path),
 
   // 文件相关
-  parseFile: (
-    files: {
-      path: string
-      type: string
-    }[]
-  ): Promise<FileLoaderRes> => ipcRenderer.invoke('parse-file', files),
+  parseFile: (files: FilePayload[]): Promise<FileLoaderRes> =>
+    ipcRenderer.invoke('parse-file', files),
   openPath: (path: string) => ipcRenderer.invoke('open-path', path),
   saveFile: (fileName: string, content: string) =>
     ipcRenderer.invoke('save-file', fileName, content),

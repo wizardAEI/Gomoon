@@ -7,6 +7,7 @@ import { searchByBaidu } from '@renderer/lib/ai/search'
 import { userData } from '@renderer/store/user'
 import { processMemo } from '@renderer/lib/ai/memo'
 import { clearAns, restoreAns } from '@renderer/store/answer'
+import { parseFile } from '@renderer/lib/ai/file'
 
 import { useLoading } from '../ui/DynamicLoading'
 import { useToast } from '../ui/Toast'
@@ -134,6 +135,57 @@ export default function Input(props: {
         }`
   })
 
+  async function processClipboardItems(clipboardData: DataTransfer | null) {
+    if (!clipboardData) return
+    // 检查是否有文件
+    if (clipboardData.files.length > 0) {
+      const vail = '.txt,.pdf,.docx,.doc,.pptx,.md,.json,.xlsx,.csv,.xls,.jpg,.jpeg,.png,.bmp,.webp'
+        .replace('.', '')
+        .split(',')
+        .find((v) => {
+          return clipboardData.files[0].name.toLowerCase().endsWith(v)
+        })
+      if (!vail) {
+        toast.error('不支持的文件类型')
+        return
+      }
+      const file = clipboardData.files[0]
+      const res = await parseFile(file)
+      if (!res.suc) {
+        toast.error(res.content, {
+          duration: 3000,
+          position: 'top-1/3'
+        })
+        return
+      }
+      let confirm = true
+      if (res.type !== 'image' && res.content.length > 2000) {
+        confirm = await toast.confirm(
+          <>
+            <div class="whitespace-nowrap py-1 text-base">文件已超过2000字，确认发送吗？</div>
+            <div>{`文件过大可能会导致资源浪费和回答出错。(当前字数：${res.length ?? 0})`}</div>
+          </>
+        )
+      }
+      confirm &&
+        setArtifacts([
+          ...artifacts(),
+          {
+            type: res.type,
+            val: res.content,
+            src: res.src || '',
+            filename: res.filename || ''
+          }
+        ])
+      return
+    }
+    // 获取剪贴板数据
+    const data = clipboardData.getData('text/plain')
+    cleanupForRestoreMsgs?.()
+    setInputText(data)
+    setInputTokenNum(await window.api.getTokenNum(data))
+  }
+
   onMount(() => {
     if (props.autoFocusWhenShow) {
       const removeListener = window.api.showWindow(() => {
@@ -157,14 +209,23 @@ export default function Input(props: {
         textAreaContainerDiv.attributes.removeNamedItem('data-active')
       }
     }
+    const handlePaste = (e) => {
+      e.preventDefault()
+      // 获取粘贴板数据
+      const clipboardData = e.clipboardData
+      // 处理粘贴的文件或图片
+      processClipboardItems(clipboardData)
+    }
     textAreaDiv!.addEventListener('focus', addActive)
     textAreaDiv!.addEventListener('blur', removeActive)
+    textAreaDiv!.addEventListener('paste', handlePaste)
 
     props.onMountHandler?.(textAreaDiv!)
 
     onCleanup(() => {
       textAreaDiv && textAreaDiv.removeEventListener('focus', addActive)
       textAreaDiv && textAreaDiv.removeEventListener('blur', removeActive)
+      textAreaDiv && textAreaDiv.removeEventListener('paste', handlePaste)
     })
   })
 
@@ -275,7 +336,7 @@ export default function Input(props: {
                 ? navigator.userAgent.includes('Mac')
                   ? 'Command + Enter 发送'
                   : 'Ctrl + Enter 发送'
-                : 'Enter 发送，Shift+Enter 换行')
+                : 'Enter 发送，Shift+Enter 换行') + '（可以复制文件和图片）'
             }
             class="font-sans max-h-48 flex-1 resize-none rounded-2xl border-none bg-transparent px-4 py-[6px] text-sm text-text1 caret-text2 transition-none focus:outline-none"
           />
