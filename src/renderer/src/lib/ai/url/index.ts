@@ -4,7 +4,11 @@ export async function parsePageToString(url: string): Promise<string> {
   // if (content.length > 2500) {
   //   return content.slice(0, 2500) + '...'
   // }
-  return await window.api.parsePageToString(url)
+  try {
+    return await window.api.parsePageToString(url)
+  } catch (e) {
+    return (e as Error).message
+  }
 }
 
 export async function parsePageForUrl(url: string) {
