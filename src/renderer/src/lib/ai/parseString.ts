@@ -7,6 +7,7 @@ const regDict = {
   regForMemo: /<gomoon-memo>(.*?)<\/gomoon-memo>/gs,
   regForQuestion: /<gomoon-question>(.*?)<\/gomoon-question>/gs,
   regForVal: /<gomoon-val>(.*?)<\/gomoon-val>/gs,
+  regForImage: /<gomoon-image (.*?)>(.*?)<\/gomoon-image>/gs,
   regForDrawer: /<gomoon-drawer>(.*?)<\/gomoon-drawer>/gs
 }
 
@@ -30,7 +31,8 @@ export function extractMeta(str: string, isLastMsg = false) {
     regForMemo,
     regForQuestion,
     regForVal,
-    regForDrawer
+    regForDrawer,
+    regForImage
   } = regDict
   str.match(regForSearch)?.forEach((match) => {
     match = match.replace(regForSearch, '$1')
@@ -55,6 +57,7 @@ export function extractMeta(str: string, isLastMsg = false) {
   str = str
     .replace(regForDrawer, '$1')
     .replace(regForFile, '$2')
+    .replace(regForImage, '$2')
     .replace(regForUrl, '$2')
     .replace(regForSearch, '')
     .replace(regForMemo, '')
@@ -86,6 +89,11 @@ export type ContentDisplay =
   | {
       type: 'memo'
       question: string
+    }
+  | {
+      type: 'image'
+      src: string
+      filename: string
     }
 export function parseDisplayArr(str: string): ContentDisplay[] {
   resetReg()

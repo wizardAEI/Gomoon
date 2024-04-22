@@ -15,8 +15,9 @@ import moment from 'moment'
 
 export interface FileLoaderRes {
   content: string
-  path: string
+  src: string
   filename: string
+  type: 'file' | 'image'
 }
 
 const appDataPath = app.getPath('userData')
@@ -104,6 +105,7 @@ export default async function parseFile(
     type: string
   }[]
 ): Promise<FileLoaderRes> {
+  let type = 'file' as 'file' | 'image'
   const today = moment().format('YYYY-MM-DD')
   const targetPath = join(filesPath, `/${today}`)
   // 适配win端
@@ -140,6 +142,17 @@ export default async function parseFile(
     content = await parseXLSXFile(file)
   }
 
+  // .jpg,.jpeg,.png,.bmp,.webp
+  if (
+    b.type === 'image/jpeg' ||
+    b.type === 'image/png' ||
+    b.type === 'image/bmp' ||
+    b.type === 'image/webp'
+  ) {
+    type = 'image'
+    content = `data:${b.type};base64,${file.toString('base64')}`
+  }
+
   // .mp3,.mp4,.wav,.m4a,.webm,.mpga,.mpeg
   // if (
   //   b.type === 'audio/wav' ||
@@ -152,8 +165,9 @@ export default async function parseFile(
   //   return parseAudioFile(b)
   // }
   return {
+    type,
     content,
-    path: targetPath,
+    src: targetPath,
     filename: basename(files[0].path)
   }
 }

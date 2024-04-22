@@ -57,7 +57,7 @@ export async function searchByBaidu(question: string, logger: (content: string) 
       break
     }
     const link = links.pop()
-    const prompt2 = `我讲给你一段网页内容，请分析内容并判断该网页是否可能和问题 ${question} 有关，如果相关请回复yes，否则请回复no。不要添加任何其他内容。
+    const prompt2 = `我将给你一段网页内容，请预测该网页是否可能和问题 ${question} 有关，如果相关请回复yes，否则请回复no。不要添加任何其他内容。
     网页内容：
     ${(await parsePageToString(link!)).slice(0, 150)}
     `

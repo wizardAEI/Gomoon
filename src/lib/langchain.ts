@@ -175,7 +175,7 @@ export const loadLMMap = async (
   ERNIE4: newERNIEModal(model.BaiduWenxin, 'ERNIE-Bot-4'),
   ERNIE128K: newERNIEModal(model.BaiduWenxin, 'ERNIE-Speed-128K'),
   GPT3: newGPTModal(model.OpenAI, 'gpt-3.5-turbo-0125'),
-  GPT4: newGPTModal(model.OpenAI, 'gpt-4-0125-preview'),
+  GPT4: newGPTModal(model.OpenAI, 'gpt-4-turbo'),
   GPTCustom: newGPTModal(model.OpenAI, model.OpenAI.customModel),
   QWenTurbo: newQWenModel(model.AliQWen, 'qwen-turbo'),
   QWenPlus: newQWenModel(model.AliQWen, 'qwen-plus'),

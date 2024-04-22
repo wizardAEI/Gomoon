@@ -86,7 +86,7 @@ function csp(items?: {
     [key in cspItem]: string[]
   } = {
     'default-src': [],
-    'script-src': ['https://jsd.cdn.zzko.cn', "'unsafe-eval'"],
+    'script-src': ["'unsafe-eval'"],
     'style-src': ["'unsafe-inline'"],
     'connect-src': ['https:', 'http://www.baidu.com', 'data:'],
     'img-src': ['https:', 'http:', 'data:', 'blob:'],

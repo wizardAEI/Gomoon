@@ -14,7 +14,7 @@ import {
   setMemoCapsule
 } from '@renderer/store/input'
 import { userData } from '@renderer/store/user'
-import { ContentDisplay } from '@renderer/lib/ai/parseString'
+import { ContentDisplay, extractMeta } from '@renderer/lib/ai/parseString'
 import CrossMarkRound from '@renderer/assets/icon/base/CrossMarkRound'
 import { initMemories, memories } from '@renderer/store/memo'
 
@@ -36,10 +36,15 @@ function ToolWrap(props: { children: JSXElement; onClick?: () => void; active?: 
   )
 }
 
-function ArtifactWrap(props: { children: JSXElement; onDel: () => void }) {
+function ArtifactWrap(props: { children: JSXElement; onDel: () => void; noPadding?: boolean }) {
   return (
     <div class="relative max-w-[100%]">
-      <div class="flex cursor-pointer select-none rounded-lg border border-solid border-dark-con bg-dark-plus px-1  py-[1px] text-[12px] text-text1 hover:text-white ">
+      <div
+        class={
+          'flex cursor-pointer select-none rounded-lg border border-solid border-dark-con bg-dark-plus text-[12px] text-text1 hover:text-white ' +
+          (props.noPadding ? '' : 'px-1 py-[1px]')
+        }
+      >
         {props.children}
       </div>
       <CrossMarkRound
@@ -120,6 +125,13 @@ export default function Tools(props: {
                 </ArtifactWrap>
               )
             }
+            if (artifact.type === 'image') {
+              return (
+                <ArtifactWrap onDel={() => removeArtifact(index())} noPadding>
+                  <img src={extractMeta(artifact.val, true)} class="w-20 rounded-md" />
+                </ArtifactWrap>
+              )
+            }
             return <ArtifactWrap onDel={() => removeArtifact(index())}>{artifact.val}</ArtifactWrap>
           }}
         </For>
@@ -143,12 +155,12 @@ export default function Tools(props: {
         >
           <ToolWrap>
             <label for="file" style={{ cursor: 'pointer' }}>
-              <span class="text-[12px]">发送文件</span>
+              <span class="text-[12px]">发送文件/图片</span>
               <input
                 id="file"
                 type="file"
                 class="hidden"
-                accept=".txt,.pdf,.docx,.doc,.pptx,.md,.json,.xlsx,.csv,.xls"
+                accept=".txt,.pdf,.docx,.doc,.pptx,.md,.json,.xlsx,.csv,.xls,.jpg,.jpeg,.png,.bmp,.webp"
                 multiple={false}
                 onChange={async (e) => {
                   const file = e.target.files![0]
@@ -163,7 +175,7 @@ export default function Tools(props: {
                       return
                     }
                     let confirm = true
-                    if (res.content.length > 2000) {
+                    if (res.type !== 'image' && res.content.length > 2000) {
                       confirm = await toast.confirm(
                         <>
                           <div class="whitespace-nowrap py-1 text-base">
@@ -177,7 +189,7 @@ export default function Tools(props: {
                     }
                     confirm &&
                       addArtifact({
-                        type: 'file',
+                        type: res.type,
                         val: res.content,
                         src: res.src || '',
                         filename: res.filename || ''
