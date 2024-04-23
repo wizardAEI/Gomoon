@@ -8,6 +8,7 @@ import { userData } from '@renderer/store/user'
 import { processMemo } from '@renderer/lib/ai/memo'
 import { clearAns, restoreAns } from '@renderer/store/answer'
 import { parseFile } from '@renderer/lib/ai/file'
+import { extractMeta } from '@renderer/lib/ai/parseString'
 
 import { useLoading } from '../ui/DynamicLoading'
 import { useToast } from '../ui/Toast'
@@ -107,7 +108,8 @@ export default function Input(props: {
   })
 
   createEffect(() => {
-    const content = artifactContent()
+    const content = artifactContent().replaceAll(/<gomoon-image (.*?)>(.*?)<\/gomoon-image>/g, '')
+    console.log(content)
     if (!content) {
       setArtifactTokenNum(0)
       return
