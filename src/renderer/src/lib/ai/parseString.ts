@@ -52,7 +52,6 @@ export function extractMeta(str: string, isLastMsg = false): MessageContent {
     Object.entries(regDict).forEach(([type, regex]) => {
       let match: RegExpExecArray | null
       while ((match = regex.exec(str)) !== null) {
-        console.log(type, regex)
         if (type === 'regForFile') {
           matches.push({
             type,
@@ -163,9 +162,7 @@ export function extractMeta(str: string, isLastMsg = false): MessageContent {
       if (match.type === 'regForImage') {
         result.push({
           type: 'image_url',
-          image_url: {
-            url: match.value
-          }
+          image_url: match.value
         })
       } else {
         result.push({
@@ -182,7 +179,6 @@ export function extractMeta(str: string, isLastMsg = false): MessageContent {
         text: str.slice(lastIndex)
       })
     }
-    console.log(result)
     return result
   }
 
@@ -292,7 +288,6 @@ export function parseDisplayArr(str: string): ContentDisplay[] {
     })
   })
   str.match(regForImage)?.forEach((match) => {
-    console.log(match)
     regForQuestion.lastIndex = 0
     arr.push({
       type: 'image',

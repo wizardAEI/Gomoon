@@ -48,6 +48,9 @@ const modelDict: {
   },
   Llama: {
     maxToken: 0
+  },
+  Ollama: {
+    maxToken: 0
   }
 }
 

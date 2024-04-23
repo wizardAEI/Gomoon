@@ -1,6 +1,7 @@
 import { ChatAlibabaTongyi } from '@langchain/community/chat_models/alibaba_tongyi'
 import type { ChatLlamaCpp } from '@langchain/community/chat_models/llama_cpp'
 import { ChatBaiduWenxin } from '@langchain/community/chat_models/baiduwenxin'
+import { ChatOllama } from '@langchain/community/chat_models/ollama'
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
 import { HumanMessage, SystemMessage, AIMessage } from '@langchain/core/messages'
 import type { MessageContent } from 'langchain/schema'
@@ -12,6 +13,7 @@ export type ModelInterfaceType =
   | ChatAlibabaTongyi
   | ChatGoogleGenerativeAI
   | ChatLlamaCpp
+  | ChatOllama
   | {
       invoke: any
     }
@@ -39,6 +41,11 @@ export interface Models {
     src: string
     temperature: number
   }
+  Ollama: {
+    address: string
+    model: string
+    temperature: number
+  }
   // kimi
   Moonshot: {
     apiKey: string
@@ -60,6 +67,7 @@ export type ModelsType =
   | 'Moonshot8k'
   | 'Moonshot32k'
   | 'Moonshot128k'
+  | 'Ollama'
 
 export const defaultModels = () =>
   ({
@@ -83,6 +91,11 @@ export const defaultModels = () =>
     },
     Llama: {
       src: '',
+      temperature: 0.3
+    },
+    Ollama: {
+      address: '',
+      model: '',
       temperature: 0.3
     },
     Moonshot: {
@@ -133,7 +146,7 @@ export const newQWenModel = (
     enableSearch: config.enableSearch
   })
 
-export const newGeminiModal = (
+export const newGeminiModel = (
   config: { apiKey: string; temperature: number },
   modelName: string
 ) =>
@@ -144,7 +157,7 @@ export const newGeminiModal = (
     temperature: config.temperature
   })
 
-export const newMoonshotModal = (
+export const newMoonshotModel = (
   config: { apiKey: string; temperature: number },
   modelName: string
 ) =>
@@ -167,6 +180,15 @@ export const newChatLlama = (config: { src: string; temperature: number }) => {
   }
 }
 
+export const newOllamaModel = (config: { address: string; model: string; temperature: number }) => {
+  console.log(config)
+  return new ChatOllama({
+    model: config.model,
+    baseUrl: config.address,
+    temperature: config.temperature
+  })
+}
+
 export const loadLMMap = async (
   model: Models
 ): Promise<{
@@ -181,12 +203,13 @@ export const loadLMMap = async (
   QWenTurbo: newQWenModel(model.AliQWen, 'qwen-turbo'),
   QWenPlus: newQWenModel(model.AliQWen, 'qwen-plus'),
   QWenMax: newQWenModel(model.AliQWen, 'qwen-max'),
-  GeminiPro: newGeminiModal(model.Gemini, 'gemini-pro-vision'),
-  Moonshot8k: newMoonshotModal(model.Moonshot, 'moonshot-v1-8k'),
-  Moonshot32k: newMoonshotModal(model.Moonshot, 'moonshot-v1-32k'),
-  Moonshot128k: newMoonshotModal(model.Moonshot, 'moonshot-v1-128k'),
+  GeminiPro: newGeminiModel(model.Gemini, 'gemini-pro-vision'),
+  Moonshot8k: newMoonshotModel(model.Moonshot, 'moonshot-v1-8k'),
+  Moonshot32k: newMoonshotModel(model.Moonshot, 'moonshot-v1-32k'),
+  Moonshot128k: newMoonshotModel(model.Moonshot, 'moonshot-v1-128k'),
   // TODO: 适配Llama
-  Llama: newChatLlama(model.Llama)
+  Llama: newChatLlama(model.Llama),
+  Ollama: newOllamaModel(model.Ollama)
 })
 
 export const msgDict: {

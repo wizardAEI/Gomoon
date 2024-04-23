@@ -96,6 +96,9 @@ export function initAppEventsHandler() {
     if (isValidUrl(models.OpenAI.baseURL)) {
       urls.push(models.OpenAI.baseURL)
     }
+    if (isValidUrl(models.Ollama.address)) {
+      urls.push(models.Ollama.address)
+    }
     if (urls.toString() !== preBaseUrls.toString()) {
       updateSendHeaders(urls)
       updateRespHeaders(urls, {

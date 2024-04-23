@@ -19,6 +19,7 @@ import GeminiIcon from '@renderer/assets/icon/models/GeminiIcon'
 import LlamaIcon from '@renderer/assets/icon/models/LlamaIcon'
 import KimiIcon from '@renderer/assets/icon/models/KimiIcon'
 import FilePicker from '@renderer/components/ui/FilePicker'
+import OllamaIcon from '@renderer/assets/icon/models/OllamaIcon'
 
 import {
   settingStore,
@@ -252,7 +253,7 @@ export default function Setting() {
                 }
               >
                 <div class="flex max-w-full gap-3">
-                  <span>本地模型地址</span>
+                  <span class="font-medium">本地模型地址</span>
                   <div class="flex-1 overflow-hidden">
                     <FilePicker
                       onChange={(path) => {
@@ -273,6 +274,53 @@ export default function Setting() {
                       onChange={(v) => {
                         const m = unwrap(settingStore.models)
                         m.Llama.temperature = v
+                        setModels(m)
+                      }}
+                    />
+                  </div>
+                </div>
+              </Collapse>
+              <Collapse
+                title={
+                  <div class="flex items-center gap-2">
+                    <OllamaIcon class="rounded-md" width={20} height={20} /> Ollama 系列
+                    <QuestionMention
+                      content={
+                        <a class="text-xs" href="https://ollama.com">
+                          模型获取地址
+                        </a>
+                      }
+                    />
+                  </div>
+                }
+              >
+                <EditInput
+                  label="模型地址 (ip:端口)"
+                  value={settingStore.models.Ollama.address}
+                  onSave={(v) => {
+                    const m = unwrap(settingStore.models)
+                    m.Ollama.address = v
+                    setModels(m)
+                  }}
+                />
+                <EditInput
+                  label="模型名称"
+                  value={settingStore.models.Ollama.model}
+                  onSave={(v) => {
+                    const m = unwrap(settingStore.models)
+                    m.Ollama.model = v
+                    setModels(m)
+                  }}
+                />
+                <div class="mb-1 flex h-7 items-center gap-4">
+                  <span class="font-bold">创造性/随机性</span>
+                  <div class="w-60">
+                    <Slider
+                      defaultValue={settingStore.models.Ollama.temperature}
+                      percentage
+                      onChange={(v) => {
+                        const m = unwrap(settingStore.models)
+                        m.Ollama.temperature = v
                         setModels(m)
                       }}
                     />

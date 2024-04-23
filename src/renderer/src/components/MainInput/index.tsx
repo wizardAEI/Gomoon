@@ -61,8 +61,11 @@ export default function Input(props: {
   async function submit() {
     setInputTokenNum(0)
     if (artifactContent().length) {
-      if (/<gomoon-image (.*?)>/.test(artifactContent()) && userData.selectedModel !== 'GPT4') {
-        toast.error('仅GPT4模型支持图片输出')
+      if (
+        /<gomoon-image (.*?)>/.test(artifactContent()) &&
+        !(userData.selectedModel === 'GPT4' || userData.selectedModel === 'Ollama')
+      ) {
+        toast.error('仅GPT4，部分 Ollama 模型支持图片输出')
         return
       }
       props.send(artifactContent() + inputText())
