@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs'
 
 import { getResourcesPath } from '../lib'
+import { defaultModels } from '../../lib/langchain'
 
 import { AssistantModel, Line, MemoModel, UserDataModel } from './model'
 import { SettingModel } from './model'
@@ -15,35 +16,7 @@ export function getDefaultAssistants(): AssistantModel[] {
 export function getDefaultConfig(): SettingModel {
   return {
     isOnTop: false,
-    models: {
-      OpenAI: {
-        apiKey: '',
-        baseURL: '',
-        temperature: 0.7,
-        customModel: ''
-      },
-      BaiduWenxin: {
-        apiKey: '',
-        secretKey: '',
-        temperature: 0.5
-      },
-      AliQWen: {
-        apiKey: '',
-        temperature: 0.7
-      },
-      Gemini: {
-        apiKey: '',
-        temperature: 0.7
-      },
-      Llama: {
-        src: '',
-        temperature: 0.7
-      },
-      Moonshot: {
-        apiKey: '',
-        temperature: 0.7
-      }
-    },
+    models: defaultModels(),
     canMultiCopy: true,
     quicklyWakeUpKeys: 'CmdOrCtrl+G',
     sendWithCmdOrCtrl: true

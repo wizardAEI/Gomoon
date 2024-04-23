@@ -1,6 +1,6 @@
 import { readFile } from 'fs/promises'
 import { basename, join } from 'path'
-import { copyFileSync, mkdirSync } from 'fs'
+import { copyFileSync, mkdirSync, writeFileSync } from 'fs'
 
 import { TextLoader } from 'langchain/document_loaders/fs/text'
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf'
@@ -99,19 +99,28 @@ async function parseCSVFile(b: Blob) {
 //   return docs.reduce((acc, doc) => acc + doc.pageContent, '\n')
 // }
 
-export default async function parseFile(
-  files: {
-    path: string
-    type: string
-  }[]
-): Promise<FileLoaderRes> {
+export interface FilePayload {
+  path: string
+  type: string
+  data?: string
+}
+
+export default async function parseFile(files: FilePayload[]): Promise<FileLoaderRes> {
   let type = 'file' as 'file' | 'image'
   const today = moment().format('YYYY-MM-DD')
   const targetPath = join(filesPath, `/${today}`)
-  // 适配win端
-  const targetFile = join(targetPath, basename(files[0].path))
+  const filePath = moment().format('HH-mm-ss-') + files[0].path
+  const targetFile = files[0].data
+    ? join(targetPath, filePath)
+    : join(targetPath, basename(files[0].path))
   mkdirSync(targetPath, { recursive: true })
-  copyFileSync(files[0].path, targetFile)
+  if (files[0].data) {
+    const base64Image = files[0].data.split(';base64,').pop()
+    const imageBuffer = Buffer.from(base64Image!, 'base64')
+    writeFileSync(targetFile, imageBuffer)
+  } else if (files[0].path) {
+    copyFileSync(files[0].path, targetFile)
+  }
   const file = await readFile(targetFile)
 
   const b = new Blob([file], { type: files[0].type })
@@ -143,12 +152,7 @@ export default async function parseFile(
   }
 
   // .jpg,.jpeg,.png,.bmp,.webp
-  if (
-    b.type === 'image/jpeg' ||
-    b.type === 'image/png' ||
-    b.type === 'image/bmp' ||
-    b.type === 'image/webp'
-  ) {
+  if (b.type.startsWith('image/')) {
     type = 'image'
     content = `data:${b.type};base64,${file.toString('base64')}`
   }

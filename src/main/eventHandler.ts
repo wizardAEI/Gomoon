@@ -42,7 +42,7 @@ import {
   updateRespHeaders,
   updateSendHeaders
 } from './window'
-import parseFile from './lib/ai/fileLoader'
+import parseFile, { FilePayload } from './lib/ai/fileLoader'
 import { parseURL2Str } from './lib/ai/parseURL'
 import { isValidUrl } from './lib/utils'
 import { quitApp } from './lib'
@@ -95,6 +95,9 @@ export function initAppEventsHandler() {
     const urls: string[] = []
     if (isValidUrl(models.OpenAI.baseURL)) {
       urls.push(models.OpenAI.baseURL)
+    }
+    if (isValidUrl(models.Ollama.address)) {
+      urls.push(models.Ollama.address)
     }
     if (urls.toString() !== preBaseUrls.toString()) {
       updateSendHeaders(urls)
@@ -157,7 +160,7 @@ export function initAppEventsHandler() {
   ipcMain.handle('import-memory', (_, path: string) => importMemo(path))
 
   // 文件相关
-  ipcMain.handle('parse-file', (_, files) => parseFile(files))
+  ipcMain.handle('parse-file', (_, files: FilePayload[]) => parseFile(files))
   ipcMain.handle('open-path', (_, path: string) => {
     shell.openPath(path)
   })

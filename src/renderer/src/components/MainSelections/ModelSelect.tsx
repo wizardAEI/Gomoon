@@ -8,6 +8,7 @@ import { ModelsType } from '@lib/langchain'
 import GeminiIcon from '@renderer/assets/icon/models/GeminiIcon'
 import KimiIcon from '@renderer/assets/icon/models/KimiIcon'
 import LlamaIcon from '@renderer/assets/icon/models/LlamaIcon'
+import OllamaIcon from '@renderer/assets/icon/models/OllamaIcon'
 
 export default function (props: { position: string; size?: number; translate?: string }) {
   const options: {
@@ -215,6 +216,22 @@ export default function (props: { position: string; size?: number; translate?: s
         )
       },
       value: 'Llama'
+    })
+  }
+
+  if (settingStore.models.Ollama.address && settingStore.models.Ollama.model) {
+    options.push({
+      label: <span class="text-base leading-6 text-current">Ollama</span>,
+      icon(size: number) {
+        return (
+          <OllamaIcon
+            width={size - 1}
+            height={size - 1}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'Ollama'
     })
   }
 

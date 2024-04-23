@@ -128,7 +128,10 @@ export default function Tools(props: {
             if (artifact.type === 'image') {
               return (
                 <ArtifactWrap onDel={() => removeArtifact(index())} noPadding>
-                  <img src={extractMeta(artifact.val, true)} class="w-20 rounded-md" />
+                  <img
+                    src={extractMeta(artifact.val, true)[0]['image_url']}
+                    class="w-20 rounded-md"
+                  />
                 </ArtifactWrap>
               )
             }
@@ -199,43 +202,6 @@ export default function Tools(props: {
               />
             </label>
           </ToolWrap>
-          <ToolWrap>
-            <label for="ocr" style={{ cursor: 'pointer' }}>
-              <span class="text-[12px]">文字图片解析</span>
-              <input
-                id="ocr"
-                type="file"
-                class="hidden"
-                accept=".jpg,.jpeg,.png,.gif,.bmp,.webp,.svg"
-                multiple={false}
-                onChange={async (e) => {
-                  const file = e.target.files![0]
-                  e.target.value = ''
-                  // 去掉中文的空格
-                  function removeChineseSpaces(str) {
-                    return str
-                      .replace(/([\u4e00-\u9fa5])\s+/g, '$1')
-                      .replace(/\s+([\u4e00-\u9fa5])/g, '$1')
-                  }
-                  if (file) {
-                    try {
-                      const content = await recognizeText(file, (m) => {
-                        load.show(m?.status || '正在识别图片中的文字')
-                      })
-                      props.onInput(removeChineseSpaces(content))
-                    } catch (error: any) {
-                      toast.error(error, {
-                        duration: 3000,
-                        position: 'top-1/3'
-                      })
-                    } finally {
-                      load.hide()
-                    }
-                  }
-                }}
-              />
-            </label>
-          </ToolWrap>
           <ToolWrap
             // eslint-disable-next-line solid/reactivity
             onClick={async () => {
@@ -276,6 +242,43 @@ export default function Tools(props: {
             }}
           >
             解析链接
+          </ToolWrap>
+          <ToolWrap>
+            <label for="ocr" style={{ cursor: 'pointer' }}>
+              <span class="text-[12px]">文字识别</span>
+              <input
+                id="ocr"
+                type="file"
+                class="hidden"
+                accept=".jpg,.jpeg,.png,.gif,.bmp,.webp,.svg"
+                multiple={false}
+                onChange={async (e) => {
+                  const file = e.target.files![0]
+                  e.target.value = ''
+                  // 去掉中文的空格
+                  function removeChineseSpaces(str) {
+                    return str
+                      .replace(/([\u4e00-\u9fa5])\s+/g, '$1')
+                      .replace(/\s+([\u4e00-\u9fa5])/g, '$1')
+                  }
+                  if (file) {
+                    try {
+                      const content = await recognizeText(file, (m) => {
+                        load.show(m?.status || '正在识别图片中的文字')
+                      })
+                      props.onInput(removeChineseSpaces(content))
+                    } catch (error: any) {
+                      toast.error(error, {
+                        duration: 3000,
+                        position: 'top-1/3'
+                      })
+                    } finally {
+                      load.hide()
+                    }
+                  }
+                }}
+              />
+            </label>
           </ToolWrap>
           <ToolWrap
             active={isNetworking() && props.artifacts().length === 0}
