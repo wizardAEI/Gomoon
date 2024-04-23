@@ -163,7 +163,7 @@ export function MsgPopupForUser(props: {
   )
 }
 
-export function MsgPopupForSpecialConte(props: { type: MsgTypes; onRemove: () => void }) {
+export function MsgPopupForSpecialContent(props: { type: MsgTypes; onRemove: () => void }) {
   return (
     <Show when={props.type === 'human'}>
       <div class="absolute right-5 top-[-10px] z-10 hidden items-center gap-1 rounded-[10px] bg-light px-2 group-hover:flex group-hover:h-6">
