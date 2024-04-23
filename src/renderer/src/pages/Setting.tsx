@@ -460,7 +460,7 @@ export default function Setting() {
             发布了教学视频，可以让你更加有效的使用 Gomoon，解锁更多功能！
           </div>
           <div class="mt-2 flex items-center gap-2 text-text2">
-            <span>版本号：v1.0.8</span>
+            <span>版本号：v1.0.9</span>
             <a
               class="cursor-pointer text-text-link hover:text-active"
               onClick={async () => {
@@ -482,10 +482,10 @@ export default function Setting() {
           </div>
           <div class="mt-2 text-text2">
             版本更新内容： <br />
-            &nbsp;1. 修复了部分问题 <br />
-            &nbsp;2. 增加了多种模型 <br />
+            &nbsp;1. 增加了ollama模型 <br />
+            &nbsp;2. 现在gpt4和部分ollama模型支持图片理解啦！（https://ollama.com/library/llava）
+            <br />
             &nbsp;3. 现已支持删除连续对话中的中间的一对内容 <br />
-            &nbsp;4. 语音朗读现在更加自然了
           </div>
         </Card>
       </div>

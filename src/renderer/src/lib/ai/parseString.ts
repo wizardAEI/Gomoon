@@ -162,7 +162,9 @@ export function extractMeta(str: string, isLastMsg = false): MessageContent {
       if (match.type === 'regForImage') {
         result.push({
           type: 'image_url',
-          image_url: match.value
+          image_url: {
+            url: match.value
+          }
         })
       } else {
         result.push({
