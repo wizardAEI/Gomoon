@@ -8,7 +8,7 @@
 
 ## 介绍
 
-<img order-radius="100px" align="right"  height="450px" src="https://github.com/wizardAEI/blog-images/blob/main/gomoon-jietu3.jpg" alt=""/>
+<img order-radius="100px" align="right"  height="450px" src="https://github.com/wizardAEI/Gomoon/assets/61337085/fd5336ae-e8c1-4ec8-83f5-12eccdaae63f" alt=""/>
 
 要使用 Gomoon，你只需要在 Gomoon 上配置好你的模型引擎，就可以快速让你的助手帮你回答问题，提高工作和学习效率。又或者...只是给你讲个笑话😋。
 
