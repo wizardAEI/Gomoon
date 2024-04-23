@@ -4,8 +4,9 @@ import { ChatBaiduWenxin } from '@langchain/community/chat_models/baiduwenxin'
 import { ChatOllama } from '@langchain/community/chat_models/ollama'
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
 import { HumanMessage, SystemMessage, AIMessage } from '@langchain/core/messages'
-import type { MessageContent } from 'langchain/schema'
+import type { BaseMessage, MessageContent } from 'langchain/schema'
 import { ChatOpenAI } from '@langchain/openai'
+import { isArray } from 'lodash'
 
 export type ModelInterfaceType =
   | ChatBaiduWenxin
@@ -181,12 +182,28 @@ export const newChatLlama = (config: { src: string; temperature: number }) => {
 }
 
 export const newOllamaModel = (config: { address: string; model: string; temperature: number }) => {
-  console.log(config)
-  return new ChatOllama({
+  const chatOllama = new ChatOllama({
     model: config.model,
     baseUrl: config.address,
     temperature: config.temperature
   })
+  const oldInvoke = chatOllama.invoke.bind(chatOllama)
+  chatOllama.invoke = async (...args) => {
+    console.log(args)
+    for (let i = 0; i < (args[0] as BaseMessage[]).length; i++) {
+      const content = (args[0][i] as BaseMessage).content
+      if (isArray(content)) {
+        content.forEach((c) => {
+          if (c.type === 'image_url') {
+            c.image_url = (c.image_url as { url: string }).url
+          }
+        })
+      }
+      ;(args[0][i] as BaseMessage).content = content
+    }
+    return oldInvoke(...args)
+  }
+  return chatOllama
 }
 
 export const loadLMMap = async (

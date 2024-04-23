@@ -129,7 +129,7 @@ export default function Tools(props: {
               return (
                 <ArtifactWrap onDel={() => removeArtifact(index())} noPadding>
                   <img
-                    src={extractMeta(artifact.val, true)[0]['image_url']}
+                    src={extractMeta(artifact.val, true)[0]['image_url']['url']}
                     class="w-20 rounded-md"
                   />
                 </ArtifactWrap>

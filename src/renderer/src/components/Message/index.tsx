@@ -9,7 +9,7 @@ import { event } from '@renderer/lib/util'
 
 import SpecialTypeContent from './SpecialTypeContent'
 import Md, { mdToText } from './Md'
-import MsgPopup, { MsgPopupForSpecialConte, MsgPopupForUser, Pause, WithDrawal } from './Popup'
+import MsgPopup, { MsgPopupForSpecialContent, MsgPopupForUser, Pause, WithDrawal } from './Popup'
 export type MsgTypes = Roles | 'ans' | 'question'
 export const style: Record<MsgTypes, string> = {
   ai: 'bg-dark',
@@ -143,7 +143,9 @@ export default function Message(props: {
         </Show>
         <Show
           when={showCompsByUser()}
-          fallback={<MsgPopupForSpecialConte onRemove={props.onRemove || (() => {})} />}
+          fallback={
+            <MsgPopupForSpecialContent type={props.type} onRemove={props.onRemove || (() => {})} />
+          }
         >
           <MsgPopupForUser
             type={props.type}

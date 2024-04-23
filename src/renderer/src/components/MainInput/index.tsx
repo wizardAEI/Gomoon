@@ -8,6 +8,7 @@ import { userData } from '@renderer/store/user'
 import { processMemo } from '@renderer/lib/ai/memo'
 import { clearAns, restoreAns } from '@renderer/store/answer'
 import { parseFile } from '@renderer/lib/ai/file'
+import { extractMeta } from '@renderer/lib/ai/parseString'
 
 import { useLoading } from '../ui/DynamicLoading'
 import { useToast } from '../ui/Toast'
@@ -107,7 +108,8 @@ export default function Input(props: {
   })
 
   createEffect(() => {
-    const content = artifactContent()
+    const content = artifactContent().replaceAll(/<gomoon-image (.*?)>(.*?)<\/gomoon-image>/g, '')
+    console.log(content)
     if (!content) {
       setArtifactTokenNum(0)
       return
@@ -138,10 +140,12 @@ export default function Input(props: {
         }`
   })
 
-  async function processClipboardItems(clipboardData: DataTransfer | null) {
-    if (!clipboardData) return
+  const handlePaste = async (e) => {
+    // 获取粘贴板数据
+    const clipboardData = e.clipboardData
     // 检查是否有文件
-    if (clipboardData.files.length > 0) {
+    if (clipboardData && clipboardData.files.length > 0) {
+      e.preventDefault()
       const vail = '.txt,.pdf,.docx,.doc,.pptx,.md,.json,.xlsx,.csv,.xls,.jpg,.jpeg,.png,.bmp,.webp'
         .replace('.', '')
         .split(',')
@@ -180,13 +184,7 @@ export default function Input(props: {
             filename: res.filename || ''
           }
         ])
-      return
     }
-    // 获取剪贴板数据
-    const data = clipboardData.getData('text/plain')
-    cleanupForRestoreMsgs?.()
-    setInputText(data)
-    setInputTokenNum(await window.api.getTokenNum(data))
   }
 
   onMount(() => {
@@ -211,13 +209,6 @@ export default function Input(props: {
       if (textAreaContainerDiv && textAreaContainerDiv.attributes.getNamedItem('data-active')) {
         textAreaContainerDiv.attributes.removeNamedItem('data-active')
       }
-    }
-    const handlePaste = (e) => {
-      e.preventDefault()
-      // 获取粘贴板数据
-      const clipboardData = e.clipboardData
-      // 处理粘贴的文件或图片
-      processClipboardItems(clipboardData)
     }
     textAreaDiv!.addEventListener('focus', addActive)
     textAreaDiv!.addEventListener('blur', removeActive)
