@@ -187,10 +187,21 @@ export const newOllamaModel = (config: { address: string; model: string; tempera
     baseUrl: config.address,
     temperature: config.temperature
   })
-  const oldInvoke = chatOllama.invoke
+  const oldInvoke = chatOllama.invoke.bind(chatOllama)
   chatOllama.invoke = async (...args) => {
     console.log(args)
-    return await oldInvoke(...args)
+    for (let i = 0; i < (args[0] as BaseMessage[]).length; i++) {
+      const content = (args[0][i] as BaseMessage).content
+      if (isArray(content)) {
+        content.forEach((c) => {
+          if (c.type === 'image_url') {
+            c.image_url = (c.image_url as { url: string }).url
+          }
+        })
+      }
+      ;(args[0][i] as BaseMessage).content = content
+    }
+    return oldInvoke(...args)
   }
   return chatOllama
 }
