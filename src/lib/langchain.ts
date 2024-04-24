@@ -50,6 +50,7 @@ export interface Models {
   // kimi
   Moonshot: {
     apiKey: string
+    baseURL: string
     temperature: number
   }
 }
@@ -100,6 +101,7 @@ export const defaultModels = () =>
       temperature: 0.3
     },
     Moonshot: {
+      baseURL: '',
       apiKey: '',
       temperature: 0.3
     }
@@ -159,7 +161,7 @@ export const newGeminiModel = (
   })
 
 export const newMoonshotModel = (
-  config: { apiKey: string; temperature: number },
+  config: { apiKey: string; temperature: number; baseURL: string },
   modelName: string
 ) =>
   new ChatOpenAI({
@@ -168,7 +170,7 @@ export const newMoonshotModel = (
     openAIApiKey: config.apiKey || 'api-key',
     temperature: config.temperature,
     configuration: {
-      baseURL: 'https://api.moonshot.cn/v1'
+      baseURL: config.baseURL || 'https://api.moonshot.cn/v1'
     }
   })
 

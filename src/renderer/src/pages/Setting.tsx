@@ -350,6 +350,16 @@ export default function Setting() {
                     setModels(m)
                   }}
                 />
+                <EditInput
+                  optional
+                  label="baseURL"
+                  value={settingStore.models.Moonshot.baseURL}
+                  onSave={(v) => {
+                    const m = unwrap(settingStore.models)
+                    m.Moonshot.baseURL = v
+                    setModels(m)
+                  }}
+                />
                 <div class="mb-1 flex h-7 items-center gap-4">
                   <span class="font-bold">创造性/随机性</span>
                   <div class="w-60">
