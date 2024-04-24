@@ -492,7 +492,7 @@ export default function Setting() {
           </div>
           <div class="mt-2 text-text2">
             版本更新内容： <br />
-            &nbsp;1. 增加了ollama模型 <br />
+            &nbsp;1. 增加了Ollama引擎，可以搭配本地或远程的Ollama客户端使用 <br />
             &nbsp;2. 现在gpt4和部分ollama模型支持图片理解啦！（https://ollama.com/library/llava）
             <br />
             &nbsp;3. 现已支持删除连续对话中的中间的一对内容 <br />
