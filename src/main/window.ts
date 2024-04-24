@@ -221,7 +221,11 @@ export function createWindow(): void {
     const eventTracker = spawn(getResourcesPath(filename))
     eventTracker.stdout.on('data', (data) => {
       if (`${data}` === 'multi-copy' && mainWindow) {
-        const copyText = clipboard.readText()
+        // 判断是否是文本
+        const copyText = clipboard.readText().trim()
+        if (!copyText) {
+          return
+        }
         mainWindow.webContents.send('multi-copy', copyText)
         if (process.platform === 'win32') {
           // FEAT: 兼容win使用show方法不会获取焦点的问题
