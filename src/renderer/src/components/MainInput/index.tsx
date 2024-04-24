@@ -109,7 +109,6 @@ export default function Input(props: {
 
   createEffect(() => {
     const content = artifactContent().replaceAll(/<gomoon-image (.*?)>(.*?)<\/gomoon-image>/g, '')
-    console.log(content)
     if (!content) {
       setArtifactTokenNum(0)
       return

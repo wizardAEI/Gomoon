@@ -31,7 +31,6 @@ export async function parseURL2Str(url: string): Promise<string> {
   } catch (e) {
     if ((e as Error).message.includes('timeout')) throw new Error('页面解析超时')
     if (doc) {
-      console.log(`${doc.title}\n\n` + doc.content)
       return `${doc.title}\n\n` + doc.content
     } else {
       throw new Error('页面解析超时')
