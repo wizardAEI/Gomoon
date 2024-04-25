@@ -226,7 +226,6 @@ export const loadLMMap = async (
   Moonshot8k: newMoonshotModel(model.Moonshot, 'moonshot-v1-8k'),
   Moonshot32k: newMoonshotModel(model.Moonshot, 'moonshot-v1-32k'),
   Moonshot128k: newMoonshotModel(model.Moonshot, 'moonshot-v1-128k'),
-  // TODO: 适配Llama
   Llama: newChatLlama(model.Llama),
   Ollama: newOllamaModel(model.Ollama)
 })

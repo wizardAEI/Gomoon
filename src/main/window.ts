@@ -221,9 +221,8 @@ export function createWindow(): void {
     const eventTracker = spawn(getResourcesPath(filename))
     eventTracker.stdout.on('data', (data) => {
       if (`${data}` === 'multi-copy' && mainWindow) {
-        // 判断是否是文本
         const copyText = clipboard.readText().trim()
-        if (!copyText) {
+        if (!copyText || !loadAppConfig().canMultiCopy) {
           return
         }
         mainWindow.webContents.send('multi-copy', copyText)

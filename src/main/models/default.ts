@@ -17,7 +17,7 @@ export function getDefaultConfig(): SettingModel {
   return {
     isOnTop: false,
     models: defaultModels(),
-    canMultiCopy: true,
+    canMultiCopy: false,
     quicklyWakeUpKeys: 'CmdOrCtrl+G',
     sendWithCmdOrCtrl: true
   }
