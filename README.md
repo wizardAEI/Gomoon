@@ -68,6 +68,9 @@ Gomoon 的名字来源于 _赛博朋克：边缘行者_ 的中 Lucy 的愿望：
 
 ## 开发/贡献指南
 
+node 版本要求：v20.11.1 及以上
+yarn 版本要求：v3.2.0 及以上
+
 由于仓库大小限制，默认的资源没有上传到 Github，开发者可以在本地安装的 Gomoon 中找到`resources`文件夹（mac用户可以通过 Finder，右键点击应用，选择“显示包内容”来浏览到`Contents`目录，`resource`文件夹存储于`Contents/Resource/app.asar.unpacked/resources`; windows系统中，这个路径通常是在用户数据资源内，例如 `C:\Users\Lenovo\AppData\Local\Programs\gomoon\resources\app.asar.unpacked\resources`），将里面的资源文件复制到项目根目录的`resources`文件夹中。
 
 `resources` 文件夹结构如下：

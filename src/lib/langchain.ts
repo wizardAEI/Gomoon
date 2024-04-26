@@ -191,7 +191,6 @@ export const newOllamaModel = (config: { address: string; model: string; tempera
   })
   const oldInvoke = chatOllama.invoke.bind(chatOllama)
   chatOllama.invoke = async (...args) => {
-    console.log(args)
     for (let i = 0; i < (args[0] as BaseMessage[]).length; i++) {
       const content = (args[0][i] as BaseMessage).content
       if (isArray(content)) {

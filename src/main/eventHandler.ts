@@ -1,6 +1,4 @@
-import { writeFile } from 'fs'
-
-import { BrowserWindow, dialog, ipcMain, shell } from 'electron'
+import { BrowserWindow, ipcMain, shell } from 'electron'
 import { autoUpdater } from 'electron-updater'
 
 import {
@@ -45,7 +43,7 @@ import {
 import parseFile, { FilePayload } from './lib/ai/fileLoader'
 import { parseURL2Str } from './lib/ai/parseURL'
 import { isValidUrl } from './lib/utils'
-import { quitApp } from './lib'
+import { quitApp, saveFile } from './lib'
 import { tokenize } from './lib/ai/embedding/embedding'
 import {
   EditFragmentOption,
@@ -164,25 +162,19 @@ export function initAppEventsHandler() {
   ipcMain.handle('open-path', (_, path: string) => {
     shell.openPath(path)
   })
-  ipcMain.handle('save-file', async (_, fileName: string, content: string) => {
-    const res = await dialog.showSaveDialog({
-      title: '保存文件',
-      buttonLabel: '保存',
-      defaultPath: fileName,
-      filters: [
-        {
-          name: 'All Files',
-          extensions: ['*']
-        }
-      ]
-    })
-    if (res.filePath) {
-      writeFile(res.filePath, content, () => {})
-    }
+  ipcMain.handle('save-file', async (e, fileName: string, content: string) => {
+    const mainWindow = BrowserWindow.fromWebContents(e.sender)
+    mainWindow!.setAlwaysOnTop(false, 'status')
+    await saveFile(fileName, content)
+    mainWindow!.setAlwaysOnTop(loadAppConfig().isOnTop, 'status')
   })
   ipcMain.handle('get-token-num', async (_, content: string) => {
     if (content === '') return 0
-    return (await tokenize(content)).length || 0
+    return (
+      // 图片单独计费
+      (await tokenize(content.replaceAll(/<gomoon-image (.*?)>(.*?)<\/gomoon-image>/g, '')))
+        .length || 0
+    )
   })
 
   // 升级

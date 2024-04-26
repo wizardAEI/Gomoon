@@ -141,45 +141,48 @@ export default function Chat() {
         <Show when={msgStatus.generatingList.length === 0}>
           <Capsule type="chat" botName={getCurrentAssistantForChat().name} />
         </Show>
-        <For each={msgs}>
-          {(msg, index) => (
-            // 这里使用三元表达式来显示消息时会有渲染不及时的问题
-            <Show
-              when={msg.content}
-              fallback={
+        <div>
+          <For each={msgs}>
+            {(msg, index) => (
+              // 这里使用三元表达式来显示消息时会有渲染不及时的问题
+              <Show
+                when={msg.content}
+                fallback={
+                  <div
+                    ref={(el) => scrollToBottom(el, index())}
+                    id={msg.id}
+                    class={'flex ' + (msg.role === 'human' ? 'human ml-4 justify-end' : 'ai mr-4')}
+                  >
+                    <Message
+                      isEmpty
+                      id={msg.id}
+                      content="......"
+                      type={msg.role}
+                      botName={getCurrentAssistantForChat().name}
+                    />
+                  </div>
+                }
+              >
                 <div
                   ref={(el) => scrollToBottom(el, index())}
-                  id={msg.id}
-                  class={'flex ' + (msg.role === 'human' ? 'human ml-4 justify-end' : 'ai mr-4')}
+                  class={`relative flex max-w-[calc(100%-16px)] ${
+                    msg.role === 'human' ? 'human ml-4 justify-end' : 'ai mr-4'
+                  }`}
                 >
                   <Message
-                    isEmpty
                     id={msg.id}
-                    content="......"
+                    content={msg.content}
                     type={msg.role}
                     botName={getCurrentAssistantForChat().name}
+                    onRemove={() => handleRemoveMsg(msg.id)}
                   />
                 </div>
-              }
-            >
-              <div
-                ref={(el) => scrollToBottom(el, index())}
-                class={`relative flex max-w-[calc(100%-16px)] ${
-                  msg.role === 'human' ? 'human ml-4 justify-end' : 'ai mr-4'
-                }`}
-              >
-                <Message
-                  id={msg.id}
-                  content={msg.content}
-                  type={msg.role}
-                  botName={getCurrentAssistantForChat().name}
-                  onRemove={() => handleRemoveMsg(msg.id)}
-                />
-              </div>
-            </Show>
-          )}
-        </For>
+              </Show>
+            )}
+          </For>
+        </div>
       </Show>
+
       <div class="fixed bottom-0 left-0 right-0 h-[118px] bg-transparent backdrop-blur-xl" />
       <div class="fixed bottom-10 z-20 w-full px-4">
         <Input

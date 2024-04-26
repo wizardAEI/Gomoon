@@ -207,7 +207,7 @@ export default function Tools(props: {
             onClick={async () => {
               const confirm = await toast.confirm(
                 <div class="flex w-60 flex-col gap-1">
-                  <span>输入链接</span>
+                  <span class="mb-1">输入链接</span>
                   <input
                     class="pr-2"
                     type="text"
@@ -344,8 +344,28 @@ export default function Tools(props: {
             <span class="text-[12px]">记忆胶囊</span>
           </ToolWrap>
           <ToolWrap
-            onClick={() => {
-              exportRecord(props.type).result === 'NoRecord' && toast.error('无对话记录')
+            // eslint-disable-next-line solid/reactivity
+            onClick={async () => {
+              const res = await toast.modal(
+                (option) => (
+                  <>
+                    <div class="flex justify-center p-2"> 选择下载类型 </div>
+                    <div class="flex gap-2 p-2">
+                      <button onClick={() => option.close('md')}> md文档 </button>
+                      <button onClick={() => option.close('png')}> png图片 </button>
+                    </div>
+                  </>
+                ),
+                {
+                  mask: true
+                }
+              )
+              load.show(`正在导出${res}...`)
+              const format = res as 'md' | 'png'
+              exportRecord(props.type, format).then((res) => {
+                load.hide()
+                res.result === 'NoRecord' && toast.error('无对话记录')
+              })
             }}
           >
             下载对话记录
