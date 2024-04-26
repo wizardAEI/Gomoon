@@ -20,11 +20,12 @@ function resetReg() {
   }
 }
 
-function parseString(str: string, isLastMsg = false) {
+export function parseString(str: string, isLastMsg = false) {
   const { regForQuestion, regForVal } = regDict
   resetReg()
   const matches: {
     type: keyof typeof regDict
+    display?: string
     src?: string
     filename?: string
     value: string
@@ -39,9 +40,10 @@ function parseString(str: string, isLastMsg = false) {
     }
     while ((match = regex.exec(str)) !== null) {
       if (type === 'regForFile') {
-        console.log(match)
         matches.push({
           type,
+          src: match[1].match(/src="(.+?)"/)?.[1],
+          filename: match[1].match(/filename="(.+?)"/)?.[1],
           value: match[2],
           index: match.index,
           endIndex: regex.lastIndex
@@ -50,6 +52,7 @@ function parseString(str: string, isLastMsg = false) {
       if (type === 'regForUrl') {
         matches.push({
           type,
+          src: match[1].match(/src="(.+?)"/)?.[1],
           value: match[2],
           index: match.index,
           endIndex: regex.lastIndex
@@ -63,12 +66,14 @@ function parseString(str: string, isLastMsg = false) {
         isLastMsg
           ? matches.push({
               type,
+              display: primary,
               value: val,
               index: match.index,
               endIndex: regex.lastIndex
             })
           : matches.push({
               type,
+              display: primary,
               value: primary,
               index: match.index,
               endIndex: regex.lastIndex
@@ -82,12 +87,14 @@ function parseString(str: string, isLastMsg = false) {
         isLastMsg
           ? matches.push({
               type,
+              display: primary,
               value: val,
               index: match.index,
               endIndex: regex.lastIndex
             })
           : matches.push({
               type,
+              display: primary,
               value: primary,
               index: match.index,
               endIndex: regex.lastIndex
@@ -96,17 +103,19 @@ function parseString(str: string, isLastMsg = false) {
       if (type === 'regForImage') {
         matches.push({
           type,
+          src: match[1].match(/src="(.+?)"/)?.[1],
+          filename: match[1].match(/filename="(.+?)"/)?.[1],
           value: match[2],
           index: match.index,
           endIndex: regex.lastIndex
         })
       }
       if (type === 'regForDrawer') {
-        console.log(match[1])
         matches.push({
           type,
           value: match[1],
           index: match.index,
+          display: '',
           endIndex: regex.lastIndex
         })
       }
@@ -119,11 +128,12 @@ function parseString(str: string, isLastMsg = false) {
     type: keyof typeof regDict | 'text'
     src?: string
     filename?: string
+    display?: string
     value: string
   }[] = []
   let lastIndex = 0
   matches.forEach((match) => {
-    const { type, value, index, endIndex, src, filename } = match
+    const { type, value, index, endIndex, src, filename, display } = match
     if (index > lastIndex) {
       // 添加前一个匹配项和当前匹配项之间的文本
       result.push({
@@ -135,6 +145,7 @@ function parseString(str: string, isLastMsg = false) {
       type,
       src,
       filename,
+      display,
       value
     })
     lastIndex = endIndex
@@ -246,72 +257,60 @@ export type ContentDisplay =
       type: 'image'
       src: string
       filename: string
-      val: string
+      value: string
     }
 export function parseDisplayArr(str: string): ContentDisplay[] {
   resetReg()
-  const {
-    regForFile,
-    regForUrl,
-    regForSearch,
-    regForMemo,
-    regForQuestion,
-    regForDrawer,
-    regForImage
-  } = regDict
-  const arr: ContentDisplay[] = []
-  str = str.replace(regForDrawer, '')
-  str.match(regForFile)?.forEach((match) => {
-    arr.push({
-      type: 'file',
-      src: match.match(/<gomoon-file .*?src="(.+?)".*?>/)?.[1] || '',
-      filename: match.match(/<gomoon-file .*?filename="(.+?)".*?>/)?.[1] || ''
-    })
-  })
-  str.match(regForUrl)?.forEach((match) => {
-    arr.push({
-      type: 'url',
-      src: match.match(/<gomoon-url .*?src="(.+?)".*?>/)?.[1] || ''
-    })
-  })
-  str.match(regForSearch)?.forEach((match) => {
-    match = match.replace(regForSearch, '$1')
-    regForQuestion.lastIndex = 0
-    arr.push({
-      type: 'search',
-      question: match.match(regForQuestion)?.[0]?.replace(regForQuestion, '$1') || ''
-    })
-  })
-  str.match(regForMemo)?.forEach((match) => {
-    match = match.replace(regForMemo, '$1')
-    regForQuestion.lastIndex = 0
-    arr.push({
-      type: 'memo',
-      question: match.match(regForQuestion)?.[0]?.replace(regForQuestion, '$1') || ''
-    })
-  })
-  str.match(regForImage)?.forEach((match) => {
-    regForQuestion.lastIndex = 0
-    arr.push({
-      type: 'image',
-      src: match.match(/<gomoon-image .*?src="(.+?)".*?>/)?.[1] || '',
-      filename: match.match(/<gomoon-image .*?filename="(.+?)".*?>/)?.[1] || '',
-      val: match.replace(regForImage, '$2')
-    })
-  })
-  if (arr.length === 0) {
-    return [
-      {
+  const contents = parseString(str, true)
+  return contents.map((c) => {
+    if (c.type === 'text') {
+      return {
         type: 'text',
-        content: str
+        content: c.value
       }
-    ]
-  } else {
-    return arr.concat({
+    }
+    if (c.type === 'regForDrawer') {
+      return {
+        type: 'text',
+        content: c.display || ''
+      }
+    }
+    if (c.type === 'regForFile') {
+      return {
+        type: 'file',
+        src: c.src || '',
+        filename: c.filename || ''
+      }
+    }
+    if (c.type === 'regForUrl') {
+      return {
+        type: 'url',
+        src: c.src || ''
+      }
+    }
+    if (c.type === 'regForSearch') {
+      return {
+        type: 'search',
+        question: c.display || ''
+      }
+    }
+    if (c.type === 'regForMemo') {
+      return {
+        type: 'memo',
+        question: c.display || ''
+      }
+    }
+    if (c.type === 'regForImage') {
+      return {
+        type: 'image',
+        src: c.src || '',
+        filename: c.filename || '',
+        value: c.value
+      }
+    }
+    return {
       type: 'text',
-      content: Object.keys(regDict).reduce((pre, cur) => {
-        return pre.replace(regDict[cur], '')
-      }, str)
-    })
-  }
+      content: c.value
+    }
+  })
 }

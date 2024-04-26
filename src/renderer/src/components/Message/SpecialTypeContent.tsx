@@ -57,7 +57,7 @@ export default function (meta: ContentDisplay, mdStyle: string) {
   if (meta.type === 'image') {
     return (
       <div class="max-w-[100%] cursor-pointer" onClick={() => window.api.openPath(meta.src)}>
-        <img src={meta.val} alt="" width="100%" class="rounded-md" />
+        <img src={meta.value} alt="" width="100%" class="rounded-md" />
       </div>
     )
   }

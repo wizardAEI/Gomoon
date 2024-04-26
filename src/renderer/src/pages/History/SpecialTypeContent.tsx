@@ -69,7 +69,7 @@ export default function (meta: ContentDisplay, role = '我', index: number) {
     return (
       <span class="items-start break-words">
         {index === 0 && <span class="mr-1">我:</span>}
-        <img src={meta.val} class="inline w-6 rounded-sm" />
+        <img src={meta.value} class="inline w-6 rounded-sm" />
       </span>
     )
   }

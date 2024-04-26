@@ -7,7 +7,7 @@ import katex from '@vscode/markdown-it-katex'
 import html2canvas from 'html2canvas'
 import moment from 'moment'
 
-import { parseDisplayArr } from '../ai/parseString'
+import { parseString } from '../ai/parseString'
 const roleDict = {
   ai: '助手',
   human: '我',
@@ -34,31 +34,45 @@ export default async function (
   }
   if (content === '') return { suc: false, result: 'NoRecord' }
   let data: string = ''
-  console.log(content)
-  const arr = parseDisplayArr(content)
-  console.log(arr)
-  data = arr.reduce((c, item) => {
+  data = parseString(content).reduce((c, item) => {
     c += '\n'
     if (item.type === 'text') {
-      c += item.content
+      return c + item.value
     }
-    if (item.type === 'image') {
-      return c + `<img alt="${item.filename}" src="${item.val}"/>`
+    if (item.type === 'regForFile') {
+      return (
+        c +
+        item.value.split('\n').reduce((p, c) => {
+          return p + '\n> ' + c
+        }, '')
+      )
+    }
+    if (item.type === 'regForSearch') {
+      return c + '联网查询：' + item.display
+    }
+    if (item.type === 'regForMemo') {
+      return c + '查询记忆胶囊：' + item.display
+    }
+    if (item.type === 'regForUrl') {
+      return c + `[${item.src}](${item.src})`
+    }
+    if (item.type === 'regForImage') {
+      return c + `<img alt="${item.filename}" src="${item.value}"/>`
     }
     return c
   }, '')
-  console.log(data)
   if (format === 'md') {
     data = 'data:text/plain;charset=utf-8,' + encodeURIComponent(data)
   } else {
     const md = MarkdownIt({
       linkify: true,
-      breaks: true
+      breaks: true,
+      html: true
     })
       .use(mdHighlight)
       .use(katex)
       .use(emoji)
-    const html = md.render(content)
+    const html = md.render(data)
     const dom = document.createElement('div')
     document.body.append(dom)
     dom.style.fontFamily = 'Microsoft YaHei'

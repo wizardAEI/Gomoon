@@ -88,17 +88,6 @@ async function parseCSVFile(b: Blob) {
   return processDocs(docs)
 }
 
-// async function parseAudioFile(b: Blob) {
-//   const loader = new OpenAIWhisperAudio(b, {
-//     clientOptions: {
-//       apiKey: 'spi-key'
-//     }
-//   })
-//   const docs = await loader.load()
-//   console.log(docs)
-//   return docs.reduce((acc, doc) => acc + doc.pageContent, '\n')
-// }
-
 export interface FilePayload {
   path: string
   type: string

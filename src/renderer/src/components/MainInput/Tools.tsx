@@ -193,6 +193,7 @@ export default function Tools(props: {
                     confirm &&
                       addArtifact({
                         type: res.type,
+                        value: res.content,
                         val: res.content,
                         src: res.src || '',
                         filename: res.filename || ''
