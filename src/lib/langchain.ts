@@ -191,7 +191,6 @@ export const newOllamaModel = (config: { address: string; model: string; tempera
   })
   const oldInvoke = chatOllama.invoke.bind(chatOllama)
   chatOllama.invoke = async (...args) => {
-    console.log(args)
     for (let i = 0; i < (args[0] as BaseMessage[]).length; i++) {
       const content = (args[0][i] as BaseMessage).content
       if (isArray(content)) {
@@ -226,7 +225,6 @@ export const loadLMMap = async (
   Moonshot8k: newMoonshotModel(model.Moonshot, 'moonshot-v1-8k'),
   Moonshot32k: newMoonshotModel(model.Moonshot, 'moonshot-v1-32k'),
   Moonshot128k: newMoonshotModel(model.Moonshot, 'moonshot-v1-128k'),
-  // TODO: 适配Llama
   Llama: newChatLlama(model.Llama),
   Ollama: newOllamaModel(model.Ollama)
 })

@@ -1,12 +1,12 @@
 import type { MessageContent } from 'langchain/schema'
-
 // 由于是全局匹配，为防止index忘记重置，禁止导出
 const regDict = {
   // e.g. <gomoon-file src="https://xxx" filename="xxx"> 文件信息 </gomoon-file>
   regForFile: /<gomoon-file (.*?)>(.*?)<\/gomoon-file>/gs,
   regForUrl: /<gomoon-url (.*?)>(.*?)<\/gomoon-url>/gs,
-  // e.g. <gomoon-search><gomoon-question>谁是Mary</gomoon-question><gomoon-val>查询信息</gomoon-val></gomoon-search>
+  // e.g. <gomoon-search><gomoon-question>谁是Mary</gomoon-question><gomoon-val>我会给你与谁是Mary这个问题有关的内容:xxx</gomoon-val></gomoon-search>
   regForSearch: /<gomoon-search>(.*?)<\/gomoon-search>/gs,
+  // e.g. <gomoon-memo><gomoon-question>谁是Mary</gomoon-question><gomoon-val>我会给你与谁是Mary这个问题有关的内容:xxx</gomoon-val></gomoon-memo>
   regForMemo: /<gomoon-memo>(.*?)<\/gomoon-memo>/gs,
   regForQuestion: /<gomoon-question>(.*?)<\/gomoon-question>/gs,
   regForVal: /<gomoon-val>(.*?)<\/gomoon-val>/gs,
@@ -20,9 +20,148 @@ function resetReg() {
   }
 }
 
+export function parseString(str: string, isLastMsg = false) {
+  const { regForQuestion, regForVal } = regDict
+  resetReg()
+  const matches: {
+    type: keyof typeof regDict
+    display?: string
+    src?: string
+    filename?: string
+    value: string
+    index: number
+    endIndex: number
+  }[] = []
+  // 遍历正则表达式字典，查找所有匹配项
+  Object.entries(regDict).forEach(([type, regex]) => {
+    let match: RegExpExecArray | null
+    if (type === 'regForQuestion' || type === 'regForVal') {
+      return
+    }
+    while ((match = regex.exec(str)) !== null) {
+      if (type === 'regForFile') {
+        matches.push({
+          type,
+          src: match[1].match(/src="(.+?)"/)?.[1],
+          filename: match[1].match(/filename="(.+?)"/)?.[1],
+          value: match[2],
+          index: match.index,
+          endIndex: regex.lastIndex
+        })
+      }
+      if (type === 'regForUrl') {
+        matches.push({
+          type,
+          src: match[1].match(/src="(.+?)"/)?.[1],
+          value: match[2],
+          index: match.index,
+          endIndex: regex.lastIndex
+        })
+      }
+      if (type === 'regForSearch') {
+        regForQuestion.lastIndex = 0
+        regForVal.lastIndex = 0
+        const primary = match[1].match(regForQuestion)?.[0]?.replace(regForQuestion, '$1') || ''
+        const val = match[1].match(regForVal)?.[0]?.replace(regForVal, '$1') || ''
+        isLastMsg
+          ? matches.push({
+              type,
+              display: primary,
+              value: val,
+              index: match.index,
+              endIndex: regex.lastIndex
+            })
+          : matches.push({
+              type,
+              display: primary,
+              value: primary,
+              index: match.index,
+              endIndex: regex.lastIndex
+            })
+      }
+      if (type === 'regForMemo') {
+        regForQuestion.lastIndex = 0
+        regForVal.lastIndex = 0
+        const primary = match[1].match(regForQuestion)?.[0]?.replace(regForQuestion, '$1') || ''
+        const val = match[1].match(regForVal)?.[0]?.replace(regForVal, '$1') || ''
+        isLastMsg
+          ? matches.push({
+              type,
+              display: primary,
+              value: val,
+              index: match.index,
+              endIndex: regex.lastIndex
+            })
+          : matches.push({
+              type,
+              display: primary,
+              value: primary,
+              index: match.index,
+              endIndex: regex.lastIndex
+            })
+      }
+      if (type === 'regForImage') {
+        matches.push({
+          type,
+          src: match[1].match(/src="(.+?)"/)?.[1],
+          filename: match[1].match(/filename="(.+?)"/)?.[1],
+          value: match[2],
+          index: match.index,
+          endIndex: regex.lastIndex
+        })
+      }
+      if (type === 'regForDrawer') {
+        matches.push({
+          type,
+          value: match[1],
+          index: match.index,
+          display: '',
+          endIndex: regex.lastIndex
+        })
+      }
+    }
+  })
+  // 对所有匹配项按在原始字符串中的位置进行排序
+  matches.sort((a, b) => a.index - b.index)
+  // 添加普通文本为类型 'text'
+  const result: {
+    type: keyof typeof regDict | 'text'
+    src?: string
+    filename?: string
+    display?: string
+    value: string
+  }[] = []
+  let lastIndex = 0
+  matches.forEach((match) => {
+    const { type, value, index, endIndex, src, filename, display } = match
+    if (index > lastIndex) {
+      // 添加前一个匹配项和当前匹配项之间的文本
+      result.push({
+        type: 'text',
+        value: str.slice(lastIndex, index)
+      })
+    }
+    result.push({
+      type,
+      src,
+      filename,
+      display,
+      value
+    })
+    lastIndex = endIndex
+  })
+  // 检查并添加最后一个匹配项后的文本
+  if (lastIndex < str.length) {
+    result.push({
+      type: 'text',
+      value: str.slice(lastIndex)
+    })
+  }
+  return result
+}
+
 export function extractMeta(str: string, isLastMsg = false): MessageContent {
   resetReg()
-
   const arr: {
     type: 'search' | 'memo'
     primary: string
@@ -38,150 +177,23 @@ export function extractMeta(str: string, isLastMsg = false): MessageContent {
     regForDrawer,
     regForImage
   } = regDict
-
   // 处理字符串中的正则内容和普通字符串并按字符串顺序组成数组
   if (regForImage.test(str)) {
-    resetReg()
-    const matches: {
-      type: keyof typeof regDict
-      value: string // 第一个捕获组是问题或其他内容
-      index: number
-      endIndex: number
-    }[] = []
-    // 遍历正则表达式字典，查找所有匹配项
-    Object.entries(regDict).forEach(([type, regex]) => {
-      let match: RegExpExecArray | null
-      while ((match = regex.exec(str)) !== null) {
-        if (type === 'regForFile') {
-          matches.push({
-            type,
-            value: match[2],
-            index: match.index,
-            endIndex: regex.lastIndex
-          })
-        }
-        if (type === 'regForUrl') {
-          matches.push({
-            type,
-            value: match[2],
-            index: match.index,
-            endIndex: regex.lastIndex
-          })
-        }
-        if (type === 'regForSearch') {
-          isLastMsg
-            ? matches.push({
-                type,
-                value: match[1],
-                index: match.index,
-                endIndex: regex.lastIndex
-              })
-            : matches.push({
-                type,
-                value: ' ',
-                index: match.index,
-                endIndex: regex.lastIndex
-              })
-        }
-        if (type === 'regForMemo') {
-          isLastMsg
-            ? matches.push({
-                type,
-                value: match[1],
-                index: match.index,
-                endIndex: regex.lastIndex
-              })
-            : matches.push({
-                type,
-                value: ' ',
-                index: match.index,
-                endIndex: regex.lastIndex
-              })
-        }
-        if (type === 'regForQuestion') {
-          matches.push({
-            type,
-            value: match[1],
-            index: match.index,
-            endIndex: regex.lastIndex
-          })
-        }
-        if (type === 'regForVal') {
-          matches.push({
-            type,
-            value: match[1],
-            index: match.index,
-            endIndex: regex.lastIndex
-          })
-        }
-        if (type === 'regForImage') {
-          matches.push({
-            type,
-            value: match[2],
-            index: match.index,
-            endIndex: regex.lastIndex
-          })
-        }
-        if (type === 'regForDrawer') {
-          matches.push({
-            type,
-            value: match[1],
-            index: match.index,
-            endIndex: regex.lastIndex
-          })
-        }
-      }
-    })
-    // 对所有匹配项按在原始字符串中的位置进行排序
-    matches.sort((a, b) => a.index - b.index)
-    // 添加普通文本为类型 'text'
-    const result: (
-      | {
-          type: 'text'
-          text: string
-        }
-      | {
-          type: 'image_url'
-          image_url:
-            | string
-            | {
-                url: string
-                detail?: 'auto' | 'low' | 'high'
-              }
-        }
-    )[] = []
-    let lastIndex = 0
-    matches.forEach((match) => {
-      if (match.index > lastIndex) {
-        // 添加前一个匹配项和当前匹配项之间的文本
-        result.push({
-          type: 'text',
-          text: str.slice(lastIndex, match.index)
-        })
-      }
-      if (match.type === 'regForImage') {
-        result.push({
+    return parseString(str, isLastMsg).map((res) => {
+      if (res.type === 'regForImage') {
+        return {
           type: 'image_url',
           image_url: {
-            url: match.value
+            url: res.value
           }
-        })
+        }
       } else {
-        result.push({
+        return {
           type: 'text',
-          text: match.value
-        })
+          text: res.value
+        }
       }
-      lastIndex = match.endIndex
     })
-    // 检查并添加最后一个匹配项后的文本
-    if (lastIndex < str.length) {
-      result.push({
-        type: 'text',
-        text: str.slice(lastIndex)
-      })
-    }
-    return result
   }
 
   str.match(regForSearch)?.forEach((match) => {
@@ -245,72 +257,60 @@ export type ContentDisplay =
       type: 'image'
       src: string
       filename: string
-      val: string
+      value: string
     }
 export function parseDisplayArr(str: string): ContentDisplay[] {
   resetReg()
-  const {
-    regForFile,
-    regForUrl,
-    regForSearch,
-    regForMemo,
-    regForQuestion,
-    regForDrawer,
-    regForImage
-  } = regDict
-  const arr: ContentDisplay[] = []
-  str = str.replace(regForDrawer, '')
-  str.match(regForFile)?.forEach((match) => {
-    arr.push({
-      type: 'file',
-      src: match.match(/<gomoon-file .*?src="(.+?)".*?>/)?.[1] || '',
-      filename: match.match(/<gomoon-file .*?filename="(.+?)".*?>/)?.[1] || ''
-    })
-  })
-  str.match(regForUrl)?.forEach((match) => {
-    arr.push({
-      type: 'url',
-      src: match.match(/<gomoon-url .*?src="(.+?)".*?>/)?.[1] || ''
-    })
-  })
-  str.match(regForSearch)?.forEach((match) => {
-    match = match.replace(regForSearch, '$1')
-    regForQuestion.lastIndex = 0
-    arr.push({
-      type: 'search',
-      question: match.match(regForQuestion)?.[0]?.replace(regForQuestion, '$1') || ''
-    })
-  })
-  str.match(regForMemo)?.forEach((match) => {
-    match = match.replace(regForMemo, '$1')
-    regForQuestion.lastIndex = 0
-    arr.push({
-      type: 'memo',
-      question: match.match(regForQuestion)?.[0]?.replace(regForQuestion, '$1') || ''
-    })
-  })
-  str.match(regForImage)?.forEach((match) => {
-    regForQuestion.lastIndex = 0
-    arr.push({
-      type: 'image',
-      src: match.match(/<gomoon-image .*?src="(.+?)".*?>/)?.[1] || '',
-      filename: match.match(/<gomoon-image .*?filename="(.+?)".*?>/)?.[1] || '',
-      val: match.replace(regForImage, '$2')
-    })
-  })
-  if (arr.length === 0) {
-    return [
-      {
+  const contents = parseString(str, true)
+  return contents.map((c) => {
+    if (c.type === 'text') {
+      return {
         type: 'text',
-        content: str
+        content: c.value
       }
-    ]
-  } else {
-    return arr.concat({
+    }
+    if (c.type === 'regForDrawer') {
+      return {
+        type: 'text',
+        content: c.display || ''
+      }
+    }
+    if (c.type === 'regForFile') {
+      return {
+        type: 'file',
+        src: c.src || '',
+        filename: c.filename || ''
+      }
+    }
+    if (c.type === 'regForUrl') {
+      return {
+        type: 'url',
+        src: c.src || ''
+      }
+    }
+    if (c.type === 'regForSearch') {
+      return {
+        type: 'search',
+        question: c.display || ''
+      }
+    }
+    if (c.type === 'regForMemo') {
+      return {
+        type: 'memo',
+        question: c.display || ''
+      }
+    }
+    if (c.type === 'regForImage') {
+      return {
+        type: 'image',
+        src: c.src || '',
+        filename: c.filename || '',
+        value: c.value
+      }
+    }
+    return {
       type: 'text',
-      content: Object.keys(regDict).reduce((pre, cur) => {
-        return pre.replace(regDict[cur], '')
-      }, str)
-    })
-  }
+      content: c.value
+    }
+  })
 }
