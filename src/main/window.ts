@@ -230,7 +230,7 @@ export function createWindow(): void {
           // FEAT: 兼容win使用show方法不会获取焦点的问题
           mainWindow.minimize()
         }
-        mainWindow?.show()
+        mainWindow.show()
       }
     })
     // 应用程序退出时，关闭子进程

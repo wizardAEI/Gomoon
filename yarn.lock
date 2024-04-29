@@ -4702,16 +4702,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^30.0.1":
-  version: 30.0.1
-  resolution: "electron@npm:30.0.1"
+"electron@npm:29.3.1":
+  version: 29.3.1
+  resolution: "electron@npm:29.3.1"
   dependencies:
     "@electron/get": ^2.0.0
     "@types/node": ^20.9.0
     extract-zip: ^2.0.1
   bin:
     electron: cli.js
-  checksum: 3e2c587eaf74e54523db314effb6558cdbb0bc71e40bb2d1f090cbe2051ded59ee74519100e184f6a88e45dd87f14c28610cd94a25518a24513f2ca5e876eaef
+  checksum: 49d54a56ffd7f4c60a2fba8f84a57041a70442dc6d774b750a52ca08943509b099b90861139d4c281926038cdbb4fb1fe8d9a56a57ad93eaeb90c66017062d0f
   languageName: node
   linkType: hard
 
@@ -5982,7 +5982,7 @@ __metadata:
     autoprefixer: ^10.4.19
     cheerio: ^1.0.0-rc.12
     d3-dsv: 2
-    electron: ^30.0.1
+    electron: 29.3.1
     electron-builder: ^24.13.3
     electron-updater: ^6.1.8
     electron-vite: ^2.2.0

@@ -64,12 +64,12 @@ Gomoon 的名字来源于 _赛博朋克：边缘行者_ 的中 Lucy 的愿望：
 | [![e9ab98e991ab](https://github.com/e9ab98e991ab.png?size=50)](https://github.com/e9ab98e991ab) | 协助完成 mac 端 x86_64 架构的适配 |
 | [![zhengxs2018](https://github.com/zhengxs2018.png?size=50)](https://github.com/zhengxs2018)    | 支持通义千问模型                  |
 
-如果你也想一起共建 Gomoon，欢迎进群畅聊、提交 PR 或者 Issue。
-
 ## 开发/贡献指南
 
-node 版本要求：v20.11.1 及以上
-yarn 版本要求：v3.2.0 及以上
+项目本身还有很多新功能需要开发，非常欢迎大家加入项目组，一起来贡献代码。
+
+node 版本要求：v20.11.1 及以上 （开启Corepack）
+yarn 版本要求：v3.2.0
 
 由于仓库大小限制，默认的资源没有上传到 Github，开发者可以在本地安装的 Gomoon 中找到`resources`文件夹（mac用户可以通过 Finder，右键点击应用，选择“显示包内容”来浏览到`Contents`目录，`resource`文件夹存储于`Contents/Resource/app.asar.unpacked/resources`; windows系统中，这个路径通常是在用户数据资源内，例如 `C:\Users\Lenovo\AppData\Local\Programs\gomoon\resources\app.asar.unpacked\resources`），将里面的资源文件复制到项目根目录的`resources`文件夹中。
 
