@@ -1,6 +1,6 @@
 import { readFile } from 'fs/promises'
 import { basename, join } from 'path'
-import { copyFileSync, mkdirSync, writeFileSync } from 'fs'
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 
 import { TextLoader } from 'langchain/document_loaders/fs/text'
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf'
@@ -157,6 +157,7 @@ export default async function parseFile(files: FilePayload[]): Promise<FileLoade
   // ) {
   //   return parseAudioFile(b)
   // }
+  content = readFileSync(targetFile, 'utf8')
   return {
     type,
     content,
