@@ -45,6 +45,8 @@
 
 ## 灵感来源
 
+<img order-radius="150px" align="right"  height="150px" src="https://github.com/wizardAEI/Gomoon/assets/61337085/b36c0c5c-1192-4eae-a5db-a012ebae417b" alt=""/>
+
 使用过很多大模型应用，但是他们总是局限于一个网页端，我想让他离我近一些，更好用一些。
 
 寻找了很多应用，我还是没有找到适合自己的，于是我选择做一个。Gomoon 就诞生了。
