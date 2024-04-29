@@ -45,7 +45,7 @@
 
 ## 灵感来源
 
-<img order-radius="150px" align="right"  height="150px" src="https://github.com/wizardAEI/Gomoon/assets/61337085/b36c0c5c-1192-4eae-a5db-a012ebae417b" alt=""/>
+<img align="right" height="180px" src="https://github.com/wizardAEI/Gomoon/assets/61337085/8c4a7dd2-0956-4c60-ab11-378d7df47937" alt="lucy"/>
 
 使用过很多大模型应用，但是他们总是局限于一个网页端，我想让他离我近一些，更好用一些。
 
