@@ -117,47 +117,32 @@ export default async function parseFile(files: FilePayload[]): Promise<FileLoade
 
   if (b.type === 'text/plain' || b.type === 'application/msword') {
     content = await parseTextFile(b)
-  }
-  if (b.type === 'application/pdf') {
+  } else if (b.type === 'application/pdf') {
     content = await parsePDFFile(b)
-  }
-  if (b.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+  } else if (b.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
     content = await parseDocxFile(b)
-  }
-  if (b.type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
+  } else if (
+    b.type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+  ) {
     content = await parsePPTXFile(b)
-  }
-  if (b.type === 'application/json') {
+  } else if (b.type === 'application/json') {
     content = await parseJSONFile(file)
-  }
-  if (b.type === 'text/csv') {
+  } else if (b.type === 'text/csv') {
     content = await parseCSVFile(b)
-  }
-  if (
+  } else if (
     b.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
     b.type === 'application/vnd.ms-excel'
   ) {
     content = await parseXLSXFile(file)
   }
-
   // .jpg,.jpeg,.png,.bmp,.webp
-  if (b.type.startsWith('image/')) {
+  else if (b.type.startsWith('image/')) {
     type = 'image'
     content = `data:${b.type};base64,${file.toString('base64')}`
+  } else {
+    content = readFileSync(targetFile, 'utf8')
   }
 
-  // .mp3,.mp4,.wav,.m4a,.webm,.mpga,.mpeg
-  // if (
-  //   b.type === 'audio/wav' ||
-  //   b.type === 'audio/mpeg' ||
-  //   b.type === 'audio/mp4' ||
-  //   b.type === 'audio/webm' ||
-  //   b.type === 'audio/wave' ||
-  //   b.type === 'audio/x-wav'
-  // ) {
-  //   return parseAudioFile(b)
-  // }
-  content = readFileSync(targetFile, 'utf8')
   return {
     type,
     content,
