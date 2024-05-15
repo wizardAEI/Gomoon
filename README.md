@@ -8,7 +8,7 @@
 
 ## 招募招募！
 
-<img order-radius="100px" align="left" height="120px" src="https://github.com/wizardAEI/Gomoon/assets/61337085/df3aab98-d40e-4e97-827f-7436ff6f823b" alt=""/>
+<img order-radius="100px" align="left" height="160px" src="https://github.com/wizardAEI/Gomoon/assets/61337085/df3aab98-d40e-4e97-827f-7436ff6f823b" alt=""/>
 
 Gomoon 是一个开源项目，目前处于开发阶段。如果你想一起把 Gomoon 做得更好，欢迎加入我们！
 
