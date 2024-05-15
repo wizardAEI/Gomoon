@@ -28,18 +28,16 @@ import {
   updateModelsToFile,
   setSendWithCmdOrCtrl,
   setCanMultiCopy,
-  setQuicklyWakeUpKeys,
-  updateVersion,
-  updateStatusLabel
-} from '../store/setting'
+  setQuicklyWakeUpKeys
+} from '../../store/setting'
+
+import VersionDesc from './VersionDesc'
 export default function Setting() {
   onMount(() => {
     onCleanup(() => {
       updateModelsToFile()
     })
   })
-  const loading = useLoading()
-  const toast = useToast()
   return (
     <div class="flex h-full select-none flex-col gap-3 px-5 pt-2">
       <div class="flex select-none items-center gap-1 text-lg text-text1 lg:justify-center">
@@ -469,34 +467,7 @@ export default function Setting() {
             </a>
             发布了教学视频，可以让你更加有效的使用 Gomoon，解锁更多功能！
           </div>
-          <div class="mt-2 flex items-center gap-2 text-text2">
-            <span>版本号：v1.0.9</span>
-            <a
-              class="cursor-pointer text-text-link hover:text-active"
-              onClick={async () => {
-                loading.show('正在检查更新')
-                try {
-                  if (!(await updateVersion())) {
-                    toast.success('已是最新版本')
-                  }
-                } catch (e) {
-                  // 浏览器打开 github
-                  window.open('https://github.com/wizardAEI/Gomoon')
-                  toast.error('检查更新失败')
-                }
-                loading.hide()
-              }}
-            >
-              {updateStatusLabel()}
-            </a>
-          </div>
-          <div class="mt-2 text-text2">
-            版本更新内容： <br />
-            &nbsp;1. 增加了Ollama引擎，可以搭配本地或远程的Ollama客户端使用 <br />
-            &nbsp;2. 现在gpt4和部分ollama模型支持图片理解啦！（https://ollama.com/library/llava）
-            <br />
-            &nbsp;3. 现已支持删除连续对话中的中间的一对内容 <br />
-          </div>
+          <VersionDesc />
         </Card>
       </div>
     </div>

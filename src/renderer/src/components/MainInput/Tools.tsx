@@ -14,7 +14,7 @@ import {
   setMemoCapsule
 } from '@renderer/store/input'
 import { userData } from '@renderer/store/user'
-import { ContentDisplay, extractMeta, parseString } from '@renderer/lib/ai/parseString'
+import { ContentDisplay, parseString } from '@renderer/lib/ai/parseString'
 import CrossMarkRound from '@renderer/assets/icon/base/CrossMarkRound'
 import { initMemories, memories } from '@renderer/store/memo'
 
