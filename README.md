@@ -6,6 +6,16 @@
 
 <h1 align="center"> </h1>
 
+## 招募招募！
+
+<img order-radius="100px" align="left" height="120px" src="https://github.com/wizardAEI/Gomoon/assets/61337085/df3aab98-d40e-4e97-827f-7436ff6f823b" alt=""/>
+
+Gomoon 是一个开源项目，目前处于开发阶段。如果你想一起把 Gomoon 做得更好，欢迎加入我们！
+
+未来，Gomoon 还将实现炫酷的主体功能，更加自定义的 Prompt 模板功能，在线获取好用的助手和知识库功能，以及第三方接入和万能的插件...
+
+如果你也想要参与进来，欢迎加入 Gomoon 开发群：758015092。
+
 ## 介绍
 
 <img order-radius="100px" align="right"  height="450px" src="https://github.com/wizardAEI/Gomoon/assets/61337085/fd5336ae-e8c1-4ec8-83f5-12eccdaae63f" alt=""/>

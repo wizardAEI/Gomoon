@@ -172,16 +172,29 @@ export default function Input(props: {
           </>
         )
       }
-      confirm &&
-        setArtifacts([
-          ...artifacts(),
-          {
-            type: res.type,
-            val: res.content,
-            src: res.src || '',
-            filename: res.filename || ''
-          }
-        ])
+      if (confirm) {
+        res.type === 'file' &&
+          setArtifacts([
+            ...artifacts(),
+            {
+              type: 'file',
+              val: res.content,
+              src: res.src || '',
+              filename: res.filename || ''
+            }
+          ])
+        res.type === 'image' &&
+          setArtifacts([
+            ...artifacts(),
+            {
+              type: 'image',
+              value: res.content,
+              val: res.content,
+              src: res.src || '',
+              filename: res.filename || ''
+            }
+          ])
+      }
     }
   }
 

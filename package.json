@@ -1,7 +1,7 @@
 {
   "name": "gomoon",
   "productName": "Gomoon",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "A ai tools for everyone on Mac, Windows and Linux.",
   "main": "./out/main/index.js",
   "author": "aei",
@@ -89,5 +89,5 @@
     "vite": "^5.2.10",
     "vite-plugin-solid": "^2.10.2"
   },
-  "packageManager": "yarn@3.2.0+sha512.bf8d01800977bb37695aa3a90c4ca70819b727165d8cc5dcc72a4de68d038bb38f49366f779fd2f9bd87f2e42ca70b1b5baefdce8ef4339459448be943d9265e"
+  "packageManager": "yarn@3.2.0"
 }

@@ -14,7 +14,7 @@ import {
   setMemoCapsule
 } from '@renderer/store/input'
 import { userData } from '@renderer/store/user'
-import { ContentDisplay, extractMeta } from '@renderer/lib/ai/parseString'
+import { ContentDisplay, parseString } from '@renderer/lib/ai/parseString'
 import CrossMarkRound from '@renderer/assets/icon/base/CrossMarkRound'
 import { initMemories, memories } from '@renderer/store/memo'
 
@@ -128,10 +128,7 @@ export default function Tools(props: {
             if (artifact.type === 'image') {
               return (
                 <ArtifactWrap onDel={() => removeArtifact(index())} noPadding>
-                  <img
-                    src={extractMeta(artifact.val, true)[0]['image_url']['url']}
-                    class="w-20 rounded-md"
-                  />
+                  <img src={parseString(artifact.val, true)[0]['value']} class="w-20 rounded-md" />
                 </ArtifactWrap>
               )
             }
@@ -361,11 +358,15 @@ export default function Tools(props: {
                   mask: true
                 }
               )
-              load.show(`正在导出${res}...`)
+              load.show(`正在导出 ${res}，请勿离开`)
               const format = res as 'md' | 'png'
               exportRecord(props.type, format).then((res) => {
                 load.hide()
-                res.result === 'NoRecord' && toast.error('无对话记录')
+                if (res.suc) {
+                  toast.success(res.result)
+                  return
+                }
+                toast.error(res.result)
               })
             }}
           >
