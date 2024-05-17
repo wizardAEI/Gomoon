@@ -76,7 +76,7 @@ export const defaultModels = () =>
     OpenAI: {
       apiKey: '',
       baseURL: '',
-      temperature: 0.7
+      temperature: 0.3
     },
     BaiduWenxin: {
       apiKey: '',

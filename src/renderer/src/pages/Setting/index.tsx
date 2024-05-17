@@ -386,7 +386,7 @@ export default function Setting() {
             />
             <Switch
               label="双击复制进行问答"
-              hint="通过快速连按复制唤起 Gomoon 并问答"
+              hint="通过快速连按复制唤起 Gomoon 并问答（设置后需重启）"
               checked={settingStore.canMultiCopy}
               onCheckedChange={setCanMultiCopy}
             />
