@@ -43,12 +43,11 @@ function Entries() {
             }
           />
         }
-        content="历史记录"
+        content="对话记录"
         position={{
           placement: 'bottom'
         }}
       />
-
       <ToolTip
         label={
           <AnswerIcon
