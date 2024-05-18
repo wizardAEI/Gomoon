@@ -130,7 +130,7 @@
   margin: 0 4px;
 }
 
-.win code:not(.hljs) {
+.win .markdown code:not(.hljs) {
   padding: 0rem 0.2rem;
 }
 
