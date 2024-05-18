@@ -55,7 +55,16 @@ const App = (props) => {
     OCRInit()
 
     createEffect(() => {
-      document.body.className = settingStore.theme
+      // 插入 .win
+      if (navigator.userAgent.includes('Windows')) {
+        document.body.classList.add('win')
+      }
+      document.body.className.split(' ').map((cls) => {
+        if (cls.endsWith('-theme')) {
+          document.body.classList.remove(cls)
+        }
+      })
+      document.body.classList.add(settingStore.theme)
     })
 
     // FEAT: receive msg

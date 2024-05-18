@@ -130,6 +130,10 @@
   margin: 0 4px;
 }
 
+.win code:not(.hljs) {
+  padding: 0rem 0.2rem;
+}
+
 .markdown code {
   @apply bg-code;
   border-radius: 0.4rem;
