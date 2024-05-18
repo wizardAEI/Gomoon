@@ -343,31 +343,34 @@ export default function Tools(props: {
           </ToolWrap>
           <ToolWrap
             // eslint-disable-next-line solid/reactivity
-            onClick={async () => {
-              const res = await toast.modal(
-                (option) => (
-                  <>
-                    <div class="flex justify-center p-2"> 选择下载类型 </div>
-                    <div class="flex gap-2 p-2">
-                      <button onClick={() => option.close('md')}> md文档 </button>
-                      <button onClick={() => option.close('png')}> png图片 </button>
-                    </div>
-                  </>
-                ),
-                {
-                  mask: true
-                }
-              )
-              load.show(`正在导出 ${res}，请勿离开`)
-              const format = res as 'md' | 'png'
-              exportRecord(props.type, format).then((res) => {
-                load.hide()
-                if (res.suc) {
-                  toast.success(res.result)
-                  return
-                }
-                toast.error(res.result)
-              })
+            onClick={() => {
+              toast
+                .modal(
+                  (option) => (
+                    <>
+                      <div class="flex justify-center p-2"> 选择下载类型 </div>
+                      <div class="flex gap-2 p-2">
+                        <button onClick={() => option.close('md')}> md文档 </button>
+                        <button onClick={() => option.close('png')}> png图片 </button>
+                      </div>
+                    </>
+                  ),
+                  {
+                    mask: true
+                  }
+                )
+                .then((res) => {
+                  load.show(`正在导出 ${res}，请勿离开`)
+                  const format = res as 'md' | 'png'
+                  exportRecord(props.type, format).then((res) => {
+                    load.hide()
+                    if (res.suc) {
+                      toast.success(res.result)
+                      return
+                    }
+                    toast.error(res.result)
+                  })
+                })
             }}
           >
             下载对话记录

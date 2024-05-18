@@ -3,7 +3,8 @@
     @apply m-0 box-border p-0 font-System text-sm;
   }
   body {
-    @apply bg-dark;
+    @apply bg-home;
+    @apply text-text1;
   }
   .bg-home {
     @apply text-text1;
