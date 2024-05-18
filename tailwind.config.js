@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+// TODO: 将 dark 类写作 primary-bac 将 light 类写作 secondary-bac
 module.exports = {
   corePlugins: {
     preflight: false
@@ -104,14 +105,14 @@ module.exports = {
               active: '#41ae3c',
               'active-con': '#63db97',
               gray: '#9FADAB',
+              'gray-pro': '#7A8E8B', // 非激活色↑ 浅紫灰色
               'inline-code': '#CCD9D9', // 非激活色 浅紫灰色
               code: '#FCFEFE',
-              'gray-pro': '#bfc7cd', // 非激活色↑ 浅紫灰色
-              'dark-con': '#c8dce0',
               'home-top': '#16353e',
+              'dark-con': '#F6F7F7',
               dark: '#EDEEEF',
-              'dark-plus': '#EDEEEF',
-              'dark-pro': '#dde4e8',
+              'dark-plus': '#E8ECEF',
+              'dark-pro': '#E1EAEE',
               light: '#e6f1f5',
               text1: '#2f585c',
               text2: '#315056',
