@@ -85,6 +85,13 @@ export function setSendWithCmdOrCtrl(sendWithCmdOrCtrl: SettingModel['sendWithCm
   configDB.write()
 }
 
+export function setTheme(theme: SettingModel['theme']) {
+  configDB.data = {
+    ...configDB.data,
+    theme
+  }
+}
+
 /**
  * FEAT: 用户数据相关
  */

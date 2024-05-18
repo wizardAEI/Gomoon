@@ -1,4 +1,12 @@
-import { type Component, createMemo, createSignal, For, type JSXElement, Show } from 'solid-js'
+import {
+  type Component,
+  createMemo,
+  createSignal,
+  For,
+  type JSXElement,
+  Show,
+  onCleanup
+} from 'solid-js'
 
 // 选项类型，可以是字符串或 JSXElement 元素
 type OptionType = {
@@ -14,7 +22,6 @@ type SelectProps = {
 }
 
 // Select 组件
-// FIXME: label是组件的时候有问题
 const Select: Component<SelectProps> = (props) => {
   // 使用 createSignal 来管理下拉菜单的显示状态
   const [isOpen, setIsOpen] = createSignal(false)
@@ -44,15 +51,31 @@ const Select: Component<SelectProps> = (props) => {
 
   return (
     <div>
-      <div class="cursor-pointer" onClick={() => setIsOpen(!isOpen())}>
+      <div
+        class="mb-1 cursor-pointer rounded-lg border-solid border-dark px-4 py-[2px] hover:border-active"
+        ref={(el) => {
+          const fn = (e) => {
+            if (e.target && el.contains(e.target)) {
+              setIsOpen((i) => !i)
+              e.stopPropagation()
+              return
+            }
+            setIsOpen(false)
+          }
+          document.addEventListener('click', fn)
+          onCleanup(() => {
+            document.removeEventListener('click', fn)
+          })
+        }}
+      >
         <div>{label()}</div>
       </div>
       <Show when={isOpen()}>
-        <div>
+        <div class="rounded-lg bg-dark-plus py-1 shadow-center">
           <For each={props.options}>
             {(option) => (
-              <div class="cursor-pointer" onClick={() => handleSelect(option)}>
-                <div>{option.label}</div>
+              <div class="my-2 cursor-pointer text-center" onClick={() => handleSelect(option)}>
+                <div class="hover:text-active">{option.label}</div>
               </div>
             )}
           </For>

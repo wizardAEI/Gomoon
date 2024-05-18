@@ -1,5 +1,5 @@
 import { useNavigate } from '@solidjs/router'
-import { Show, onCleanup, onMount } from 'solid-js'
+import { Show, createEffect, onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
 
 import TopBar from './components/TopBar'
@@ -53,6 +53,10 @@ const App = (props) => {
 
     // FEAT: OCR
     OCRInit()
+
+    createEffect(() => {
+      document.body.className = settingStore.theme
+    })
 
     // FEAT: receive msg
     window.api.receiveMsg(async (_, msg: string) => {

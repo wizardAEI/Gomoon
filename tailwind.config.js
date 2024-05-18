@@ -12,35 +12,6 @@ module.exports = {
       System: ['-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif']
     },
     extend: {
-      backgroundImage: {
-        cyber: 'linear-gradient(to right, #2d535d, #005271, #004c86, #2b3f90, #642388)', // 赛博蓝渐变色
-        'cyber-pro': 'linear-gradient(to right, #2d6170, #006089, #005aa0, #364cac, #792ba4);', // 赛博蓝渐变色↑
-        'active-gradient': 'linear-gradient(to bottom right, #ae79f1, #9366cb)', // 淡紫色渐变色
-        'green-gradient': 'linear-gradient(to bottom right, #007a93, #078170)', // 绿色渐变色
-        home: 'linear-gradient(to top, #040c17, #0d1821, #10212b, #132b35, #16353e)' // 深蓝灰转深蓝绿
-      },
-      colors: {
-        active: '#a57bea', // 激活色 亮紫色
-        'active-con': '#7c56ba', // 激活色 深紫
-        gray: '#869d9d', // 非激活色 淡紫灰色
-        'gray-pro': '#93a5a6', // 非激活色↑ 浅紫灰色
-        'dark-con': '#436565', // 暗色稍微亮一点
-        'home-top': '#16353e', // 首页顶部渐变色
-        dark: '#22444e', // 暗色 深蓝绿
-        'dark-plus': '#1f3d48', // 暗色稍微深一点
-        'dark-pro': '#152431', // 暗色↑
-        light: '#e2e1e4', // 亮色 芡食白
-        text1: '#d8e3e7', // 云峰白
-        text2: '#baccd9', // 云水蓝
-        text3: '#baccd970', // 云水蓝70%
-        'text-dark': '#151b26', // 深色
-        'text-dark2': '#276b84', // 深蓝绿
-        'text-link': '#2382c6', // 链接色
-        'white/70': '#ffffff70', // 白色透明度70%
-        success: '#12c569', // 绿色
-        error: '#DF919C', // 红色
-        warning: '#f59c13' // 黄色
-      },
       keyframes: {
         click: {
           '0%': { transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(0, 0, 0, 0)' },
@@ -73,12 +44,93 @@ module.exports = {
         dropdown: 'dropdown 0.2s ease-in-out forwards',
         'scale-down-entrance': 'scale-down-entrance 0.3s ease-in-out forwards',
         'rotate-180': 'rotate-180 0.3s ease-in-out forwards'
-      },
-      boxShadow: {
-        green: '20px 20px 60px #93b58a, -20px -20px 60px #c7f5ba',
-        center: '0px 2px 12px #51939320'
       }
     }
   },
-  plugins: []
+  plugins: [
+    require('tailwindcss-themer')({
+      defaultTheme: {
+        extend: {
+          backgroundImage: {
+            cyber: 'linear-gradient(to right, #2d535d, #005271, #004c86, #2b3f90, #642388)', // 赛博蓝渐变色
+            'cyber-pro': 'linear-gradient(to right, #2d6170, #006089, #005aa0, #364cac, #792ba4)', // 赛博蓝渐变色↑
+            'active-gradient': 'linear-gradient(to bottom right, #ae79f1, #9366cb)', // 淡紫色渐变色
+            'green-gradient': 'linear-gradient(to bottom right, #007a93, #078170)', // 绿色渐变色
+            home: 'linear-gradient(to top, #040c17, #0d1821, #10212b, #132b35, #16353e)' // 深蓝灰转深蓝绿
+          },
+          colors: {
+            active: '#a57bea', // 激活色 亮紫色
+            'active-con': '#7c56ba', // 激活色 深紫
+            gray: '#869d9d', // 非激活色 淡紫灰色
+            'inline-code': '#869d9d', // 非激活色 浅紫灰色
+            code: '#132c33', // 非激活色 浅紫灰色
+            'gray-pro': '#93a5a6', // 非激活色↑ 浅紫灰色
+            'dark-con': '#436565', // 暗色稍微亮一点
+            'home-top': '#16353e', // 首页顶部渐变色
+            dark: '#22444e', // 暗色 深蓝绿
+            'dark-plus': '#1f3d48', // 暗色稍微深一点
+            'dark-pro': '#152431', // 暗色↑
+            light: '#e2e1e4', // 亮色 芡食白
+            text1: '#d8e3e7', // 云峰白
+            text2: '#d0dfe6', // 远天蓝
+            text3: '#d0dfe680', // 远天蓝70%
+            'text-dark': '#151b26', // 深色
+            'text-dark2': '#276b84', // 深蓝绿
+            'text-link': '#2382c6', // 链接色
+            'white/70': '#ffffff70', // 白色透明度70%
+            success: '#12c569', // 绿色
+            error: '#DF919C', // 红色
+            warning: '#f59c13' // 黄色
+          },
+          boxShadow: {
+            green: '20px 20px 60px #93b58a, -20px -20px 60px #c7f5ba',
+            center: '0px 2px 12px #51939320'
+          }
+        }
+      },
+      themes: [
+        {
+          name: 'light',
+          selectors: ['.light-theme'],
+          extend: {
+            backgroundImage: {
+              cyber: 'linear-gradient(to right, #489d83, #58a484, #67ab85, #77b286, #86b988)', // 赛博蓝渐变色
+              'cyber-pro': 'linear-gradient(to right, #50ae91, #5fb591, #6ebc90, #7dc38f, #8dc98f)', // 赛博蓝渐变色↑
+              'active-gradient': 'linear-gradient(to bottom right, #ae79f1, #9366cb)', // 淡紫色渐变色
+              'green-gradient': 'linear-gradient(to bottom right, #007a93, #078170)', // 绿色渐变色
+              home: 'linear-gradient(to bottom, #e0e6e7, #dde6e8, #dae6e8, #d7e7e9, #d4e7e9)'
+            },
+            colors: {
+              active: '#41ae3c',
+              'active-con': '#63db97',
+              gray: '#9FADAB',
+              'inline-code': '#CCD9D9', // 非激活色 浅紫灰色
+              code: '#FCFEFE',
+              'gray-pro': '#bfc7cd', // 非激活色↑ 浅紫灰色
+              'dark-con': '#c8dce0',
+              'home-top': '#16353e',
+              dark: '#EDEEEF',
+              'dark-plus': '#EDEEEF',
+              'dark-pro': '#dde4e8',
+              light: '#e6f1f5',
+              text1: '#2f585c',
+              text2: '#315056',
+              text3: '#31505690',
+              'text-dark': '#151b26', // 深色
+              'text-dark2': '#276b84', // 深蓝绿
+              'text-link': '#2382c6', // 链接色
+              'white/70': '#ffffff70', // 白色透明度70%
+              success: '#12c569', // 绿色
+              error: '#DF919C', // 红色
+              warning: '#f59c13' // 黄色
+            },
+            boxShadow: {
+              green: '20px 20px 60px #93b58a, -20px -20px 60px #c7f5ba',
+              center: '0px 2px 12px #385b6070'
+            }
+          }
+        }
+      ]
+    })
+  ]
 }

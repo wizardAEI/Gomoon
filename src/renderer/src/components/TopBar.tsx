@@ -38,8 +38,8 @@ function Entries() {
               nav('/history')
             }}
             class={
-              'cursor-pointer duration-100 hover:text-active ' +
-              (pathname() === 'history' ? 'text-active' : 'text-gray')
+              'cursor-pointer duration-100 hover:fill-active ' +
+              (pathname() === 'history' ? 'fill-active' : 'fill-gray')
             }
           />
         }
@@ -57,8 +57,8 @@ function Entries() {
               nav('/ans')
             }}
             class={
-              'translate-y-[-1px] cursor-pointer duration-100 hover:text-active ' +
-              (pathname() === 'ans' ? 'text-active' : 'text-gray')
+              'translate-y-[-1px] cursor-pointer duration-100 hover:fill-active ' +
+              (pathname() === 'ans' ? 'fill-active' : 'fill-gray')
             }
           />
         }
@@ -77,8 +77,8 @@ function Entries() {
               nav('/chat')
             }}
             class={
-              'cursor-pointer duration-100 hover:text-active ' +
-              (pathname() === 'chat' ? 'text-active' : 'text-gray')
+              'cursor-pointer duration-100 hover:fill-active ' +
+              (pathname() === 'chat' ? 'fill-active' : 'fill-gray')
             }
           />
         }
@@ -100,8 +100,8 @@ function Entries() {
                   nav('/setting')
                 }}
                 class={
-                  'ml-[-0.0625rem] translate-y-[-0.5px] cursor-pointer duration-100 hover:text-active ' +
-                  (pathname() === 'setting' ? 'text-active' : 'text-gray')
+                  'ml-[-0.0625rem] translate-y-[-0.5px] cursor-pointer duration-100 hover:fill-active ' +
+                  (pathname() === 'setting' ? 'fill-active' : 'fill-gray')
                 }
               />
             }
@@ -113,8 +113,8 @@ function Entries() {
                 nav('/setting')
               }}
               class={
-                'ml-[-0.0625rem] cursor-pointer duration-100 hover:text-active ' +
-                (pathname() === 'setting' ? 'text-active' : 'text-gray')
+                'ml-[-0.0625rem] cursor-pointer duration-100 hover:fill-active ' +
+                (pathname() === 'setting' ? 'fill-active' : 'fill-gray')
               }
             />
           </Show>
@@ -157,7 +157,7 @@ export default function TopBar() {
       {/* win 关闭按钮 */}
       <Show when={navigator.userAgent.includes('Win')}>
         <MinimizeIcon
-          class="cursor-pointer pr-4 pt-1 text-gray duration-100 hover:text-active "
+          class="cursor-pointer pr-4 pt-1 text-gray duration-100 hover:fill-active "
           height={18}
           width={18}
           onClick={() => {
@@ -165,7 +165,7 @@ export default function TopBar() {
           }}
         />
         <CrossIcon
-          class="cursor-pointer pr-4 pt-1 text-gray duration-100 hover:text-active "
+          class="cursor-pointer pr-4 pt-1 text-gray duration-100 hover:fill-active "
           height={18}
           width={18}
           onClick={() => {

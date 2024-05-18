@@ -33,7 +33,7 @@ export const compWithTip = (
     >
       <Show when={tipModal().label}>
         {tipModal().status === 'success' && (
-          <div class="absolute top-[-8px] -mx-4 h-1 animate-popup whitespace-nowrap text-slate-50">
+          <div class="absolute top-[-8px] -mx-4 h-1 animate-popup whitespace-nowrap text-text1">
             {tipModal().label || '成功!'}
           </div>
         )}

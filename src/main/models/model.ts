@@ -70,6 +70,7 @@ export interface SettingModel {
   quicklyWakeUpKeys: string
   sendWithCmdOrCtrl: boolean
   models: Models
+  theme: string
 }
 export interface MemoResult {
   content: string

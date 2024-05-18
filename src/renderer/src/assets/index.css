@@ -3,7 +3,11 @@
     @apply m-0 box-border p-0 font-System text-sm;
   }
   body {
-    @apply bg-dark text-text1;
+    @apply bg-dark;
+  }
+  .bg-home {
+    @apply text-text1;
+    @apply fill-text1;
   }
   input {
     @apply w-full max-w-[512px] rounded-md border-[1px] border-solid border-gray bg-dark px-2 py-1 text-sm text-text1 outline-none placeholder:text-text3 focus:border-active;
@@ -119,17 +123,16 @@
 }
 
 .markdown code:not(.hljs) {
-  background: #869d9d; /* 虾壳灰 */
-  color: rgb(249 250 251);
+  @apply bg-inline-code;
+  @apply text-text2;
   border-radius: 0.4rem;
-  border: 0.1rem solid rgba(0, 0, 0, 0.1);
-  padding: 0 0.1rem;
+  padding: 0.05rem 0.2rem;
   margin: 0 4px;
 }
 
 .markdown code {
+  @apply bg-code;
   border-radius: 0.4rem;
-  background: #132c33;
 }
 
 .markdown a {

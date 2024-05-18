@@ -38,7 +38,7 @@ export default function (props: { type: 'chat' | 'ans' }) {
     return true
   }, false)
   return (
-    <div class={'relative mx-4 ' + (props.type === 'ans' ? 'mt-4' : 'mt-8')}>
+    <div class={'relative mx-4 text-text1 ' + (props.type === 'ans' ? 'mt-4' : 'mt-8')}>
       <div class="relative mx-auto flex max-w-4xl items-center justify-center gap-2 rounded-2xl bg-dark p-4">
         <span class="select-none text-base">{currentA().name}</span>
         <Show when={userData.firstTimeFor.modelSelect}>

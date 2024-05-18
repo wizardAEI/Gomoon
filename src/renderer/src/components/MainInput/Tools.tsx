@@ -27,7 +27,7 @@ function ToolWrap(props: { children: JSXElement; onClick?: () => void; active?: 
     <div
       onClick={props.onClick}
       class={
-        'flex cursor-pointer select-none rounded-lg border border-solid  border-dark-con px-1 py-[1px] text-[12px] hover:text-white ' +
+        'flex cursor-pointer select-none rounded-lg border border-solid  border-dark-con px-1 py-[1px] text-[12px] hover:text-active ' +
         (props.active ? 'bg-active-con  text-text1' : 'bg-dark-plus hover:border-active')
       }
     >
@@ -41,7 +41,7 @@ function ArtifactWrap(props: { children: JSXElement; onDel: () => void; noPaddin
     <div class="relative max-w-[100%]">
       <div
         class={
-          'flex cursor-pointer select-none rounded-lg border border-solid border-dark-con bg-dark-plus text-[12px] text-text1 hover:text-white ' +
+          'flex cursor-pointer select-none rounded-lg border border-solid border-dark-con bg-dark-plus text-[12px] text-text1 hover:text-active ' +
           (props.noPadding ? '' : 'px-1 py-[1px]')
         }
       >
@@ -139,7 +139,7 @@ export default function Tools(props: {
       <div class="group/tools relative select-none px-1">
         <Show when={showArrow()}>
           <LeftArrow
-            class="absolute left-[-16px] top-1/2 -translate-y-1/2 transform cursor-pointer opacity-0 delay-200 duration-200 hover:text-active group-hover/tools:opacity-100"
+            class="absolute left-[-16px] top-1/2 -translate-y-1/2 transform cursor-pointer fill-text1 opacity-0 delay-200 duration-200 hover:text-active group-hover/tools:opacity-100"
             width={18}
             height={18}
             onClick={() => scroll('left')}
@@ -405,7 +405,7 @@ export default function Tools(props: {
         </div>
         <Show when={showArrow()}>
           <RightArrow
-            class="absolute right-[-16px] top-1/2 -translate-y-1/2 transform cursor-pointer opacity-0 delay-200 duration-200 hover:text-active group-hover/tools:opacity-100"
+            class="absolute right-[-16px] top-1/2 -translate-y-1/2 transform cursor-pointer fill-text1 opacity-0 delay-200 duration-200 hover:text-active group-hover/tools:opacity-100"
             width={18}
             height={18}
             onClick={() => scroll('right')}

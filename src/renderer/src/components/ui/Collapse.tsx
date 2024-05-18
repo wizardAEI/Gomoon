@@ -15,9 +15,9 @@ export default function Collapse(props: { title: string | JSX.Element; children:
         <div>{props.title}</div>
         <Show
           when={!collapsed()}
-          fallback={<DownwardArrow height={16} width={16} class="pt-[2px]" />}
+          fallback={<DownwardArrow height={16} width={16} class="fill-text1 pt-[2px]" />}
         >
-          <UpwardArrow height={16} width={16} class="pt-[2px]" />
+          <UpwardArrow height={16} width={16} class="fill-text1 pt-[2px]" />
         </Show>
       </div>
       <Show when={!collapsed()}>

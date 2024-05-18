@@ -33,7 +33,7 @@ export default function MsgPopup(props: {
           <CopyIcon
             height={22}
             width={22}
-            class="cursor-pointer text-gray duration-100 hover:text-active"
+            class="cursor-pointer text-gray duration-100 hover:fill-active"
             onClick={() => {
               copy(props.content).then(() => tip('success', '复制成功'))
             }}
@@ -65,7 +65,7 @@ export default function MsgPopup(props: {
           <SpeechIcon
             height={22}
             width={22}
-            class="cursor-pointer text-gray duration-100 hover:text-active"
+            class="cursor-pointer fill-gray duration-100 hover:fill-active"
             onClick={props.onSpeak}
           />
         }
@@ -149,7 +149,7 @@ export function MsgPopupForUser(props: {
             <CopyIcon
               height={22}
               width={22}
-              class="cursor-pointer text-gray duration-100 hover:text-active"
+              class="cursor-pointer text-gray duration-100 hover:fill-active"
               onClick={() => {
                 copy(props.content).then(() => tip('success', '复制成功！'))
               }}
@@ -172,7 +172,7 @@ export function MsgPopupForSpecialContent(props: { type: MsgTypes; onRemove: () 
             <TrashIcon
               height={19}
               width={19}
-              class="cursor-pointer text-gray duration-100 hover:text-active"
+              class="cursor-pointer fill-gray duration-100 hover:fill-active"
               onClick={props.onRemove}
             />
           }
@@ -197,7 +197,7 @@ export function WithDrawal(props: { type: MsgTypes }) {
           <WithdrawalIcon
             height={22}
             width={22}
-            class="cursor-pointer text-gray duration-100 hover:text-active"
+            class="cursor-pointer fill-gray duration-100 hover:fill-active"
             onClick={() => {
               event.emit('editUserMsg', '', '')
             }}
@@ -220,7 +220,7 @@ export function Pause(props: { id?: string; type: MsgTypes }) {
           <PauseIcon
             height={22}
             width={22}
-            class="cursor-pointer text-gray duration-100 hover:text-active"
+            class="cursor-pointer fill-gray duration-100 hover:fill-active"
             onClick={() => {
               if (props.id) {
                 stopGenMsg(props.id)
