@@ -5701,67 +5701,6 @@ export default (function () {
       } catch (e) {}
       return clonedCanvas
     }
-    /*
-        createIFrameClone(iframe: HTMLIFrameElement) {
-            const tempIframe = <HTMLIFrameElement>iframe.cloneNode(false);
-            const iframeKey = generateIframeKey();
-            tempIframe.setAttribute('data-html2canvas-internal-iframe-key', iframeKey);
-
-            const {width, height} = parseBounds(iframe);
-
-            this.resourceLoader.cache[iframeKey] = getIframeDocumentElement(iframe, this.options)
-                .then(documentElement => {
-                    return this.renderer(
-                        documentElement,
-                        {
-                            allowTaint: this.options.allowTaint,
-                            backgroundColor: '#ffffff',
-                            canvas: null,
-                            imageTimeout: this.options.imageTimeout,
-                            logging: this.options.logging,
-                            proxy: this.options.proxy,
-                            removeContainer: this.options.removeContainer,
-                            scale: this.options.scale,
-                            foreignObjectRendering: this.options.foreignObjectRendering,
-                            useCORS: this.options.useCORS,
-                            target: new CanvasRenderer(),
-                            width,
-                            height,
-                            x: 0,
-                            y: 0,
-                            windowWidth: documentElement.ownerDocument.defaultView.innerWidth,
-                            windowHeight: documentElement.ownerDocument.defaultView.innerHeight,
-                            scrollX: documentElement.ownerDocument.defaultView.pageXOffset,
-                            scrollY: documentElement.ownerDocument.defaultView.pageYOffset
-                        },
-                    );
-                })
-                .then(
-                    (canvas: HTMLCanvasElement) =>
-                        new Promise((resolve, reject) => {
-                            const iframeCanvas = document.createElement('img');
-                            iframeCanvas.onload = () => resolve(canvas);
-                            iframeCanvas.onerror = (event) => {
-                                // Empty iframes may result in empty "data:," URLs, which are invalid from the <img>'s point of view
-                                // and instead of `onload` cause `onerror` and unhandled rejection warnings
-                                // https://github.com/niklasvh/html2canvas/issues/1502
-                                iframeCanvas.src == 'data:,' ? resolve(canvas) : reject(event);
-                            };
-                            iframeCanvas.src = canvas.toDataURL();
-                            if (tempIframe.parentNode && iframe.ownerDocument && iframe.ownerDocument.defaultView) {
-                                tempIframe.parentNode.replaceChild(
-                                    copyCSSStyles(
-                                        iframe.ownerDocument.defaultView.getComputedStyle(iframe),
-                                        iframeCanvas
-                                    ),
-                                    tempIframe
-                                );
-                            }
-                        })
-                );
-            return tempIframe;
-        }
-    */
     DocumentCloner.prototype.cloneNode = function (node) {
       if (isTextNode(node)) {
         return document.createTextNode(node.data)

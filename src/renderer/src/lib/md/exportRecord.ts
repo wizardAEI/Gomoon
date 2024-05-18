@@ -5,9 +5,10 @@ import { full as emoji } from 'markdown-it-emoji'
 import mdHighlight from 'markdown-it-highlightjs'
 import katex from '@vscode/markdown-it-katex'
 import moment from 'moment'
-import html2canvas from 'html2canvas'
 
 import { parseString } from '../ai/parseString'
+
+import html2canvas from './html2canvas'
 
 const roleDict = {
   ai: '助手',
@@ -108,6 +109,7 @@ export default async function (
     ctx.drawImage(canvas, 64, 64)
 
     dom.remove()
+
     await new Promise((res, reject) => {
       canvasF.toBlob((blob) => {
         try {

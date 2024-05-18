@@ -44,7 +44,6 @@
     "d3-dsv": "2",
     "electron-updater": "^6.1.8",
     "highlight.js": "^11.9.0",
-    "html2canvas": "^1.4.1",
     "jsdom": "^24.0.0",
     "langchain": "^0.1.36",
     "libreoffice-convert": "^1.5.1",
