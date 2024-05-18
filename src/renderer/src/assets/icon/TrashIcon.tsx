@@ -10,6 +10,7 @@ export default function (props: SvgProps) {
       p-id="17861"
       width="200"
       height="200"
+      fill="currentColor"
       {...props}
     >
       <path

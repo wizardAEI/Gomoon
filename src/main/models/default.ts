@@ -19,7 +19,8 @@ export function getDefaultConfig(): SettingModel {
     models: defaultModels(),
     canMultiCopy: false,
     quicklyWakeUpKeys: 'CmdOrCtrl+G',
-    sendWithCmdOrCtrl: true
+    sendWithCmdOrCtrl: true,
+    theme: 'gomoon-theme'
   }
 }
 

@@ -15,6 +15,7 @@ export default function (props: SvgProps) {
         height="246"
         x="0"
         y="0"
+        // @ts-ignore
         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAIAAABqcO2fAAAAIGNIUk0AAHomAACAhAAA+gAAAIDo
 AAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAD/AP8A/6C9p5MAABnZSURBVHja7d1rjBxXlQfw
 /7m3qvoxD/cMs2PHYR07u4E4igkbZ7NxAkQhkIRIEVlAESIQFJCRkKUoIg8BEgg5XzYfAlolMgiw

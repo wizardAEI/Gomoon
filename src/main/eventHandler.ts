@@ -21,7 +21,8 @@ import {
   getLines,
   getMemories,
   useMemo,
-  initMemories
+  initMemories,
+  setTheme
 } from './models/index'
 import {
   AssistantModel,
@@ -117,6 +118,7 @@ export function initAppEventsHandler() {
     setQuicklyWakeUp(keys)
   })
   ipcMain.handle('set-send-with-cmd-or-ctrl', (_, b: boolean) => setSendWithCmdOrCtrl(b))
+  ipcMain.handle('set-theme', (_, theme: string) => setTheme(theme))
 
   /**
    * FEAT: 用户相关

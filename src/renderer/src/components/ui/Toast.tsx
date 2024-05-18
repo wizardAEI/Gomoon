@@ -53,9 +53,13 @@ export function ToastsContainer() {
         {(toast) => (
           <>
             <Show when={toast.mask}>
-              <div class="bg-red fixed inset-0 z-40 h-full w-full bg-dark-pro bg-opacity-60" />
+              <div class="fixed inset-0 z-40 h-full w-full bg-dark-pro bg-opacity-60" />
             </Show>
-            <div class={'fixed left-1/2 z-50 -translate-x-1/2 select-none ' + toast.position}>
+            <div
+              class={
+                'fixed left-1/2 z-50 -translate-x-1/2 select-none text-text1 ' + toast.position
+              }
+            >
               <div class="flex animate-popup flex-col gap-2 rounded-lg bg-dark-plus shadow-center">
                 <div class={`m-2 flex max-w-xs items-center gap-1`}>
                   <span class="flex">{Icon[toast.type]}</span>

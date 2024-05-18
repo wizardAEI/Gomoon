@@ -1,5 +1,5 @@
 import { useNavigate } from '@solidjs/router'
-import { Show, onCleanup, onMount } from 'solid-js'
+import { Show, createEffect, onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
 
 import TopBar from './components/TopBar'
@@ -53,6 +53,19 @@ const App = (props) => {
 
     // FEAT: OCR
     OCRInit()
+
+    createEffect(() => {
+      // 插入 .win
+      if (navigator.userAgent.includes('Windows')) {
+        document.body.classList.add('win')
+      }
+      document.body.className.split(' ').map((cls) => {
+        if (cls.endsWith('-theme')) {
+          document.body.classList.remove(cls)
+        }
+      })
+      document.body.classList.add(settingStore.theme)
+    })
 
     // FEAT: receive msg
     window.api.receiveMsg(async (_, msg: string) => {

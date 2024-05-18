@@ -137,7 +137,7 @@ export default function () {
                     <CapitalIcon
                       size={26}
                       content={m.name}
-                      bg={getCurrentMemo()?.id === m.id ? 'bg-active-gradient' : 'bg-gray'}
+                      bg={getCurrentMemo()?.id === m.id ? 'bg-green-gradient' : 'bg-gray'}
                       hiddenTiptop
                     />
                     <div class="font-medium">{m.name}</div>

@@ -3898,7 +3898,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"color@npm:^4.2.3":
+"color@npm:^4.1.0, color@npm:^4.2.3":
   version: 4.2.3
   resolution: "color@npm:4.2.3"
   dependencies:
@@ -6012,6 +6012,7 @@ __metadata:
     solid-js: ^1.8.17
     solidjs-use: ^2.3.0
     tailwindcss: ^3.4.3
+    tailwindcss-themer: ^4.0.0
     tesseract.js: ^5.0.5
     typescript: ^5.4.5
     ulid: ^2.3.0
@@ -6978,6 +6979,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"just-unique@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "just-unique@npm:4.2.0"
+  checksum: 81c996e332c9eb599c4c479e58f398d5981a7d656cc81cfe91249536e9300aa0581b156e2fd8edae94690a23035c076c661d29778e74a2b9d7ab10f3a5e7d26b
+  languageName: node
+  linkType: hard
+
 "jwa@npm:^1.4.1":
   version: 1.4.1
   resolution: "jwa@npm:1.4.1"
@@ -7392,6 +7400,13 @@ __metadata:
   version: 4.6.2
   resolution: "lodash.merge@npm:4.6.2"
   checksum: ad580b4bdbb7ca1f7abf7e1bce63a9a0b98e370cf40194b03380a46b4ed799c9573029599caebc1b14e3f24b111aef72b96674a56cfa105e0f5ac70546cdc005
+  languageName: node
+  linkType: hard
+
+"lodash.mergewith@npm:^4.6.2":
+  version: 4.6.2
+  resolution: "lodash.mergewith@npm:4.6.2"
+  checksum: a6db2a9339752411f21b956908c404ec1e088e783a65c8b29e30ae5b3b6384f82517662d6f425cc97c2070b546cc2c7daaa8d33f78db7b6e9be06cd834abdeb8
   languageName: node
   linkType: hard
 
@@ -10040,6 +10055,20 @@ __metadata:
   bin:
     table-layout: bin/cli.js
   checksum: 2d4c538f224e64321d35788dbf78305cc1d138a3508e1a29f33e4f6b00bd082990a45dc85fd92948213f48ed8c0b3599155c2a05de412661ff020635e0db3762
+  languageName: node
+  linkType: hard
+
+"tailwindcss-themer@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "tailwindcss-themer@npm:4.0.0"
+  dependencies:
+    color: ^4.1.0
+    just-unique: ^4.2.0
+    lodash.merge: ^4.6.2
+    lodash.mergewith: ^4.6.2
+  peerDependencies:
+    tailwindcss: ^3.1.0
+  checksum: 35d43a63294c599899cb602ad8b24263e20e886b0867da82f7c391cb39dff5cc281d60a398ac652d38be6191a4e00f452a291fd02b57a011b56e7ae6c072434d
   languageName: node
   linkType: hard
 

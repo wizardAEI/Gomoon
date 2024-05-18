@@ -127,8 +127,8 @@ export default function Chat() {
           <>
             {
               <div class="flex w-full select-none flex-col items-center justify-center gap-2 px-10 pt-8">
-                <span class="text-sm text-gray">Gomoon</span>
-                <span class="text-center text-[12px] text-gray">
+                <span class="text-sm text-text3">Gomoon</span>
+                <span class="text-center text-[12px] text-text3">
                   {linesContent()}
                   <em class="text-[12px]">{linesFrom()}</em>
                 </span>

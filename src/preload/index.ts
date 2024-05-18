@@ -41,6 +41,7 @@ export const api = {
   setCanMultiCopy: (b: boolean) => ipcRenderer.invoke('set-can-multi-copy', b),
   setQuicklyWakeUpKeys: (keys: string) => ipcRenderer.invoke('set-quickly-wake-up-keys', keys),
   setSendWithCmdOrCtrl: (b: boolean) => ipcRenderer.invoke('set-send-with-cmd-or-ctrl', b),
+  setTheme: (theme: string) => ipcRenderer.invoke('set-theme', theme),
 
   // 用户信息相关
   getUserData: (): Promise<UserDataModel> => ipcRenderer.invoke('get-user-data'),

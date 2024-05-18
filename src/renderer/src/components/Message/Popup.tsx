@@ -27,13 +27,13 @@ export default function MsgPopup(props: {
   const { copy } = useClipboard({ source })
 
   return (
-    <div class="absolute left-5 top-[-10px] z-10 hidden items-center gap-1 rounded-[10px] bg-dark px-2 group-hover:flex group-hover:h-6">
+    <div class="absolute -top-4 left-5 z-10 hidden items-center gap-1 rounded-xl bg-dark px-2 group-hover:flex group-hover:h-7">
       <ToolTip
         label={compWithTip((tip) => (
           <CopyIcon
             height={22}
             width={22}
-            class="cursor-pointer text-gray duration-100 hover:text-active"
+            class="cursor-pointer text-gray duration-100 hover:fill-active"
             onClick={() => {
               copy(props.content).then(() => tip('success', '复制成功'))
             }}
@@ -65,7 +65,7 @@ export default function MsgPopup(props: {
           <SpeechIcon
             height={22}
             width={22}
-            class="cursor-pointer text-gray duration-100 hover:text-active"
+            class="cursor-pointer fill-gray duration-100 hover:fill-active"
             onClick={props.onSpeak}
           />
         }
@@ -118,7 +118,7 @@ export function MsgPopupForUser(props: {
   const [source] = createSignal('')
   const { copy } = useClipboard({ source })
   return (
-    <div class="absolute right-5 top-[-10px] z-10 hidden items-center gap-1 rounded-[10px] bg-light px-2 group-hover:flex group-hover:h-6">
+    <div class="absolute -top-4 right-5 z-10 hidden items-center gap-1 rounded-xl bg-light px-2 group-hover:flex group-hover:h-7">
       <ToolTip
         label={
           <EditIcon
@@ -149,7 +149,7 @@ export function MsgPopupForUser(props: {
             <CopyIcon
               height={22}
               width={22}
-              class="cursor-pointer text-gray duration-100 hover:text-active"
+              class="cursor-pointer text-gray duration-100 hover:fill-active"
               onClick={() => {
                 copy(props.content).then(() => tip('success', '复制成功！'))
               }}
@@ -166,7 +166,7 @@ export function MsgPopupForUser(props: {
 export function MsgPopupForSpecialContent(props: { type: MsgTypes; onRemove: () => void }) {
   return (
     <Show when={props.type === 'human'}>
-      <div class="absolute right-5 top-[-10px] z-10 hidden items-center gap-1 rounded-[10px] bg-light px-2 group-hover:flex group-hover:h-6">
+      <div class="absolute -top-4 right-5 z-10 hidden items-center gap-1 rounded-xl bg-light px-2 group-hover:flex group-hover:h-7">
         <ToolTip
           label={
             <TrashIcon
@@ -197,7 +197,7 @@ export function WithDrawal(props: { type: MsgTypes }) {
           <WithdrawalIcon
             height={22}
             width={22}
-            class="cursor-pointer text-gray duration-100 hover:text-active"
+            class="cursor-pointer fill-gray duration-100 hover:fill-active"
             onClick={() => {
               event.emit('editUserMsg', '', '')
             }}
@@ -220,7 +220,7 @@ export function Pause(props: { id?: string; type: MsgTypes }) {
           <PauseIcon
             height={22}
             width={22}
-            class="cursor-pointer text-gray duration-100 hover:text-active"
+            class="cursor-pointer fill-gray duration-100 hover:fill-active"
             onClick={() => {
               if (props.id) {
                 stopGenMsg(props.id)

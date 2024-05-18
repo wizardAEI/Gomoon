@@ -5,8 +5,6 @@ import EditInput from '@renderer/components/ui/EditInput'
 import { onCleanup, onMount } from 'solid-js'
 import { unwrap } from 'solid-js/store'
 import SettingIcon from '@renderer/assets/icon/base/SettingIcon'
-import { useLoading } from '@renderer/components/ui/DynamicLoading'
-import { useToast } from '@renderer/components/ui/Toast'
 import QuestionMention from '@renderer/components/ui/QuestionMention'
 import Expand from '@renderer/components/ui/Expand'
 import MoreIcon from '@renderer/assets/icon/base/MoreIcon'
@@ -20,6 +18,9 @@ import LlamaIcon from '@renderer/assets/icon/models/LlamaIcon'
 import KimiIcon from '@renderer/assets/icon/models/KimiIcon'
 import FilePicker from '@renderer/components/ui/FilePicker'
 import OllamaIcon from '@renderer/assets/icon/models/OllamaIcon'
+import Select from '@renderer/components/ui/Select'
+import { setTheme } from '@renderer/store/setting'
+import { useToast } from '@renderer/components/ui/Toast'
 
 import {
   settingStore,
@@ -32,7 +33,9 @@ import {
 } from '../../store/setting'
 
 import VersionDesc from './VersionDesc'
+import { themeOptions } from './theme'
 export default function Setting() {
+  const toast = useToast()
   onMount(() => {
     onCleanup(() => {
       updateModelsToFile()
@@ -152,13 +155,13 @@ export default function Setting() {
             </Collapse>
             <Expand
               title={
-                <div class="flex items-center justify-center gap-2">
+                <div class="flex items-center justify-center gap-2 fill-text1">
                   <MoreIcon height={16} width={16} />
                   <span>更多模型引擎</span>
                 </div>
               }
               foldTitle={
-                <div class="flex items-center justify-center gap-2">
+                <div class="flex items-center justify-center gap-2 fill-text1">
                   <UpwardArrow height={16} width={16} />
                   <span>收起模型引擎</span>
                 </div>
@@ -447,6 +450,20 @@ export default function Setting() {
               checked={settingStore.sendWithCmdOrCtrl}
               onCheckedChange={setSendWithCmdOrCtrl}
             />
+            <div class="item-center relative flex justify-between gap-3">
+              <span class="h-6">主题设置</span>
+              <div class="absolute right-0">
+                <Select
+                  defaultValue={settingStore.theme}
+                  options={themeOptions}
+                  onSelect={(v) => {
+                    const slogan = themeOptions.find((item) => item.value === v)?.slogan
+                    slogan && toast.info(slogan)
+                    setTheme(v)
+                  }}
+                />
+              </div>
+            </div>
           </div>
         </Card>
         <Card title="更多信息">

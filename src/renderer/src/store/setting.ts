@@ -4,22 +4,21 @@ import { event } from '@renderer/lib/util'
 import { defaultModels } from '@lib/langchain'
 import { Models } from 'src/lib/langchain'
 import { createMemo } from 'solid-js'
-const [settingStore, setSettingStore] = createStore<{
-  isOnTop: boolean
-  isLoaded: boolean
-  models: Models
-  oldModels: Models
-  canMultiCopy: boolean
-  quicklyWakeUpKeys: string
-  sendWithCmdOrCtrl: boolean
-}>({
+import { SettingModel } from 'src/main/models/model'
+const [settingStore, setSettingStore] = createStore<
+  {
+    isLoaded: boolean
+    oldModels: Models
+  } & SettingModel
+>({
   isOnTop: false,
   isLoaded: false,
   models: defaultModels(),
   oldModels: defaultModels(),
   canMultiCopy: false,
   quicklyWakeUpKeys: '',
-  sendWithCmdOrCtrl: false
+  sendWithCmdOrCtrl: false,
+  theme: 'gomoon-theme'
 })
 
 export function setIsOnTop(v: boolean) {
@@ -42,6 +41,11 @@ export function setSendWithCmdOrCtrl(v: boolean) {
   return window.api.setSendWithCmdOrCtrl(v)
 }
 
+export async function setTheme(theme: string) {
+  setSettingStore('theme', theme)
+  return window.api.setTheme(theme)
+}
+
 export async function loadConfig() {
   const config = await window.api.loadConfig()
   // 从 data 中读取配置
@@ -52,6 +56,7 @@ export async function loadConfig() {
   setSettingStore('quicklyWakeUpKeys', config.quicklyWakeUpKeys)
   setSettingStore('sendWithCmdOrCtrl', config.sendWithCmdOrCtrl)
   setSettingStore('isLoaded', true)
+  setSettingStore('theme', config.theme)
   event.emit('updateModels', config.models)
 }
 
