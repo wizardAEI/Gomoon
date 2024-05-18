@@ -280,8 +280,8 @@ export default function (props: { position: string; size?: number; translate?: s
             {(option) => (
               <div
                 class={`w-[100px] cursor-pointer break-words rounded-lg py-1 pl-1 pr-0 ${
-                  userData.selectedModel === option.value ? 'bg-active-gradient' : ''
-                } hover:bg-gray
+                  userData.selectedModel === option.value ? 'bg-active' : ''
+                } hover:bg-active
                 `}
                 onClick={() => handleSelect(option)}
               >

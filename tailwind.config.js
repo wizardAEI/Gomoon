@@ -99,7 +99,7 @@ module.exports = {
               'cyber-pro': 'linear-gradient(to right, #50ae91, #5fb591, #6ebc90, #7dc38f, #8dc98f)', // 赛博蓝渐变色↑
               'active-gradient': 'linear-gradient(to bottom right, #ae79f1, #9366cb)', // 淡紫色渐变色
               'green-gradient': 'linear-gradient(to bottom right, #007a93, #078170)', // 绿色渐变色
-              home: 'linear-gradient(to bottom, #e0e6e7, #dde6e8, #dae6e8, #d7e7e9, #d4e7e9)'
+              home: 'linear-gradient(to bottom, #eaeeee, #dde6e8, #dae6e8, #d7e7e9, #d4e7e9)'
             },
             colors: {
               active: '#50AF4B',
