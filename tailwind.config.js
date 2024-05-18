@@ -102,8 +102,8 @@ module.exports = {
               home: 'linear-gradient(to bottom, #e0e6e7, #dde6e8, #dae6e8, #d7e7e9, #d4e7e9)'
             },
             colors: {
-              active: '#41ae3c',
-              'active-con': '#63db97',
+              active: '#50AF4B',
+              'active-con': '#7AC078',
               gray: '#9FADAB',
               'gray-pro': '#7A8E8B', // 非激活色↑ 浅紫灰色
               'inline-code': '#CCD9D9', // 非激活色 浅紫灰色
