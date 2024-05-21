@@ -9,10 +9,14 @@ export async function loadHistories() {
 }
 
 export async function starHistory(historyID: string, status: boolean) {
+  await window.api.setHistoryStar(historyID, status)
+  loadHistories()
   return
 }
 
 export async function clearHistory() {
+  await window.api.clearHistory()
+  loadHistories()
   return
 }
 

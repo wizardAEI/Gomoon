@@ -59,6 +59,9 @@ export const api = {
   getHistories: (): Promise<HistoryModel[]> => ipcRenderer.invoke('get-histories'),
   addHistory: (history: HistoryModel) => ipcRenderer.invoke('add-history', history),
   deleteHistory: (historyId: string) => ipcRenderer.invoke('delete-history', historyId),
+  setHistoryStar: (historyId: string, starred: boolean) =>
+    ipcRenderer.invoke('set-history-star', historyId, starred),
+  clearHistory: () => ipcRenderer.invoke('clear-history'),
 
   // memory 相关
   getMemories: (): Promise<MemoModel[]> => ipcRenderer.invoke('get-memories'),

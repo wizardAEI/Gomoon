@@ -4,7 +4,7 @@ import HistoryIcon from '@renderer/assets/icon/base/HistoryIcon'
 import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
 import { parseDisplayArr } from '@renderer/lib/ai/parseString'
 import { setAnswerStore } from '@renderer/store/answer'
-import { histories, removeHistory, starHistory } from '@renderer/store/history'
+import { clearHistory, histories, removeHistory, starHistory } from '@renderer/store/history'
 import { Msg, setMsgs } from '@renderer/store/chat'
 import { setSelectedAssistantForAns, setSelectedAssistantForChat } from '@renderer/store/user'
 import { useNavigate } from '@solidjs/router'
@@ -52,7 +52,7 @@ export default function () {
 
   const filteredHistory = createMemo(() => {
     let arr = histories
-    if (selectType() === 'stared') arr = arr.filter((h) => h.stared)
+    if (selectType() === 'starred') arr = arr.filter((h) => h.starred)
     return arr.filter((a) => a.contents.find((c) => c.content.includes(searchText())))
   })
 
@@ -61,7 +61,7 @@ export default function () {
       <div class="mb-3 flex select-none items-center gap-1 text-lg text-text1 lg:justify-center">
         <HistoryIcon width={20} height={20} /> <span class="text-base font-medium">对话历史</span>{' '}
       </div>
-      <div class="mb-2 flex min-h-8 w-full items-center justify-between gap-2 px-1 lg:max-w-4xl">
+      <div class="mb-2 flex min-h-8 w-full items-center justify-between gap-2 pl-1 pr-2 lg:max-w-4xl">
         <Show
           when={!showSearchInput()}
           fallback={
@@ -100,7 +100,7 @@ export default function () {
               },
               {
                 label: '收藏',
-                value: 'stared'
+                value: 'starred'
               }
             ]}
             onCheckedChange={(v) => setSelectType(v)}
@@ -132,16 +132,23 @@ export default function () {
             >
               <>
                 <div
+                  class="flex"
                   onClick={() => {
-                    toast.confirm(
-                      <div class="flex items-center gap-1 pt-4">
-                        <WarningIcon width={24} height={24} class="text-warning" />
-                        确定删除所有历史记录吗？
-                      </div>,
-                      {
-                        mask: true
-                      }
-                    )
+                    toast
+                      .confirm(
+                        <div class="flex items-center gap-1 pt-4">
+                          <WarningIcon width={24} height={24} class="text-warning" />
+                          确定删除所有历史记录吗？
+                        </div>,
+                        {
+                          mask: true
+                        }
+                      )
+                      .then((res) => {
+                        if (res) {
+                          clearHistory()
+                        }
+                      })
                   }}
                 >
                   <ToolTip
@@ -189,10 +196,10 @@ export default function () {
                     <StarIcon
                       width={22}
                       height={22}
-                      class={`cursor-pointer ${h.stared ? 'text-active' : 'text-gray hover:text-active/80'}`}
+                      class={`cursor-pointer ${h.starred ? 'text-active' : 'text-gray hover:text-active/80'}`}
                       onClick={(e) => {
                         e.stopPropagation()
-                        h.stared ? starHistory(h.id, false) : starHistory(h.id, true)
+                        h.starred ? starHistory(h.id, false) : starHistory(h.id, true)
                       }}
                     />
                     <DoubleConfirm
@@ -219,6 +226,7 @@ export default function () {
                       h.assistantId && setSelectedAssistantForAns(h.assistantId)
                       nav('/ans')
                     } else if (h.type === 'chat') {
+                      removeHistory(h.id)
                       setMsgs(h.contents as Msg[])
                       h.assistantId && setSelectedAssistantForChat(h.assistantId)
                       nav('/chat')

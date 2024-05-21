@@ -8,7 +8,7 @@ import EditIcon from '@renderer/assets/icon/base/EditIcon'
 import { event } from '@renderer/lib/util'
 import WithdrawalIcon from '@renderer/assets/icon/base/WithdrawalICon'
 import PauseIcon from '@renderer/assets/icon/base/PauseIcon'
-import { saveMsgsBeforeID, stopGenMsg } from '@renderer/store/chat'
+import { stopGenMsg } from '@renderer/store/chat'
 import SpeechIcon from '@renderer/assets/icon/SpeechIcon'
 import TrashIcon from '@renderer/assets/icon/TrashIcon'
 
@@ -41,25 +41,24 @@ export default function MsgPopup(props: {
         ))}
         content="复制到剪贴板"
       />
-      <ToolTip
-        label={compWithTip((tip) => (
-          <SaveIcon
-            height={22}
-            width={22}
-            class="cursor-pointer text-gray duration-100 hover:text-active"
-            // eslint-disable-next-line solid/reactivity
-            onClick={async () => {
-              if (props.type === 'ai') {
-                await saveMsgsBeforeID(props.id)
-              } else if (props.type === 'ans') {
+      <Show when={props.type === 'ans'}>
+        <ToolTip
+          label={compWithTip((tip) => (
+            <SaveIcon
+              height={22}
+              width={22}
+              class="cursor-pointer text-gray duration-100 hover:text-active"
+              // eslint-disable-next-line solid/reactivity
+              onClick={async () => {
                 await saveAns()
-              }
-              tip('success', '保存成功')
-            }}
-          />
-        ))}
-        content={`${props.type === 'ai' ? '保存此前内容' : '保存'}`}
-      />
+                tip('success', '保存成功')
+              }}
+            />
+          ))}
+          content={`${props.type === 'ai' ? '保存此前内容' : '保存问答记录'}`}
+        />
+      </Show>
+
       <ToolTip
         label={
           <SpeechIcon

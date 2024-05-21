@@ -65,7 +65,7 @@ export function ToastsContainer() {
                   <span class="flex">{Icon[toast.type]}</span>
                   <span>
                     {typeof toast.text === 'string' ? (
-                      <div class="px-4 pt-4">{toast.text}</div>
+                      <div class={toast.type === 'confirm' ? `px-4 pt-4` : ''}>{toast.text}</div>
                     ) : (
                       toast.text
                     )}

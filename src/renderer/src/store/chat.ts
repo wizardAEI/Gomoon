@@ -14,22 +14,20 @@ export interface Msg {
   role: Roles
   content: string
 }
+
 const [msgs, setMsgs] = createStore<Array<Msg>>([])
 
 let trash: {
   msgs: Array<Msg>
   consumedToken: number
-} = {
-  msgs: [],
-  consumedToken: 0
 }
-
 function initTrash() {
   trash = {
     msgs: [],
     consumedToken: 0
   }
 }
+initTrash()
 
 const abortMap = new Map<string, (ans?: string) => void>()
 
@@ -43,10 +41,17 @@ export function pushMsg(msg: Msg) {
 }
 
 export function clearMsgs() {
+  if (!msgs.length) return
   trash = {
     msgs: cloneDeep(msgs),
     consumedToken: consumedToken().chat
   }
+  addHistory({
+    id: ulid(),
+    assistantId: getCurrentAssistantForChat()?.id,
+    type: 'chat',
+    contents: msgs
+  })
   setMsgs([])
   setConsumedTokenForChat(0)
 }
@@ -179,18 +184,6 @@ export async function stopGenMsg(id: string) {
     (assistant) => assistant.id === userData.selectedAssistantForChat
   )?.prompt
   setConsumedTokenForChat(await window.api.getTokenNum(systemContent + currentMsgs))
-}
-
-export async function saveMsgsBeforeID(id: string) {
-  const index = msgs.findIndex((msg) => msg.id === id)
-  if (index === -1) return
-  const currentMsgs = msgs.slice(0, index + 1)
-  return addHistory({
-    id: ulid(),
-    assistantId: getCurrentAssistantForChat()?.id,
-    type: 'chat',
-    contents: currentMsgs
-  })
 }
 
 export { msgs, setMsgs, msgStatus }

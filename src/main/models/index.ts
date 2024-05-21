@@ -179,6 +179,7 @@ export function getHistories() {
 }
 
 export function addHistory(h: HistoryModel) {
+  if (!h.contents.length) return
   historiesDB.data.unshift(h)
   historiesDB.write()
 }
@@ -189,6 +190,19 @@ export function deleteHistory(id: string) {
     return
   }
   historiesDB.data.splice(index, 1)
+  historiesDB.write()
+}
+export function setHistoryStar(id: string, starred: boolean) {
+  const index = historiesDB.data.findIndex((item) => item.id === id)
+  if (index === -1) {
+    return
+  }
+  historiesDB.data[index].starred = starred
+  historiesDB.write()
+}
+export function clearHistory() {
+  const arr = historiesDB.data.filter((d) => d.starred)
+  historiesDB.data = arr
   historiesDB.write()
 }
 
