@@ -8,6 +8,14 @@ export async function loadHistories() {
   return window.api.getHistories().then(setHistories)
 }
 
+export async function starHistory(historyID: string, status: boolean) {
+  return
+}
+
+export async function clearHistory() {
+  return
+}
+
 export async function addHistory(history: HistoryModel) {
   await window.api.addHistory(cloneDeep(history))
   loadHistories()

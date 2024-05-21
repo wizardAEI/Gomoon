@@ -214,7 +214,7 @@ export function WithDrawal(props: { type: MsgTypes }) {
 
 export function Pause(props: { id?: string; type: MsgTypes }) {
   return (
-    <div class="absolute left-5 top-[-10px] z-10 hidden items-center gap-1 rounded-[10px] bg-dark px-2 group-hover:flex group-hover:h-6">
+    <div class="absolute -top-4 left-5 z-10 hidden items-center gap-1 rounded-[10px] bg-dark px-2 group-hover:flex group-hover:h-7">
       <ToolTip
         label={
           <PauseIcon

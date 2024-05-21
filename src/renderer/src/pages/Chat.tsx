@@ -151,7 +151,9 @@ export default function Chat() {
                   <div
                     ref={(el) => scrollToBottom(el, index())}
                     id={msg.id}
-                    class={'flex ' + (msg.role === 'human' ? 'human ml-4 justify-end' : 'ai mr-4')}
+                    class={
+                      'mb-1 flex ' + (msg.role === 'human' ? 'human ml-4 justify-end' : 'ai mr-4')
+                    }
                   >
                     <Message
                       isEmpty
@@ -165,7 +167,7 @@ export default function Chat() {
               >
                 <div
                   ref={(el) => scrollToBottom(el, index())}
-                  class={`relative flex max-w-[calc(100%-16px)] ${
+                  class={`relative mb-1 flex max-w-[calc(100%-16px)] ${
                     msg.role === 'human' ? 'human ml-4 justify-end' : 'ai mr-4'
                   }`}
                 >

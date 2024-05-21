@@ -15,7 +15,7 @@ const UIContext = createContext<{
 function LoadingWrap() {
   return (
     <Show when={useContext(UIContext)?.loading().show}>
-      <div class="fixed left-0 top-0 z-40 flex h-screen w-screen select-none items-center justify-center bg-black/80">
+      <div class="bg-mask fixed left-0 top-0 z-40 flex h-screen w-screen select-none items-center justify-center">
         <div class="flex translate-y-[-60px] flex-col items-center gap-4 text-text1">
           <Loading />
           {useContext(UIContext)?.loading().msg}

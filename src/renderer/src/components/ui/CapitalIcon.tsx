@@ -38,7 +38,7 @@ export default function CapitalIcon(props: {
           {firstChat}
         </div>
       </button>
-      <Show when={api().isOpen && !props.hiddenTiptop}>
+      <Show when={api().open && !props.hiddenTiptop}>
         <div {...api().positionerProps}>
           <div {...api().contentProps} class="rounded-md bg-white/80 p-1 text-xs text-text-dark">
             {props.content}
