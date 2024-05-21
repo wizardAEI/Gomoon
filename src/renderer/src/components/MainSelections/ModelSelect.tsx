@@ -115,19 +115,6 @@ export default function (props: { position: string; size?: number; translate?: s
         value: 'QWenTurbo'
       },
       {
-        label: <span class="text-sm leading-6 text-current">千问Plus</span>,
-        icon(size: number) {
-          return (
-            <QWenIcon
-              width={size - 2}
-              height={size - 2}
-              class="cursor-pointer overflow-hidden rounded-md"
-            />
-          )
-        },
-        value: 'QWenPlus'
-      },
-      {
         label: <span class="text-sm leading-6 text-current">千问Max</span>,
         icon(size: number) {
           return (
@@ -139,6 +126,19 @@ export default function (props: { position: string; size?: number; translate?: s
           )
         },
         value: 'QWenMax'
+      },
+      {
+        label: <span class="text-sm leading-6 text-current">千问Long</span>,
+        icon(size: number) {
+          return (
+            <QWenIcon
+              width={size - 2}
+              height={size - 2}
+              class="cursor-pointer overflow-hidden rounded-md"
+            />
+          )
+        },
+        value: 'QWenLong'
       }
     )
   }
@@ -285,7 +285,9 @@ export default function (props: { position: string; size?: number; translate?: s
                 `}
                 onClick={() => handleSelect(option)}
               >
-                <div class={`flex select-none items-center gap-1 text-text1`}>
+                <div
+                  class={`flex select-none items-center gap-1 duration-100 ${userData.selectedModel === option.value ? 'text-text-active' : 'text-text1'}`}
+                >
                   {option.icon(20)}
                   {option.label}
                 </div>

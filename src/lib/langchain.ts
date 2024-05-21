@@ -62,7 +62,7 @@ export type ModelsType =
   | 'GPT4'
   | 'GPTCustom'
   | 'QWenTurbo'
-  | 'QWenPlus'
+  | 'QWenLong'
   | 'QWenMax'
   | 'GeminiPro'
   | 'Llama'
@@ -70,6 +70,56 @@ export type ModelsType =
   | 'Moonshot32k'
   | 'Moonshot128k'
   | 'Ollama'
+
+export const modelDict: {
+  [key in ModelsType]: { maxToken: number }
+} = {
+  ERNIE3: {
+    maxToken: 11200
+  },
+  ERNIE4: {
+    maxToken: 9600
+  },
+  ERNIE128K: {
+    maxToken: 128000
+  },
+  GPT3: {
+    maxToken: 16385
+  },
+  GPT4: {
+    maxToken: 128000
+  },
+  GPTCustom: {
+    maxToken: 0
+  },
+  QWenTurbo: {
+    maxToken: 6000
+  },
+  QWenLong: {
+    maxToken: 10000000
+  },
+  QWenMax: {
+    maxToken: 6000
+  },
+  GeminiPro: {
+    maxToken: 30720
+  },
+  Moonshot128k: {
+    maxToken: 128000
+  },
+  Moonshot8k: {
+    maxToken: 8000
+  },
+  Moonshot32k: {
+    maxToken: 32000
+  },
+  Llama: {
+    maxToken: 0
+  },
+  Ollama: {
+    maxToken: 0
+  }
+}
 
 export const defaultModels = () =>
   ({
@@ -149,6 +199,21 @@ export const newQWenModel = (
     enableSearch: config.enableSearch
   })
 
+export const newQWenModelV2 = (
+  config: { apiKey: string; temperature: number; baseURL?: string },
+  modelName: string
+) =>
+  new ChatOpenAI({
+    streaming: true,
+    modelName,
+    openAIApiKey: config.apiKey || 'api-key',
+    temperature: config.temperature,
+    topP: 0.75,
+    configuration: {
+      baseURL: config.baseURL || 'https://dashscope.aliyuncs.com/compatible-mode/v1'
+    }
+  })
+
 export const newGeminiModel = (
   config: { apiKey: string; temperature: number },
   modelName: string
@@ -219,8 +284,8 @@ export const loadLMMap = async (
   GPT4: newGPTModal(model.OpenAI, 'gpt-4o'),
   GPTCustom: newGPTModal(model.OpenAI, model.OpenAI.customModel),
   QWenTurbo: newQWenModel(model.AliQWen, 'qwen-turbo'),
-  QWenPlus: newQWenModel(model.AliQWen, 'qwen-plus'),
   QWenMax: newQWenModel(model.AliQWen, 'qwen-max'),
+  QWenLong: newQWenModelV2(model.AliQWen, 'qwen-long'),
   GeminiPro: newGeminiModel(model.Gemini, 'gemini-pro-vision'),
   Moonshot8k: newMoonshotModel(model.Moonshot, 'moonshot-v1-8k'),
   Moonshot32k: newMoonshotModel(model.Moonshot, 'moonshot-v1-32k'),

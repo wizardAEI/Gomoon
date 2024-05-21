@@ -27,9 +27,9 @@ export function CheckItem(props: {
       </span>
       <div
         {...api().controlProps}
-        class="flex h-[18px] w-[18px] cursor-pointer items-center overflow-hidden rounded-full bg-slate-200 text-xs duration-150 first:hidden data-[hover]:bg-slate-300 data-[state=checked]:bg-[#A57BEA]"
+        class="flex h-[18px] w-[18px] cursor-pointer items-center overflow-hidden rounded-full bg-slate-200 text-xs duration-150 first:hidden data-[hover]:bg-slate-300 data-[state=checked]:bg-active"
       >
-        {api().isChecked && (
+        {api().checked && (
           <div class=" pl-[2px] pt-[3.5px] text-text-dark">
             <svg
               class="icon"

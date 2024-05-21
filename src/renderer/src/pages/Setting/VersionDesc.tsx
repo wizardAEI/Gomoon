@@ -49,7 +49,7 @@ export default function () {
           {updateStatusLabel()}
         </a>
       </div>
-      <div class="mt-2 text-text2">
+      <div class="mt-1 text-text2">
         {
           <For each={versions[0].contents}>
             {(content, index) => {
@@ -77,7 +77,7 @@ export default function () {
             {(version, index) => {
               return (
                 <>
-                  <div>v{version.version}</div>
+                  <div class="mb-1">v{version.version}</div>
                   <For each={versions[index() + 1].contents}>
                     {(content, index) => {
                       return (

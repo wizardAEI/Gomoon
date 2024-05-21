@@ -1,58 +1,8 @@
 import { createMemo } from 'solid-js'
 import { createStore } from 'solid-js/store'
-import { ModelsType } from '@lib/langchain'
+import { modelDict } from '@lib/langchain'
 
 import { userData } from './user'
-
-const modelDict: {
-  [key in ModelsType]: { maxToken: number }
-} = {
-  ERNIE3: {
-    maxToken: 11200
-  },
-  ERNIE4: {
-    maxToken: 9600
-  },
-  ERNIE128K: {
-    maxToken: 128000
-  },
-  GPT3: {
-    maxToken: 16385
-  },
-  GPT4: {
-    maxToken: 128000
-  },
-  GPTCustom: {
-    maxToken: 0
-  },
-  QWenTurbo: {
-    maxToken: 6000
-  },
-  QWenPlus: {
-    maxToken: 30000
-  },
-  QWenMax: {
-    maxToken: 6000
-  },
-  GeminiPro: {
-    maxToken: 30720
-  },
-  Moonshot128k: {
-    maxToken: 128000
-  },
-  Moonshot8k: {
-    maxToken: 8000
-  },
-  Moonshot32k: {
-    maxToken: 32000
-  },
-  Llama: {
-    maxToken: 0
-  },
-  Ollama: {
-    maxToken: 0
-  }
-}
 
 interface InputStore {
   isNetworking: boolean

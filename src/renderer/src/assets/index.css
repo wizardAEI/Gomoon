@@ -11,7 +11,7 @@
     @apply fill-text1;
   }
   input {
-    @apply w-full max-w-[512px] rounded-md border-[1px] border-solid border-gray bg-dark px-2 py-1 text-sm text-text1 outline-none placeholder:text-text3 focus:border-active;
+    @apply w-full rounded-md border-[1px] border-solid border-gray bg-dark px-2 py-1 text-sm text-text1 outline-none placeholder:text-text3 focus:border-active;
   }
   button {
     @apply cursor-pointer overflow-hidden rounded-md border-0 bg-gray px-3 py-1 text-text1 focus:outline-none active:animate-click;
@@ -145,7 +145,7 @@
 }
 
 .markdown a:hover {
-  color: #a57bea;
+  @apply text-active;
 }
 .markdown blockquote {
   border-left: 0.2rem solid #64748b;

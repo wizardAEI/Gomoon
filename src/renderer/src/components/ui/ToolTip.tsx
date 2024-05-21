@@ -8,13 +8,14 @@ export default function (props: {
   size?: number
   color?: string
   label: string | JSXElement
-  content: string
+  content: string | JSXElement
   fill?: string
   position?: PositioningOptions
 }) {
   const [state, send] = useMachine(
     tooltip.machine({
       id: createUniqueId(),
+      interactive: true,
       openDelay: 200,
       closeDelay: 300,
       // eslint-disable-next-line solid/reactivity
@@ -33,7 +34,7 @@ export default function (props: {
       >
         {props.label}
       </button>
-      <Show when={api().isOpen && props.content}>
+      <Show when={api().open && props.content}>
         <div {...api().positionerProps}>
           <div
             {...api().contentProps}

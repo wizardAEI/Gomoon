@@ -32,6 +32,7 @@ export default function (props: {
       <span>记忆名称</span>
       <input
         type="text"
+        class="w-full"
         value={m().name}
         onChange={(e) => setField('name', e.currentTarget.value)}
         placeholder="记忆胶囊名称"

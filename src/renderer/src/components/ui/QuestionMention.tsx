@@ -11,6 +11,8 @@ export default function QuestionMention(props: {
 }) {
   const [state, send] = useMachine(
     tooltip.machine({
+      closeOnPointerDown: false,
+      interactive: true,
       id: createUniqueId(),
       openDelay: 200,
       closeDelay: 300,
@@ -35,7 +37,7 @@ export default function QuestionMention(props: {
           height={props.size || 14}
         />
       </button>
-      <Show when={api().isOpen}>
+      <Show when={api().open}>
         <div {...api().positionerProps}>
           <div
             {...api().contentProps}
