@@ -1,5 +1,5 @@
 import { join } from 'path'
-import { spawn } from 'child_process'
+import { ChildProcessWithoutNullStreams, spawn } from 'child_process'
 
 import {
   app,
@@ -25,6 +25,7 @@ import { getResourcesPath, quitApp } from './lib'
 let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
 let preKeys = ''
+let multiCopyTracker: ChildProcessWithoutNullStreams | null = null
 
 export function setQuicklyWakeUp(keys: string) {
   /**
@@ -218,8 +219,8 @@ export function createWindow(): void {
     } else if (process.arch === 'x64') {
       filename = 'eventTracker_x64'
     }
-    const eventTracker = spawn(getResourcesPath(filename))
-    eventTracker.stdout.on('data', (data) => {
+    multiCopyTracker = spawn(getResourcesPath(filename))
+    multiCopyTracker.stdout.on('data', (data) => {
       if (`${data}` === 'multi-copy' && mainWindow) {
         const copyText = clipboard.readText().trim()
         if (!copyText || !loadAppConfig().canMultiCopy) {
@@ -232,11 +233,6 @@ export function createWindow(): void {
         }
         mainWindow.show()
       }
-    })
-    // 应用程序退出时，关闭子进程
-    app.on('will-quit', () => {
-      // 查看子进程是否已经退出
-      !eventTracker.killed && eventTracker.kill()
     })
   }
 
@@ -293,4 +289,9 @@ export function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+}
+
+export async function beforeQuitWindowHandler() {
+  // TODO: 发送关闭事件到前端（存储当前对话为历史）
+  !multiCopyTracker?.killed && multiCopyTracker?.kill()
 }

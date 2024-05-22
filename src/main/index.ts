@@ -4,7 +4,7 @@ import { electronApp, optimizer } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
 import { initAppEventsHandler } from './eventHandler'
-import { createWindow, showWindow } from './window'
+import { beforeQuitWindowHandler, createWindow, showWindow } from './window'
 import { quitApp } from './lib'
 
 // dock
@@ -45,10 +45,16 @@ app.whenReady().then(() => {
   })
 })
 
-app.on('before-quit', () => {
+app.on('before-quit', async (e) => {
   // Unregister all shortcuts.
+  if (quitApp.shouldQuit) {
+    return
+  }
+  e.preventDefault()
+  await beforeQuitWindowHandler()
   globalShortcut.unregisterAll()
   quitApp.quit()
+  setTimeout(() => app.quit())
 })
 
 app.on('window-all-closed', () => {
@@ -57,7 +63,6 @@ app.on('window-all-closed', () => {
   }
 })
 
-app.on('will-quit', () => {
-  // Unregister all shortcuts.
-  globalShortcut.unregisterAll()
-})
+// app.on('will-quit', (e) => {
+//  ///
+// })

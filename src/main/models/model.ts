@@ -37,7 +37,7 @@ export interface HistoryModel {
   id: string
   type: 'chat' | 'ans'
   assistantId?: string
-  stared?: boolean
+  starred?: boolean
   contents: { id?: string; role: 'human' | 'system' | 'ai' | 'ans' | 'question'; content: string }[]
 }
 export interface Line {

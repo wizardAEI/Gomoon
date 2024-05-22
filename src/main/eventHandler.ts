@@ -22,7 +22,9 @@ import {
   getMemories,
   useMemo,
   initMemories,
-  setTheme
+  setTheme,
+  setHistoryStar,
+  clearHistory
 } from './models/index'
 import {
   AssistantModel,
@@ -141,6 +143,10 @@ export function initAppEventsHandler() {
   ipcMain.handle('get-histories', () => getHistories())
   ipcMain.handle('add-history', (_, history: HistoryModel) => addHistory(history))
   ipcMain.handle('delete-history', (_, id: string) => deleteHistory(id))
+  ipcMain.handle('set-history-star', (_, id: string, starred: boolean) =>
+    setHistoryStar(id, starred)
+  )
+  ipcMain.handle('clear-history', () => clearHistory())
 
   /**
    * FEAT: memory 相关
