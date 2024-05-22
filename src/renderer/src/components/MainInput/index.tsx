@@ -8,10 +8,13 @@ import { userData } from '@renderer/store/user'
 import { processMemo } from '@renderer/lib/ai/memo'
 import { clearAns, restoreAns } from '@renderer/store/answer'
 import { parseFile } from '@renderer/lib/ai/file'
+import { chatHistoryTransfer } from '@renderer/store/history'
+import NewChatIcon from '@renderer/assets/icon/NewChatIcon'
 
 import { useLoading } from '../ui/DynamicLoading'
 import { useToast } from '../ui/Toast'
 import { clearMsgs, msgs, restoreMsgs } from '../../store/chat'
+import ToolTip from '../ui/ToolTip'
 
 import Tools, { Artifacts } from './Tools'
 
@@ -267,11 +270,14 @@ export default function Input(props: {
                   setRefreshing(false)
                 }, 600)
                 props.onClear?.()
-                toast.info(`${navigator.userAgent.includes('Mac') ? 'command' : 'ctrl'} + z 撤销`, {
-                  duration: 1000,
-                  position: 'top-3/4'
-                })
                 if (props.type === 'ans' || props.type === 'question') {
+                  toast.info(
+                    `${navigator.userAgent.includes('Mac') ? 'command' : 'ctrl'} + z 撤销`,
+                    {
+                      duration: 1000,
+                      position: 'top-3/4'
+                    }
+                  )
                   clearAns()
                   cleanupForRestoreMsgs = useEventListener(document, 'keydown', (e) => {
                     if ((e.key === 'z' && e.ctrlKey) || (e.key === 'z' && e.metaKey)) {
@@ -282,24 +288,41 @@ export default function Input(props: {
                   return
                 }
                 if (!msgs.length) return
+                toast.info('已创建新对话', {
+                  duration: 1000,
+                  position: 'top-3/4'
+                })
+                const historyID = chatHistoryTransfer.newHistory({ contents: msgs })
                 clearMsgs()
                 cleanupForRestoreMsgs = useEventListener(document, 'keydown', (e) => {
                   if ((e.key === 'z' && e.ctrlKey) || (e.key === 'z' && e.metaKey)) {
                     restoreMsgs()
+                    chatHistoryTransfer.drawHistory(historyID)
                     cleanupForRestoreMsgs?.()
                   }
                 })
               }}
-              class="group/refresh ml-1 h-8 w-8 rounded-full p-[7px] hover:bg-dark-plus"
+              class={`group/refresh ml-1 h-8 w-8 rounded-full ${props.type === 'ans' || props.type === 'question' ? 'p-[7px]' : 'p-1'} hover:bg-dark-plus`}
             >
-              <RefreshIcon
-                width={18}
-                height={18}
-                class={
-                  'rotate-45 cursor-pointer text-gray group-hover/refresh:text-active' +
-                  (refreshing() ? ' animate-rotate-180' : '')
+              <Show
+                when={props.type === 'ans' || props.type === 'question'}
+                fallback={
+                  <NewChatIcon
+                    width={24}
+                    height={24}
+                    class="text-gray group-hover/refresh:text-active"
+                  />
                 }
-              />
+              >
+                <RefreshIcon
+                  width={18}
+                  height={18}
+                  class={
+                    'rotate-45 cursor-pointer text-gray group-hover/refresh:text-active' +
+                    (refreshing() ? ' animate-rotate-180' : '')
+                  }
+                />
+              </Show>
             </div>
           </div>
         </Show>

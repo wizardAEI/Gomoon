@@ -4,8 +4,15 @@ import HistoryIcon from '@renderer/assets/icon/base/HistoryIcon'
 import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
 import { parseDisplayArr } from '@renderer/lib/ai/parseString'
 import { setAnswerStore } from '@renderer/store/answer'
-import { clearHistory, histories, removeHistory, starHistory } from '@renderer/store/history'
-import { Msg, setMsgs } from '@renderer/store/chat'
+import {
+  chatHistoryTransfer,
+  clearHistory,
+  copyHistory,
+  histories,
+  removeHistory,
+  starHistory
+} from '@renderer/store/history'
+import { Msg, msgs, setMsgs } from '@renderer/store/chat'
 import { setSelectedAssistantForAns, setSelectedAssistantForChat } from '@renderer/store/user'
 import { useNavigate } from '@solidjs/router'
 import { For, Show, createMemo, createSignal, onCleanup } from 'solid-js'
@@ -20,6 +27,8 @@ import ToolTip from '@renderer/components/ui/ToolTip'
 import StarIcon from '@renderer/assets/icon/StarIcon'
 import { useToast } from '@renderer/components/ui/Toast'
 import WarningIcon from '@renderer/assets/icon/base/Toast/WarningIcon'
+import CopyFillIcon from '@renderer/assets/icon/base/CopyFillIcon'
+import QuestionMention from '@renderer/components/ui/QuestionMention'
 
 import SpecialTypeContent from './SpecialTypeContent'
 import { decorateContent } from './utils'
@@ -29,6 +38,7 @@ const map = {
   question: '问题:',
   ans: '答案:'
 }
+
 export default function () {
   const nav = useNavigate()
   const toast = useToast()
@@ -57,11 +67,12 @@ export default function () {
   })
 
   return (
-    <div class="flex h-full select-none flex-col px-5 pt-2">
-      <div class="mb-3 flex select-none items-center gap-1 text-lg text-text1 lg:justify-center">
+    <div class="relative flex h-full select-none flex-col px-5 pt-2">
+      <div class="z-10 mb-3 flex select-none items-center gap-1 text-lg text-text1 lg:justify-center">
         <HistoryIcon width={20} height={20} /> <span class="text-base font-medium">对话历史</span>{' '}
+        <QuestionMention content="开启新连续对话后将自动保存，当前对话将不会展示在历史中" />
       </div>
-      <div class="mb-2 flex min-h-8 w-full items-center justify-between gap-2 pl-1 pr-2 lg:max-w-4xl">
+      <div class="mb-[10px] flex min-h-8 w-full items-center justify-between gap-2 pl-1 pr-2 lg:max-w-4xl">
         <Show
           when={!showSearchInput()}
           fallback={
@@ -138,7 +149,7 @@ export default function () {
                       .confirm(
                         <div class="flex items-center gap-1 pt-4">
                           <WarningIcon width={24} height={24} class="text-warning" />
-                          确定删除所有历史记录吗？
+                          确定删除所有非收藏历史记录吗?
                         </div>,
                         {
                           mask: true
@@ -197,9 +208,18 @@ export default function () {
                       width={22}
                       height={22}
                       class={`cursor-pointer ${h.starred ? 'text-active' : 'text-gray hover:text-active/80'}`}
-                      onClick={(e) => {
-                        e.stopPropagation()
+                      onClick={() => {
                         h.starred ? starHistory(h.id, false) : starHistory(h.id, true)
+                      }}
+                    />
+                    <CopyFillIcon
+                      width={21}
+                      height={21}
+                      class="cursor-pointer pl-[1px] pt-[1px] text-gray duration-100 hover:text-active"
+                      onClick={() => {
+                        copyHistory(h.id).then(() => {
+                          toast.success('拷贝成功')
+                        })
                       }}
                     />
                     <DoubleConfirm
@@ -226,7 +246,10 @@ export default function () {
                       h.assistantId && setSelectedAssistantForAns(h.assistantId)
                       nav('/ans')
                     } else if (h.type === 'chat') {
-                      removeHistory(h.id)
+                      if (msgs.length) {
+                        chatHistoryTransfer.newHistory({ contents: msgs })
+                      }
+                      chatHistoryTransfer.drawHistory(h.id)
                       setMsgs(h.contents as Msg[])
                       h.assistantId && setSelectedAssistantForChat(h.assistantId)
                       nav('/chat')

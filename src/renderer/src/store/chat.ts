@@ -5,8 +5,7 @@ import { ulid } from 'ulid'
 import { cloneDeep } from 'lodash'
 import { extractMeta } from '@renderer/lib/ai/parseString'
 
-import { addHistory } from './history'
-import { assistants, getCurrentAssistantForChat } from './assistants'
+import { assistants } from './assistants'
 import { consumedToken, setConsumedTokenForChat } from './input'
 import { userData } from './user'
 export interface Msg {
@@ -46,12 +45,6 @@ export function clearMsgs() {
     msgs: cloneDeep(msgs),
     consumedToken: consumedToken().chat
   }
-  addHistory({
-    id: ulid(),
-    assistantId: getCurrentAssistantForChat()?.id,
-    type: 'chat',
-    contents: msgs
-  })
   setMsgs([])
   setConsumedTokenForChat(0)
 }
