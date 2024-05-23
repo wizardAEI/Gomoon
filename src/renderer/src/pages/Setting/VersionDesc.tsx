@@ -5,6 +5,15 @@ import { For, Show, createSignal } from 'solid-js'
 
 const versions = [
   {
+    version: '1.1.1',
+    contents: [
+      '历史消息功能升级，支持了更多实用功能！',
+      '启动新对话时会自动保留上一次对话，管理历史消息更省心~',
+      '白月光主题适配优化。',
+      '最新模型『千问Long』上线，同时『文心 128K』更新为『Speed 128K』系列。'
+    ]
+  },
+  {
     version: '1.1.0',
     contents: [
       '白月光主题上线！不是单纯的白，色彩柔和更护眼，适合亮度较高的环境下使用。',
@@ -15,9 +24,9 @@ const versions = [
   {
     version: '1.0.9',
     contents: [
-      '增加了Ollama引擎，可以搭配本地或远程的Ollama客户端使用',
+      '增加了Ollama引擎，可以搭配本地或远程的Ollama客户端使用。',
       '现在gpt4和部分ollama模型支持图片理解啦！（https://ollama.com/library/llava）',
-      '现已支持删除连续对话中的中间的一对内容'
+      '现已支持删除连续对话中的中间的一对内容。'
     ]
   }
 ]
