@@ -1,6 +1,4 @@
 /* eslint-disable */
-//@ts-ignore
-//@eslint-ignore
 /*!
  * html2canvas 1.0.0-rc.7 <https://html2canvas.hertzen.com>
  * Copyright (c) 2020 Niklas von Hertzen <https://hertzen.com>
