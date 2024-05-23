@@ -197,9 +197,13 @@ export function createWindow(): void {
   })
   autoUpdater.checkForUpdates().then((res) => {
     // 如果有新版本则下载：
-    if (res && res.updateInfo.version !== app.getVersion()) {
-      autoUpdater.downloadUpdate()
-    }
+    // if (res && res.updateInfo.version !== app.getVersion()) {
+    //   autoUpdater.downloadUpdate()
+    // }
+    // 如果有新版本则通知：
+    mainWindow?.on('show', () => {
+      mainWindow?.webContents.send('post-message', 'update-available')
+    })
   })
 
   // FEAT: 链接跳转，自动打开浏览器

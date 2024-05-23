@@ -70,6 +70,11 @@ const App = (props) => {
 
     // FEAT: receive msg
     window.api.receiveMsg(async (_, msg: string) => {
+      if (msg === 'update-available') {
+        setUpdaterStatus({
+          canUpdate: true
+        })
+      }
       if (msg === 'update-downloaded')
         setUpdaterStatus({
           haveDownloaded: true
