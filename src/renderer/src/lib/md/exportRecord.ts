@@ -7,8 +7,7 @@ import katex from '@vscode/markdown-it-katex'
 import moment from 'moment'
 
 import { parseString } from '../ai/parseString'
-
-import html2canvas from './html2canvas'
+import html2canvas from '../html2canvas'
 
 const roleDict = {
   ai: '助手',
