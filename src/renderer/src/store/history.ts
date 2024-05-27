@@ -69,12 +69,14 @@ export const chatHistoryTransfer: {
   },
   // 将历史提取出出来
   drawHistory(id) {
+    if (this.now.id) {
+      addHistory(cloneDeep(this.now))
+    }
     this.now = cloneDeep(histories.find((history) => history.id === id)!)
     removeHistory(id)
     return this.now
   },
   newHistory(history) {
-    this.now.id && removeHistory(this.now.id)
     const id = ulid()
     addHistory({
       ...history,

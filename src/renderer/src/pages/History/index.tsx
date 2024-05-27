@@ -12,7 +12,7 @@ import {
   removeHistory,
   starHistory
 } from '@renderer/store/history'
-import { Msg, msgs, setMsgs } from '@renderer/store/chat'
+import { Msg, setMsgs } from '@renderer/store/chat'
 import { setSelectedAssistantForAns, setSelectedAssistantForChat } from '@renderer/store/user'
 import { useNavigate } from '@solidjs/router'
 import { For, Show, createMemo, createSignal, onCleanup } from 'solid-js'
@@ -72,7 +72,7 @@ export default function () {
         <HistoryIcon width={20} height={20} /> <span class="text-base font-medium">对话历史</span>{' '}
         <QuestionMention content="开启新连续对话后将自动保存，当前对话将不会展示在历史中" />
       </div>
-      <div class="mb-[10px] flex min-h-8 w-full items-center justify-between gap-2 pl-1 pr-2 lg:max-w-4xl">
+      <div class="mx-auto mb-[10px] flex min-h-8 w-full items-center justify-between gap-2 pl-1 pr-2 lg:max-w-4xl">
         <Show
           when={!showSearchInput()}
           fallback={
@@ -187,7 +187,7 @@ export default function () {
         <Show
           when={histories.length}
           fallback={
-            <div class="relative m-4 flex h-40 w-full select-none flex-col items-center justify-center gap-3 rounded-2xl border-2 border-solid border-transparent bg-dark p-5 duration-150 lg:max-w-4xl">
+            <div class="relative m-4 flex h-40 w-[calc(100%-32px)] select-none flex-col items-center justify-center gap-3 rounded-2xl border-2 border-solid border-transparent bg-dark p-5 duration-150 lg:max-w-4xl">
               <EmptyIcon height={50} class="text-gray" />
               <span class="text-sm text-gray">暂无历史</span>
               <span class="text-[12px] text-gray">
@@ -199,7 +199,7 @@ export default function () {
           <For each={filteredHistory()}>
             {(h) => (
               <>
-                <div class="flex w-full items-center justify-between rounded-t-2xl bg-dark-plus px-4 pt-2">
+                <div class="flex w-full items-center justify-between rounded-t-2xl bg-dark-plus px-4 pt-2 lg:max-w-4xl">
                   <div class="flex items-center gap-3 text-text2">
                     {h.contents[0].role === 'question' ? '问答记录' : '对话记录'}
                   </div>
