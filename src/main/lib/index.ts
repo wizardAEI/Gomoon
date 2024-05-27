@@ -1,7 +1,9 @@
 import { join } from 'path'
 import { writeFile } from 'fs'
 
-import { app, dialog } from 'electron'
+import { app, dialog, globalShortcut } from 'electron'
+
+import { beforeQuitWindowHandler } from '../window'
 
 export function getResourcesPath(filename: string): string {
   return app.isPackaged
@@ -11,7 +13,9 @@ export function getResourcesPath(filename: string): string {
 
 export const quitApp = {
   shouldQuit: false,
-  quit() {
+  async quit() {
+    await beforeQuitWindowHandler()
+    globalShortcut.unregisterAll()
     this.shouldQuit = true
   },
   reset() {
