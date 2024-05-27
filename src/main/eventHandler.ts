@@ -36,6 +36,7 @@ import {
   UserDataModel
 } from './models/model'
 import {
+  beforeQuitWindowHandler,
   checkUpdate,
   hideWindow,
   minimize,
@@ -189,9 +190,10 @@ export function initAppEventsHandler() {
   ipcMain.handle('check-update', async () => {
     return await checkUpdate()
   })
-  ipcMain.handle('quit-for-update', () => {
+  ipcMain.handle('quit-for-update', async () => {
     quitApp.quit()
-    autoUpdater.quitAndInstall(undefined, true)
+    await beforeQuitWindowHandler()
+    autoUpdater.quitAndInstall(true, true)
   })
   ipcMain.handle('download-update', async () => {
     return await autoUpdater.downloadUpdate()

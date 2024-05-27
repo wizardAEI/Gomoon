@@ -294,6 +294,5 @@ export function createWindow(): void {
 }
 
 export async function beforeQuitWindowHandler() {
-  // TODO: 发送关闭事件到前端（存储当前对话为历史）
   !multiCopyTracker?.killed && multiCopyTracker?.kill()
 }

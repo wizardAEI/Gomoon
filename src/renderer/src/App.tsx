@@ -3,7 +3,7 @@ import { Show, createEffect, onCleanup, onMount } from 'solid-js'
 import { IpcRendererEvent } from 'electron'
 
 import TopBar from './components/TopBar'
-import { loadConfig, setUpdaterStatus, settingStore } from './store/setting'
+import { loadConfig, setUpdaterStatus, settingStore, systemStore } from './store/setting'
 import Loading from './pages/Loading'
 import { loadUserData, userData, userHasUse } from './store/user'
 import { loadAssistants } from './store/assistants'
@@ -70,15 +70,16 @@ const App = (props) => {
 
     // FEAT: receive msg
     window.api.receiveMsg(async (_, msg: string) => {
-      if (msg === 'update-available') {
+      if (msg === 'update-available' && !systemStore.updateStatus.canUpdate) {
         setUpdaterStatus({
           canUpdate: true
         })
       }
-      if (msg === 'update-downloaded')
+      if (msg === 'update-downloaded' && !systemStore.updateStatus.haveDownloaded) {
         setUpdaterStatus({
           haveDownloaded: true
         })
+      }
       if (msg.includes('download-progress')) {
         const progress = parseInt(msg.split(' ')[1])
         setUpdaterStatus({
