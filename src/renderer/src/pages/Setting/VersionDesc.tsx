@@ -70,12 +70,11 @@ export default function () {
             }}
           </For>
         }
-        <br />
         <Show
           when={showMore()}
           fallback={
             <a
-              class="cursor-pointer text-text-link hover:text-active"
+              class="mt-3 cursor-pointer text-text-link hover:text-active"
               onClick={async () => setShowMore(true)}
             >
               查看更多
@@ -86,7 +85,7 @@ export default function () {
             {(version, index) => {
               return (
                 <>
-                  <div class="mb-1">v{version.version}</div>
+                  <div class="mt-3">v{version.version}</div>
                   <For each={versions[index() + 1].contents}>
                     {(content, index) => {
                       return (
