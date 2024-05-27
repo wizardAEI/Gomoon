@@ -196,10 +196,6 @@ export function createWindow(): void {
     mainWindow?.webContents.send('post-message', 'update-downloaded')
   })
   autoUpdater.checkForUpdates().then((res) => {
-    // 如果有新版本则下载：
-    // if (res && res.updateInfo.version !== app.getVersion()) {
-    //   autoUpdater.downloadUpdate()
-    // }
     // 如果有新版本则通知：
     if (res && res.updateInfo.version !== app.getVersion()) {
       mainWindow?.on('show', () => {
