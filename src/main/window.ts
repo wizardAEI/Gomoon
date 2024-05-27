@@ -201,9 +201,11 @@ export function createWindow(): void {
     //   autoUpdater.downloadUpdate()
     // }
     // 如果有新版本则通知：
-    mainWindow?.on('show', () => {
-      mainWindow?.webContents.send('post-message', 'update-available')
-    })
+    if (res && res.updateInfo.version !== app.getVersion()) {
+      mainWindow?.on('show', () => {
+        mainWindow?.webContents.send('post-message', 'update-available')
+      })
+    }
   })
 
   // FEAT: 链接跳转，自动打开浏览器
