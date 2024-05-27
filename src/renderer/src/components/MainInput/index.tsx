@@ -14,7 +14,6 @@ import NewChatIcon from '@renderer/assets/icon/NewChatIcon'
 import { useLoading } from '../ui/DynamicLoading'
 import { useToast } from '../ui/Toast'
 import { clearMsgs, msgs, restoreMsgs } from '../../store/chat'
-import ToolTip from '../ui/ToolTip'
 
 import Tools, { Artifacts } from './Tools'
 
@@ -292,7 +291,10 @@ export default function Input(props: {
                   duration: 1000,
                   position: 'top-3/4'
                 })
-                const historyID = chatHistoryTransfer.newHistory({ contents: msgs })
+                const historyID = chatHistoryTransfer.newHistory({
+                  contents: msgs,
+                  assistantId: userData.selectedAssistantForChat
+                })
                 clearMsgs()
                 cleanupForRestoreMsgs = useEventListener(document, 'keydown', (e) => {
                   if ((e.key === 'z' && e.ctrlKey) || (e.key === 'z' && e.metaKey)) {

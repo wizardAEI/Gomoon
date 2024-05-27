@@ -246,9 +246,6 @@ export default function () {
                       h.assistantId && setSelectedAssistantForAns(h.assistantId)
                       nav('/ans')
                     } else if (h.type === 'chat') {
-                      if (msgs.length) {
-                        chatHistoryTransfer.newHistory({ contents: msgs })
-                      }
                       chatHistoryTransfer.drawHistory(h.id)
                       setMsgs(h.contents as Msg[])
                       h.assistantId && setSelectedAssistantForChat(h.assistantId)

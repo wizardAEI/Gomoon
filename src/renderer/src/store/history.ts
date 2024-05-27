@@ -46,7 +46,10 @@ export const chatHistoryTransfer: {
   now: HistoryModel
   init: () => void
   drawHistory(id: string): HistoryModel
-  newHistory(history: { contents: HistoryModel['contents'] }): string
+  newHistory(history: {
+    contents: HistoryModel['contents']
+    assistantId?: HistoryModel['assistantId']
+  }): string
 } = {
   now: {
     id: '',
@@ -67,6 +70,7 @@ export const chatHistoryTransfer: {
   // 将历史提取出出来
   drawHistory(id) {
     this.now = cloneDeep(histories.find((history) => history.id === id)!)
+    removeHistory(id)
     return this.now
   },
   newHistory(history) {
