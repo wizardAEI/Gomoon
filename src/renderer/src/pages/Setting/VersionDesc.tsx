@@ -5,6 +5,10 @@ import { For, Show, createSignal } from 'solid-js'
 
 const versions = [
   {
+    version: '1.1.3',
+    contents: ['增加了KIMI的图面识别功能。', '文案优化']
+  },
+  {
     version: '1.1.2',
     contents: ['修复一些消息历史模块的已知问题。', '消息历史页面样式优化。']
   },

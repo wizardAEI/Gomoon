@@ -10,6 +10,7 @@ import { clearAns, restoreAns } from '@renderer/store/answer'
 import { parseFile } from '@renderer/lib/ai/file'
 import { chatHistoryTransfer } from '@renderer/store/history'
 import NewChatIcon from '@renderer/assets/icon/NewChatIcon'
+import { ModelsType } from '@lib/langchain'
 
 import { useLoading } from '../ui/DynamicLoading'
 import { useToast } from '../ui/Toast'
@@ -25,6 +26,15 @@ const typeDict: {
   ans: 'ans',
   question: 'ans'
 }
+
+const multiModals = [
+  'GPT4',
+  'GPTCustom',
+  'Ollama',
+  'Moonshot8k',
+  'Moonshot32k',
+  'Moonshot128k'
+] as ModelsType[]
 
 /**
  * FEAT: Input 组件，用于接收用户输入的文本，onMountHandler可以在外部操作 input 元素
@@ -65,9 +75,9 @@ export default function Input(props: {
     if (artifactContent().length) {
       if (
         /<gomoon-image (.*?)>/.test(artifactContent()) &&
-        !(userData.selectedModel === 'GPT4' || userData.selectedModel === 'Ollama')
+        !multiModals.includes(userData.selectedModel)
       ) {
-        toast.error('仅GPT4，部分 Ollama 模型支持图片输出')
+        toast.error('仅 GPT4，KIMI，部分 Ollama 模型支持图片输出')
         return
       }
       props.send(artifactContent() + inputText())

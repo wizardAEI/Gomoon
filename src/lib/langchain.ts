@@ -5,8 +5,10 @@ import { ChatOllama } from '@langchain/community/chat_models/ollama'
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
 import { HumanMessage, SystemMessage, AIMessage } from '@langchain/core/messages'
 import type { BaseMessage, MessageContent } from 'langchain/schema'
-import { ChatOpenAI } from '@langchain/openai'
+import { ChatOpenAI, OpenAIClient } from '@langchain/openai'
 import { isArray } from 'lodash'
+
+import { base64ToFile } from './utils_web'
 
 export type ModelInterfaceType =
   | ChatBaiduWenxin
@@ -228,8 +230,8 @@ export const newGeminiModel = (
 export const newMoonshotModel = (
   config: { apiKey: string; temperature: number; baseURL: string },
   modelName: string
-) =>
-  new ChatOpenAI({
+) => {
+  const moonshot = new ChatOpenAI({
     streaming: true,
     modelName,
     openAIApiKey: config.apiKey || 'api-key',
@@ -238,6 +240,38 @@ export const newMoonshotModel = (
       baseURL: config.baseURL || 'https://api.moonshot.cn/v1'
     }
   })
+  const client = new OpenAIClient({
+    apiKey: config.apiKey || 'api-key',
+    baseURL: config.baseURL || 'https://api.moonshot.cn/v1',
+    dangerouslyAllowBrowser: true
+  })
+  const oldInvoke = moonshot.invoke.bind(moonshot)
+  moonshot.invoke = async (...args) => {
+    const msgs = args[0] as any
+    if (isArray(msgs)) {
+      for (const msg of msgs) {
+        const content = msg.content
+        if (isArray(content)) {
+          for (const c of content) {
+            if (c.type === 'image_url') {
+              const base64 = c.image_url.url as string
+              const file = base64ToFile(base64, 'image')
+              const file_object = await client.files.create({
+                file,
+                purpose: 'file-extract' as any
+              })
+              const file_content = await (await client.files.content(file_object.id)).text()
+              c.type = 'text'
+              c.text = file_content
+            }
+          }
+        }
+      }
+    }
+    return oldInvoke(...args)
+  }
+  return moonshot
+}
 
 // 判断当前是node环境还是浏览器环境
 export const newChatLlama = (config: { src: string; temperature: number }) => {
