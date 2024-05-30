@@ -32,12 +32,19 @@ export function setQuicklyWakeUp(keys: string) {
    * FEAT: 按键监听
    */
   globalShortcut.register(keys, () => {
-    if (mainWindow?.isVisible()) {
-      mainWindow?.hide()
-      return
+    function showWindow() {
+      mainWindow?.webContents.send('show-window')
+      mainWindow?.show()
     }
-    mainWindow?.webContents.send('show-window')
-    mainWindow?.show()
+    if (!mainWindow?.isVisible()) {
+      showWindow()
+    } else if (mainWindow?.isAlwaysOnTop()) {
+      mainWindow?.hide()
+    } else if (!mainWindow?.isFocused()) {
+      showWindow()
+    } else {
+      mainWindow?.hide()
+    }
   })
   preKeys && globalShortcut.unregister(preKeys)
   preKeys = keys
