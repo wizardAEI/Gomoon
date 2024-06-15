@@ -75,6 +75,7 @@ module.exports = {
             text1: '#d8e3e7', // 云峰白
             text2: '#d0dfe6', // 远天蓝
             text3: '#d0dfe680', // 远天蓝70%
+            'text-code': '#abb2bf', // 云峰白
             'text-active': '#d8e3e7', // 激活的背景上的文字
             'text-dark': '#151b26', // 深色
             'text-dark2': '#276b84', // 深蓝绿
@@ -119,6 +120,7 @@ module.exports = {
               text1: '#181a07',
               text2: '#25270b',
               text3: '#25270b60',
+              'text-code': '#474b4c',
               'text-active': '#eef7f2', // 激活的背景上的文字
               'text-dark': '#151b26', // 深色
               'text-dark2': '#276b84', // 深蓝绿

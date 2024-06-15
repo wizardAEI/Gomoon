@@ -123,6 +123,10 @@
   border-bottom: 2px solid #64748b40;
 }
 
+.hljs {
+  @apply text-text-code !important;
+}
+
 .markdown code:not(.hljs) {
   @apply bg-inline-code;
   @apply text-text2;
