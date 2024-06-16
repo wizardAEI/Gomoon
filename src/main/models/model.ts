@@ -28,6 +28,7 @@ export type AssistantModel = (
   name: string
   introduce?: string
   prompt: string
+  matchModel?: ModelsType
   // 保留字段
   deleted?: boolean
   tools?: ToolEnum[]
