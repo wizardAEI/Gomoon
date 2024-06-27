@@ -84,6 +84,7 @@ export default function Input(props: {
       setInputText(''), setArtifacts([])
       return
     }
+    if (inputText().trim() === '') return
     let content = ''
     if (memoCapsule() && props.type !== 'ai' && props.type !== 'ans') {
       dynamicLoading.show('记忆胶囊启动⚡️⚡️')

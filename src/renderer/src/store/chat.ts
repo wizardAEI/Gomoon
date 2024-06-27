@@ -4,6 +4,7 @@ import { createStore, produce } from 'solid-js/store'
 import { ulid } from 'ulid'
 import { cloneDeep } from 'lodash'
 import { extractMeta } from '@renderer/lib/ai/parseString'
+import { createEffect } from 'solid-js'
 
 import { assistants } from './assistants'
 import { consumedToken, setConsumedTokenForChat } from './input'
@@ -14,7 +15,13 @@ export interface Msg {
   content: string
 }
 
-const [msgs, setMsgs] = createStore<Array<Msg>>([])
+const [msgs, setMsgs] = createStore<Array<Msg>>(
+  localStorage.getItem('chat_msgs') ? JSON.parse(localStorage.getItem('chat_msgs')!) : []
+)
+
+createEffect(() => {
+  localStorage.setItem('chat_msgs', JSON.stringify(msgs))
+})
 
 let trash: {
   msgs: Array<Msg>

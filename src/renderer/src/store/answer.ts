@@ -3,6 +3,7 @@ import { createStore, produce } from 'solid-js/store'
 import { ulid } from 'ulid'
 import { ErrorDict } from '@renderer/lib/constant'
 import { extractMeta } from '@renderer/lib/ai/parseString'
+import { createEffect } from 'solid-js'
 
 import { addHistory } from './history'
 import { getCurrentAssistantForAnswer } from './assistants'
@@ -21,10 +22,19 @@ function initTrash() {
   }
 }
 
-const [answerStore, setAnswerStore] = createStore({
-  answer: '',
-  question: ''
+const [answerStore, setAnswerStore] = createStore(
+  localStorage.getItem('answer_answer')
+    ? JSON.parse(localStorage.getItem('answer_answer')!)
+    : {
+        answer: '',
+        question: ''
+      }
+)
+
+createEffect(() => {
+  localStorage.setItem('answer_answer', JSON.stringify(answerStore))
 })
+
 const [ansStatus, setAnsStatus] = createStore({
   isGenerating: false
 })
