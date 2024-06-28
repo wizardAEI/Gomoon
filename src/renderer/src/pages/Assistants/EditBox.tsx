@@ -57,8 +57,12 @@ export default function (props: {
       >
         <div class="absolute right-0">
           <Select
-            defaultValue={a().matchModel || '跟随当前模型'}
+            defaultValue={a().matchModel || 'current'}
             options={[
+              {
+                value: 'current',
+                label: '跟随当前模型'
+              },
               {
                 value: 'a',
                 label: 'A'

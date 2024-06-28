@@ -6,7 +6,11 @@ import { For, Show, createSignal } from 'solid-js'
 const versions = [
   {
     version: '1.1.3',
-    contents: ['增加了KIMI的图片识别功能。', '一些交互优化']
+    contents: [
+      '助手偏好模型功能（点击更多助手进行编辑即可体验~）',
+      '增加了KIMI的图片识别功能。',
+      '一些细节的优化'
+    ]
   },
   {
     version: '1.1.2',
