@@ -2,7 +2,8 @@ import ChatGptIcon from '@renderer/assets/icon/models/ChatGptIcon'
 import WenxinIcon from '@renderer/assets/icon/models/WenxinIcon'
 import QWenIcon from '@renderer/assets/icon/models/QWenIcon'
 import { setSelectedModel, userData } from '@renderer/store/user'
-import { createMemo, createSignal, For, JSXElement, onCleanup, Show } from 'solid-js'
+import { createMemo, createSignal, For, onCleanup, Show } from 'solid-js'
+import type { JSXElement } from 'solid-js'
 import { settingStore } from '@renderer/store/setting'
 import { ModelsType } from '@lib/langchain'
 import GeminiIcon from '@renderer/assets/icon/models/GeminiIcon'
@@ -10,7 +11,11 @@ import KimiIcon from '@renderer/assets/icon/models/KimiIcon'
 import LlamaIcon from '@renderer/assets/icon/models/LlamaIcon'
 import OllamaIcon from '@renderer/assets/icon/models/OllamaIcon'
 
-export default function (props: { position: string; size?: number; translate?: string }) {
+export function getModelOptions(): {
+  label: JSXElement
+  icon: (size: number) => JSXElement
+  value: ModelsType
+}[] {
   const options: {
     label: JSXElement
     icon: (size: number) => JSXElement
@@ -234,7 +239,11 @@ export default function (props: { position: string; size?: number; translate?: s
       value: 'Ollama'
     })
   }
+  return options
+}
 
+export default function (props: { position: string; size?: number; translate?: string }) {
+  const options = getModelOptions()
   // 使用 createSignal 来管理下拉菜单的显示状态
   const [isOpen, setIsOpen] = createSignal(false)
   // 使用 createSignal 来管理选中的值

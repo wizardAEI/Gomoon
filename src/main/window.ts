@@ -32,12 +32,19 @@ export function setQuicklyWakeUp(keys: string) {
    * FEAT: 按键监听
    */
   globalShortcut.register(keys, () => {
-    if (mainWindow?.isVisible()) {
-      mainWindow?.hide()
-      return
+    function showWindow() {
+      mainWindow?.webContents.send('show-window')
+      mainWindow?.show()
     }
-    mainWindow?.webContents.send('show-window')
-    mainWindow?.show()
+    if (!mainWindow?.isVisible()) {
+      showWindow()
+    } else if (mainWindow?.isAlwaysOnTop()) {
+      mainWindow?.hide()
+    } else if (!mainWindow?.isFocused()) {
+      showWindow()
+    } else {
+      mainWindow?.hide()
+    }
   })
   preKeys && globalShortcut.unregister(preKeys)
   preKeys = keys
@@ -196,9 +203,11 @@ export function createWindow(): void {
     mainWindow?.webContents.send('post-message', 'update-downloaded')
   })
   autoUpdater.checkForUpdates().then((res) => {
-    // 如果有新版本则下载：
+    // 如果有新版本则通知：
     if (res && res.updateInfo.version !== app.getVersion()) {
-      autoUpdater.downloadUpdate()
+      mainWindow?.on('show', () => {
+        mainWindow?.webContents.send('post-message', 'update-available')
+      })
     }
   })
 
@@ -292,6 +301,5 @@ export function createWindow(): void {
 }
 
 export async function beforeQuitWindowHandler() {
-  // TODO: 发送关闭事件到前端（存储当前对话为历史）
   !multiCopyTracker?.killed && multiCopyTracker?.kill()
 }

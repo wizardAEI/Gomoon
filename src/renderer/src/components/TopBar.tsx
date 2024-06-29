@@ -43,7 +43,7 @@ function Entries() {
             }
           />
         }
-        content="对话记录"
+        content="对话历史"
         position={{
           placement: 'bottom'
         }}

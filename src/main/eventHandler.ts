@@ -189,9 +189,9 @@ export function initAppEventsHandler() {
   ipcMain.handle('check-update', async () => {
     return await checkUpdate()
   })
-  ipcMain.handle('quit-for-update', () => {
-    quitApp.quit()
-    autoUpdater.quitAndInstall(undefined, true)
+  ipcMain.handle('quit-for-update', async () => {
+    await quitApp.quit()
+    autoUpdater.quitAndInstall(true, true)
   })
   ipcMain.handle('download-update', async () => {
     return await autoUpdater.downloadUpdate()

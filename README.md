@@ -105,7 +105,7 @@ resources/
 
 后续就可以正常启动项目进行开发了。
 
-## LLAMA 模型支持 CUDA（NVIDIA 显卡调用）
+## llama-cpp 支持 CUDA（NVIDIA 显卡调用）
 
 1. 确保你的显卡支持 CUDA，并且已经安装了 CUDA 驱动和 CUDA Toolkit（版本12以上）
 2. 克隆该项目，获取 resource 文件，并放在项目根目录

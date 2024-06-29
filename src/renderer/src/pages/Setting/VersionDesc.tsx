@@ -5,6 +5,18 @@ import { For, Show, createSignal } from 'solid-js'
 
 const versions = [
   {
+    version: '1.1.3',
+    contents: [
+      '助手偏好模型功能（点击更多助手进行编辑即可体验~）',
+      '增加了KIMI的图片识别功能。',
+      '一些细节的优化'
+    ]
+  },
+  {
+    version: '1.1.2',
+    contents: ['修复一些消息历史模块的已知问题。', '消息历史页面样式优化。']
+  },
+  {
     version: '1.1.1',
     contents: [
       '历史消息功能升级，支持了更多实用功能！',
@@ -70,12 +82,11 @@ export default function () {
             }}
           </For>
         }
-        <br />
         <Show
           when={showMore()}
           fallback={
             <a
-              class="cursor-pointer text-text-link hover:text-active"
+              class="mt-3 cursor-pointer text-text-link hover:text-active"
               onClick={async () => setShowMore(true)}
             >
               查看更多
@@ -86,7 +97,7 @@ export default function () {
             {(version, index) => {
               return (
                 <>
-                  <div class="mb-1">v{version.version}</div>
+                  <div class="mt-3">v{version.version}</div>
                   <For each={versions[index() + 1].contents}>
                     {(content, index) => {
                       return (

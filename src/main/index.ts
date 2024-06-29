@@ -1,10 +1,10 @@
-import { app, BrowserWindow, Menu, globalShortcut } from 'electron'
+import { app, BrowserWindow, Menu } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 
 import icon from '../../resources/icon.png?asset'
 
 import { initAppEventsHandler } from './eventHandler'
-import { beforeQuitWindowHandler, createWindow, showWindow } from './window'
+import { createWindow, showWindow } from './window'
 import { quitApp } from './lib'
 
 // dock
@@ -51,9 +51,7 @@ app.on('before-quit', async (e) => {
     return
   }
   e.preventDefault()
-  await beforeQuitWindowHandler()
-  globalShortcut.unregisterAll()
-  quitApp.quit()
+  await quitApp.quit()
   setTimeout(() => app.quit())
 })
 
@@ -62,7 +60,3 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-
-// app.on('will-quit', (e) => {
-//  ///
-// })
