@@ -78,6 +78,12 @@
   width: 0.45rem;
   height: 6px;
 }
+.scrollbar-translucent::-webkit-scrollbar-thumb {
+  background-color: #c0c1c540;
+}
+.scrollbar-transparent::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
 
 /* markdown 专属css */
 .markdown h1 {
