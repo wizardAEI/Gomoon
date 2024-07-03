@@ -7,6 +7,7 @@ import { getCurrentAssistantForAnswer } from '@renderer/store/assistants'
 import SystemHeader from '@renderer/components/MainSelections'
 import Capsule from '@renderer/components/Capsule'
 import { inputText, setInputText } from '@renderer/store/input'
+import { changeMatchModel } from '@renderer/store/user'
 
 import { genAns, answerStore, ansStatus } from '../../store/answer'
 
@@ -40,6 +41,9 @@ export default function Answer() {
       setInputText(msg)
       setShowModal(true)
     })
+
+    changeMatchModel(getCurrentAssistantForAnswer().matchModel)
+
     onCleanup(() => {
       removeListener()
     })

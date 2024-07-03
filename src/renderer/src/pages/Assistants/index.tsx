@@ -57,7 +57,7 @@ export default function () {
             width={30}
             class="cursor-pointer text-gray duration-100 group-hover/create:text-active"
           />
-          <span class="text-base">创建一个属于你的{map[type]}助手</span>
+          <span class="text-base">创建一个属于你的{type ? map[type] : ''}助手</span>
         </div>
         <For each={assistants.filter((a) => a.type === type)}>
           {(a) => (

@@ -50,9 +50,9 @@ const Select: Component<SelectProps> = (props) => {
   }
 
   return (
-    <div>
+    <div class="w-full">
       <div
-        class="mb-1 cursor-pointer rounded-lg border-solid border-dark px-4 py-[2px] hover:border-active"
+        class="mb-1 cursor-pointer rounded-lg border-solid border-dark px-4 py-[2px] text-center hover:border-active"
         ref={(el) => {
           const fn = (e) => {
             if (e.target && el.contains(e.target)) {
@@ -68,17 +68,19 @@ const Select: Component<SelectProps> = (props) => {
           })
         }}
       >
-        <div>{label()}</div>
+        {label()}
       </div>
       <Show when={isOpen()}>
-        <div class="rounded-lg bg-dark-plus py-1 shadow-center">
-          <For each={props.options}>
-            {(option) => (
-              <div class="my-2 cursor-pointer text-center" onClick={() => handleSelect(option)}>
-                <div class="hover:text-active">{option.label}</div>
-              </div>
-            )}
-          </For>
+        <div class="w-full rounded-lg bg-dark-plus p-1 shadow-center">
+          <div class="scrollbar-show max-h-40">
+            <For each={props.options}>
+              {(option) => (
+                <div class="my-2 cursor-pointer text-center" onClick={() => handleSelect(option)}>
+                  <div class="hover:text-active">{option.label}</div>
+                </div>
+              )}
+            </For>
+          </div>
         </div>
       </Show>
     </div>
