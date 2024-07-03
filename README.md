@@ -39,13 +39,15 @@ Gomoon 是一个开源项目，目前处于初始阶段，还有很多功能有�
 
 | 模型类型 | 模型名称                                                                    |
 | -------- | --------------------------------------------------------------------------- |
-| ChatGPT  | 最新的 GPT3，GPT4，支持 GPT API 的自定义模型                                |
+| ChatGPT  | GPT3，GPT4，支持 OpenAI API 模式的模型。                                    |
 | 文心     | 文心3.5，文心4.0，文心128k                                                  |
 | 千问     | 千问Turbo，千问Plus，千问Max                                                |
 | Gemini   | Gemini Pro                                                                  |
 | Kimi     | Kimi 8k，Kimi 32k，Kimi 128k                                                |
 | Llama    | [node-llama-cpp](https://withcatai.github.io/node-llama-cpp) 支持的所有模型 |
 | Ollama   | [ollama](https://ollama.com/) 支持的所有模型                                |
+
+由于 ChatGPT 国内访问不易，这里推荐一下 [ChatAnywhere](https://peiqishop.me/)，价格十分实惠的国内 ChatGPT 提供商。
 
 ## 安装指南
 
@@ -101,7 +103,7 @@ resources/
             └── ....
 ```
 
-同时也可以使用[云盘](https://www.123pan.com/s/Cwttjv-VASXv.html)下载
+同时也可以使用[云盘](https://www.123pan.com/s/Cwttjv-29lXv.html)下载
 
 后续就可以正常启动项目进行开发了。
 
