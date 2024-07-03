@@ -6,7 +6,7 @@ import { event } from '@renderer/lib/util'
 import { getCurrentAssistantForChat } from '@renderer/store/assistants'
 import SystemHeader from '@renderer/components/MainSelections'
 import Capsule from '@renderer/components/Capsule'
-import { currentLines } from '@renderer/store/user'
+import { changeMatchModel, currentLines } from '@renderer/store/user'
 import { inputText, setInputText } from '@renderer/store/input'
 import { useToast } from '@renderer/components/ui/Toast'
 import { useEventListener } from 'solidjs-use'
@@ -93,6 +93,8 @@ export default function Chat() {
       setPreviousMsg({ content: c, id, state: 'pending' })
     }
     event.on('editUserMsg', editUserMsg)
+
+    changeMatchModel(getCurrentAssistantForChat().matchModel)
 
     onCleanup(() => {
       if (previousMsg().state !== 'complete') {

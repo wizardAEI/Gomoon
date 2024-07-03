@@ -183,7 +183,32 @@ export default function () {
           </div>
         </Show>
       </div>
-      <div class="scrollbar-show -mx-2 flex w-[calc(100%+16px)] flex-col items-center">
+      <div
+        ref={(dom) => {
+          dom.classList.add('scrollbar-translucent')
+          dom.classList.add('scrollbar-transparent')
+          let time: NodeJS.Timeout | null = null
+          dom.onscrollend = () => {
+            console.log('scroll end')
+
+            time = setTimeout(() => {
+              dom.classList.add('scrollbar-translucent')
+              setTimeout(() => {
+                dom.classList.add('scrollbar-transparent')
+              }, 1000)
+            }, 2000)
+          }
+          dom.onscroll = () => {
+            console.log('scroll')
+            dom.classList.remove('scrollbar-translucent')
+            dom.classList.remove('scrollbar-transparent')
+            if (time) {
+              clearTimeout(time)
+            }
+          }
+        }}
+        class="scrollbar-show -mx-2 flex w-[calc(100%+16px)] flex-col items-center"
+      >
         <div class="ml-[0.45rem] mr-[calc(100%-100vw+24px+0.45rem)] w-[calc(100vw-24px-0.9rem)] px-1">
           <Show
             when={histories.length}

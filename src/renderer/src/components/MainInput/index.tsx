@@ -377,7 +377,7 @@ export default function Input(props: {
                 ? navigator.userAgent.includes('Mac')
                   ? 'Command + Enter 发送'
                   : 'Ctrl + Enter 发送'
-                : 'Enter 发送，Shift+Enter 换行') + '（可以复制文件和图片）'
+                : 'Enter 发送，Shift+Enter 换行') + '（可以粘贴文件和图片）'
             }
             class="font-sans max-h-48 flex-1 resize-none rounded-2xl border-none bg-transparent px-4 py-[6px] text-sm text-text1 caret-text2 transition-none focus:outline-none"
           />

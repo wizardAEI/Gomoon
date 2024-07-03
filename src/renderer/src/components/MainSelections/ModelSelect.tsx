@@ -5,7 +5,7 @@ import { setSelectedModel, userData } from '@renderer/store/user'
 import { createMemo, createSignal, For, onCleanup, Show } from 'solid-js'
 import type { JSXElement } from 'solid-js'
 import { settingStore } from '@renderer/store/setting'
-import { ModelsType } from '@lib/langchain'
+import { ModelsType, modelDict } from '@lib/langchain'
 import GeminiIcon from '@renderer/assets/icon/models/GeminiIcon'
 import KimiIcon from '@renderer/assets/icon/models/KimiIcon'
 import LlamaIcon from '@renderer/assets/icon/models/LlamaIcon'
@@ -22,7 +22,7 @@ export function getModelOptions(): {
     value: ModelsType
   }[] = [
     {
-      label: <span class="text-base text-current">文心 3.5</span>,
+      label: <span class="text-base text-current">{modelDict['ERNIE3'].label}</span>,
       icon(size: number) {
         return (
           <WenxinIcon
@@ -35,7 +35,7 @@ export function getModelOptions(): {
       value: 'ERNIE3'
     },
     {
-      label: <span class="text-base text-current">文心 4.0</span>,
+      label: <span class="text-base text-current">{modelDict['ERNIE4'].label}</span>,
       icon(size: number) {
         return (
           <WenxinIcon
@@ -48,7 +48,7 @@ export function getModelOptions(): {
       value: 'ERNIE4'
     },
     {
-      label: <span class="text-sm text-current">文心 128K</span>,
+      label: <span class="text-sm text-current">{modelDict['ERNIE128K'].label}</span>,
       icon(size: number) {
         return (
           <WenxinIcon
@@ -61,7 +61,7 @@ export function getModelOptions(): {
       value: 'ERNIE128K'
     },
     {
-      label: <span class="text-base text-current">GPT 3.5</span>,
+      label: <span class="text-base text-current">{modelDict['GPT3'].label}</span>,
       icon(size: number) {
         return (
           <ChatGptIcon
@@ -74,7 +74,7 @@ export function getModelOptions(): {
       value: 'GPT3'
     },
     {
-      label: <span class="text-base text-current">GPT 4.0</span>,
+      label: <span class="text-base text-current">{modelDict['GPT4'].label}</span>,
       icon(size: number) {
         return (
           <ChatGptIcon
@@ -90,7 +90,7 @@ export function getModelOptions(): {
 
   if (settingStore.models.OpenAI.customModel) {
     options.push({
-      label: <span class="text-base text-current">ChatGPT</span>,
+      label: <span class="text-base text-current">{modelDict['GPTCustom'].label}</span>,
       icon(size: number) {
         return (
           <ChatGptIcon
@@ -107,7 +107,7 @@ export function getModelOptions(): {
   if (settingStore.models.AliQWen.apiKey) {
     options.push(
       {
-        label: <span class="text-sm leading-6 text-current">千问Turbo</span>,
+        label: <span class="text-sm leading-6 text-current">{modelDict['QWenTurbo'].label}</span>,
         icon(size: number) {
           return (
             <QWenIcon
@@ -120,7 +120,7 @@ export function getModelOptions(): {
         value: 'QWenTurbo'
       },
       {
-        label: <span class="text-sm leading-6 text-current">千问Max</span>,
+        label: <span class="text-sm leading-6 text-current">{modelDict['QWenMax'].label}</span>,
         icon(size: number) {
           return (
             <QWenIcon
@@ -133,7 +133,7 @@ export function getModelOptions(): {
         value: 'QWenMax'
       },
       {
-        label: <span class="text-sm leading-6 text-current">千问Long</span>,
+        label: <span class="text-sm leading-6 text-current">{modelDict['QWenLong'].label}</span>,
         icon(size: number) {
           return (
             <QWenIcon
@@ -150,7 +150,7 @@ export function getModelOptions(): {
 
   if (settingStore.models.Gemini.apiKey) {
     options.push({
-      label: <span class="text-sm leading-6 text-current">Gemini Pro</span>,
+      label: <span class="text-sm leading-6 text-current">{modelDict['GeminiPro'].label}</span>,
       icon(size: number) {
         return (
           <GeminiIcon
@@ -167,7 +167,7 @@ export function getModelOptions(): {
   if (settingStore.models.Moonshot.apiKey) {
     options.push(
       {
-        label: <span class="text-sm leading-6 text-current">KIMI 8k</span>,
+        label: <span class="text-sm leading-6 text-current">{modelDict['Moonshot8k'].label}</span>,
         icon(size: number) {
           return (
             <KimiIcon
@@ -180,7 +180,7 @@ export function getModelOptions(): {
         value: 'Moonshot8k'
       },
       {
-        label: <span class="text-sm leading-6 text-current">KIMI 32k</span>,
+        label: <span class="text-sm leading-6 text-current">{modelDict['Moonshot32k'].label}</span>,
         icon(size: number) {
           return (
             <KimiIcon
@@ -193,7 +193,9 @@ export function getModelOptions(): {
         value: 'Moonshot32k'
       },
       {
-        label: <span class="text-sm leading-6 text-current">KIMI 128k</span>,
+        label: (
+          <span class="text-sm leading-6 text-current">{modelDict['Moonshot128k'].label}</span>
+        ),
         icon(size: number) {
           return (
             <KimiIcon
@@ -210,7 +212,7 @@ export function getModelOptions(): {
 
   if (settingStore.models.Llama.src) {
     options.push({
-      label: <span class="text-base leading-6 text-current">Llama</span>,
+      label: <span class="text-base leading-6 text-current">{modelDict['Llama'].label}</span>,
       icon(size: number) {
         return (
           <LlamaIcon
@@ -226,7 +228,7 @@ export function getModelOptions(): {
 
   if (settingStore.models.Ollama.address && settingStore.models.Ollama.model) {
     options.push({
-      label: <span class="text-base leading-6 text-current">Ollama</span>,
+      label: <span class="text-base leading-6 text-current">{modelDict['Ollama'].label}</span>,
       icon(size: number) {
         return (
           <OllamaIcon

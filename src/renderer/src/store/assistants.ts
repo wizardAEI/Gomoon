@@ -3,7 +3,7 @@ import { AssistantModel } from 'src/main/models/model'
 import { createMemo } from 'solid-js'
 import { cloneDeep } from 'lodash'
 
-import { userData } from './user'
+import { changeMatchModel, userData } from './user'
 
 const [assistants, setAssistants] = createStore<AssistantModel[]>([])
 
@@ -83,6 +83,8 @@ export async function deleteAssistant(id: string) {
 export async function useAssistant(id: string) {
   await window.api.useAssistant(id)
   await loadAssistants()
+  const currentA = assistants.find((a) => a.id === id)
+  changeMatchModel(currentA?.matchModel)
 }
 
 export const getCurrentAssistantForAnswer = createMemo<AssistantModel>(() => {

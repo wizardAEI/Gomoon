@@ -90,6 +90,7 @@ export function setTheme(theme: SettingModel['theme']) {
     ...configDB.data,
     theme
   }
+  configDB.write()
 }
 
 /**

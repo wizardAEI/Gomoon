@@ -1,5 +1,5 @@
 import { createStore } from 'solid-js/store'
-import { Line, UserDataModel } from 'src/main/models/model'
+import { AssistantModel, Line, UserDataModel } from 'src/main/models/model'
 import { ModelsType } from '@lib/langchain'
 import { createMemo } from 'solid-js'
 
@@ -45,6 +45,18 @@ export function userHasUse() {
   window.api.setUserData({
     firstTime: false
   })
+}
+
+export function changeMatchModel(model: AssistantModel['matchModel']) {
+  if (model && model !== 'current') {
+    window.api
+      .setUserData({
+        selectedModel: model
+      })
+      .then(() => {
+        setUserData('selectedModel', model)
+      })
+  }
 }
 
 export function setSelectedModel(model: ModelsType) {

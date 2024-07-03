@@ -1,3 +1,5 @@
+import { modelDict } from '@lib/langchain'
+import { getModelOptions } from '@renderer/components/MainSelections/ModelSelect'
 import QuestionMention from '@renderer/components/ui/QuestionMention'
 import Select from '@renderer/components/ui/Select'
 import { useToast } from '@renderer/components/ui/Toast'
@@ -37,6 +39,10 @@ export default function (props: {
       [key]: value
     })
   }
+  const options = getModelOptions().map((m) => ({
+    label: modelDict[m.value].label,
+    value: m.value
+  }))
   return (
     <div class="relative m-4 rounded-2xl bg-dark p-4 duration-150">
       <Field title="助手名称">
@@ -55,7 +61,7 @@ export default function (props: {
           </div>
         }
       >
-        <div class="absolute right-0">
+        <div class="absolute right-0 w-[120px]">
           <Select
             defaultValue={a().matchModel || 'current'}
             options={[
@@ -63,10 +69,7 @@ export default function (props: {
                 value: 'current',
                 label: '跟随当前模型'
               },
-              {
-                value: 'a',
-                label: 'A'
-              }
+              ...options
             ]}
             onSelect={(v) => {
               setField('matchModel', v)

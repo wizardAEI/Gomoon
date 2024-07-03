@@ -74,51 +74,66 @@ export type ModelsType =
   | 'Ollama'
 
 export const modelDict: {
-  [key in ModelsType]: { maxToken: number }
+  [key in ModelsType]: { maxToken: number; label: string }
 } = {
-  ERNIE3: {
-    maxToken: 11200
-  },
-  ERNIE4: {
-    maxToken: 9600
-  },
-  ERNIE128K: {
-    maxToken: 128000
-  },
   GPT3: {
+    label: 'GPT 3.5',
     maxToken: 16385
   },
   GPT4: {
+    label: 'GPT 4.0',
+    maxToken: 128000
+  },
+  ERNIE3: {
+    maxToken: 11200,
+    label: '文心 3.5'
+  },
+  ERNIE4: {
+    label: '文心 4.0',
+    maxToken: 9600
+  },
+  ERNIE128K: {
+    label: '文心 128K',
     maxToken: 128000
   },
   GPTCustom: {
+    label: 'ChatGPT',
     maxToken: 0
   },
   QWenTurbo: {
+    label: '千问Turbo',
     maxToken: 6000
   },
   QWenLong: {
+    label: '千问Long',
     maxToken: 10000000
   },
   QWenMax: {
+    label: '千问Max',
     maxToken: 6000
   },
   GeminiPro: {
+    label: 'Gemini Pro',
     maxToken: 30720
   },
   Moonshot128k: {
+    label: 'KIMI 128k',
     maxToken: 128000
   },
   Moonshot8k: {
+    label: 'KIMI 8k',
     maxToken: 8000
   },
   Moonshot32k: {
+    label: 'KIMI 32k',
     maxToken: 32000
   },
   Llama: {
+    label: 'Llama',
     maxToken: 0
   },
   Ollama: {
+    label: 'Ollama',
     maxToken: 0
   }
 }
