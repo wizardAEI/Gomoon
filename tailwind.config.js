@@ -112,14 +112,14 @@ module.exports = {
               'inline-code': '#CCD9D9', // 非激活色 浅紫灰色
               code: '#FCFEFE',
               'home-top': '#16353e',
-              'dark-con': '#F6F7F7',
+              'dark-con': '#FAFBFB',
               dark: '#EFF2F4',
               'dark-plus': '#F1F5F7',
               'dark-pro': '#F2F8FA',
               light: '#e6f1f5',
               text1: '#181a07',
               text2: '#25270b',
-              text3: '#25270b60',
+              text3: '#70887d70',
               'text-code': '#474b4c',
               'text-active': '#eef7f2', // 激活的背景上的文字
               'text-dark': '#151b26', // 深色

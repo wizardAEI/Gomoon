@@ -5,6 +5,10 @@ import { For, Show, createSignal } from 'solid-js'
 
 const versions = [
   {
+    version: '1.1.4',
+    contents: ['一些细节的优化', 'Windows平台现在也支持全屏啦']
+  },
+  {
     version: '1.1.3',
     contents: [
       '助手偏好模型（点击更多助手进行编辑即可体验~）',

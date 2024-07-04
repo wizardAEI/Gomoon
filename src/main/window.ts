@@ -58,6 +58,18 @@ export function minimize() {
   mainWindow?.minimize()
 }
 
+export function maximize() {
+  mainWindow?.maximize()
+}
+
+export function unmaximize() {
+  mainWindow?.unmaximize()
+}
+
+export function isMaximized() {
+  return mainWindow?.isMaximized() || false
+}
+
 export function showWindow() {
   mainWindow?.show()
 }
