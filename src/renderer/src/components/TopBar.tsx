@@ -143,7 +143,7 @@ export default function TopBar() {
   })
   return (
     <div
-      class={'relative z-50 flex w-full text-slate-50 shadow-sm ' + (isWin() ? ' h-7' : 'h-8 pt-1')}
+      class='relative z-50 flex w-full text-slate-50 shadow-sm h-8 pt-1'
     >
       <Show
         // win
