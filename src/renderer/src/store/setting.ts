@@ -1,6 +1,6 @@
 import { createStore, produce, unwrap } from 'solid-js/store'
 import { isEqual, merge, cloneDeep } from 'lodash'
-import { event } from '@renderer/lib/util'
+import { event, getSystem } from '@renderer/lib/util'
 import { defaultModels } from '@lib/langchain'
 import { Models } from 'src/lib/langchain'
 import { createMemo } from 'solid-js'
@@ -107,7 +107,7 @@ export const updateStatusLabel = createMemo(() => {
     canUpdate: '有新版本,点击下载！',
     updateProgress:
       '下载中: ' + updaterStore.updateStatus.updateProgress + '%（请不要中途退出应用）',
-    haveDownloaded: '新版本下载完成,立即安装！'
+    haveDownloaded: getSystem() === 'mac' ? '下载完成，请手动安装' : '新版本下载完成,立即安装！'
   }
   let label = '检查更新'
   for (const key in dict) {
@@ -120,6 +120,9 @@ export const updateStatusLabel = createMemo(() => {
 
 export async function updateVersion() {
   if (updaterStore.updateStatus.haveDownloaded) {
+    if (getSystem() === 'mac') {
+      return true
+    }
     window.api.quitForUpdate()
     return true
   }
