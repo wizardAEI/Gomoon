@@ -4,8 +4,10 @@ import HistoryIcon from '@renderer/assets/icon/base/HistoryIcon'
 import SettingIcon from '@renderer/assets/icon/base/SettingIcon'
 import CrossIcon from '@renderer/assets/icon/base/win/WinCrossIcon'
 import { useLocation, useNavigate } from '@solidjs/router'
-import { Show, createMemo } from 'solid-js'
+import { Show, createMemo, createSignal, onMount } from 'solid-js'
 import MinimizeIcon from '@renderer/assets/icon/base/win/MinimizeIcon'
+import FullScreenIcon from '@renderer/assets/icon/base/win/FullScreenIcon'
+import ExitFullScreenIcon from '@renderer/assets/icon/base/win/ExitFullScreenIcon'
 
 import ToolTip from './ui/ToolTip'
 
@@ -129,18 +131,25 @@ function Entries() {
 }
 
 export default function TopBar() {
+  const isWin = createMemo(() => {
+    return navigator.userAgent.includes('Win')
+  })
+  const isMac = createMemo(() => {
+    return navigator.userAgent.includes('Mac')
+  })
+  const [isMaximized, setIsMaximized] = createSignal(false)
+  onMount(() => {
+    window.api.isMaximized().then(setIsMaximized)
+  })
   return (
     <div
-      class={
-        'relative z-50 flex w-full text-center text-slate-50 ' +
-        (navigator.userAgent.includes('Mac') ? ' h-6' : 'h-7 pt-1')
-      }
+      class={'relative z-50 flex w-full text-slate-50 shadow-sm ' + (isWin() ? ' h-7' : 'h-8 pt-1')}
     >
       <Show
         // win
-        when={navigator.userAgent.includes('Win')}
+        when={isWin()}
       >
-        <div class="flex items-center gap-2 px-4 pt-[5px]">{<Entries />}</div>
+        <div class="flex items-center gap-2 px-4">{<Entries />}</div>
       </Show>
       <div
         class="h-full flex-1"
@@ -150,12 +159,12 @@ export default function TopBar() {
       />
       <Show
         // mac
-        when={navigator.userAgent.includes('Mac')}
+        when={isMac()}
       >
-        <div class="flex h-6 items-center gap-2 px-4 pt-[5px]">{<Entries />}</div>
+        <div class="flex h-6 items-center gap-2 px-4">{<Entries />}</div>
       </Show>
-      {/* win 关闭按钮 */}
-      <Show when={navigator.userAgent.includes('Win')}>
+      {/* win 按钮*/}
+      <Show when={isWin()}>
         <MinimizeIcon
           class="cursor-pointer pr-4 pt-1 text-gray duration-100 hover:fill-active "
           height={18}
@@ -164,6 +173,30 @@ export default function TopBar() {
             window.api.minimizeWindow()
           }}
         />
+        <Show
+          when={isMaximized()}
+          fallback={
+            <FullScreenIcon
+              class="cursor-pointer pr-4 pt-1 text-gray duration-100 hover:text-active "
+              height={18}
+              width={18}
+              onClick={() => {
+                window.api.maximizeWindow()
+                window.api.isMaximized().then(setIsMaximized)
+              }}
+            />
+          }
+        >
+          <ExitFullScreenIcon
+            class="cursor-pointer pr-4 pt-1 text-gray duration-100 hover:text-active "
+            height={18}
+            width={18}
+            onClick={() => {
+              window.api.unmaximizeWindow()
+              window.api.isMaximized().then(setIsMaximized)
+            }}
+          />
+        </Show>
         <CrossIcon
           class="cursor-pointer pr-4 pt-1 text-gray duration-100 hover:fill-active "
           height={18}

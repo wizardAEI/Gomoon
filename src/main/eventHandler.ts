@@ -38,8 +38,11 @@ import {
 import {
   checkUpdate,
   hideWindow,
+  isMaximized,
+  maximize,
   minimize,
   setQuicklyWakeUp,
+  unmaximize,
   updateRespHeaders,
   updateSendHeaders
 } from './window'
@@ -204,6 +207,9 @@ export function initAppEventsHandler() {
   // 其他
   ipcMain.handle('hide-window', () => hideWindow())
   ipcMain.handle('minimize-window', () => minimize())
+  ipcMain.handle('maximize-window', () => maximize())
+  ipcMain.handle('unmaximize-window', () => unmaximize())
+  ipcMain.handle('is-maximized', () => isMaximized())
   ipcMain.handle('get-lines', () => getLines())
   ipcMain.handle('parse-page-to-string', (_, url: string) => parseURL2Str(url))
   ipcMain.handle('speak', (_, text: string) => speak(text))

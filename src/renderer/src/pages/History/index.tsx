@@ -189,8 +189,6 @@ export default function () {
           dom.classList.add('scrollbar-transparent')
           let time: NodeJS.Timeout | null = null
           dom.onscrollend = () => {
-            console.log('scroll end')
-
             time = setTimeout(() => {
               dom.classList.add('scrollbar-translucent')
               setTimeout(() => {
@@ -199,7 +197,6 @@ export default function () {
             }, 2000)
           }
           dom.onscroll = () => {
-            console.log('scroll')
             dom.classList.remove('scrollbar-translucent')
             dom.classList.remove('scrollbar-transparent')
             if (time) {
@@ -209,11 +206,11 @@ export default function () {
         }}
         class="scrollbar-show -mx-2 flex w-[calc(100%+16px)] flex-col items-center"
       >
-        <div class="ml-[0.45rem] mr-[calc(100%-100vw+24px+0.45rem)] w-[calc(100vw-24px-0.9rem)] px-1">
+        <div class="ml-[0.45rem] mr-[calc(100%-100vw+24px+0.45rem)] w-[calc(100vw-24px-0.9rem)] px-1 lg:max-w-4xl">
           <Show
             when={histories.length}
             fallback={
-              <div class="relative m-auto flex h-40 w-full select-none flex-col items-center justify-center gap-3 rounded-2xl bg-dark p-5 duration-150 lg:max-w-4xl">
+              <div class="relative m-auto flex h-40 w-full select-none flex-col items-center justify-center gap-3 rounded-2xl bg-dark p-5 duration-150">
                 <EmptyIcon height={50} class="text-gray" />
                 <span class="text-sm text-gray">暂无历史</span>
                 <span class="text-[12px] text-gray">
@@ -225,7 +222,7 @@ export default function () {
             <For each={filteredHistory()}>
               {(h) => (
                 <>
-                  <div class="flex w-full items-center justify-between rounded-t-2xl bg-dark-plus px-4 pt-2 lg:max-w-4xl">
+                  <div class="flex w-full items-center justify-between rounded-t-2xl bg-dark-plus px-4 pt-2">
                     <div class="flex items-center gap-3 text-text2">
                       {h.contents[0].role === 'question' ? '问答记录' : '对话记录'}
                     </div>

@@ -32,6 +32,9 @@ export const api = {
   },
   hideWindow: () => ipcRenderer.invoke('hide-window'),
   minimizeWindow: () => ipcRenderer.invoke('minimize-window'),
+  maximizeWindow: () => ipcRenderer.invoke('maximize-window'),
+  unmaximizeWindow: () => ipcRenderer.invoke('unmaximize-window'),
+  isMaximized: () => ipcRenderer.invoke('is-maximized'),
   setIsOnTop: (isOnTop: boolean) => ipcRenderer.invoke('set-is-on-top', isOnTop),
 
   // 配置相关
