@@ -12,9 +12,8 @@ export async function updateForMac() {
   const fileName =
     'gomoon-' + res?.updateInfo?.version + (process.arch === 'x64' ? '-x64' : '-arm64') + '.dmg'
   url += fileName
-  // FEAT: 流式下载文件，回调返回进度
+  // FEAT: 流式下载文件，返回进度
   fetchWithProgress(url, (loaded, total) => {
-    console.log(`Progress: ${((loaded / total) * 100).toFixed(2)}%`)
     postMsgToMainWindow('download-progress ' + Math.ceil((loaded / total) * 100))
   })
     .then((buf) => {

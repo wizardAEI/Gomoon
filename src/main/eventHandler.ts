@@ -198,7 +198,6 @@ export function initAppEventsHandler() {
     autoUpdater.quitAndInstall(true, true)
   })
   ipcMain.handle('download-update', async () => {
-    console.log(process.platform)
     if (process.platform === 'win32') {
       return await autoUpdater.downloadUpdate()
     }
