@@ -21,6 +21,7 @@ import OllamaIcon from '@renderer/assets/icon/models/OllamaIcon'
 import Select from '@renderer/components/ui/Select'
 import { setTheme } from '@renderer/store/setting'
 import { useToast } from '@renderer/components/ui/Toast'
+import CustomIcon from '@renderer/assets/icon/models/CustomIcon'
 
 import {
   settingStore,
@@ -167,6 +168,54 @@ export default function Setting() {
                 </div>
               }
             >
+              <Collapse
+                title={
+                  <div class="flex items-center gap-2">
+                    <KimiIcon class="rounded-md" height={20} width={20} /> Kimi ( Moonshot AI ) 系列
+                    <QuestionMention
+                      content={
+                        <a class="text-xs" href="https://platform.moonshot.cn/console/api-keys">
+                          密钥注册地址
+                        </a>
+                      }
+                    />
+                  </div>
+                }
+              >
+                <EditInput
+                  label="apiKey"
+                  value={settingStore.models.Moonshot.apiKey}
+                  onSave={(v) => {
+                    const m = unwrap(settingStore.models)
+                    m.Moonshot.apiKey = v
+                    setModels(m)
+                  }}
+                />
+                <EditInput
+                  optional
+                  label="baseURL"
+                  value={settingStore.models.Moonshot.baseURL}
+                  onSave={(v) => {
+                    const m = unwrap(settingStore.models)
+                    m.Moonshot.baseURL = v
+                    setModels(m)
+                  }}
+                />
+                <div class="mb-1 flex h-7 items-center gap-4">
+                  <span class="font-bold">创造性/随机性</span>
+                  <div class="w-60">
+                    <Slider
+                      defaultValue={settingStore.models.Moonshot.temperature}
+                      percentage
+                      onChange={(v) => {
+                        const m = unwrap(settingStore.models)
+                        m.Moonshot.temperature = v
+                        setModels(m)
+                      }}
+                    />
+                  </div>
+                </div>
+              </Collapse>
               <Collapse
                 title={
                   <div class="flex items-center gap-2">
@@ -331,14 +380,8 @@ export default function Setting() {
               <Collapse
                 title={
                   <div class="flex items-center gap-2">
-                    <KimiIcon class="rounded-md" height={20} width={20} /> Kimi ( Moonshot AI ) 系列
-                    <QuestionMention
-                      content={
-                        <a class="text-xs" href="https://platform.moonshot.cn/console/api-keys">
-                          密钥注册地址
-                        </a>
-                      }
-                    />
+                    <CustomIcon class="rounded-md" height={20} width={20} /> 自定义模型
+                    <QuestionMention content="支持任何的兼容 OpenAI API 的模型，如 DeepSeek，豆包大模型等。" />
                   </div>
                 }
               >

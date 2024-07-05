@@ -22,45 +22,6 @@ export function getModelOptions(): {
     value: ModelsType
   }[] = [
     {
-      label: <span class="text-base text-current">{modelDict['ERNIE3'].label}</span>,
-      icon(size: number) {
-        return (
-          <WenxinIcon
-            width={size}
-            height={size}
-            class="cursor-pointer overflow-hidden rounded-md"
-          />
-        )
-      },
-      value: 'ERNIE3'
-    },
-    {
-      label: <span class="text-base text-current">{modelDict['ERNIE4'].label}</span>,
-      icon(size: number) {
-        return (
-          <WenxinIcon
-            width={size}
-            height={size}
-            class="cursor-pointer overflow-hidden rounded-md"
-          />
-        )
-      },
-      value: 'ERNIE4'
-    },
-    {
-      label: <span class="text-sm text-current">{modelDict['ERNIE128K'].label}</span>,
-      icon(size: number) {
-        return (
-          <WenxinIcon
-            width={size}
-            height={size}
-            class="cursor-pointer overflow-hidden rounded-md"
-          />
-        )
-      },
-      value: 'ERNIE128K'
-    },
-    {
       label: <span class="text-base text-current">{modelDict['GPT3'].label}</span>,
       icon(size: number) {
         return (
@@ -103,6 +64,48 @@ export function getModelOptions(): {
       value: 'GPTCustom'
     })
   }
+
+  options.push(
+    {
+      label: <span class="text-base text-current">{modelDict['ERNIE3'].label}</span>,
+      icon(size: number) {
+        return (
+          <WenxinIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'ERNIE3'
+    },
+    {
+      label: <span class="text-base text-current">{modelDict['ERNIE4'].label}</span>,
+      icon(size: number) {
+        return (
+          <WenxinIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'ERNIE4'
+    },
+    {
+      label: <span class="text-sm text-current">{modelDict['ERNIE128K'].label}</span>,
+      icon(size: number) {
+        return (
+          <WenxinIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'ERNIE128K'
+    }
+  )
 
   if (settingStore.models.AliQWen.apiKey) {
     options.push(
