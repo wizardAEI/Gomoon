@@ -74,7 +74,7 @@ export default function () {
               }
             >
               <div
-                class="relative m-4 flex flex-col gap-2 rounded-2xl border-2 border-solid border-transparent bg-dark p-4 duration-150 hover:border-active"
+                class="relative m-4 flex flex-col gap-3 rounded-2xl border-2 border-solid border-transparent bg-dark p-3 duration-150 hover:border-active"
                 onClick={async () => {
                   switch (type) {
                     case 'ans':
@@ -107,8 +107,8 @@ export default function () {
                   </div>
                   <div class="flex h-6 gap-1">
                     <EditIcon
-                      height={20}
-                      width={20}
+                      height={24}
+                      width={24}
                       class="cursor-pointer text-gray duration-100 hover:text-active"
                       onClick={(e) => {
                         onEditAssistant(a.id)
@@ -148,8 +148,8 @@ export default function () {
                       }}
                     >
                       <CrossMark
-                        height={20}
-                        width={20}
+                        height={24}
+                        width={24}
                         class="cursor-pointer text-gray duration-100 hover:text-active"
                       />
                     </DoubleConfirm>

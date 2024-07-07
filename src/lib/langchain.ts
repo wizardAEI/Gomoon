@@ -55,6 +55,12 @@ export interface Models {
     baseURL: string
     temperature: number
   }
+  CustomModel: {
+    apiKey: string
+    baseURL: string
+    temperature: number
+    customModel: string
+  }
 }
 export type ModelsType =
   | 'ERNIE3'
@@ -72,6 +78,7 @@ export type ModelsType =
   | 'Moonshot32k'
   | 'Moonshot128k'
   | 'Ollama'
+  | 'CustomModel'
 
 export const modelDict: {
   [key in ModelsType]: { maxToken: number; label: string }
@@ -135,44 +142,54 @@ export const modelDict: {
   Ollama: {
     label: 'Ollama',
     maxToken: 0
+  },
+  CustomModel: {
+    label: '自定义模型',
+    maxToken: 0
   }
 }
 
-export const defaultModels = () =>
-  ({
-    OpenAI: {
-      apiKey: '',
-      baseURL: '',
-      temperature: 0.3
-    },
-    BaiduWenxin: {
-      apiKey: '',
-      secretKey: '',
-      temperature: 0.3
-    },
-    AliQWen: {
-      apiKey: '',
-      temperature: 0.3
-    },
-    Gemini: {
-      apiKey: '',
-      temperature: 0.3
-    },
-    Llama: {
-      src: '',
-      temperature: 0.3
-    },
-    Ollama: {
-      address: '',
-      model: '',
-      temperature: 0.3
-    },
-    Moonshot: {
-      baseURL: '',
-      apiKey: '',
-      temperature: 0.3
-    }
-  }) as Models
+export const defaultModels: () => Models = () => ({
+  OpenAI: {
+    apiKey: '',
+    baseURL: '',
+    customModel: '',
+    temperature: 0.3
+  },
+  BaiduWenxin: {
+    apiKey: '',
+    secretKey: '',
+    temperature: 0.3
+  },
+  AliQWen: {
+    apiKey: '',
+    temperature: 0.3
+  },
+  Gemini: {
+    apiKey: '',
+    temperature: 0.3
+  },
+  Llama: {
+    src: '',
+    temperature: 0.3
+  },
+  Ollama: {
+    address: '',
+    model: '',
+    temperature: 0.3
+  },
+  Moonshot: {
+    baseURL: '',
+    apiKey: '',
+    temperature: 0.3
+  },
+  CustomModel: {
+    baseURL: '',
+    apiKey: '',
+    customModel: '',
+    temperature: 0.3
+  }
+})
 
 export const newERNIEModal = (
   config: {
@@ -321,6 +338,20 @@ export const newOllamaModel = (config: { address: string; model: string; tempera
   return chatOllama
 }
 
+export const newCustomModel = (
+  config: { apiKey: string; baseURL: string; temperature: number },
+  modelName: string
+) =>
+  new ChatOpenAI({
+    streaming: true,
+    modelName,
+    openAIApiKey: config.apiKey || 'api-key',
+    temperature: config.temperature,
+    configuration: {
+      baseURL: config.baseURL
+    }
+  })
+
 export const loadLMMap = async (
   model: Models
 ): Promise<{
@@ -340,7 +371,8 @@ export const loadLMMap = async (
   Moonshot32k: newMoonshotModel(model.Moonshot, 'moonshot-v1-32k'),
   Moonshot128k: newMoonshotModel(model.Moonshot, 'moonshot-v1-128k'),
   Llama: newChatLlama(model.Llama),
-  Ollama: newOllamaModel(model.Ollama)
+  Ollama: newOllamaModel(model.Ollama),
+  CustomModel: newCustomModel(model.OpenAI, model.CustomModel.customModel)
 })
 
 export const msgDict: {
