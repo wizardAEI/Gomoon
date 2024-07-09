@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu } from 'electron'
+import { app, BrowserWindow, Menu, session } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 
 import icon from '../../resources/icon.png?asset'

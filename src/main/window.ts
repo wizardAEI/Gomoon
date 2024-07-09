@@ -214,14 +214,16 @@ export function createWindow(): void {
   autoUpdater.on('update-downloaded', () => {
     mainWindow?.webContents.send('post-message', 'update-downloaded')
   })
-  autoUpdater.checkForUpdates().then((res) => {
-    // 如果有新版本则通知：
-    if (res && res.updateInfo.version !== app.getVersion()) {
-      mainWindow?.on('show', () => {
-        mainWindow?.webContents.send('post-message', 'update-available')
-      })
-    }
-  })
+  // NOTICE: 由于没有苹果开发者认证，没办法自动更新，这里只有windows才去检查
+  process.platform === 'win32' &&
+    autoUpdater.checkForUpdates().then((res) => {
+      // 如果有新版本则通知：
+      if (res && res.updateInfo.version !== app.getVersion()) {
+        mainWindow?.on('show', () => {
+          mainWindow?.webContents.send('post-message', 'update-available')
+        })
+      }
+    })
 
   // FEAT: 链接跳转，自动打开浏览器
   mainWindow.webContents.on('will-frame-navigate', (event) => {

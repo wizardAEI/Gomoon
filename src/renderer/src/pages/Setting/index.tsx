@@ -21,6 +21,7 @@ import OllamaIcon from '@renderer/assets/icon/models/OllamaIcon'
 import Select from '@renderer/components/ui/Select'
 import { setTheme } from '@renderer/store/setting'
 import { useToast } from '@renderer/components/ui/Toast'
+import CustomIcon from '@renderer/assets/icon/models/CustomIcon'
 
 import {
   settingStore,
@@ -63,7 +64,7 @@ export default function Setting() {
                 value={settingStore.models.OpenAI.apiKey}
                 onSave={(v) => {
                   const m = unwrap(settingStore.models)
-                  m.OpenAI.apiKey = v
+                  m.OpenAI.apiKey = v.trim()
                   setModels(m)
                 }}
               />
@@ -73,7 +74,7 @@ export default function Setting() {
                 value={settingStore.models.OpenAI.baseURL}
                 onSave={(v) => {
                   const m = unwrap(settingStore.models)
-                  m.OpenAI.baseURL = v
+                  m.OpenAI.baseURL = v.trim()
                   setModels(m)
                 }}
               />
@@ -83,7 +84,7 @@ export default function Setting() {
                 value={settingStore.models.OpenAI.customModel}
                 onSave={(v) => {
                   const m = unwrap(settingStore.models)
-                  m.OpenAI.customModel = v
+                  m.OpenAI.customModel = v.trim()
                   setModels(m)
                 }}
               />
@@ -125,7 +126,7 @@ export default function Setting() {
                 value={settingStore.models.BaiduWenxin.apiKey}
                 onSave={(v) => {
                   const m = unwrap(settingStore.models)
-                  m.BaiduWenxin.apiKey = v
+                  m.BaiduWenxin.apiKey = v.trim()
                   setModels(m)
                 }}
               />
@@ -134,7 +135,7 @@ export default function Setting() {
                 label="secretKey"
                 onSave={(v) => {
                   const m = unwrap(settingStore.models)
-                  m.BaiduWenxin.secretKey = v
+                  m.BaiduWenxin.secretKey = v.trim()
                   setModels(m)
                 }}
               />
@@ -170,6 +171,54 @@ export default function Setting() {
               <Collapse
                 title={
                   <div class="flex items-center gap-2">
+                    <KimiIcon class="rounded-md" height={20} width={20} /> Kimi ( Moonshot AI ) 系列
+                    <QuestionMention
+                      content={
+                        <a class="text-xs" href="https://platform.moonshot.cn/console/api-keys">
+                          密钥注册地址
+                        </a>
+                      }
+                    />
+                  </div>
+                }
+              >
+                <EditInput
+                  label="apiKey"
+                  value={settingStore.models.Moonshot.apiKey}
+                  onSave={(v) => {
+                    const m = unwrap(settingStore.models)
+                    m.Moonshot.apiKey = v.trim()
+                    setModels(m)
+                  }}
+                />
+                <EditInput
+                  optional
+                  label="baseURL"
+                  value={settingStore.models.Moonshot.baseURL}
+                  onSave={(v) => {
+                    const m = unwrap(settingStore.models)
+                    m.Moonshot.baseURL = v.trim()
+                    setModels(m)
+                  }}
+                />
+                <div class="mb-1 flex h-7 items-center gap-4">
+                  <span class="font-bold">创造性/随机性</span>
+                  <div class="w-60">
+                    <Slider
+                      defaultValue={settingStore.models.Moonshot.temperature}
+                      percentage
+                      onChange={(v) => {
+                        const m = unwrap(settingStore.models)
+                        m.Moonshot.temperature = v
+                        setModels(m)
+                      }}
+                    />
+                  </div>
+                </div>
+              </Collapse>
+              <Collapse
+                title={
+                  <div class="flex items-center gap-2">
                     <QWenIcon class="rounded-md" height={18} width={18} /> 千问系列
                     <QuestionMention
                       content={
@@ -186,7 +235,7 @@ export default function Setting() {
                   value={settingStore.models.AliQWen.apiKey}
                   onSave={(v) => {
                     const m = unwrap(settingStore.models)
-                    m.AliQWen.apiKey = v
+                    m.AliQWen.apiKey = v.trim()
                     setModels(m)
                   }}
                 />
@@ -217,7 +266,7 @@ export default function Setting() {
                   value={settingStore.models.Gemini.apiKey}
                   onSave={(v) => {
                     const m = unwrap(settingStore.models)
-                    m.Gemini.apiKey = v
+                    m.Gemini.apiKey = v.trim()
                     setModels(m)
                   }}
                 />
@@ -300,7 +349,7 @@ export default function Setting() {
                   value={settingStore.models.Ollama.address}
                   onSave={(v) => {
                     const m = unwrap(settingStore.models)
-                    m.Ollama.address = v
+                    m.Ollama.address = v.trim()
                     setModels(m)
                   }}
                 />
@@ -309,7 +358,7 @@ export default function Setting() {
                   value={settingStore.models.Ollama.model}
                   onSave={(v) => {
                     const m = unwrap(settingStore.models)
-                    m.Ollama.model = v
+                    m.Ollama.model = v.trim()
                     setModels(m)
                   }}
                 />
@@ -331,33 +380,35 @@ export default function Setting() {
               <Collapse
                 title={
                   <div class="flex items-center gap-2">
-                    <KimiIcon class="rounded-md" height={20} width={20} /> Kimi ( Moonshot AI ) 系列
-                    <QuestionMention
-                      content={
-                        <a class="text-xs" href="https://platform.moonshot.cn/console/api-keys">
-                          密钥注册地址
-                        </a>
-                      }
-                    />
+                    <CustomIcon class="rounded-md" height={20} width={20} /> 自定义模型
+                    <QuestionMention content="支持任何的兼容 OpenAI API 的模型，如 DeepSeek，豆包大模型等。" />
                   </div>
                 }
               >
                 <EditInput
-                  label="apiKey"
-                  value={settingStore.models.Moonshot.apiKey}
+                  label="模型名"
+                  value={settingStore.models.CustomModel.customModel}
                   onSave={(v) => {
                     const m = unwrap(settingStore.models)
-                    m.Moonshot.apiKey = v
+                    m.CustomModel.customModel = v.trim()
                     setModels(m)
                   }}
                 />
                 <EditInput
-                  optional
-                  label="baseURL"
-                  value={settingStore.models.Moonshot.baseURL}
+                  label="apiKey"
+                  value={settingStore.models.CustomModel.apiKey}
                   onSave={(v) => {
                     const m = unwrap(settingStore.models)
-                    m.Moonshot.baseURL = v
+                    m.CustomModel.apiKey = v.trim()
+                    setModels(m)
+                  }}
+                />
+                <EditInput
+                  label="baseURL"
+                  value={settingStore.models.CustomModel.baseURL}
+                  onSave={(v) => {
+                    const m = unwrap(settingStore.models)
+                    m.CustomModel.baseURL = v.trim()
                     setModels(m)
                   }}
                 />
@@ -365,11 +416,11 @@ export default function Setting() {
                   <span class="font-bold">创造性/随机性</span>
                   <div class="w-60">
                     <Slider
-                      defaultValue={settingStore.models.Moonshot.temperature}
+                      defaultValue={settingStore.models.CustomModel.temperature}
                       percentage
                       onChange={(v) => {
                         const m = unwrap(settingStore.models)
-                        m.Moonshot.temperature = v
+                        m.CustomModel.temperature = v
                         setModels(m)
                       }}
                     />
@@ -457,7 +508,7 @@ export default function Setting() {
                   defaultValue={settingStore.theme}
                   options={themeOptions}
                   onSelect={(v) => {
-                    const slogan = themeOptions.find((item) => item.value === v)?.slogan
+                    const slogan = themeOptions.find((item) => item.value === v.trim())?.slogan
                     slogan && toast.info(slogan)
                     setTheme(v)
                   }}

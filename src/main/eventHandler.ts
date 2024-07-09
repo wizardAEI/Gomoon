@@ -66,6 +66,7 @@ import {
 } from './lib/ai/embedding/index'
 import { speak } from './lib/ai/tts'
 import { callLLM, CallLLmOption, stopLLM } from './lib/ai/langchain'
+import { updateForMac } from './service'
 
 export function initAppEventsHandler() {
   /**
@@ -197,7 +198,10 @@ export function initAppEventsHandler() {
     autoUpdater.quitAndInstall(true, true)
   })
   ipcMain.handle('download-update', async () => {
-    return await autoUpdater.downloadUpdate()
+    if (process.platform === 'win32') {
+      return await autoUpdater.downloadUpdate()
+    }
+    updateForMac()
   })
 
   // 大模型调用

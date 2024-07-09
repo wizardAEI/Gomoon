@@ -30,3 +30,14 @@ export const event = {
     }
   }
 }
+
+export const getSystem: () => 'mac' | 'linux' | 'win' = () => {
+  const ua = navigator.userAgent
+  if (ua.match(/windows/i)) {
+    return 'win'
+  }
+  if (ua.match(/mac/i)) {
+    return 'mac'
+  }
+  return 'linux'
+}

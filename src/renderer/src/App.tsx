@@ -7,13 +7,12 @@ import { loadConfig, setUpdaterStatus, settingStore, systemStore } from './store
 import Loading from './pages/Loading'
 import { loadUserData, userData, userHasUse } from './store/user'
 import { loadAssistants } from './store/assistants'
-import { chatHistoryTransfer, loadHistories } from './store/history'
+import { loadHistories } from './store/history'
 import { ToastProvider } from './components/ui/Toast'
 import { LoadingProvider } from './components/ui/DynamicLoading'
 import { init as OCRInit } from './lib/ai/ocr'
 import System from './pages/System'
 import { loadMemories } from './store/memo'
-import { msgs } from './store/chat'
 
 const App = (props) => {
   const nav = useNavigate()

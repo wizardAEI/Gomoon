@@ -10,6 +10,7 @@ import GeminiIcon from '@renderer/assets/icon/models/GeminiIcon'
 import KimiIcon from '@renderer/assets/icon/models/KimiIcon'
 import LlamaIcon from '@renderer/assets/icon/models/LlamaIcon'
 import OllamaIcon from '@renderer/assets/icon/models/OllamaIcon'
+import CustomIcon from '@renderer/assets/icon/models/CustomIcon'
 
 export function getModelOptions(): {
   label: JSXElement
@@ -21,45 +22,6 @@ export function getModelOptions(): {
     icon: (size: number) => JSXElement
     value: ModelsType
   }[] = [
-    {
-      label: <span class="text-base text-current">{modelDict['ERNIE3'].label}</span>,
-      icon(size: number) {
-        return (
-          <WenxinIcon
-            width={size}
-            height={size}
-            class="cursor-pointer overflow-hidden rounded-md"
-          />
-        )
-      },
-      value: 'ERNIE3'
-    },
-    {
-      label: <span class="text-base text-current">{modelDict['ERNIE4'].label}</span>,
-      icon(size: number) {
-        return (
-          <WenxinIcon
-            width={size}
-            height={size}
-            class="cursor-pointer overflow-hidden rounded-md"
-          />
-        )
-      },
-      value: 'ERNIE4'
-    },
-    {
-      label: <span class="text-sm text-current">{modelDict['ERNIE128K'].label}</span>,
-      icon(size: number) {
-        return (
-          <WenxinIcon
-            width={size}
-            height={size}
-            class="cursor-pointer overflow-hidden rounded-md"
-          />
-        )
-      },
-      value: 'ERNIE128K'
-    },
     {
       label: <span class="text-base text-current">{modelDict['GPT3'].label}</span>,
       icon(size: number) {
@@ -103,6 +65,48 @@ export function getModelOptions(): {
       value: 'GPTCustom'
     })
   }
+
+  options.push(
+    {
+      label: <span class="text-base text-current">{modelDict['ERNIE3'].label}</span>,
+      icon(size: number) {
+        return (
+          <WenxinIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'ERNIE3'
+    },
+    {
+      label: <span class="text-base text-current">{modelDict['ERNIE4'].label}</span>,
+      icon(size: number) {
+        return (
+          <WenxinIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'ERNIE4'
+    },
+    {
+      label: <span class="text-sm text-current">{modelDict['ERNIE128K'].label}</span>,
+      icon(size: number) {
+        return (
+          <WenxinIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'ERNIE128K'
+    }
+  )
 
   if (settingStore.models.AliQWen.apiKey) {
     options.push(
@@ -239,6 +243,22 @@ export function getModelOptions(): {
         )
       },
       value: 'Ollama'
+    })
+  }
+
+  if (settingStore.models.CustomModel.customModel && settingStore.models.CustomModel.apiKey) {
+    options.push({
+      label: <span class="text-sm leading-6 text-current">{modelDict['CustomModel'].label}</span>,
+      icon(size: number) {
+        return (
+          <CustomIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'CustomModel'
     })
   }
   return options
