@@ -517,6 +517,20 @@ export default function Setting() {
                 />
               </div>
             </div>
+            <div class="item-center flex justify-between gap-3">
+              <span class="h-6">问答文字大小</span>
+              <div class="max-w-20">
+                <EditInput
+                  value={'16' + 'px'}
+                  type="number"
+                  onSave={(v) => {
+                    const m = unwrap(settingStore.models)
+                    m.OpenAI.apiKey = v
+                    setModels(m)
+                  }}
+                />
+              </div>
+            </div>
           </div>
         </Card>
         <Card title="更多信息">
