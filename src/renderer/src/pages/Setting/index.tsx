@@ -386,21 +386,31 @@ export default function Setting() {
                 }
               >
                 <EditInput
-                  label="apiKey"
-                  value={settingStore.models.Moonshot.apiKey}
+                  optional
+                  label="模型名"
+                  value={settingStore.models.CustomModel.customModel}
                   onSave={(v) => {
                     const m = unwrap(settingStore.models)
-                    m.Moonshot.apiKey = v
+                    m.CustomModel.customModel = v
+                    setModels(m)
+                  }}
+                />
+                <EditInput
+                  label="apiKey"
+                  value={settingStore.models.CustomModel.apiKey}
+                  onSave={(v) => {
+                    const m = unwrap(settingStore.models)
+                    m.CustomModel.apiKey = v
                     setModels(m)
                   }}
                 />
                 <EditInput
                   optional
                   label="baseURL"
-                  value={settingStore.models.Moonshot.baseURL}
+                  value={settingStore.models.CustomModel.baseURL}
                   onSave={(v) => {
                     const m = unwrap(settingStore.models)
-                    m.Moonshot.baseURL = v
+                    m.CustomModel.baseURL = v
                     setModels(m)
                   }}
                 />
@@ -408,11 +418,11 @@ export default function Setting() {
                   <span class="font-bold">创造性/随机性</span>
                   <div class="w-60">
                     <Slider
-                      defaultValue={settingStore.models.Moonshot.temperature}
+                      defaultValue={settingStore.models.CustomModel.temperature}
                       percentage
                       onChange={(v) => {
                         const m = unwrap(settingStore.models)
-                        m.Moonshot.temperature = v
+                        m.CustomModel.temperature = v
                         setModels(m)
                       }}
                     />
