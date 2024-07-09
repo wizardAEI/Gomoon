@@ -338,17 +338,14 @@ export const newOllamaModel = (config: { address: string; model: string; tempera
   return chatOllama
 }
 
-export const newCustomModel = (
-  config: { apiKey: string; baseURL: string; temperature: number },
-  modelName: string
-) =>
+export const newCustomModel = (model: Models['CustomModel']) =>
   new ChatOpenAI({
     streaming: true,
-    modelName,
-    openAIApiKey: config.apiKey || 'api-key',
-    temperature: config.temperature,
+    modelName: model.customModel,
+    openAIApiKey: model.apiKey || 'api-key',
+    temperature: model.temperature,
     configuration: {
-      baseURL: config.baseURL
+      baseURL: model.baseURL
     }
   })
 
@@ -372,7 +369,7 @@ export const loadLMMap = async (
   Moonshot128k: newMoonshotModel(model.Moonshot, 'moonshot-v1-128k'),
   Llama: newChatLlama(model.Llama),
   Ollama: newOllamaModel(model.Ollama),
-  CustomModel: newCustomModel(model.OpenAI, model.CustomModel.customModel)
+  CustomModel: newCustomModel(model.CustomModel)
 })
 
 export const msgDict: {
