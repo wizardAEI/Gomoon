@@ -38,6 +38,7 @@ export interface Models {
   }
   Gemini: {
     apiKey: string
+    customModel: string
     temperature: number
   }
   Llama: {
@@ -73,6 +74,7 @@ export type ModelsType =
   | 'QWenLong'
   | 'QWenMax'
   | 'GeminiPro'
+  | 'GeminiCustom'
   | 'Llama'
   | 'Moonshot8k'
   | 'Moonshot32k'
@@ -123,6 +125,10 @@ export const modelDict: {
     label: 'Gemini Pro',
     maxToken: 30720
   },
+  GeminiCustom: {
+    label: 'Gemini',
+    maxToken: 0
+  },
   Moonshot128k: {
     label: 'KIMI 128k',
     maxToken: 128000
@@ -167,7 +173,8 @@ export const defaultModels: () => Models = () => ({
   },
   Gemini: {
     apiKey: '',
-    temperature: 0.3
+    temperature: 0.3,
+    customModel: ''
   },
   Llama: {
     src: '',
@@ -254,7 +261,7 @@ export const newGeminiModel = (
 ) =>
   new ChatGoogleGenerativeAI({
     streaming: true,
-    modelName,
+    modelName: modelName || 'gemini-pro',
     apiKey: config.apiKey || 'api-key',
     temperature: config.temperature
   })
@@ -364,6 +371,7 @@ export const loadLMMap = async (
   QWenMax: newQWenModel(model.AliQWen, 'qwen-max'),
   QWenLong: newQWenModelV2(model.AliQWen, 'qwen-long'),
   GeminiPro: newGeminiModel(model.Gemini, 'gemini-pro'),
+  GeminiCustom: newGeminiModel(model.Gemini, model.Gemini.customModel),
   Moonshot8k: newMoonshotModel(model.Moonshot, 'moonshot-v1-8k'),
   Moonshot32k: newMoonshotModel(model.Moonshot, 'moonshot-v1-32k'),
   Moonshot128k: newMoonshotModel(model.Moonshot, 'moonshot-v1-128k'),

@@ -3,7 +3,6 @@ import Switch from '@renderer/components/ui/SwitchItem'
 import Collapse from '@renderer/components/ui/Collapse'
 import EditInput from '@renderer/components/ui/EditInput'
 import { onCleanup, onMount } from 'solid-js'
-import { unwrap } from 'solid-js/store'
 import SettingIcon from '@renderer/assets/icon/base/SettingIcon'
 import QuestionMention from '@renderer/components/ui/QuestionMention'
 import Expand from '@renderer/components/ui/Expand'
@@ -19,7 +18,7 @@ import KimiIcon from '@renderer/assets/icon/models/KimiIcon'
 import FilePicker from '@renderer/components/ui/FilePicker'
 import OllamaIcon from '@renderer/assets/icon/models/OllamaIcon'
 import Select from '@renderer/components/ui/Select'
-import { setTheme } from '@renderer/store/setting'
+import { setChatFontSize, setTheme } from '@renderer/store/setting'
 import { useToast } from '@renderer/components/ui/Toast'
 import CustomIcon from '@renderer/assets/icon/models/CustomIcon'
 
@@ -63,9 +62,7 @@ export default function Setting() {
                 label="apiKey"
                 value={settingStore.models.OpenAI.apiKey}
                 onSave={(v) => {
-                  const m = unwrap(settingStore.models)
-                  m.OpenAI.apiKey = v.trim()
-                  setModels(m)
+                  setModels(v.trim(), 'OpenAI', 'apiKey')
                 }}
               />
               <EditInput
@@ -73,9 +70,7 @@ export default function Setting() {
                 label="baseURL"
                 value={settingStore.models.OpenAI.baseURL}
                 onSave={(v) => {
-                  const m = unwrap(settingStore.models)
-                  m.OpenAI.baseURL = v.trim()
-                  setModels(m)
+                  setModels(v.trim(), 'OpenAI', 'baseURL')
                 }}
               />
               <EditInput
@@ -83,9 +78,7 @@ export default function Setting() {
                 label="自定义模型"
                 value={settingStore.models.OpenAI.customModel}
                 onSave={(v) => {
-                  const m = unwrap(settingStore.models)
-                  m.OpenAI.customModel = v.trim()
-                  setModels(m)
+                  setModels(v.trim(), 'OpenAI', 'customModel')
                 }}
               />
               <div class="mb-1 flex h-7 items-center gap-4">
@@ -95,9 +88,7 @@ export default function Setting() {
                     defaultValue={settingStore.models.OpenAI.temperature}
                     percentage
                     onChange={(v) => {
-                      const m = unwrap(settingStore.models)
-                      m.OpenAI.temperature = v
-                      setModels(m)
+                      setModels(v, 'OpenAI', 'temperature')
                     }}
                   />
                 </div>
@@ -121,22 +112,19 @@ export default function Setting() {
                 </div>
               }
             >
+              {settingStore.models.BaiduWenxin.apiKey}
               <EditInput
                 label="apiKey"
                 value={settingStore.models.BaiduWenxin.apiKey}
                 onSave={(v) => {
-                  const m = unwrap(settingStore.models)
-                  m.BaiduWenxin.apiKey = v.trim()
-                  setModels(m)
+                  setModels(v.trim(), 'BaiduWenxin', 'apiKey')
                 }}
               />
               <EditInput
                 value={settingStore.models.BaiduWenxin.secretKey}
                 label="secretKey"
                 onSave={(v) => {
-                  const m = unwrap(settingStore.models)
-                  m.BaiduWenxin.secretKey = v.trim()
-                  setModels(m)
+                  setModels(v.trim(), 'BaiduWenxin', 'secretKey')
                 }}
               />
               <div class="mb-1 flex h-7 items-center gap-4">
@@ -146,9 +134,7 @@ export default function Setting() {
                     percentage
                     defaultValue={settingStore.models.BaiduWenxin.temperature}
                     onChange={(v) => {
-                      const m = unwrap(settingStore.models)
-                      m.BaiduWenxin.temperature = v
-                      setModels(m)
+                      setModels(v, 'BaiduWenxin', 'temperature')
                     }}
                   />
                 </div>
@@ -186,9 +172,7 @@ export default function Setting() {
                   label="apiKey"
                   value={settingStore.models.Moonshot.apiKey}
                   onSave={(v) => {
-                    const m = unwrap(settingStore.models)
-                    m.Moonshot.apiKey = v.trim()
-                    setModels(m)
+                    setModels(v.trim(), 'Moonshot', 'apiKey')
                   }}
                 />
                 <EditInput
@@ -196,9 +180,7 @@ export default function Setting() {
                   label="baseURL"
                   value={settingStore.models.Moonshot.baseURL}
                   onSave={(v) => {
-                    const m = unwrap(settingStore.models)
-                    m.Moonshot.baseURL = v.trim()
-                    setModels(m)
+                    setModels(v.trim(), 'Moonshot', 'baseURL')
                   }}
                 />
                 <div class="mb-1 flex h-7 items-center gap-4">
@@ -208,9 +190,7 @@ export default function Setting() {
                       defaultValue={settingStore.models.Moonshot.temperature}
                       percentage
                       onChange={(v) => {
-                        const m = unwrap(settingStore.models)
-                        m.Moonshot.temperature = v
-                        setModels(m)
+                        setModels(v, 'Moonshot', 'temperature')
                       }}
                     />
                   </div>
@@ -234,9 +214,7 @@ export default function Setting() {
                   label="apiKey"
                   value={settingStore.models.AliQWen.apiKey}
                   onSave={(v) => {
-                    const m = unwrap(settingStore.models)
-                    m.AliQWen.apiKey = v.trim()
-                    setModels(m)
+                    setModels(v.trim(), 'AliQWen', 'apiKey')
                   }}
                 />
                 <div class="mb-1 flex h-7 items-center gap-4">
@@ -246,9 +224,7 @@ export default function Setting() {
                       defaultValue={settingStore.models.AliQWen.temperature}
                       percentage
                       onChange={(v) => {
-                        const m = unwrap(settingStore.models)
-                        m.AliQWen.temperature = v
-                        setModels(m)
+                        setModels(v, 'AliQWen', 'temperature')
                       }}
                     />
                   </div>
@@ -265,9 +241,14 @@ export default function Setting() {
                   label="apiKey"
                   value={settingStore.models.Gemini.apiKey}
                   onSave={(v) => {
-                    const m = unwrap(settingStore.models)
-                    m.Gemini.apiKey = v.trim()
-                    setModels(m)
+                    setModels(v.trim(), 'Gemini', 'apiKey')
+                  }}
+                />
+                <EditInput
+                  label="自定义模型"
+                  value={settingStore.models.Gemini.customModel}
+                  onSave={(v) => {
+                    setModels(v.trim(), 'Gemini', 'customModel')
                   }}
                 />
                 <div class="mb-1 flex h-7 items-center gap-4">
@@ -277,9 +258,7 @@ export default function Setting() {
                       defaultValue={settingStore.models.Gemini.temperature}
                       percentage
                       onChange={(v) => {
-                        const m = unwrap(settingStore.models)
-                        m.Gemini.temperature = v
-                        setModels(m)
+                        setModels(v, 'Gemini', 'temperature')
                       }}
                     />
                   </div>
@@ -307,9 +286,7 @@ export default function Setting() {
                   <div class="flex-1 overflow-hidden">
                     <FilePicker
                       onChange={(path) => {
-                        const m = unwrap(settingStore.models)
-                        m.Llama.src = path
-                        setModels(m)
+                        setModels(path, 'Llama', 'src')
                       }}
                       path={settingStore.models.Llama.src || '选择文件地址'}
                     />
@@ -322,9 +299,7 @@ export default function Setting() {
                       defaultValue={settingStore.models.Llama.temperature}
                       percentage
                       onChange={(v) => {
-                        const m = unwrap(settingStore.models)
-                        m.Llama.temperature = v
-                        setModels(m)
+                        setModels(v, 'Llama', 'temperature')
                       }}
                     />
                   </div>
@@ -348,18 +323,14 @@ export default function Setting() {
                   label="模型地址 (ip:端口)"
                   value={settingStore.models.Ollama.address}
                   onSave={(v) => {
-                    const m = unwrap(settingStore.models)
-                    m.Ollama.address = v.trim()
-                    setModels(m)
+                    setModels(v.trim(), 'Ollama', 'address')
                   }}
                 />
                 <EditInput
                   label="模型名称"
                   value={settingStore.models.Ollama.model}
                   onSave={(v) => {
-                    const m = unwrap(settingStore.models)
-                    m.Ollama.model = v.trim()
-                    setModels(m)
+                    setModels(v.trim(), 'Ollama', 'model')
                   }}
                 />
                 <div class="mb-1 flex h-7 items-center gap-4">
@@ -369,9 +340,7 @@ export default function Setting() {
                       defaultValue={settingStore.models.Ollama.temperature}
                       percentage
                       onChange={(v) => {
-                        const m = unwrap(settingStore.models)
-                        m.Ollama.temperature = v
-                        setModels(m)
+                        setModels(v, 'Ollama', 'temperature')
                       }}
                     />
                   </div>
@@ -389,27 +358,21 @@ export default function Setting() {
                   label="模型名"
                   value={settingStore.models.CustomModel.customModel}
                   onSave={(v) => {
-                    const m = unwrap(settingStore.models)
-                    m.CustomModel.customModel = v.trim()
-                    setModels(m)
+                    setModels(v, 'CustomModel', 'customModel')
                   }}
                 />
                 <EditInput
                   label="apiKey"
                   value={settingStore.models.CustomModel.apiKey}
                   onSave={(v) => {
-                    const m = unwrap(settingStore.models)
-                    m.CustomModel.apiKey = v.trim()
-                    setModels(m)
+                    setModels(v, 'CustomModel', 'apiKey')
                   }}
                 />
                 <EditInput
                   label="baseURL"
                   value={settingStore.models.CustomModel.baseURL}
                   onSave={(v) => {
-                    const m = unwrap(settingStore.models)
-                    m.CustomModel.baseURL = v.trim()
-                    setModels(m)
+                    setModels(v, 'CustomModel', 'baseURL')
                   }}
                 />
                 <div class="mb-1 flex h-7 items-center gap-4">
@@ -419,9 +382,7 @@ export default function Setting() {
                       defaultValue={settingStore.models.CustomModel.temperature}
                       percentage
                       onChange={(v) => {
-                        const m = unwrap(settingStore.models)
-                        m.CustomModel.temperature = v
-                        setModels(m)
+                        setModels(v, 'CustomModel', 'temperature')
                       }}
                     />
                   </div>
@@ -519,12 +480,10 @@ export default function Setting() {
               <span class="h-6">问答文字大小</span>
               <div class="max-w-20">
                 <EditInput
-                  value={'16' + 'px'}
+                  value={settingStore.chatFontSize + 'px'}
                   type="number"
                   onSave={(v) => {
-                    const m = unwrap(settingStore.models)
-                    m.OpenAI.apiKey = v
-                    setModels(m)
+                    setChatFontSize(Number(v))
                   }}
                 />
               </div>

@@ -1,5 +1,5 @@
 import SaveIcon from '@renderer/assets/icon/base/SaveIcon'
-import { Show, createSignal } from 'solid-js'
+import { Show, createEffect, createSignal } from 'solid-js'
 
 export default function EditInput(
   props: {
@@ -39,7 +39,7 @@ export default function EditInput(
             }}
           >
             <span class="text-gray-500 mr-2 truncate text-ellipsis text-sm">
-              {value() || '填写您的 ' + props.label + (props.optional ? '（非必填）' : '')}
+              {props.value || '填写您的 ' + props.label + (props.optional ? '（非必填）' : '')}
             </span>
           </div>
         }
@@ -54,7 +54,7 @@ export default function EditInput(
             onInput={(e) => setValue((e.target as HTMLInputElement).value)}
             onBlur={onSave}
           />
-          <Show when={props.type === 'text'}>
+          <Show when={props.type !== 'number'}>
             <SaveIcon
               height={20}
               class="absolute right-0 top-1 cursor-pointer text-gray hover:text-active"

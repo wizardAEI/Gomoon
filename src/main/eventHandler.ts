@@ -24,7 +24,8 @@ import {
   initMemories,
   setTheme,
   setHistoryStar,
-  clearHistory
+  clearHistory,
+  setChatFontSize
 } from './models/index'
 import {
   AssistantModel,
@@ -118,13 +119,13 @@ export function initAppEventsHandler() {
   ipcMain.handle('set-can-multi-copy', (_, canMultiCopy: boolean) => {
     setCanMultiCopy(canMultiCopy)
   })
-
   ipcMain.handle('set-quickly-wake-up-keys', (_, keys: string) => {
     setQuicklyWakeUpKeys(keys)
     setQuicklyWakeUp(keys)
   })
   ipcMain.handle('set-send-with-cmd-or-ctrl', (_, b: boolean) => setSendWithCmdOrCtrl(b))
   ipcMain.handle('set-theme', (_, theme: string) => setTheme(theme))
+  ipcMain.handle('set-chat-fontsize', (_, v: number) => setChatFontSize(v))
 
   /**
    * FEAT: 用户相关

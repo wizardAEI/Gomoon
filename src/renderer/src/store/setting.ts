@@ -18,7 +18,8 @@ const [settingStore, setSettingStore] = createStore<
   canMultiCopy: false,
   quicklyWakeUpKeys: '',
   sendWithCmdOrCtrl: false,
-  theme: 'gomoon-theme'
+  theme: 'gomoon-theme',
+  chatFontSize: 14
 })
 
 export function setIsOnTop(v: boolean) {
@@ -60,8 +61,18 @@ export async function loadConfig() {
   event.emit('updateModels', config.models)
 }
 
-export async function setModels(models: Models) {
-  setSettingStore('models', merge(unwrap(settingStore.models), models))
+export async function setModels<T extends keyof Models>(
+  v: Models[T][keyof Models[T]],
+  modelName: T,
+  field: keyof Models[T]
+) {
+  setSettingStore(
+    'models',
+    modelName,
+    produce((b) => {
+      b[field] = v
+    })
+  )
 }
 
 export async function updateModelsToFile() {
@@ -70,6 +81,11 @@ export async function updateModelsToFile() {
   await window.api.setModels(config.models)
   event.emit('updateModels', config.models)
   loadConfig()
+}
+
+export async function setChatFontSize(v: number) {
+  setSettingStore('chatFontSize', v)
+  return window.api.setChatFontSize(v)
 }
 
 export { settingStore, setSettingStore }

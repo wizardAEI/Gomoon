@@ -20,7 +20,8 @@ export function getDefaultConfig(): SettingModel {
     canMultiCopy: false,
     quicklyWakeUpKeys: 'CmdOrCtrl+G',
     sendWithCmdOrCtrl: true,
-    theme: 'gomoon-theme'
+    theme: 'gomoon-theme',
+    chatFontSize: 14
   }
 }
 
