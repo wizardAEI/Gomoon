@@ -335,7 +335,7 @@ export const loadLMMap = async (
   QWenTurbo: newQWenModel(model.AliQWen, 'qwen-turbo'),
   QWenMax: newQWenModel(model.AliQWen, 'qwen-max'),
   QWenLong: newQWenModelV2(model.AliQWen, 'qwen-long'),
-  GeminiPro: newGeminiModel(model.Gemini, 'gemini-pro-vision'),
+  GeminiPro: newGeminiModel(model.Gemini, 'gemini-pro'),
   Moonshot8k: newMoonshotModel(model.Moonshot, 'moonshot-v1-8k'),
   Moonshot32k: newMoonshotModel(model.Moonshot, 'moonshot-v1-32k'),
   Moonshot128k: newMoonshotModel(model.Moonshot, 'moonshot-v1-128k'),
