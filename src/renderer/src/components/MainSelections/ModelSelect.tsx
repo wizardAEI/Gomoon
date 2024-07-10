@@ -168,6 +168,22 @@ export function getModelOptions(): {
     })
   }
 
+  if (settingStore.models.Gemini.customModel) {
+    options.push({
+      label: <span class="text-base text-current">{modelDict['GeminiCustom'].label}</span>,
+      icon(size: number) {
+        return (
+          <GeminiIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'GeminiCustom'
+    })
+  }
+
   if (settingStore.models.Moonshot.apiKey) {
     options.push(
       {

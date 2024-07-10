@@ -1,13 +1,19 @@
 import SaveIcon from '@renderer/assets/icon/base/SaveIcon'
-import { Show, createSignal } from 'solid-js'
+import { Show, createEffect, createSignal } from 'solid-js'
 
-export default function EditInput(props: {
-  label: string
-  value?: string
-  spellcheck?: boolean
-  onSave: (value: string) => void
-  optional?: boolean
-}) {
+export default function EditInput(
+  props: {
+    label?: string
+    value?: string
+    spellcheck?: boolean
+    onSave: (value: string) => void
+    optional?: boolean
+    type?: 'text' | 'number'
+  } = {
+    onSave: () => {},
+    type: 'text'
+  }
+) {
   // eslint-disable-next-line solid/reactivity
   const [value, setValue] = createSignal(props.value || '')
   const [isEditing, setIsEditing] = createSignal(false)
@@ -19,7 +25,9 @@ export default function EditInput(props: {
 
   return (
     <div class="mb-1 flex items-center gap-3">
-      <div class="text-gray-500 text-sm font-bold">{props.label}</div>
+      <Show when={props.label}>
+        <div class="text-gray-500 text-sm font-bold">{props.label}</div>
+      </Show>
       <Show
         when={isEditing()}
         fallback={
@@ -31,25 +39,28 @@ export default function EditInput(props: {
             }}
           >
             <span class="text-gray-500 mr-2 truncate text-ellipsis text-sm">
-              {value() || '填写您的 ' + props.label + (props.optional ? '（非必填）' : '')}
+              {props.value || '填写您的 ' + props.label + (props.optional ? '（非必填）' : '')}
             </span>
           </div>
         }
       >
         <div class="relative max-w-lg flex-1">
           <input
+            class="pr-3"
             spellcheck={props.spellcheck || false}
             ref={inputRef}
-            type="text"
+            type={props.type}
             value={value()}
             onInput={(e) => setValue((e.target as HTMLInputElement).value)}
             onBlur={onSave}
           />
-          <SaveIcon
-            height={20}
-            class="absolute right-0 top-1 cursor-pointer text-gray hover:text-active"
-            onClick={onSave}
-          />
+          <Show when={props.type !== 'number'}>
+            <SaveIcon
+              height={20}
+              class="absolute right-0 top-1 cursor-pointer text-gray hover:text-active"
+              onClick={onSave}
+            />
+          </Show>
         </div>
       </Show>
     </div>

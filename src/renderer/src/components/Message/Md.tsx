@@ -129,7 +129,7 @@ export default function Md(props: {
           </div>`
     }
 
-    const $ = load(`<div id="gomoon-md">${md.render(content)}</div>`)
+    const $ = load(`<div class="gomoon-md">${md.render(content)}</div>`)
     // FEAT: 对findContent高亮
     function highlightText(node: any) {
       if (!findContent()) return
@@ -152,7 +152,7 @@ export default function Md(props: {
           }
         })
     }
-    highlightText($('#gomoon-md'))
+    highlightText($('.gomoon-md'))
     return $.html() || ''
   })
 

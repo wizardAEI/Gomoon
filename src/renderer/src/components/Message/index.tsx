@@ -1,11 +1,12 @@
 import { Roles } from '@renderer/lib/ai/langchain'
-import { For, Show, createMemo } from 'solid-js'
+import { For, Show, createEffect, createMemo } from 'solid-js'
 import 'highlight.js/styles/atom-one-dark.css'
 import { msgStatus, msgs } from '@renderer/store/chat'
 import { ansStatus } from '@renderer/store/answer'
 import { parseDisplayArr } from '@renderer/lib/ai/parseString'
 import { setPageData } from '@renderer/store/user'
 import { event } from '@renderer/lib/util'
+import { settingStore } from '@renderer/store/setting'
 
 import SpecialTypeContent from './SpecialTypeContent'
 import Md, { mdToText } from './Md'
@@ -114,7 +115,12 @@ export default function Message(props: {
       .join('\n')
     speakText(mdToText(contents))
   }
-
+  createEffect(() => {
+    document.documentElement.style.setProperty(
+      '--gomoon-md-fontsize',
+      `${settingStore.chatFontSize}px`
+    )
+  })
   return (
     <div class="group relative max-w-full">
       <Show

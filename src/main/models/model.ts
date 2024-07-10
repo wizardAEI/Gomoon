@@ -73,6 +73,7 @@ export interface SettingModel {
   sendWithCmdOrCtrl: boolean
   models: Models
   theme: string
+  chatFontSize: number
 }
 export interface MemoResult {
   content: string

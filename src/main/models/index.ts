@@ -93,6 +93,14 @@ export function setTheme(theme: SettingModel['theme']) {
   configDB.write()
 }
 
+export function setChatFontSize(chatFontSize: SettingModel['chatFontSize']) {
+  configDB.data = {
+    ...configDB.data,
+    chatFontSize
+  }
+  configDB.write()
+}
+
 /**
  * FEAT: 用户数据相关
  */

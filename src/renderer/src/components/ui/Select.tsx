@@ -50,7 +50,7 @@ const Select: Component<SelectProps> = (props) => {
   }
 
   return (
-    <div class="w-full">
+    <div class="relative z-10 w-full">
       <div
         class="mb-1 cursor-pointer rounded-lg border-solid border-dark px-4 py-[2px] text-center hover:border-active"
         ref={(el) => {
