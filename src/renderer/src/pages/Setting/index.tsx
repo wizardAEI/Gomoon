@@ -246,6 +246,7 @@ export default function Setting() {
                 />
                 <EditInput
                   label="自定义模型"
+                  optional
                   value={settingStore.models.Gemini.customModel}
                   onSave={(v) => {
                     setModels(v.trim(), 'Gemini', 'customModel')

@@ -80,7 +80,6 @@ export async function updateModelsToFile() {
   const config = unwrap(settingStore)
   if (isEqual(config.models, config.oldModels)) return
   await window.api.setModels(config.models)
-  event.emit('updateModels', config.models)
   loadConfig()
 }
 
