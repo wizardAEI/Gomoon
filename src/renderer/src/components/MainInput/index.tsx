@@ -345,7 +345,6 @@ export default function Input(props: {
             {tokenConsumeDisplay()}
           </div>
           <textarea
-            class="gomoon-input"
             ref={textAreaDiv}
             value={inputText()}
             disabled={props.disable}
@@ -380,7 +379,7 @@ export default function Input(props: {
                   : 'Ctrl + Enter 发送'
                 : 'Enter 发送，Shift+Enter 换行') + '（可以粘贴文件和图片）'
             }
-            class="font-sans max-h-48 flex-1 resize-none rounded-2xl border-none bg-transparent px-4 py-[6px] text-sm text-text1 caret-text2 transition-none focus:outline-none"
+            class="gomoon-input font-sans max-h-48 flex-1 resize-none rounded-2xl border-none bg-transparent px-4 py-[6px] text-sm text-text1 caret-text2 transition-none focus:outline-none"
           />
           {/* <button class="absolute bottom-1 right-1 h-8 w-8 cursor-pointer overflow-hidden rounded-full bg-cyber px-0 py-1">
           <ChatIcon class="duration-150 hover:text-active" width={24} height={24} />

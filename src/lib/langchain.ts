@@ -18,6 +18,7 @@ export type ModelInterfaceType =
   | ChatLlamaCpp
   | ChatOllama
   | {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       invoke: any
     }
 export interface Models {
