@@ -345,6 +345,7 @@ export default function Input(props: {
             {tokenConsumeDisplay()}
           </div>
           <textarea
+            class="gomoon-input"
             ref={textAreaDiv}
             value={inputText()}
             disabled={props.disable}

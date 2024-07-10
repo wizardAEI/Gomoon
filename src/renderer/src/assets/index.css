@@ -85,14 +85,22 @@
   background-color: transparent;
 }
 
-/* markdown 专属css */
-/* .markdown #gomoon-md {
-  font-size: 14px;
+:root {
+  --gomoon-md-fontsize: 14px; /* 默认值 */
 }
 
-.markdown *:not(svg, path, g) {
-  font-size: 1em;
-} */
+.gomoon-input {
+  font-size: var(--gomoon-md-fontsize);
+}
+
+.gomoon-md {
+  font-size: var(--gomoon-md-fontsize);
+}
+
+.gomoon-md *:not(svg, path, g) {
+  font-size: inherit;
+  line-height: 1.4;
+}
 
 .markdown h1 {
   font-size: 1.52em;
@@ -127,7 +135,7 @@
 }
 
 .markdown table {
-  font-size: 0.8rem;
+  font-size: 0.9em;
 }
 
 .markdown table thead tr {
@@ -152,7 +160,7 @@
   @apply bg-inline-code;
   @apply text-text2;
   border-radius: 0.4em;
-  padding: 0.05em 0.2em;
+  padding: 0.03em 0.2em;
   margin: 0 4px;
 }
 
@@ -172,6 +180,7 @@
 .markdown a:hover {
   @apply text-active;
 }
+
 .markdown blockquote {
   border-left: 0.2em solid #64748b;
   padding: 0.5em 0.5em;

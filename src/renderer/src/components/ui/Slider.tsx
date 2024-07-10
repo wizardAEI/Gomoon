@@ -3,6 +3,7 @@ import { Show, createEffect, createSignal } from 'solid-js'
 export default function (props: {
   onChange: (value: number) => void
   defaultValue?: number
+  value?: number
   min?: number
   max?: number
   percentage?: boolean
@@ -11,13 +12,15 @@ export default function (props: {
   let range: HTMLInputElement | undefined
   const [value, setValue] = createSignal(
     props.defaultValue !== undefined
-      ? // eslint-disable-next-line solid/reactivity
-        props.percentage
+      ? props.percentage
         ? props.defaultValue * 100
         : props.defaultValue
       : 70
   )
   createEffect(() => {
+    if (props.value) {
+      setValue(props.percentage ? props.value * 100 : props.value)
+    }
     const containerWidth = container?.getBoundingClientRect().width
     range!.style.width = `${
       (containerWidth! - 34) *

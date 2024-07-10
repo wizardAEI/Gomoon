@@ -58,6 +58,7 @@ export async function loadConfig() {
   setSettingStore('sendWithCmdOrCtrl', config.sendWithCmdOrCtrl)
   setSettingStore('isLoaded', true)
   setSettingStore('theme', config.theme)
+  setSettingStore('chatFontSize', config.chatFontSize)
   event.emit('updateModels', config.models)
 }
 

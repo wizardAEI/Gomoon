@@ -85,7 +85,7 @@ export default function Setting() {
                 <span class="font-bold">创造性/随机性</span>
                 <div class="w-60">
                   <Slider
-                    defaultValue={settingStore.models.OpenAI.temperature}
+                    value={settingStore.models.OpenAI.temperature}
                     percentage
                     onChange={(v) => {
                       setModels(v, 'OpenAI', 'temperature')
@@ -132,7 +132,7 @@ export default function Setting() {
                 <div class="w-60">
                   <Slider
                     percentage
-                    defaultValue={settingStore.models.BaiduWenxin.temperature}
+                    value={settingStore.models.BaiduWenxin.temperature}
                     onChange={(v) => {
                       setModels(v, 'BaiduWenxin', 'temperature')
                     }}
@@ -187,7 +187,7 @@ export default function Setting() {
                   <span class="font-bold">创造性/随机性</span>
                   <div class="w-60">
                     <Slider
-                      defaultValue={settingStore.models.Moonshot.temperature}
+                      value={settingStore.models.Moonshot.temperature}
                       percentage
                       onChange={(v) => {
                         setModels(v, 'Moonshot', 'temperature')
@@ -221,7 +221,7 @@ export default function Setting() {
                   <span class="font-bold">创造性/随机性</span>
                   <div class="w-60">
                     <Slider
-                      defaultValue={settingStore.models.AliQWen.temperature}
+                      value={settingStore.models.AliQWen.temperature}
                       percentage
                       onChange={(v) => {
                         setModels(v, 'AliQWen', 'temperature')
@@ -255,7 +255,7 @@ export default function Setting() {
                   <span class="font-bold">创造性/随机性</span>
                   <div class="w-60">
                     <Slider
-                      defaultValue={settingStore.models.Gemini.temperature}
+                      value={settingStore.models.Gemini.temperature}
                       percentage
                       onChange={(v) => {
                         setModels(v, 'Gemini', 'temperature')
@@ -296,7 +296,7 @@ export default function Setting() {
                   <span class="font-bold">创造性/随机性</span>
                   <div class="w-60">
                     <Slider
-                      defaultValue={settingStore.models.Llama.temperature}
+                      value={settingStore.models.Llama.temperature}
                       percentage
                       onChange={(v) => {
                         setModels(v, 'Llama', 'temperature')
@@ -337,7 +337,7 @@ export default function Setting() {
                   <span class="font-bold">创造性/随机性</span>
                   <div class="w-60">
                     <Slider
-                      defaultValue={settingStore.models.Ollama.temperature}
+                      value={settingStore.models.Ollama.temperature}
                       percentage
                       onChange={(v) => {
                         setModels(v, 'Ollama', 'temperature')
@@ -379,7 +379,7 @@ export default function Setting() {
                   <span class="font-bold">创造性/随机性</span>
                   <div class="w-60">
                     <Slider
-                      defaultValue={settingStore.models.CustomModel.temperature}
+                      value={settingStore.models.CustomModel.temperature}
                       percentage
                       onChange={(v) => {
                         setModels(v, 'CustomModel', 'temperature')
@@ -477,12 +477,13 @@ export default function Setting() {
               </div>
             </div>
             <div class="item-center flex justify-between gap-3">
-              <span class="h-6">问答文字大小</span>
-              <div class="max-w-20">
-                <EditInput
-                  value={settingStore.chatFontSize + 'px'}
-                  type="number"
-                  onSave={(v) => {
+              <span class="h-6">聊天文字大小</span>
+              <div class="max-w-32">
+                <Slider
+                  value={settingStore.chatFontSize}
+                  min={12}
+                  max={18}
+                  onChange={(v) => {
                     setChatFontSize(Number(v))
                   }}
                 />
