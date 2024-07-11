@@ -112,7 +112,6 @@ export default function Setting() {
                 </div>
               }
             >
-              {settingStore.models.BaiduWenxin.apiKey}
               <EditInput
                 label="apiKey"
                 value={settingStore.models.BaiduWenxin.apiKey}
@@ -501,7 +500,7 @@ export default function Setting() {
             <span>，您的 Star 和建议是对该项目最大的支持。</span>
           </div>
           <div class="mt-2 text-sm text-text2">
-            <span>哈喽👋，我在</span>
+            <span>哈喽 👋，我在</span>
             <a
               href="https://space.bilibili.com/434118077/channel/collectiondetail?sid=2235600"
               target="_blank"

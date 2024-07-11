@@ -85,6 +85,7 @@ const cors: {
 } = {
   defaultURLs: [
     'http://www.baidu.com/*',
+    'https://www.baidu.com/*',
     'https://dashscope.aliyuncs.com/*',
     'https://aip.baidubce.com/*',
     'https://api.openai.com/*',
