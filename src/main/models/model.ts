@@ -10,6 +10,10 @@ export interface UserDataModel {
     modelSelect?: boolean
     assistantSelect?: boolean
   }
+  windowSize: {
+    width: number
+    height: number
+  }
 }
 
 export type AssistantType = 'chat' | 'answer'

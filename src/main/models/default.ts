@@ -46,6 +46,10 @@ export function getDefaultUserData(): UserDataModel {
     firstTimeFor: {
       modelSelect: true,
       assistantSelect: true
+    },
+    windowSize: {
+      width: 480,
+      height: 760
     }
   }
 }

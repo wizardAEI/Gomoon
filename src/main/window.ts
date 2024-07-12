@@ -15,11 +15,12 @@ import {
 } from 'electron'
 import { is } from '@electron-toolkit/utils'
 import { autoUpdater } from 'electron-updater'
+import { debounce } from 'lodash'
 
 import icon from '../../resources/icon.png?asset'
 import trayIcon from '../../resources/icon@20.png?asset'
 
-import { loadAppConfig } from './models'
+import { getUserData, loadAppConfig, setWindowSize } from './models'
 import { getResourcesPath, quitApp } from './lib'
 
 let mainWindow: BrowserWindow | null = null
@@ -187,12 +188,13 @@ export async function PostBuffToMainWindow(buff: Buffer) {
 
 export function createWindow(): void {
   const userConfig = loadAppConfig()
+  const userData = getUserData()
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
     title: 'Gomoon',
-    width: 480,
-    height: 750,
+    width: userData.windowSize.width,
+    height: userData.windowSize.height,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
@@ -305,6 +307,15 @@ export function createWindow(): void {
 
   updateSendHeaders()
   updateRespHeaders()
+
+  // FEAT: 窗口大小调整持久化
+  const resizeThrottle = debounce(() => {
+    const [width, height] = mainWindow?.getSize() || [480, 760]
+    setWindowSize(width, height)
+  }, 600)
+  mainWindow.on('resize', () => {
+    resizeThrottle()
+  })
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
