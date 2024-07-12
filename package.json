@@ -23,9 +23,10 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
+    "@google/generative-ai": "^0.14.1",
     "@langchain/community": "^0.0.52",
     "@langchain/core": "^0.1.60",
-    "@langchain/google-genai": "^0.0.12",
+    "@langchain/google-genai": "^0.0.21",
     "@langchain/openai": "^0.0.34",
     "@mozilla/readability": "^0.5.0",
     "@solidjs/router": "^0.13.2",

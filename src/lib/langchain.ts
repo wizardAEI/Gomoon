@@ -7,6 +7,7 @@ import { HumanMessage, SystemMessage, AIMessage } from '@langchain/core/messages
 import type { BaseMessage, MessageContent } from 'langchain/schema'
 import { ChatOpenAI, OpenAIClient } from '@langchain/openai'
 import { isArray } from 'lodash'
+import { HarmBlockThreshold, HarmCategory } from '@google/generative-ai'
 
 import { base64ToFile } from './utils_web'
 
@@ -264,7 +265,29 @@ export const newGeminiModel = (
     streaming: true,
     modelName: modelName || 'gemini-pro',
     apiKey: config.apiKey || 'api-key',
-    temperature: config.temperature
+    temperature: config.temperature,
+    safetySettings: [
+      {
+        category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+        threshold: HarmBlockThreshold.BLOCK_NONE
+      },
+      {
+        category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+        threshold: HarmBlockThreshold.BLOCK_NONE
+      },
+      {
+        category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+        threshold: HarmBlockThreshold.BLOCK_NONE
+      },
+      {
+        category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+        threshold: HarmBlockThreshold.BLOCK_NONE
+      },
+      {
+        category: HarmCategory.HARM_CATEGORY_UNSPECIFIED,
+        threshold: HarmBlockThreshold.BLOCK_NONE
+      }
+    ]
   })
 
 export const newMoonshotModel = (

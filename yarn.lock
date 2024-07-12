@@ -854,6 +854,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@google/generative-ai@npm:^0.14.1":
+  version: 0.14.1
+  resolution: "@google/generative-ai@npm:0.14.1"
+  checksum: 7aa1e5248dbc4b61a002a2a55dc2028a4dbf2f1cf1b3f28bc3a1ac0a919d789a62c32a05a7423a53020ce5081bd57ae2e24a05bf1fd5ab8a7b420743d67fc2e9
+  languageName: node
+  linkType: hard
+
 "@google/generative-ai@npm:^0.7.0":
   version: 0.7.1
   resolution: "@google/generative-ai@npm:0.7.1"
@@ -1611,7 +1618,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@langchain/core@npm:^0.1.60, @langchain/core@npm:~0.1.5, @langchain/core@npm:~0.1.60":
+"@langchain/core@npm:>=0.2.9 <0.3.0":
+  version: 0.2.15
+  resolution: "@langchain/core@npm:0.2.15"
+  dependencies:
+    ansi-styles: ^5.0.0
+    camelcase: 6
+    decamelize: 1.2.0
+    js-tiktoken: ^1.0.12
+    langsmith: ~0.1.30
+    ml-distance: ^4.0.0
+    mustache: ^4.2.0
+    p-queue: ^6.6.2
+    p-retry: 4
+    uuid: ^10.0.0
+    zod: ^3.22.4
+    zod-to-json-schema: ^3.22.3
+  checksum: 320060914ab5f2019979ce740b397f874c300ecbda73540eb16946ec5bd6a07d7901c938b0bbcda6e92908d88bf6c69a99453847f78c85c2d4a2291465bc65ad
+  languageName: node
+  linkType: hard
+
+"@langchain/core@npm:^0.1.60, @langchain/core@npm:~0.1.60":
   version: 0.1.63
   resolution: "@langchain/core@npm:0.1.63"
   dependencies:
@@ -1631,13 +1658,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@langchain/google-genai@npm:^0.0.12":
-  version: 0.0.12
-  resolution: "@langchain/google-genai@npm:0.0.12"
+"@langchain/google-genai@npm:^0.0.21":
+  version: 0.0.21
+  resolution: "@langchain/google-genai@npm:0.0.21"
   dependencies:
     "@google/generative-ai": ^0.7.0
-    "@langchain/core": ~0.1.5
-  checksum: f879d6b8a051eda88a5be9dd8775f7ad6926e7f7f0894bcb87b8ddd3868bf9d1bf3d86e9376083c3abf16a474c8c3a078a1c3d53f921bd466affdd4bd672d4f9
+    "@langchain/core": ">=0.2.9 <0.3.0"
+    zod-to-json-schema: ^3.22.4
+  checksum: 1b70759172660d10f2c3f811436491b35aca7876eb953239c78295b64aa76844c63628762ab5b63b8777e9e68a7311cde95c20bfe318ca8bce1b0a5cca54d9d1
   languageName: node
   linkType: hard
 
@@ -6246,9 +6274,10 @@ __metadata:
     "@electron-toolkit/preload": ^3.0.1
     "@electron-toolkit/tsconfig": ^1.0.1
     "@electron-toolkit/utils": ^3.0.0
+    "@google/generative-ai": ^0.14.1
     "@langchain/community": ^0.0.52
     "@langchain/core": ^0.1.60
-    "@langchain/google-genai": ^0.0.12
+    "@langchain/google-genai": ^0.0.21
     "@langchain/openai": ^0.0.34
     "@mozilla/readability": ^0.5.0
     "@solidjs/router": ^0.13.2
@@ -11010,6 +11039,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"uuid@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "uuid@npm:10.0.0"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 4b81611ade2885d2313ddd8dc865d93d8dccc13ddf901745edca8f86d99bc46d7a330d678e7532e7ebf93ce616679fb19b2e3568873ac0c14c999032acb25869
+  languageName: node
+  linkType: hard
+
 "uuid@npm:^9.0.0":
   version: 9.0.1
   resolution: "uuid@npm:9.0.1"
@@ -11482,6 +11520,15 @@ __metadata:
   peerDependencies:
     zod: ^3.23.3
   checksum: 56f220f06687b41602478cf19f9fbf04488a450c0e47e6cd6c1dc3b6729e2b1c75f742a52a16cbb11bcdf1ff7b2bf2043dfff59f3784d6ac8ecfa562ce035e21
+  languageName: node
+  linkType: hard
+
+"zod-to-json-schema@npm:^3.22.4":
+  version: 3.23.1
+  resolution: "zod-to-json-schema@npm:3.23.1"
+  peerDependencies:
+    zod: ^3.23.3
+  checksum: bbb0fdd8d28179c912d2d1c93051e418fc933288b8ac3704e7a514498fadf7781a8417aa9d52129a6a89ed5bc5a59793d3739c4869aa38600743cb009b52856d
   languageName: node
   linkType: hard
 

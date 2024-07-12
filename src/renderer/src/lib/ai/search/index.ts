@@ -7,7 +7,6 @@ async function fetchBaiduResults(keyword) {
   if (!data.feed?.entry?.length) {
     return []
   }
-  // debugger
   const links: {
     summary: string
     link: string
