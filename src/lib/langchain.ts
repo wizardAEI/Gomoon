@@ -282,10 +282,6 @@ export const newGeminiModel = (
       {
         category: HarmCategory.HARM_CATEGORY_HARASSMENT,
         threshold: HarmBlockThreshold.BLOCK_NONE
-      },
-      {
-        category: HarmCategory.HARM_CATEGORY_UNSPECIFIED,
-        threshold: HarmBlockThreshold.BLOCK_NONE
       }
     ]
   })
