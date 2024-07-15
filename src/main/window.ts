@@ -1,6 +1,7 @@
 import { join } from 'path'
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process'
 
+import robot from 'robotjs'
 import {
   app,
   shell,
@@ -34,6 +35,49 @@ export function setQuicklyWakeUp(keys: string) {
    */
   globalShortcut.register(keys, () => {
     function showWindow() {
+      const getSelected: () => Promise<{
+        text: string
+      }> = () => {
+        return new Promise((resolve) => {
+          // 缓存之前的文案
+          const lastText = clipboard.readText('clipboard')
+
+          const lastFile = clipboard.read('NSFilenamesPboardType')
+          console.log(lastFile)
+
+          const platform = process.platform
+
+          // 执行复制动作
+          if (platform === 'darwin') {
+            robot.keyTap('c', 'command')
+            setTimeout(() => {
+              robot.keyTap('command')
+              robot.keyTap('down')
+            }, 150)
+          } else {
+            robot.keyTap('c', 'control')
+          }
+
+          setTimeout(() => {
+            // 读取剪切板内容
+            const text = clipboard.readText('clipboard') || ''
+
+            // 恢复剪切板内容
+            clipboard.writeText(lastText)
+            if (lastFile) {
+              clipboard.writeBuffer('NSFilenamesPboardType', Buffer.from(lastFile))
+            }
+            resolve({
+              text
+            })
+          }, 300)
+        })
+      }
+
+      getSelected().then((res) => {
+        console.log('show-window', res)
+      })
+
       mainWindow?.webContents.send('show-window')
       mainWindow?.show()
     }

@@ -61,6 +61,7 @@
     "officeparser": "^4.0.8",
     "pdf-parse": "^1.1.1",
     "puppeteer": "^22.7.1",
+    "robotjs": "^0.6.0",
     "solid-js": "^1.8.17",
     "solidjs-use": "^2.3.0",
     "tesseract.js": "^5.0.5",
