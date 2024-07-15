@@ -5,6 +5,10 @@ import { For, Show, createSignal } from 'solid-js'
 
 const versions = [
   {
+    version: '1.1.6',
+    contents: ['一些细节的优化', '划选了一段文字后，使用快捷键召唤 Gomoon 会有新效果哦']
+  },
+  {
     version: '1.1.5',
     contents: [
       '一些细节的优化',
