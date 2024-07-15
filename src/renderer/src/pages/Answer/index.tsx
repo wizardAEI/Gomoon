@@ -17,9 +17,6 @@ export default function Answer() {
   const [showModal, setShowModal] = createSignal(false)
   const [introduce, setIntroduce] = createSignal('每')
   const [query, setQuery] = useSearchParams()
-  setQuery({
-    q: ''
-  })
   onMount(() => {
     const introduceFull = '每一次回答都将是一次新的对话'
     // 打字机效果,逐渐显示introduce
@@ -36,6 +33,9 @@ export default function Answer() {
     if (query.q) {
       setInputText(query.q)
       setShowModal(true)
+      setQuery({
+        q: ''
+      })
     }
     const removeListener = window.api.multiCopy((_: IpcRendererEvent, msg: string) => {
       setInputText(msg)

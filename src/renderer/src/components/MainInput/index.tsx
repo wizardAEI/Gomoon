@@ -11,6 +11,7 @@ import { parseFile } from '@renderer/lib/ai/file'
 import { chatHistoryTransfer } from '@renderer/store/history'
 import NewChatIcon from '@renderer/assets/icon/NewChatIcon'
 import { ModelsType } from '@lib/langchain'
+import { useSearchParams } from '@solidjs/router'
 
 import { useLoading } from '../ui/DynamicLoading'
 import { useToast } from '../ui/Toast'
@@ -210,6 +211,18 @@ export default function Input(props: {
       }
     }
   }
+
+  const [query, setQuery] = useSearchParams()
+
+  createEffect(() => {
+    if (query.text) {
+      setInputText(query.text)
+      setTimeout(() => {
+        textAreaDiv!.select()
+      }, 200)
+      setQuery({ text: '' })
+    }
+  })
 
   onMount(() => {
     if (props.autoFocusWhenShow) {

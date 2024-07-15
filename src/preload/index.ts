@@ -15,6 +15,7 @@ import {
 import { FileLoaderRes, FilePayload } from '../main/lib/ai/fileLoader'
 import { EditFragmentOption, GetMemoParams, SaveMemoParams } from '../main/lib/ai/embedding/index'
 import { CallLLmOption } from '../main/lib/ai/langchain'
+import { ShowWindowParams } from '../main/window'
 
 // Custom APIs for renderer
 export const api = {
@@ -24,7 +25,7 @@ export const api = {
       ipcRenderer.removeListener('multi-copy', callback)
     }
   },
-  showWindow: (callback: (event: IpcRendererEvent) => void) => {
+  showWindow: (callback: (event: IpcRendererEvent, data: ShowWindowParams) => void) => {
     ipcRenderer.on('show-window', callback)
     return () => {
       ipcRenderer.removeListener('show-window', callback)

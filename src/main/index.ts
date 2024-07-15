@@ -1,5 +1,6 @@
 import { app, BrowserWindow, Menu } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
+import robot from 'robotjs'
 
 import icon from '../../resources/icon.png?asset'
 
@@ -59,4 +60,11 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
+})
+
+// 激活robot
+// 分出一个线程，防止阻塞主进程
+setTimeout(() => {
+  const pos = robot.getMousePos()
+  robot.moveMouse(pos.x, pos.y)
 })
