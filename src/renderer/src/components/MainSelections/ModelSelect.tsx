@@ -52,7 +52,7 @@ export function getModelOptions(): {
 
   if (settingStore.models.OpenAI.customModel) {
     options.push({
-      label: <span class="text-base text-current">{modelDict['GPTCustom'].label}</span>,
+      label: <span class="text-sm leading-6 text-current">{modelDict['GPTCustom'].label}</span>,
       icon(size: number) {
         return (
           <ChatGptIcon
@@ -68,7 +68,7 @@ export function getModelOptions(): {
 
   options.push(
     {
-      label: <span class="text-base text-current">{modelDict['ERNIE3'].label}</span>,
+      label: <span class="text-base leading-6 text-current">{modelDict['ERNIE3'].label}</span>,
       icon(size: number) {
         return (
           <WenxinIcon
@@ -81,7 +81,7 @@ export function getModelOptions(): {
       value: 'ERNIE3'
     },
     {
-      label: <span class="text-base text-current">{modelDict['ERNIE4'].label}</span>,
+      label: <span class="text-base leading-6 text-current">{modelDict['ERNIE4'].label}</span>,
       icon(size: number) {
         return (
           <WenxinIcon
@@ -94,7 +94,7 @@ export function getModelOptions(): {
       value: 'ERNIE4'
     },
     {
-      label: <span class="text-sm text-current">{modelDict['ERNIE128K'].label}</span>,
+      label: <span class="text-sm leading-6 text-current">{modelDict['ERNIE128K'].label}</span>,
       icon(size: number) {
         return (
           <WenxinIcon
@@ -170,7 +170,7 @@ export function getModelOptions(): {
 
   if (settingStore.models.Gemini.customModel) {
     options.push({
-      label: <span class="text-base text-current">{modelDict['GeminiCustom'].label}</span>,
+      label: <span class="text-sm leading-6 text-current">{modelDict['GeminiCustom'].label}</span>,
       icon(size: number) {
         return (
           <GeminiIcon
@@ -181,6 +181,22 @@ export function getModelOptions(): {
         )
       },
       value: 'GeminiCustom'
+    })
+  }
+
+  if (settingStore.models.Llama.src) {
+    options.push({
+      label: <span class="text-sm leading-6 text-current">{modelDict['Llama'].label}</span>,
+      icon(size: number) {
+        return (
+          <LlamaIcon
+            width={size - 1}
+            height={size - 1}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'Llama'
     })
   }
 
@@ -228,22 +244,6 @@ export function getModelOptions(): {
         value: 'Moonshot128k'
       }
     )
-  }
-
-  if (settingStore.models.Llama.src) {
-    options.push({
-      label: <span class="text-base leading-6 text-current">{modelDict['Llama'].label}</span>,
-      icon(size: number) {
-        return (
-          <LlamaIcon
-            width={size - 1}
-            height={size - 1}
-            class="cursor-pointer overflow-hidden rounded-md"
-          />
-        )
-      },
-      value: 'Llama'
-    })
   }
 
   if (settingStore.models.Ollama.address && settingStore.models.Ollama.model) {
@@ -319,14 +319,14 @@ export default function (props: { position: string; size?: number; translate?: s
       </div>
       <Show when={isOpen()}>
         <div
-          class={`absolute z-10 mt-3 flex  flex-wrap gap-1 rounded-md bg-dark-plus p-2 shadow-center ${
+          class={`absolute z-10 mt-3 flex flex-wrap gap-x-2 gap-y-1 rounded-md bg-dark-plus p-2 shadow-center ${
             props.position
-          } ${props.translate || ''} ${options.length > 4 ? 'w-[324px]' : 'w-[220px]'}`}
+          } ${props.translate || ''} ${options.length > 4 ? 'w-[362px]' : 'w-[256px]'}`}
         >
           <For each={options}>
             {(option) => (
               <div
-                class={`w-[100px] cursor-pointer break-words rounded-lg py-1 pl-1 pr-0 ${
+                class={`w-[110px] cursor-pointer break-words rounded-lg py-1 pl-2 pr-0 ${
                   userData.selectedModel === option.value ? 'bg-active' : ''
                 } hover:bg-active
                 `}

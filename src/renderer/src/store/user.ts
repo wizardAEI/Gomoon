@@ -34,8 +34,17 @@ const [userData, setUserData] = createStore<UserDataModel>({
   firstTimeFor: {
     modelSelect: true,
     assistantSelect: true
+  },
+  windowSize: {
+    width: 0,
+    height: 0
   }
 })
+
+export const [userState, setUserState] = createStore({
+  preSelectedAssistant: ''
+})
+
 export async function loadUserData() {
   setUserData(await window.api.getUserData())
   loadLines()
@@ -47,7 +56,7 @@ export function userHasUse() {
   })
 }
 
-export function changeMatchModel(model: AssistantModel['matchModel']) {
+export function changeMatchModel(model: AssistantModel['matchModel'], id: string) {
   if (model && model !== 'current') {
     window.api
       .setUserData({
@@ -57,6 +66,7 @@ export function changeMatchModel(model: AssistantModel['matchModel']) {
         setUserData('selectedModel', model)
       })
   }
+  setUserState('preSelectedAssistant', id)
 }
 
 export function setSelectedModel(model: ModelsType) {

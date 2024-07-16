@@ -34,7 +34,9 @@ const multiModals = [
   'Ollama',
   'Moonshot8k',
   'Moonshot32k',
-  'Moonshot128k'
+  'Moonshot128k',
+  'GeminiPro',
+  'GeminiCustom'
 ] as ModelsType[]
 
 /**
@@ -78,7 +80,7 @@ export default function Input(props: {
         /<gomoon-image (.*?)>/.test(artifactContent()) &&
         !multiModals.includes(userData.selectedModel)
       ) {
-        toast.error('仅 GPT4，KIMI，部分 Ollama 模型支持图片输出')
+        toast.error('当前模型不支持图片解析')
         return
       }
       props.send(artifactContent() + inputText())

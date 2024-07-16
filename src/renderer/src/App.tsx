@@ -5,7 +5,7 @@ import { IpcRendererEvent } from 'electron'
 import TopBar from './components/TopBar'
 import { loadConfig, setUpdaterStatus, settingStore, systemStore } from './store/setting'
 import Loading from './pages/Loading'
-import { loadUserData, userData, userHasUse } from './store/user'
+import { loadUserData, setUserState, userData, userHasUse } from './store/user'
 import { loadAssistants } from './store/assistants'
 import { loadHistories } from './store/history'
 import { ToastProvider } from './components/ui/Toast'
@@ -25,6 +25,13 @@ const App = (props) => {
     loadUserData().then(() => {
       if (userData.firstTime) {
         userHasUse()
+      }
+      // FEAT: 初始化当前userState
+      console.log(window.location.pathname)
+      if (window.location.hash.startsWith('#/ans')) {
+        setUserState('preSelectedAssistant', userData.selectedAssistantForAns)
+      } else {
+        setUserState('preSelectedAssistant', userData.selectedAssistantForChat)
       }
     })
 

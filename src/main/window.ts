@@ -74,16 +74,22 @@ export function setQuicklyWakeUp(keys: string) {
         eventTracker.stdin.write('isDragged\n')
         eventTracker.stdout.once('data', (data) => {
           const isDragged = `${data}`.trim() === 'true'
+          mainWindow?.show()
           if (isDragged) {
             getSelected().then((res) => {
               mainWindow?.webContents.send('show-window', res)
             })
+          } else {
+            mainWindow?.webContents.send('show-window', {
+              text: ''
+            })
           }
-          mainWindow?.show()
         })
       } else {
         mainWindow?.show()
-        mainWindow?.webContents.send('show-window', '')
+        mainWindow?.webContents.send('show-window', {
+          text: ''
+        })
       }
     }
     if (!mainWindow?.isVisible()) {

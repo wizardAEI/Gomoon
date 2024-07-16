@@ -6,7 +6,7 @@ import { event } from '@renderer/lib/util'
 import { getCurrentAssistantForChat } from '@renderer/store/assistants'
 import SystemHeader from '@renderer/components/MainSelections'
 import Capsule from '@renderer/components/Capsule'
-import { changeMatchModel, currentLines } from '@renderer/store/user'
+import { changeMatchModel, currentLines, userState } from '@renderer/store/user'
 import { inputText, setInputText } from '@renderer/store/input'
 import { useToast } from '@renderer/components/ui/Toast'
 import { useEventListener } from 'solidjs-use'
@@ -94,7 +94,10 @@ export default function Chat() {
     }
     event.on('editUserMsg', editUserMsg)
 
-    changeMatchModel(getCurrentAssistantForChat().matchModel)
+    const currentAssistant = getCurrentAssistantForChat()
+    if (currentAssistant.id !== userState.preSelectedAssistant) {
+      changeMatchModel(currentAssistant.matchModel, currentAssistant.id)
+    }
 
     onCleanup(() => {
       if (previousMsg().state !== 'complete') {
@@ -159,6 +162,7 @@ export default function Chat() {
                   >
                     <Message
                       isEmpty
+                      editing={msg.id === editId()}
                       id={msg.id}
                       content="......"
                       type={msg.role}
@@ -174,6 +178,7 @@ export default function Chat() {
                   }`}
                 >
                   <Message
+                    editing={msg.id === editId()}
                     id={msg.id}
                     content={msg.content}
                     type={msg.role}
