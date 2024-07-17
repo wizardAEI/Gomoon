@@ -69,6 +69,8 @@ export const api = {
   clearHistory: () => ipcRenderer.invoke('clear-history'),
 
   // memory 相关
+  checkEmbeddingModel: (): Promise<boolean> => ipcRenderer.invoke('check-embedding-model'),
+  downloadEmbeddingModel: () => ipcRenderer.invoke('download-embedding-model'),
   getMemories: (): Promise<MemoModel[]> => ipcRenderer.invoke('get-memories'),
   editFragment: (
     option: EditFragmentOption

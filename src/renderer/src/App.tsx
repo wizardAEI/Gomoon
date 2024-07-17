@@ -27,7 +27,6 @@ const App = (props) => {
         userHasUse()
       }
       // FEAT: 初始化当前userState
-      console.log(window.location.pathname)
       if (window.location.hash.startsWith('#/ans')) {
         setUserState('preSelectedAssistant', userData.selectedAssistantForAns)
       } else {
