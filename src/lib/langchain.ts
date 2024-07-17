@@ -7,6 +7,7 @@ import { HumanMessage, SystemMessage, AIMessage } from '@langchain/core/messages
 import type { BaseMessage, MessageContent } from 'langchain/schema'
 import { ChatOpenAI, OpenAIClient } from '@langchain/openai'
 import { isArray } from 'lodash'
+import { HarmBlockThreshold, HarmCategory } from '@google/generative-ai'
 
 import { base64ToFile } from './utils_web'
 
@@ -107,7 +108,7 @@ export const modelDict: {
     maxToken: 128000
   },
   GPTCustom: {
-    label: 'ChatGPT',
+    label: '自定义模型',
     maxToken: 0
   },
   QWenTurbo: {
@@ -127,7 +128,7 @@ export const modelDict: {
     maxToken: 30720
   },
   GeminiCustom: {
-    label: 'Gemini',
+    label: '自定义模型',
     maxToken: 0
   },
   Moonshot128k: {
@@ -143,7 +144,7 @@ export const modelDict: {
     maxToken: 32000
   },
   Llama: {
-    label: 'Llama',
+    label: 'Llama CPP',
     maxToken: 0
   },
   Ollama: {
@@ -262,9 +263,27 @@ export const newGeminiModel = (
 ) =>
   new ChatGoogleGenerativeAI({
     streaming: true,
-    modelName: modelName || 'gemini-pro',
+    modelName: modelName || 'gemini-1.5-pro',
     apiKey: config.apiKey || 'api-key',
-    temperature: config.temperature
+    temperature: config.temperature,
+    safetySettings: [
+      {
+        category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+        threshold: HarmBlockThreshold.BLOCK_NONE
+      },
+      {
+        category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+        threshold: HarmBlockThreshold.BLOCK_NONE
+      },
+      {
+        category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+        threshold: HarmBlockThreshold.BLOCK_NONE
+      },
+      {
+        category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+        threshold: HarmBlockThreshold.BLOCK_NONE
+      }
+    ]
   })
 
 export const newMoonshotModel = (
@@ -371,7 +390,7 @@ export const loadLMMap = async (
   QWenTurbo: newQWenModel(model.AliQWen, 'qwen-turbo'),
   QWenMax: newQWenModel(model.AliQWen, 'qwen-max'),
   QWenLong: newQWenModelV2(model.AliQWen, 'qwen-long'),
-  GeminiPro: newGeminiModel(model.Gemini, 'gemini-pro'),
+  GeminiPro: newGeminiModel(model.Gemini, 'gemini-1.5-pro'),
   GeminiCustom: newGeminiModel(model.Gemini, model.Gemini.customModel),
   Moonshot8k: newMoonshotModel(model.Moonshot, 'moonshot-v1-8k'),
   Moonshot32k: newMoonshotModel(model.Moonshot, 'moonshot-v1-32k'),

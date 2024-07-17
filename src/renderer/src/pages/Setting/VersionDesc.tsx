@@ -5,12 +5,21 @@ import { For, Show, createSignal } from 'solid-js'
 
 const versions = [
   {
+    version: '1.1.6',
+    contents: [
+      '一些细节的优化',
+      '划选了一段文字后，使用快捷键召唤 Gomoon 会有新效果哦',
+      'Gemini 支持了图片理解，默认模型改为 gemini-1.5-pro'
+    ]
+  },
+  {
     version: '1.1.5',
     contents: [
       '一些细节的优化',
       '聊天文字的大小支持切换',
       '新增了自定义模型 😶',
-      'Gemini 现在也支持自定义模型啦'
+      'Gemini 现在也支持自定义模型啦',
+      '联网查询第n次升级，希望这次会好用些 🥹'
     ]
   },
   {

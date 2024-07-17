@@ -112,6 +112,13 @@ export function updateUserData(data: Partial<typeof userDataDB.data>) {
   userDataDB.data = merge(userDataDB.data, data)
   userDataDB.write()
 }
+export function setWindowSize(width: number, height: number) {
+  userDataDB.data = {
+    ...userDataDB.data,
+    windowSize: { width, height }
+  }
+  userDataDB.write()
+}
 
 /**
  * FEAT: assistants 相关

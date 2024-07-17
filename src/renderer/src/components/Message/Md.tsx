@@ -116,7 +116,7 @@ export default function Md(props: {
       const [tokens, idx] = args
       const token = tokens[idx]
       const rawCode = fence(...args)
-      return `<div class="relative mt-1 w-full text-text1">
+      return `<div class="relative mt-2 w-full text-text1">
           <div data-code=${encodeURIComponent(
             token.content
           )} class="cursor-pointer absolute top-1 right-1 z-10 hover:h-3 group/copy copy-btn">

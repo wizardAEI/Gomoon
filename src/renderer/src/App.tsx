@@ -5,7 +5,7 @@ import { IpcRendererEvent } from 'electron'
 import TopBar from './components/TopBar'
 import { loadConfig, setUpdaterStatus, settingStore, systemStore } from './store/setting'
 import Loading from './pages/Loading'
-import { loadUserData, userData, userHasUse } from './store/user'
+import { loadUserData, setUserState, userData, userHasUse } from './store/user'
 import { loadAssistants } from './store/assistants'
 import { loadHistories } from './store/history'
 import { ToastProvider } from './components/ui/Toast'
@@ -24,8 +24,13 @@ const App = (props) => {
     // FEAT: 获取用户信息
     loadUserData().then(() => {
       if (userData.firstTime) {
-        alert('请允许程序权限后重启，以使用快捷方式功能')
         userHasUse()
+      }
+      // FEAT: 初始化当前userState
+      if (window.location.hash.startsWith('#/ans')) {
+        setUserState('preSelectedAssistant', userData.selectedAssistantForAns)
+      } else {
+        setUserState('preSelectedAssistant', userData.selectedAssistantForChat)
       }
     })
 
@@ -39,12 +44,10 @@ const App = (props) => {
     loadMemories()
 
     // FEAT: 快捷键触发操作
-    const removeListener2 = window.api.showWindow(() => {
-      nav('/')
+    const removeListener2 = window.api.showWindow((_, data) => {
+      nav('/?text=' + data.text)
     })
-    onCleanup(() => {
-      removeListener2()
-    })
+    onCleanup(() => removeListener2())
 
     const removeListener = window.api.multiCopy(async (_: IpcRendererEvent, msg: string) => {
       nav('/ans?q=' + msg)
@@ -84,6 +87,9 @@ const App = (props) => {
         setUpdaterStatus({
           updateProgress: progress
         })
+      }
+      if (msg.includes('event-tracker-access-denied')) {
+        alert('请允许程序权限后重启，以使用快捷方式功能')
       }
     })
 

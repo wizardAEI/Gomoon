@@ -7,7 +7,7 @@ import { getCurrentAssistantForAnswer } from '@renderer/store/assistants'
 import SystemHeader from '@renderer/components/MainSelections'
 import Capsule from '@renderer/components/Capsule'
 import { inputText, setInputText } from '@renderer/store/input'
-import { changeMatchModel } from '@renderer/store/user'
+import { changeMatchModel, userState } from '@renderer/store/user'
 
 import { genAns, answerStore, ansStatus } from '../../store/answer'
 
@@ -17,9 +17,6 @@ export default function Answer() {
   const [showModal, setShowModal] = createSignal(false)
   const [introduce, setIntroduce] = createSignal('每')
   const [query, setQuery] = useSearchParams()
-  setQuery({
-    q: ''
-  })
   onMount(() => {
     const introduceFull = '每一次回答都将是一次新的对话'
     // 打字机效果,逐渐显示introduce
@@ -36,13 +33,19 @@ export default function Answer() {
     if (query.q) {
       setInputText(query.q)
       setShowModal(true)
+      setQuery({
+        q: ''
+      })
     }
     const removeListener = window.api.multiCopy((_: IpcRendererEvent, msg: string) => {
       setInputText(msg)
       setShowModal(true)
     })
 
-    changeMatchModel(getCurrentAssistantForAnswer().matchModel)
+    const currentAssistant = getCurrentAssistantForAnswer()
+    if (currentAssistant.id !== userState.preSelectedAssistant) {
+      changeMatchModel(currentAssistant.matchModel, currentAssistant.id)
+    }
 
     onCleanup(() => {
       removeListener()

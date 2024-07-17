@@ -3,6 +3,7 @@ function stringError(err: Error) {
 }
 
 export function ErrorDict(err: Error): string {
+  console.log('error', err)
   if (err.message.includes('AbortError') || err.name.includes('AbortError')) {
     return ' ⏹'
   } else if (

@@ -31,6 +31,7 @@ export default function Message(props: {
   id?: string
   content: string
   botName?: string
+  editing?: boolean
   isEmpty?: boolean
   onRemove?: () => void
 }) {
@@ -132,7 +133,7 @@ export default function Message(props: {
         <Pause id={props.id} type={props.type} />
       </Show>
       <Show
-        when={!props.isEmpty}
+        when={!props.editing}
         fallback={
           <Show when={props.id && !msgStatus.generatingList.includes(props.id)}>
             <WithDrawal type={props.type} />

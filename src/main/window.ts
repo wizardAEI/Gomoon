@@ -1,6 +1,7 @@
 import { join } from 'path'
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process'
 
+import robot from 'robotjs'
 import {
   app,
   shell,
@@ -15,17 +16,22 @@ import {
 } from 'electron'
 import { is } from '@electron-toolkit/utils'
 import { autoUpdater } from 'electron-updater'
+import { debounce } from 'lodash'
 
 import icon from '../../resources/icon.png?asset'
 import trayIcon from '../../resources/icon@20.png?asset'
 
-import { loadAppConfig } from './models'
+import { getUserData, loadAppConfig, setWindowSize } from './models'
 import { getResourcesPath, quitApp } from './lib'
 
 let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
 let preKeys = ''
-let multiCopyTracker: ChildProcessWithoutNullStreams | null = null
+let eventTracker: ChildProcessWithoutNullStreams | null = null
+
+export interface ShowWindowParams {
+  text: string
+}
 
 export function setQuicklyWakeUp(keys: string) {
   /**
@@ -33,8 +39,58 @@ export function setQuicklyWakeUp(keys: string) {
    */
   globalShortcut.register(keys, () => {
     function showWindow() {
-      mainWindow?.webContents.send('show-window')
-      mainWindow?.show()
+      const getSelected: () => Promise<ShowWindowParams> = () => {
+        return new Promise((resolve) => {
+          // 缓存之前的文案
+          const lastText = clipboard.readText('clipboard')
+
+          const lastFile = clipboard.read('NSFilenamesPboardType')
+
+          const platform = process.platform
+
+          // 执行复制动作
+          if (platform === 'darwin') {
+            robot.keyTap('c', 'command')
+          } else {
+            robot.keyTap('c', 'control')
+          }
+
+          setTimeout(() => {
+            const text =
+              lastText === (clipboard.readText('clipboard') || '')
+                ? ''
+                : clipboard.readText('clipboard')
+            // clipboard.writeText(lastText)
+            if (lastFile) {
+              clipboard.writeBuffer('NSFilenamesPboardType', Buffer.from(lastFile))
+            }
+            resolve({
+              text
+            })
+          })
+        })
+      }
+      if (eventTracker) {
+        eventTracker.stdin.write('isDragged\n')
+        eventTracker.stdout.once('data', (data) => {
+          const isDragged = `${data}`.trim() === 'true'
+          mainWindow?.show()
+          if (isDragged) {
+            getSelected().then((res) => {
+              mainWindow?.webContents.send('show-window', res)
+            })
+          } else {
+            mainWindow?.webContents.send('show-window', {
+              text: ''
+            })
+          }
+        })
+      } else {
+        mainWindow?.show()
+        mainWindow?.webContents.send('show-window', {
+          text: ''
+        })
+      }
     }
     if (!mainWindow?.isVisible()) {
       showWindow()
@@ -85,6 +141,7 @@ const cors: {
 } = {
   defaultURLs: [
     'http://www.baidu.com/*',
+    'https://www.baidu.com/*',
     'https://dashscope.aliyuncs.com/*',
     'https://aip.baidubce.com/*',
     'https://api.openai.com/*',
@@ -186,12 +243,13 @@ export async function PostBuffToMainWindow(buff: Buffer) {
 
 export function createWindow(): void {
   const userConfig = loadAppConfig()
+  const userData = getUserData()
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
     title: 'Gomoon',
-    width: 480,
-    height: 750,
+    width: userData.windowSize.width,
+    height: userData.windowSize.height,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
@@ -234,16 +292,24 @@ export function createWindow(): void {
     shell.openExternal(event.url)
   })
 
-  // FEAT: 双击复制回答
-  if (userConfig.canMultiCopy) {
-    let filename = 'eventTracker'
-    if (process.platform === 'win32') {
-      filename += '.exe'
-    } else if (process.arch === 'x64') {
-      filename = 'eventTracker_x64'
+  let filename = 'eventTracker'
+  if (process.platform === 'win32') {
+    filename += '.exe'
+  } else if (process.arch === 'x64') {
+    filename = 'eventTracker_x64'
+  }
+  eventTracker = spawn(getResourcesPath(filename))
+  eventTracker.stderr.on('data', (data) => {
+    if (`${data}`.includes('Failed to enable access')) {
+      console.log('Failed to enable access')
+      mainWindow?.once('show', () => {
+        mainWindow?.webContents.send('post-message', 'event-tracker-access-denied')
+      })
     }
-    multiCopyTracker = spawn(getResourcesPath(filename))
-    multiCopyTracker.stdout.on('data', (data) => {
+  })
+  eventTracker.stdout.on('data', (data) => {
+    // FEAT: 双击复制回答
+    if (userConfig.canMultiCopy) {
       if (`${data}` === 'multi-copy' && mainWindow) {
         const copyText = clipboard.readText().trim()
         if (!copyText || !loadAppConfig().canMultiCopy) {
@@ -256,8 +322,8 @@ export function createWindow(): void {
         }
         mainWindow.show()
       }
-    })
-  }
+    }
+  })
 
   mainWindow.on('ready-to-show', () => {
     mainWindow!.show()
@@ -305,6 +371,15 @@ export function createWindow(): void {
   updateSendHeaders()
   updateRespHeaders()
 
+  // FEAT: 窗口大小调整持久化
+  const resizeThrottle = debounce(() => {
+    const [width, height] = mainWindow?.getSize() || [480, 760]
+    setWindowSize(width, height)
+  }, 600)
+  mainWindow.on('resize', () => {
+    resizeThrottle()
+  })
+
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
@@ -315,5 +390,5 @@ export function createWindow(): void {
 }
 
 export async function beforeQuitWindowHandler() {
-  !multiCopyTracker?.killed && multiCopyTracker?.kill()
+  !eventTracker?.killed && eventTracker?.kill()
 }

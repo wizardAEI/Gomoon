@@ -11,6 +11,8 @@ import { parseFile } from '@renderer/lib/ai/file'
 import { chatHistoryTransfer } from '@renderer/store/history'
 import NewChatIcon from '@renderer/assets/icon/NewChatIcon'
 import { ModelsType } from '@lib/langchain'
+import { useSearchParams } from '@solidjs/router'
+import SendIcon from '@renderer/assets/icon/SendIcon'
 
 import { useLoading } from '../ui/DynamicLoading'
 import { useToast } from '../ui/Toast'
@@ -33,7 +35,9 @@ const multiModals = [
   'Ollama',
   'Moonshot8k',
   'Moonshot32k',
-  'Moonshot128k'
+  'Moonshot128k',
+  'GeminiPro',
+  'GeminiCustom'
 ] as ModelsType[]
 
 /**
@@ -77,7 +81,7 @@ export default function Input(props: {
         /<gomoon-image (.*?)>/.test(artifactContent()) &&
         !multiModals.includes(userData.selectedModel)
       ) {
-        toast.error('仅 GPT4，KIMI，部分 Ollama 模型支持图片输出')
+        toast.error('当前模型不支持图片解析')
         return
       }
       props.send(artifactContent() + inputText())
@@ -211,6 +215,18 @@ export default function Input(props: {
     }
   }
 
+  const [query, setQuery] = useSearchParams()
+
+  createEffect(() => {
+    if (query.text) {
+      setInputText(query.text)
+      setTimeout(() => {
+        textAreaDiv!.select()
+      }, 200)
+      setQuery({ text: '' })
+    }
+  })
+
   onMount(() => {
     if (props.autoFocusWhenShow) {
       const removeListener = window.api.showWindow(() => {
@@ -272,7 +288,7 @@ export default function Input(props: {
       />
       <div class="over relative flex w-full justify-center gap-1">
         <Show when={props.showClearButton && !props.isGenerating && !inputText()?.length}>
-          <div class="-ml-3 mr-[2px] flex cursor-pointer flex-col items-center justify-center">
+          <div class="-ml-3 flex cursor-pointer items-center">
             <div
               onClick={() => {
                 setRefreshing(true)
@@ -315,21 +331,21 @@ export default function Input(props: {
                   }
                 })
               }}
-              class={`group/refresh ml-1 h-8 w-8 rounded-full ${props.type === 'ans' || props.type === 'question' ? 'p-[7px]' : 'p-1'} hover:bg-dark-plus`}
+              class={`group/refresh ml-1 h-8 w-8 translate-y-[1px] rounded-full ${props.type === 'ans' || props.type === 'question' ? 'p-[6px]' : 'p-[3px]'} hover:bg-dark-plus`}
             >
               <Show
                 when={props.type === 'ans' || props.type === 'question'}
                 fallback={
                   <NewChatIcon
-                    width={24}
-                    height={24}
+                    width={26}
+                    height={26}
                     class="text-gray group-hover/refresh:text-active"
                   />
                 }
               >
                 <RefreshIcon
-                  width={18}
-                  height={18}
+                  width={20}
+                  height={20}
                   class={
                     'rotate-45 cursor-pointer text-gray group-hover/refresh:text-active' +
                     (refreshing() ? ' animate-rotate-180' : '')
@@ -381,9 +397,26 @@ export default function Input(props: {
             }
             class="gomoon-input font-sans max-h-48 flex-1 resize-none rounded-2xl border-none bg-transparent px-4 py-[6px] text-sm text-text1 caret-text2 transition-none focus:outline-none"
           />
-          {/* <button class="absolute bottom-1 right-1 h-8 w-8 cursor-pointer overflow-hidden rounded-full bg-cyber px-0 py-1">
-          <ChatIcon class="duration-150 hover:text-active" width={24} height={24} />
-        </button> */}
+        </div>
+        <div
+          class={
+            '-mr-3 ml-[-2px] hidden items-center md:flex ' +
+            (inputText().trim() ? 'group/send cursor-pointer ' : ' cursor-not-allowed')
+          }
+          onClick={() => {
+            submit()
+          }}
+        >
+          <div class="h-8 w-8 rounded-full p-[2px] group-hover/send:bg-dark">
+            <SendIcon
+              class={
+                'duration-300 group-hover/send:fill-active ' +
+                (inputText().trim() ? 'fill-gray' : 'fill-gray/70')
+              }
+              width={28}
+              height={28}
+            />
+          </div>
         </div>
       </div>
     </div>
