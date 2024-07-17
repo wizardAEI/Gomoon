@@ -403,7 +403,12 @@ export default function Setting() {
               label="双击复制进行问答"
               hint="通过快速连按复制唤起 Gomoon 并问答（设置后需重启）"
               checked={settingStore.canMultiCopy}
-              onCheckedChange={setCanMultiCopy}
+              onCheckedChange={(v) => {
+                if (v) {
+                  toast.success('设置成功，重启应用后生效')
+                }
+                setCanMultiCopy(v)
+              }}
             />
             <div class="item-center flex justify-between gap-3">
               <span class="h-6">唤起应用快捷键</span>
