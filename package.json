@@ -1,7 +1,7 @@
 {
   "name": "gomoon",
   "productName": "Gomoon",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "A ai tools for everyone on Mac, Windows and Linux.",
   "main": "./out/main/index.js",
   "author": "aei",
@@ -61,6 +61,7 @@
     "officeparser": "^4.0.8",
     "pdf-parse": "^1.1.1",
     "puppeteer": "^22.7.1",
+    "robotjs": "^0.6.0",
     "solid-js": "^1.8.17",
     "solidjs-use": "^2.3.0",
     "tesseract.js": "^5.0.5",

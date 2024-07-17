@@ -37,15 +37,16 @@ Gomoon 是一个开源项目，目前处于初始阶段，还有很多功能有�
 
 ## 已支持的模型
 
-| 模型类型 | 模型名称                                                                    |
-| -------- | --------------------------------------------------------------------------- |
-| ChatGPT  | GPT3，GPT4，支持 OpenAI API 模式的模型。                                    |
-| 文心     | 文心3.5，文心4.0，文心128k                                                  |
-| 千问     | 千问Turbo，千问Plus，千问Max                                                |
-| Gemini   | Gemini Pro                                                                  |
-| Kimi     | Kimi 8k，Kimi 32k，Kimi 128k                                                |
-| Llama    | [node-llama-cpp](https://withcatai.github.io/node-llama-cpp) 支持的所有模型 |
-| Ollama   | [ollama](https://ollama.com/) 支持的所有模型                                |
+| 模型类型   | 模型名称                                                                    |
+| ---------- | --------------------------------------------------------------------------- |
+| ChatGPT    | GPT3，GPT4，支持 OpenAI API 模式的模型。                                    |
+| 文心       | 文心3.5，文心4.0，文心128k                                                  |
+| 千问       | 千问Turbo，千问Plus，千问Max                                                |
+| Gemini     | Gemini Pro 和 Gemini 自定义模型                                             |
+| Kimi       | Kimi 8k，Kimi 32k，Kimi 128k                                                |
+| Llama      | [node-llama-cpp](https://withcatai.github.io/node-llama-cpp) 支持的所有模型 |
+| Ollama     | [ollama](https://ollama.com/) 支持的所有模型                                |
+| 自定义模型 | 任何支持 OpenAI 接口的模型，如DeepSeek，豆包，Kimi，讯飞星火等              |
 
 由于 ChatGPT 国内访问不易，这里推荐一下 [ChatAnywhere](https://peiqishop.me/)，价格十分实惠的国内 ChatGPT 提供商。
 
