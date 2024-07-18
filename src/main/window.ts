@@ -343,11 +343,9 @@ export function createWindow(): void {
   })
 
   // tray
-  let trayIcon = nativeImage.createFromPath(getResourcesPath('icon.png'))
+  let trayIcon = nativeImage.createFromPath(getResourcesPath('tray.png'))
   if (process.platform === 'darwin') {
     trayIcon = trayIcon.resize({ width: 22, height: 22 })
-  } else {
-    trayIcon = trayIcon.resize({ width: 24, height: 24 })
   }
   tray = new Tray(trayIcon)
   const contextMenu = Menu.buildFromTemplate([
