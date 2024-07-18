@@ -318,16 +318,20 @@ export default function Tools(props: {
                     position: 'top-1/3'
                   })
                 : toast.success('已关闭记忆胶囊')
-              if (memoCapsule() && memories.length === 0) {
+              if (memoCapsule() && !(await window.api.checkEmbeddingModel())) {
                 load.show('功能初始化中...')
                 const remove = window.api.receiveMsg(async (_, msg: string) => {
-                  if (msg.includes('progress')) {
+                  if (msg.startsWith('model-progress')) {
+                    const progress = msg.replace(/^model-progress /, '')
+                    load.show(`下载模型中${progress}...`)
+                  }
+                  if (msg.startsWith('progress')) {
                     const progress = msg.replace(/^progress /, '')
                     if (progress === '100%') {
                       remove()
                       return
                     }
-                    load.show(`功能初始化中...${progress}`)
+                    load.show(`记忆初始化中${progress}...`)
                   }
                 })
                 try {

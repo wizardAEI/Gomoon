@@ -59,39 +59,16 @@ export interface ImportMemoDataModel {
   vectors?: Float32Array[]
 }
 
-export async function importDataAndIndexes(
-  memoId: string,
-  data: {
-    [id: string]: ImportMemoDataModel
-  }
-) {
+export async function deleteDataAndIndex(memoId: string) {
+  // delete memo data file
   const path = join(memoPath, memoId)
-  const db = JSONFileSyncPreset<MemoData>(path, data)
-  await deleteDataAndIndex(memoId)
-  const indexes: {
-    [key in string]: Float32Array[] | undefined
-  } = {}
-  for (let i = 0; i < Object.keys(data).length; i++) {
-    const key = Object.keys(data)[i]
-    const item = data[key]
-    for (let j = 0; j < item.indexes.length; j++) {
-      if (item.vectors?.[j] && item.embeddingModel === getEmbeddingModel()) {
-        indexes[key] ? indexes[key]?.push(item.vectors[j]) : (indexes[key] = [item.vectors[j]])
-        continue
-      }
-      const v = await embedding(item.indexes[j])
-      indexes[key] ? indexes[key]?.push(v) : (indexes[key] = [v])
-    }
-    postMsgToMainWindow(`progress ${(i / Object.keys(data).length) * 100}%`)
+  existsSync(path) && unlinkSync(path)
+  // delete memo indexes table
+  await connectDB()
+  const tables = await dbl!.tableNames()
+  if (tables.includes(memoId)) {
+    await dbl!.dropTable(memoId)
   }
-  await saveIndexes(
-    memoId,
-    Object.keys(indexes).map((key) => ({
-      id: key,
-      vectors: indexes[key] ?? []
-    }))
-  )
-  db.write()
 }
 
 export async function saveIndexes(
@@ -126,6 +103,41 @@ export async function saveIndexes(
   }
   const table = await dbl!.openTable(memoId)
   table.add(data)
+}
+
+export async function importDataAndIndexes(
+  memoId: string,
+  data: {
+    [id: string]: ImportMemoDataModel
+  }
+) {
+  const path = join(memoPath, memoId)
+  const db = JSONFileSyncPreset<MemoData>(path, data)
+  await deleteDataAndIndex(memoId)
+  const indexes: {
+    [key in string]: Float32Array[] | undefined
+  } = {}
+  for (let i = 0; i < Object.keys(data).length; i++) {
+    const key = Object.keys(data)[i]
+    const item = data[key]
+    for (let j = 0; j < item.indexes.length; j++) {
+      if (item.vectors?.[j] && item.embeddingModel === getEmbeddingModel()) {
+        indexes[key] ? indexes[key]?.push(item.vectors[j]) : (indexes[key] = [item.vectors[j]])
+        continue
+      }
+      const v = await embedding(item.indexes[j])
+      indexes[key] ? indexes[key]?.push(v) : (indexes[key] = [v])
+    }
+    postMsgToMainWindow(`progress ${((i / Object.keys(data).length) * 100).toFixed(0)}%`)
+  }
+  await saveIndexes(
+    memoId,
+    Object.keys(indexes).map((key) => ({
+      id: key,
+      vectors: indexes[key] ?? []
+    }))
+  )
+  db.write()
 }
 
 export async function getData(data: { id: string; content: string }): Promise<Array<MemoResult>> {
@@ -179,16 +191,4 @@ export async function getMemoDataAndIndexes(memoId: string): Promise<MemoFragmen
     })
   }
   return arr
-}
-
-export async function deleteDataAndIndex(memoId: string) {
-  // delete memo data file
-  const path = join(memoPath, memoId)
-  existsSync(path) && unlinkSync(path)
-  // delete memo indexes table
-  await connectDB()
-  const tables = await dbl!.tableNames()
-  if (tables.includes(memoId)) {
-    await dbl!.dropTable(memoId)
-  }
 }

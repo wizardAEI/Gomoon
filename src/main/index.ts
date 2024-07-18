@@ -7,6 +7,7 @@ import icon from '../../resources/icon.png?asset'
 import { initAppEventsHandler } from './eventHandler'
 import { createWindow, showWindow } from './window'
 import { quitApp } from './lib'
+import { activateTokenizer } from './lib/ai/embedding/embedding'
 
 // dock
 app.dock?.setIcon(icon)
@@ -63,8 +64,10 @@ app.on('window-all-closed', () => {
 })
 
 // 激活robot
+// 初始化tokenizer
 // 分出一个线程，防止阻塞主进程
 setTimeout(() => {
   const pos = robot.getMousePos()
   robot.moveMouse(pos.x, pos.y)
+  activateTokenizer()
 })
