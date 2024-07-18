@@ -215,14 +215,14 @@ export default function Input(props: {
     }
   }
 
+  //FEAT: 用户选中文字后，自动添加进输入框
   const [query, setQuery] = useSearchParams()
-
   createEffect(() => {
     if (query.text) {
       setInputText(query.text)
       setTimeout(() => {
         textAreaDiv!.select()
-      }, 200)
+      }, 100)
       setQuery({ text: '' })
     }
   })

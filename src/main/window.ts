@@ -12,14 +12,14 @@ import {
   globalShortcut,
   OnBeforeSendHeadersListenerDetails,
   BeforeSendResponse,
-  session
+  session,
+  nativeImage
 } from 'electron'
 import { is } from '@electron-toolkit/utils'
 import { autoUpdater } from 'electron-updater'
 import { debounce } from 'lodash'
 
 import icon from '../../resources/icon.png?asset'
-import trayIcon from '../../resources/icon@20.png?asset'
 
 import { getUserData, loadAppConfig, setWindowSize } from './models'
 import { getResourcesPath, quitApp } from './lib'
@@ -54,32 +54,32 @@ export function setQuicklyWakeUp(keys: string) {
           } else {
             robot.keyTap('c', 'control')
           }
-
           setTimeout(() => {
             const text =
               lastText === (clipboard.readText('clipboard') || '')
                 ? ''
                 : clipboard.readText('clipboard')
-            // clipboard.writeText(lastText)
+            clipboard.writeText(lastText)
             if (lastFile) {
               clipboard.writeBuffer('NSFilenamesPboardType', Buffer.from(lastFile))
             }
             resolve({
               text
             })
-          })
+          }, 100)
         })
       }
       if (eventTracker) {
         eventTracker.stdin.write('isDragged\n')
         eventTracker.stdout.once('data', (data) => {
           const isDragged = `${data}`.trim() === 'true'
-          mainWindow?.show()
           if (isDragged) {
             getSelected().then((res) => {
+              mainWindow?.show()
               mainWindow?.webContents.send('show-window', res)
             })
           } else {
+            mainWindow?.show()
             mainWindow?.webContents.send('show-window', {
               text: ''
             })
@@ -343,6 +343,12 @@ export function createWindow(): void {
   })
 
   // tray
+  let trayIcon = nativeImage.createFromPath(getResourcesPath('icon.png'))
+  if (process.platform === 'darwin') {
+    trayIcon = trayIcon.resize({ width: 22, height: 22 })
+  } else {
+    trayIcon = trayIcon.resize({ width: 24, height: 24 })
+  }
   tray = new Tray(trayIcon)
   const contextMenu = Menu.buildFromTemplate([
     {
