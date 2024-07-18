@@ -358,21 +358,21 @@ export default function Setting() {
                   label="模型名"
                   value={settingStore.models.CustomModel.customModel}
                   onSave={(v) => {
-                    setModels(v, 'CustomModel', 'customModel')
+                    setModels(v.trim(), 'CustomModel', 'customModel')
                   }}
                 />
                 <EditInput
                   label="apiKey"
                   value={settingStore.models.CustomModel.apiKey}
                   onSave={(v) => {
-                    setModels(v, 'CustomModel', 'apiKey')
+                    setModels(v.trim(), 'CustomModel', 'apiKey')
                   }}
                 />
                 <EditInput
                   label="baseURL"
                   value={settingStore.models.CustomModel.baseURL}
                   onSave={(v) => {
-                    setModels(v, 'CustomModel', 'baseURL')
+                    setModels(v.trim(), 'CustomModel', 'baseURL')
                   }}
                 />
                 <div class="mb-1 flex h-7 items-center gap-4">

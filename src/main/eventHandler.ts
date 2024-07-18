@@ -21,7 +21,6 @@ import {
   getLines,
   getMemories,
   useMemo,
-  initMemories,
   setTheme,
   setHistoryStar,
   clearHistory,
@@ -67,7 +66,7 @@ import {
 } from './lib/ai/embedding/index'
 import { speak } from './lib/ai/tts'
 import { callLLM, CallLLmOption, stopLLM } from './lib/ai/langchain'
-import { updateForMac } from './service'
+import { checkModelsSvc, initMemoriesSvc, updateForMac } from './service'
 
 export function initAppEventsHandler() {
   /**
@@ -166,7 +165,8 @@ export function initAppEventsHandler() {
   ipcMain.handle('cancel-save-memory', (_, id: string) => cancelSaveMemo(id))
   ipcMain.handle('use-memory', (_, id: string) => useMemo(id))
   ipcMain.handle('get-memory-data', (_, data: GetMemoParams) => getMemo(data))
-  ipcMain.handle('init-memories', () => initMemories())
+  ipcMain.handle('check-embedding-model', () => checkModelsSvc())
+  ipcMain.handle('init-memories', () => initMemoriesSvc())
   ipcMain.handle('export-memory', (_, memo: MemoModel) => exportMemo(memo))
   ipcMain.handle('import-memory', (_, path: string) => importMemo(path))
 
