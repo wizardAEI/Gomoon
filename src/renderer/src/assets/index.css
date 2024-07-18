@@ -28,6 +28,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 选择 */
+::selection {
+  @apply bg-selection;
+}
+
 /* 滚动条基础样式 */
 ::-webkit-scrollbar {
   width: 0px;
