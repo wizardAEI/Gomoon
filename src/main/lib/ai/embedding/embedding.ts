@@ -11,6 +11,7 @@ export function getEmbeddingModel() {
 
 export async function embedding(text: string): Promise<Float32Array> {
   const { env, pipeline } = await import('@xenova/transformers')
+  env.allowLocalModels = true
   env.localModelPath = appDataPath
   env.backends.onnx.wasm.numThreads = 1
   env.backends.onnx.logLevel = 'info'
@@ -57,6 +58,7 @@ export async function tokenize(text: string) {
     return []
   }
   const { AutoTokenizer, env } = await import('@xenova/transformers')
+  env.allowLocalModels = true
   env.localModelPath = appDataPath
   env.backends.onnx.wasm.numThreads = 1
   env.backends.onnx.logLevel = 'info'
