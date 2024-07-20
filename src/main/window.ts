@@ -66,7 +66,7 @@ export function setQuicklyWakeUp(keys: string) {
             resolve({
               text
             })
-          }, 100)
+          }, 200)
         })
       }
       if (eventTracker) {
@@ -75,6 +75,7 @@ export function setQuicklyWakeUp(keys: string) {
           const isDragged = `${data}`.trim() === 'true'
           if (isDragged) {
             getSelected().then((res) => {
+              console.log(res)
               mainWindow?.show()
               mainWindow?.webContents.send('show-window', res)
             })
