@@ -47,6 +47,19 @@ export function getModelOptions(): {
         )
       },
       value: 'GPT4'
+    },
+    {
+      label: <span class="text-base leading-6 text-current">{modelDict['GPTMINI'].label}</span>,
+      icon(size: number) {
+        return (
+          <ChatGptIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'GPTMINI'
     }
   ]
 

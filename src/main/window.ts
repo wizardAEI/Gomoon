@@ -46,6 +46,8 @@ export function setQuicklyWakeUp(keys: string) {
 
           const lastFile = clipboard.read('NSFilenamesPboardType')
 
+          const lastImage = clipboard.readImage('clipboard')
+
           const platform = process.platform
 
           // 执行复制动作
@@ -60,6 +62,7 @@ export function setQuicklyWakeUp(keys: string) {
                 ? ''
                 : clipboard.readText('clipboard')
             clipboard.writeText(lastText)
+            clipboard.writeImage(lastImage)
             if (lastFile) {
               clipboard.writeBuffer('NSFilenamesPboardType', Buffer.from(lastFile))
             }

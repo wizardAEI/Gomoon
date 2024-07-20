@@ -71,6 +71,7 @@ export type ModelsType =
   | 'ERNIE128K'
   | 'GPT3'
   | 'GPT4'
+  | 'GPTMINI'
   | 'GPTCustom'
   | 'QWenTurbo'
   | 'QWenLong'
@@ -90,6 +91,10 @@ export const modelDict: {
   GPT3: {
     label: 'GPT 3.5',
     maxToken: 16385
+  },
+  GPTMINI: {
+    label: 'GPT Mini',
+    maxToken: 128000
   },
   GPT4: {
     label: 'GPT 4.0',
@@ -112,15 +117,15 @@ export const modelDict: {
     maxToken: 0
   },
   QWenTurbo: {
-    label: '千问Turbo',
+    label: '千问 Turbo',
     maxToken: 6000
   },
   QWenLong: {
-    label: '千问Long',
+    label: '千问 Long',
     maxToken: 10000000
   },
   QWenMax: {
-    label: '千问Max',
+    label: '千问 Max',
     maxToken: 6000
   },
   GeminiPro: {
@@ -385,6 +390,7 @@ export const loadLMMap = async (
   ERNIE4: newERNIEModal(model.BaiduWenxin, 'ERNIE-Bot-4'),
   ERNIE128K: newERNIEModal(model.BaiduWenxin, 'ERNIE-Speed-128K'),
   GPT3: newGPTModal(model.OpenAI, 'gpt-3.5-turbo'),
+  GPTMINI: newGPTModal(model.OpenAI, 'gpt-4-mini'),
   GPT4: newGPTModal(model.OpenAI, 'gpt-4o'),
   GPTCustom: newGPTModal(model.OpenAI, model.OpenAI.customModel),
   QWenTurbo: newQWenModel(model.AliQWen, 'qwen-turbo'),
