@@ -45,7 +45,7 @@ function Entries() {
             }
           />
         }
-        content="对话历史"
+        content="历史数据"
         position={{
           placement: 'bottom'
         }}
@@ -142,9 +142,7 @@ export default function TopBar() {
     window.api.isMaximized().then(setIsMaximized)
   })
   return (
-    <div
-      class='relative z-50 flex w-full text-slate-50 shadow-sm h-8 pt-1'
-    >
+    <div class="relative z-50 flex h-8 w-full pt-1 text-slate-50 shadow-sm">
       <Show
         // win
         when={isWin()}

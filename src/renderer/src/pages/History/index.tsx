@@ -32,6 +32,7 @@ import QuestionMention from '@renderer/components/ui/QuestionMention'
 
 import SpecialTypeContent from './SpecialTypeContent'
 import { decorateContent } from './utils'
+import Collection from './Collection'
 const map = {
   human: '我:',
   ai: '助手:',
@@ -69,7 +70,7 @@ export default function () {
   return (
     <div class="relative flex h-full select-none flex-col px-5 pt-2">
       <div class="z-10 mb-3 flex select-none items-center gap-1 text-lg text-text1 lg:justify-center">
-        <HistoryIcon width={20} height={20} /> <span class="text-base font-medium">对话历史</span>{' '}
+        <HistoryIcon width={20} height={20} /> <span class="text-base font-medium">历史数据</span>{' '}
         <QuestionMention content="开启新连续对话后将自动保存，当前对话将不会展示在历史中" />
       </div>
       <div class="mx-auto mb-[10px] flex min-h-8 w-full items-center justify-between gap-2 pl-1 pr-2 lg:max-w-4xl">
@@ -94,7 +95,7 @@ export default function () {
               class="w-full"
             >
               <Search
-                placeholder="搜索历史记录...（点击其他区域返回）"
+                placeholder="搜索...（点击其他区域返回）"
                 onChange={(v) => {
                   setSearchText(v)
                 }}
@@ -112,6 +113,10 @@ export default function () {
               {
                 label: '收藏',
                 value: 'starred'
+              },
+              {
+                label: '合集',
+                value: 'collection'
               }
             ]}
             onCheckedChange={(v) => setSelectType(v)}
@@ -142,31 +147,34 @@ export default function () {
               }
             >
               <>
-                <div
-                  class="flex"
-                  onClick={() => {
-                    toast
-                      .confirm(
-                        <div class="flex items-center gap-1 pt-4">
-                          <WarningIcon width={24} height={24} class="text-warning" />
-                          确定删除所有非收藏历史记录吗?
-                        </div>,
-                        {
-                          mask: true
-                        }
-                      )
-                      .then((res) => {
-                        if (res) {
-                          clearHistory()
-                        }
-                      })
-                  }}
-                >
-                  <ToolTip
-                    label={<ClearIcon width={24} height={24} class={iconClass} />}
-                    content="清除历史记录（非收藏）"
-                  />
-                </div>
+                <Show when={selectType() !== 'collection'}>
+                  <div
+                    class="flex"
+                    onClick={() => {
+                      toast
+                        .confirm(
+                          <div class="flex items-center gap-1 pt-4">
+                            <WarningIcon width={24} height={24} class="text-warning" />
+                            确定删除所有非收藏历史记录吗?
+                          </div>,
+                          {
+                            mask: true
+                          }
+                        )
+                        .then((res) => {
+                          if (res) {
+                            clearHistory()
+                          }
+                        })
+                    }}
+                  >
+                    <ToolTip
+                      label={<ClearIcon width={24} height={24} class={iconClass} />}
+                      content="清除历史记录（非收藏）"
+                    />
+                  </div>
+                </Show>
+
                 <ToolTip
                   label={
                     <CrossMarkRound
@@ -206,108 +214,110 @@ export default function () {
         }}
         class="scrollbar-show -mx-2 flex w-[calc(100%+16px)] flex-col items-center"
       >
-        <div class="ml-[0.45rem] mr-[calc(100%-100vw+24px+0.45rem)] w-[calc(100vw-24px-0.9rem)] px-1 lg:max-w-4xl">
-          <Show
-            when={histories.length}
-            fallback={
-              <div class="relative m-auto flex h-40 w-full select-none flex-col items-center justify-center gap-3 rounded-2xl bg-dark p-5 duration-150">
-                <EmptyIcon height={50} class="text-gray" />
-                <span class="text-sm text-gray">暂无历史</span>
-                <span class="text-[12px] text-gray">
-                  &lt; 在每段回答下点击保存，即可将对话历史保存至此 &gt;
-                </span>
-              </div>
-            }
-          >
-            <For each={filteredHistory()}>
-              {(h) => (
-                <>
-                  <div class="flex w-full items-center justify-between rounded-t-2xl bg-dark-plus px-4 pt-2">
-                    <div class="flex items-center gap-3 text-text2">
-                      {h.contents[0].role === 'question' ? '问答记录' : '对话记录'}
-                    </div>
-                    <div class="flex gap-2">
-                      <StarIcon
-                        width={22}
-                        height={22}
-                        class={`cursor-pointer ${h.starred ? 'text-active' : 'text-gray hover:text-active/80'}`}
-                        onClick={() => {
-                          h.starred ? starHistory(h.id, false) : starHistory(h.id, true)
-                        }}
-                      />
-                      <CopyFillIcon
-                        width={21}
-                        height={21}
-                        class="cursor-pointer pl-[1px] pt-[1px] text-gray duration-100 hover:text-active"
-                        onClick={() => {
-                          copyHistory(h.id).then(() => {
-                            toast.success('拷贝成功')
-                          })
-                        }}
-                      />
-                      <DoubleConfirm
-                        label="确认删除"
-                        position="-right-2 top-3"
-                        onConfirm={() => {
-                          removeHistory(h.id)
-                        }}
-                      >
-                        <CrossMark
-                          height={22}
+        <Show
+          when={selectType() !== 'collection'}
+          fallback={<Collection searchText={searchText()} />}
+        >
+          <div class="ml-[0.45rem] mr-[calc(100%-100vw+24px+0.45rem)] w-[calc(100vw-24px-0.9rem)] px-1 lg:max-w-4xl">
+            <Show
+              when={histories.length}
+              fallback={
+                <div class="relative m-auto flex h-40 w-full select-none flex-col items-center justify-center gap-3 rounded-2xl bg-dark p-5 duration-150">
+                  <EmptyIcon height={50} class="text-gray" />
+                  <span class="text-sm text-gray">暂无历史</span>
+                </div>
+              }
+            >
+              <For each={filteredHistory()}>
+                {(h) => (
+                  <>
+                    <div class="flex w-full items-center justify-between rounded-t-2xl bg-dark-plus px-4 pt-2">
+                      <div class="flex items-center gap-3 text-text2">
+                        {h.contents[0].role === 'question' ? '问答记录' : '对话记录'}
+                      </div>
+                      <div class="flex gap-2">
+                        <StarIcon
                           width={22}
-                          class="cursor-pointer text-gray duration-100 hover:text-active"
+                          height={22}
+                          class={`cursor-pointer ${h.starred ? 'text-active' : 'text-gray hover:text-active/80'}`}
+                          onClick={() => {
+                            h.starred ? starHistory(h.id, false) : starHistory(h.id, true)
+                          }}
                         />
-                      </DoubleConfirm>
+                        <CopyFillIcon
+                          width={21}
+                          height={21}
+                          class="cursor-pointer pl-[1px] pt-[1px] text-gray duration-100 hover:text-active"
+                          onClick={() => {
+                            copyHistory(h.id).then(() => {
+                              toast.success('拷贝成功')
+                            })
+                          }}
+                        />
+                        <DoubleConfirm
+                          label="确认删除"
+                          position="-right-2 top-3"
+                          onConfirm={() => {
+                            removeHistory(h.id)
+                          }}
+                        >
+                          <CrossMark
+                            height={22}
+                            width={22}
+                            class="cursor-pointer text-gray duration-100 hover:text-active"
+                          />
+                        </DoubleConfirm>
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="group/history-box relative mb-3 flex w-full cursor-pointer flex-col gap-2 rounded-b-2xl border-2 border-solid border-transparent bg-dark p-4 pt-2 duration-150 hover:border-active lg:max-w-4xl"
-                    onClick={() => {
-                      if (h.type === 'ans') {
-                        setAnswerStore('question', h.contents[0].content)
-                        setAnswerStore('answer', h.contents[1].content)
-                        h.assistantId && setSelectedAssistantForAns(h.assistantId)
-                        nav('/ans')
-                      } else if (h.type === 'chat') {
-                        chatHistoryTransfer.drawHistory(h.id)
-                        setMsgs(h.contents as Msg[])
-                        h.assistantId && setSelectedAssistantForChat(h.assistantId)
-                        nav('/chat')
-                      }
-                    }}
-                  >
-                    <div class="absolute -left-[2px] top-0 w-[calc(100%+4px)] border-b-0 border-t border-solid border-gray group-hover/history-box:border-transparent" />
-                    <For each={sliceArr(h.contents)}>
-                      {(c, index) => {
-                        const meta = parseDisplayArr(c.content)
-                        return (
-                          <div class="flex flex-col gap-1 break-words text-sm">
-                            <div class={index() === 0 ? 'pr-3' : ''}>
-                              <For each={meta}>
-                                {(m, index) => {
-                                  return m.type === 'text' ? (
-                                    <>
-                                      {index() === 0 && `${map[c.role]}`}{' '}
-                                      {decorateContent(m.content)}
-                                    </>
-                                  ) : (
-                                    // eslint-disable-next-line solid/reactivity
-                                    SpecialTypeContent(m, map[c.role], index())
-                                  )
-                                }}
-                              </For>
-                            </div>
-                            <div class="border-b-0 border-t border-dashed border-gray" />
-                          </div>
-                        )
+                    <div
+                      class="group/history-box relative mb-3 flex w-full cursor-pointer flex-col gap-2 rounded-b-2xl border-2 border-solid border-transparent bg-dark p-4 pt-2 duration-150 hover:border-active lg:max-w-4xl"
+                      onClick={() => {
+                        if (h.type === 'ans') {
+                          setAnswerStore('question', h.contents[0].content)
+                          setAnswerStore('answer', h.contents[1].content)
+                          h.assistantId && setSelectedAssistantForAns(h.assistantId)
+                          nav('/ans')
+                        } else if (h.type === 'chat') {
+                          chatHistoryTransfer.drawHistory(h.id)
+                          setMsgs(h.contents as Msg[])
+                          h.assistantId && setSelectedAssistantForChat(h.assistantId)
+                          nav('/chat')
+                        }
                       }}
-                    </For>
-                  </div>
-                </>
-              )}
-            </For>
-          </Show>
-        </div>
+                    >
+                      <div class="absolute -left-[2px] top-0 w-[calc(100%+4px)] border-b-0 border-t border-solid border-gray group-hover/history-box:border-transparent" />
+                      <For each={sliceArr(h.contents)}>
+                        {(c, index) => {
+                          const meta = parseDisplayArr(c.content)
+                          return (
+                            <div class="flex flex-col gap-1 break-words text-sm">
+                              <div class={index() === 0 ? 'pr-3' : ''}>
+                                <For each={meta}>
+                                  {(m, index) => {
+                                    return m.type === 'text' ? (
+                                      <>
+                                        {index() === 0 && `${map[c.role]}`}{' '}
+                                        {decorateContent(m.content)}
+                                      </>
+                                    ) : (
+                                      // eslint-disable-next-line solid/reactivity
+                                      SpecialTypeContent(m, map[c.role], index())
+                                    )
+                                  }}
+                                </For>
+                              </div>
+                              <div class="border-b-0 border-t border-dashed border-gray" />
+                            </div>
+                          )
+                        }}
+                      </For>
+                    </div>
+                  </>
+                )}
+              </For>
+            </Show>
+          </div>
+        </Show>
       </div>
     </div>
   )

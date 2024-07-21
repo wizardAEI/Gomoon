@@ -11,6 +11,7 @@ import KimiIcon from '@renderer/assets/icon/models/KimiIcon'
 import LlamaIcon from '@renderer/assets/icon/models/LlamaIcon'
 import OllamaIcon from '@renderer/assets/icon/models/OllamaIcon'
 import CustomIcon from '@renderer/assets/icon/models/CustomIcon'
+import DeepSeekIcon from '@renderer/assets/icon/models/DeepSeekIcon'
 
 export function getModelOptions(): {
   label: JSXElement
@@ -120,6 +121,41 @@ export function getModelOptions(): {
       value: 'ERNIE128K'
     }
   )
+
+  if (settingStore.models.DeepSeek.apiKey) {
+    options.push(
+      {
+        label: (
+          <span class="text-base leading-6 text-current">{modelDict['DeepSeekChat'].label}</span>
+        ),
+        icon(size: number) {
+          return (
+            <DeepSeekIcon
+              width={size}
+              height={size}
+              class="cursor-pointer overflow-hidden rounded-md"
+            />
+          )
+        },
+        value: 'DeepSeekChat'
+      },
+      {
+        label: (
+          <span class="text-base leading-6 text-current">{modelDict['DeepSeekCoder'].label}</span>
+        ),
+        icon(size: number) {
+          return (
+            <DeepSeekIcon
+              width={size}
+              height={size}
+              class="cursor-pointer overflow-hidden rounded-md"
+            />
+          )
+        },
+        value: 'DeepSeekCoder'
+      }
+    )
+  }
 
   if (settingStore.models.AliQWen.apiKey) {
     options.push(

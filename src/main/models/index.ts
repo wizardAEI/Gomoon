@@ -7,6 +7,7 @@ import { merge } from 'lodash'
 
 import {
   AssistantModel,
+  Collection,
   CreateAssistantModel,
   CreateMemoModel,
   HistoryModel,
@@ -294,3 +295,8 @@ export function deleteMemo(id: string) {
   memoDB.data.splice(index, 1)
   memoDB.write()
 }
+
+/**
+ * FEAT: 合集相关
+ */
+const collectionsDB = JSONFileSyncPreset<Collection[]>(join(appDataPath, 'collections.json'), [])

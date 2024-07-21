@@ -11,6 +11,7 @@ import PauseIcon from '@renderer/assets/icon/base/PauseIcon'
 import { stopGenMsg } from '@renderer/store/chat'
 import SpeechIcon from '@renderer/assets/icon/SpeechIcon'
 import TrashIcon from '@renderer/assets/icon/TrashIcon'
+import CollectionIcon from '@renderer/assets/icon/CollectionIcon'
 
 import { compWithTip } from '../ui/compWithTip'
 import ToolTip from '../ui/ToolTip'
@@ -41,6 +42,19 @@ export default function MsgPopup(props: {
         ))}
         content="复制到剪贴板"
       />
+      <ToolTip
+        label={
+          <CollectionIcon
+            height={19}
+            width={19}
+            class="cursor-pointer text-gray duration-100 hover:text-active"
+            onClick={() => {
+              // 加入合集
+            }}
+          />
+        }
+        content="加入合集"
+      />
       <Show when={props.type === 'ans'}>
         <ToolTip
           label={compWithTip((tip) => (
@@ -58,7 +72,6 @@ export default function MsgPopup(props: {
           content={`${props.type === 'ai' ? '保存此前内容' : '保存问答记录'}`}
         />
       </Show>
-
       <ToolTip
         label={
           <SpeechIcon

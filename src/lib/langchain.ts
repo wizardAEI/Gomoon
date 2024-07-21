@@ -34,6 +34,10 @@ export interface Models {
     secretKey: string
     temperature: number
   }
+  DeepSeek: {
+    apiKey: string
+    temperature: number
+  }
   AliQWen: {
     apiKey: string
     temperature: number
@@ -73,6 +77,8 @@ export type ModelsType =
   | 'GPT4'
   | 'GPTMINI'
   | 'GPTCustom'
+  | 'DeepSeekChat'
+  | 'DeepSeekCoder'
   | 'QWenTurbo'
   | 'QWenLong'
   | 'QWenMax'
@@ -110,6 +116,14 @@ export const modelDict: {
   },
   ERNIE128K: {
     label: '文心 128K',
+    maxToken: 128000
+  },
+  DeepSeekChat: {
+    label: 'Chat V2',
+    maxToken: 128000
+  },
+  DeepSeekCoder: {
+    label: 'Coder V2',
     maxToken: 128000
   },
   GPTCustom: {
@@ -174,6 +188,10 @@ export const defaultModels: () => Models = () => ({
     secretKey: '',
     temperature: 0.3
   },
+  DeepSeek: {
+    apiKey: '',
+    temperature: 0.3
+  },
   AliQWen: {
     apiKey: '',
     temperature: 0.3
@@ -234,7 +252,19 @@ export const newGPTModal = (
       baseURL: config.baseURL
     }
   })
-
+export const newDeepSeekModel = (
+  config: { apiKey: string; temperature: number },
+  modelName: string
+) =>
+  new ChatOpenAI({
+    streaming: true,
+    modelName,
+    openAIApiKey: config.apiKey || 'api-key',
+    temperature: config.temperature,
+    configuration: {
+      baseURL: 'https://api.deepseek.com/v1'
+    }
+  })
 export const newQWenModel = (
   config: { apiKey: string; temperature: number; enableSearch?: boolean },
   modelName: string
@@ -392,6 +422,8 @@ export const loadLMMap = async (
   GPT3: newGPTModal(model.OpenAI, 'gpt-3.5-turbo'),
   GPTMINI: newGPTModal(model.OpenAI, 'gpt-4-mini'),
   GPT4: newGPTModal(model.OpenAI, 'gpt-4o'),
+  DeepSeekChat: newDeepSeekModel(model.DeepSeek, 'deepseek-chat'),
+  DeepSeekCoder: newDeepSeekModel(model.DeepSeek, 'deepseek-coder'),
   GPTCustom: newGPTModal(model.OpenAI, model.OpenAI.customModel),
   QWenTurbo: newQWenModel(model.AliQWen, 'qwen-turbo'),
   QWenMax: newQWenModel(model.AliQWen, 'qwen-max'),

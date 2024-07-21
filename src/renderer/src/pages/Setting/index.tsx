@@ -21,6 +21,7 @@ import Select from '@renderer/components/ui/Select'
 import { setChatFontSize, setTheme } from '@renderer/store/setting'
 import { useToast } from '@renderer/components/ui/Toast'
 import CustomIcon from '@renderer/assets/icon/models/CustomIcon'
+import DeepSeekIcon from '@renderer/assets/icon/models/DeepSeekIcon'
 
 import {
   settingStore,
@@ -105,7 +106,7 @@ export default function Setting() {
                         class="text-xs"
                         href="https://console.bce.baidu.com/qianfan/ais/console/applicationConsole/application"
                       >
-                        密钥注册地址
+                        密钥注册地址（128k模型限时免费）
                       </a>
                     }
                   />
@@ -153,6 +154,40 @@ export default function Setting() {
                 </div>
               }
             >
+              <Collapse
+                title={
+                  <div class="flex items-center gap-2">
+                    <DeepSeekIcon class="rounded-md" height={20} width={20} /> DeepSeek 系列
+                    <QuestionMention
+                      content={
+                        <a class="text-xs" href="https://platform.deepseek.com">
+                          密钥注册地址（注册即送500万token）
+                        </a>
+                      }
+                    />
+                  </div>
+                }
+              >
+                <EditInput
+                  label="apiKey"
+                  value={settingStore.models.DeepSeek.apiKey}
+                  onSave={(v) => {
+                    setModels(v.trim(), 'DeepSeek', 'apiKey')
+                  }}
+                />
+                <div class="mb-1 flex h-7 items-center gap-4">
+                  <span class="font-bold">创造性/随机性</span>
+                  <div class="w-60">
+                    <Slider
+                      value={settingStore.models.Moonshot.temperature}
+                      percentage
+                      onChange={(v) => {
+                        setModels(v, 'DeepSeek', 'temperature')
+                      }}
+                    />
+                  </div>
+                </div>
+              </Collapse>
               <Collapse
                 title={
                   <div class="flex items-center gap-2">

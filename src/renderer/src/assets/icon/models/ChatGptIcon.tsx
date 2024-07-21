@@ -2,16 +2,7 @@ import { SvgProps } from '../type'
 
 export default function ChatGptICon(props: SvgProps) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      // @ts-ignore
-      xmlns:xlink="http://www.w3.org/1999/xlink"
-      xml:space="preserve"
-      viewBox="0 0 2406 2406"
-      width="32"
-      height="32"
-      {...props}
-    >
+    <svg viewBox="0 0 2406 2406" width="32" height="32" {...props}>
       <defs>
         <clipPath id="clip0">
           <rect x="0" y="0" width="2406" height="2406" />

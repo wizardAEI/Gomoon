@@ -37,16 +37,17 @@ Gomoon 是一个开源项目，目前处于初始阶段，还有很多功能有�
 
 ## 已支持的模型
 
-| 模型类型   | 模型名称                                                                    |
-| ---------- | --------------------------------------------------------------------------- |
-| ChatGPT    | GPT3，GPT4，支持 OpenAI API 模式的模型。                                    |
-| 文心       | 文心3.5，文心4.0，文心128k                                                  |
-| 千问       | 千问Turbo，千问Plus，千问Max                                                |
-| Gemini     | Gemini Pro 和 Gemini 自定义模型                                             |
-| Kimi       | Kimi 8k，Kimi 32k，Kimi 128k                                                |
+| 模型类型   | 模型名称                                                                 |
+| ---------- | ------------------------------------------------------------------------ |
+| ChatGPT    | GPT3，GPT4 Mini，GPT4，支持 OpenAI API 模式的模型                        |
+| 文心       | 文心3.5，文心4.0，文心128k                                               |
+| DeepSeek   | DeepSeek Coder 和 DeepSeek Coder 最新版本                                |
+| 千问       | 千问Turbo，千问Plus，千问Max                                             |
+| Gemini     | Gemini Pro 和 Gemini 自定义模型                                          |
+| Kimi       | Kimi 8k，Kimi 32k，Kimi 128k                                             |
 | Llama      | [node-llama-cpp](https://withcatai.github.io/node-llama-cpp) 支持的所有模型 |
 | Ollama     | [ollama](https://ollama.com/) 支持的所有模型                                |
-| 自定义模型 | 任何支持 OpenAI 接口的模型，如DeepSeek，豆包，Kimi，讯飞星火等              |
+| 自定义模型 | 任何支持 OpenAI 接口的模型，如DeepSeek，豆包，Kimi，讯飞星火等           |
 
 由于 ChatGPT 国内访问不易，这里推荐一下 [ChatAnywhere](https://peiqishop.me/)，价格十分实惠的国内 ChatGPT 提供商。
 
@@ -74,8 +75,8 @@ Gomoon 的名字来源于 _赛博朋克：边缘行者_ 的中 Lucy 的愿望：
 
 感谢以下开发者的支持：
 
-| 贡献者                                                                                          | 贡献内容                          |
-| ----------------------------------------------------------------------------------------------- | --------------------------------- |
+| 贡献者                                                                                     | 贡献内容                          |
+| ------------------------------------------------------------------------------------------ | --------------------------------- |
 | [![e9ab98e991ab](https://github.com/e9ab98e991ab.png?size=50)](https://github.com/e9ab98e991ab) | 协助完成 mac 端 x86_64 架构的适配 |
 | [![zhengxs2018](https://github.com/zhengxs2018.png?size=50)](https://github.com/zhengxs2018)    | 支持通义千问模型                  |
 
