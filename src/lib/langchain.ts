@@ -386,7 +386,7 @@ export const loadLMMap = async (
 ): Promise<{
   [key in ModelsType]: ModelInterfaceType
 }> => ({
-  ERNIE3: newERNIEModal(model.BaiduWenxin, 'ERNIE-Speed-8K'),
+  ERNIE3: newERNIEModal(model.BaiduWenxin, 'ERNIE-3.5-8K'),
   ERNIE4: newERNIEModal(model.BaiduWenxin, 'ERNIE-Bot-4'),
   ERNIE128K: newERNIEModal(model.BaiduWenxin, 'ERNIE-Speed-128K'),
   GPT3: newGPTModal(model.OpenAI, 'gpt-3.5-turbo'),
