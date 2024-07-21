@@ -31,7 +31,9 @@ Gomoon 是一个开源项目，目前处于初始阶段，还有很多功能有�
 - 发送文件，图片和URL解析，联网查询，朗读等快捷功能
 - 使用记忆胶囊储存你的本地知识库，更加安全可靠，最重要的是完全免费
 - 下载对话记录，助手一键导入导出, 把你觉得实用的助手分享给你的朋友
-- 划选一段文本，可以快速的在对话中进行查找和朗读
+- 在 Gomoon 划选一段文本，可以快速进行查找和朗读
+- 在任何地方滑选字段分子后，可以
+- 合集功能
 
 更多实用的功能可以询问 Gomoon 中自带的『Gomoon使用指南』 记忆胶囊来探索！
 
@@ -120,3 +122,9 @@ resources/
 4. 在根目录执行 `npx --no node-llama-cpp download --cuda` 安装 `node-llama-cpp` CUDA 支持依赖
 5. 如需修改显卡使用大小，可以修改 `src/lib/utils.ts`中 `ChatLlamaCpp`的 `gpuLayers`参数
 6. 执行 `yarn dev` 测试效果没有问题后，执行 `yarn build` 打包项目，在 dist 目录可以看到 `setup.exe` 软件安装文件
+
+## 相关介绍
+
+[八个月后，我终于做出了自己满意的大模型工具](https://juejin.cn/post/7388444606457757715)
+
+[一键本地使用上百款开源大模型，不挑配置，2分钟学会！](https://www.bilibili.com/video/BV1uM4m127hV)

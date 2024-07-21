@@ -15,6 +15,7 @@ import CollectionIcon from '@renderer/assets/icon/CollectionIcon'
 
 import { compWithTip } from '../ui/compWithTip'
 import ToolTip from '../ui/ToolTip'
+import { useToast } from '../ui/Toast'
 
 import { MsgTypes } from '.'
 
@@ -26,7 +27,7 @@ export default function MsgPopup(props: {
 }) {
   const [source] = createSignal('')
   const { copy } = useClipboard({ source })
-
+  const toast = useToast()
   return (
     <div class="absolute -top-4 left-5 z-10 hidden items-center gap-1 rounded-xl bg-dark px-2 group-hover:flex group-hover:h-7">
       <ToolTip
@@ -49,7 +50,62 @@ export default function MsgPopup(props: {
             width={19}
             class="cursor-pointer text-gray duration-100 hover:text-active"
             onClick={() => {
-              // 加入合集
+              toast
+                .modal(
+                  (option) => {
+                    const [addNewCollection, setAddNewCollection] = createSignal(false)
+                    const [collectionName, setCollectionName] = createSignal('')
+                    return (
+                      <div class="flex w-80 flex-col gap-4 p-1">
+                        保存到合集
+                        <div onClick={() => setAddNewCollection(false)}>现有合集</div>
+                        <Show
+                          when={addNewCollection()}
+                          fallback={
+                            <button
+                              class="py-1 text-white hover:text-opacity-70"
+                              onClick={() => {
+                                setCollectionName('')
+                                setAddNewCollection(true)
+                              }}
+                            >
+                              添加新合集
+                            </button>
+                          }
+                        >
+                          <div class="flex items-center gap-3">
+                            <div class="">新合集名称</div>
+                            <div>
+                              <input
+                                onInput={(e) => {
+                                  setCollectionName(e.target.value)
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </Show>
+                        <div class="flex">
+                          <button onClick={() => option.close('')}>关闭</button>
+                          <button
+                            onClick={() => {
+                              if (!collectionName()) {
+                                toast.warning('合集名称不能为空')
+                              }
+                            }}
+                          >
+                            保存
+                          </button>
+                        </div>
+                      </div>
+                    )
+                  },
+                  {
+                    mask: true
+                  }
+                )
+                .then((type) => {
+                  console.log(type)
+                })
             }}
           />
         }
@@ -69,7 +125,7 @@ export default function MsgPopup(props: {
               }}
             />
           ))}
-          content={`${props.type === 'ai' ? '保存此前内容' : '保存问答记录'}`}
+          content="保存问答记录"
         />
       </Show>
       <ToolTip
