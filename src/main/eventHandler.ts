@@ -24,10 +24,15 @@ import {
   setTheme,
   setHistoryStar,
   clearHistory,
-  setChatFontSize
+  setChatFontSize,
+  getCollections,
+  createCollection,
+  deleteCollection,
+  updateCollection
 } from './models/index'
 import {
   AssistantModel,
+  Collection,
   CreateAssistantModel,
   HistoryModel,
   MemoFragment,
@@ -169,6 +174,14 @@ export function initAppEventsHandler() {
   ipcMain.handle('init-memories', () => initMemoriesSvc())
   ipcMain.handle('export-memory', (_, memo: MemoModel) => exportMemo(memo))
   ipcMain.handle('import-memory', (_, path: string) => importMemo(path))
+
+  /**
+   * FEAT: 合集相关
+   */
+  ipcMain.handle('get-collections', () => getCollections())
+  ipcMain.handle('create-collection', (_, collection: Collection) => createCollection(collection))
+  ipcMain.handle('delete-collection', (_, id: string) => deleteCollection(id))
+  ipcMain.handle('update-collection', (_, collection: Collection) => updateCollection(collection))
 
   // 文件相关
   ipcMain.handle('parse-file', (_, files: FilePayload[]) => parseFile(files))

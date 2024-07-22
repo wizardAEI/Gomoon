@@ -56,7 +56,7 @@ export default function MsgPopup(props: {
                     const [addNewCollection, setAddNewCollection] = createSignal(false)
                     const [collectionName, setCollectionName] = createSignal('')
                     return (
-                      <div class="flex w-80 flex-col gap-4 p-1">
+                      <div class="flex w-64 flex-col gap-4 p-1">
                         保存到合集
                         <div onClick={() => setAddNewCollection(false)}>现有合集</div>
                         <Show
@@ -84,7 +84,7 @@ export default function MsgPopup(props: {
                             </div>
                           </div>
                         </Show>
-                        <div class="flex">
+                        <div class="flex w-full justify-around">
                           <button onClick={() => option.close('')}>关闭</button>
                           <button
                             onClick={() => {

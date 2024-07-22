@@ -128,38 +128,36 @@ export function getModelOptions() {
     }
   )
 
-  if (settingStore.models.DeepSeek.apiKey) {
-    options.push(
-      {
-        label: <span>{modelDict['DeepSeekChat'].label}</span>,
-        icon(size: number) {
-          return (
-            <DeepSeekIcon
-              width={size}
-              height={size}
-              class="cursor-pointer overflow-hidden rounded-md"
-            />
-          )
-        },
-        value: 'DeepSeekChat',
-        maxToken: modelDict['DeepSeekChat'].maxToken
+  options.push(
+    {
+      label: <span>{modelDict['DeepSeekChat'].label}</span>,
+      icon(size: number) {
+        return (
+          <DeepSeekIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
       },
-      {
-        label: <span>{modelDict['DeepSeekCoder'].label}</span>,
-        icon(size: number) {
-          return (
-            <DeepSeekIcon
-              width={size}
-              height={size}
-              class="cursor-pointer overflow-hidden rounded-md"
-            />
-          )
-        },
-        value: 'DeepSeekCoder',
-        maxToken: modelDict['DeepSeekCoder'].maxToken
-      }
-    )
-  }
+      value: 'DeepSeekChat',
+      maxToken: modelDict['DeepSeekChat'].maxToken
+    },
+    {
+      label: <span>{modelDict['DeepSeekCoder'].label}</span>,
+      icon(size: number) {
+        return (
+          <DeepSeekIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'DeepSeekCoder',
+      maxToken: modelDict['DeepSeekCoder'].maxToken
+    }
+  )
 
   if (settingStore.models.AliQWen.apiKey) {
     options.push(
@@ -387,10 +385,10 @@ export default function ModelSelect(props: {
         <div
           class={`absolute z-10 mt-3 flex-col rounded-md bg-dark-plus px-2 shadow-center ${
             props.position
-          } ${props.translate || ''} ${options.length > 6 ? 'h-60' : 'h-52'} w-60`}
+          } ${props.translate || ''} ${options.length > 8 ? 'h-72' : 'h-[278px]'} w-60`}
         >
           <ScrollBox>
-            <div class="h-2" />
+            <div class="h-3" />
             <For each={options}>
               {(option) => (
                 <div

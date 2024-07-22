@@ -300,3 +300,26 @@ export function deleteMemo(id: string) {
  * FEAT: 合集相关
  */
 const collectionsDB = JSONFileSyncPreset<Collection[]>(join(appDataPath, 'collections.json'), [])
+
+export function getCollections() {
+  return collectionsDB.data || []
+}
+
+export function createCollection(c: Collection) {
+  collectionsDB.data = [...(collectionsDB.data || []), c]
+  collectionsDB.write()
+}
+
+export function updateCollection(c: Collection) {
+  const index = collectionsDB.data?.findIndex((item) => item.id === c.id)
+  if (index !== -1) {
+    collectionsDB.data[index] = c
+  }
+}
+
+export function deleteCollection(id: string) {
+  const index = collectionsDB.data?.findIndex((item) => item.id === id)
+  if (index !== -1) {
+    collectionsDB.data!.splice(index, 1)
+  }
+}
