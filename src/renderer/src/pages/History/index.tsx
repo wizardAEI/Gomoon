@@ -29,6 +29,7 @@ import { useToast } from '@renderer/components/ui/Toast'
 import WarningIcon from '@renderer/assets/icon/base/Toast/WarningIcon'
 import CopyFillIcon from '@renderer/assets/icon/base/CopyFillIcon'
 import QuestionMention from '@renderer/components/ui/QuestionMention'
+import ScrollBox from '@renderer/components/ScrollBox'
 
 import SpecialTypeContent from './SpecialTypeContent'
 import { decorateContent } from './utils'
@@ -191,29 +192,7 @@ export default function () {
           </div>
         </Show>
       </div>
-      <div
-        ref={(dom) => {
-          dom.classList.add('scrollbar-translucent')
-          dom.classList.add('scrollbar-transparent')
-          let time: NodeJS.Timeout | null = null
-          dom.onscrollend = () => {
-            time = setTimeout(() => {
-              dom.classList.add('scrollbar-translucent')
-              setTimeout(() => {
-                dom.classList.add('scrollbar-transparent')
-              }, 1000)
-            }, 2000)
-          }
-          dom.onscroll = () => {
-            dom.classList.remove('scrollbar-translucent')
-            dom.classList.remove('scrollbar-transparent')
-            if (time) {
-              clearTimeout(time)
-            }
-          }
-        }}
-        class="scrollbar-show -mx-2 flex w-[calc(100%+16px)] flex-col items-center"
-      >
+      <ScrollBox>
         <Show
           when={selectType() !== 'collection'}
           fallback={<Collection searchText={searchText()} />}
@@ -318,7 +297,7 @@ export default function () {
             </Show>
           </div>
         </Show>
-      </div>
+      </ScrollBox>
     </div>
   )
 }

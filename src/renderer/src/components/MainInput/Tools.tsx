@@ -16,7 +16,7 @@ import {
 import { userData } from '@renderer/store/user'
 import { ContentDisplay, parseString } from '@renderer/lib/ai/parseString'
 import CrossMarkRound from '@renderer/assets/icon/base/CrossMarkRound'
-import { initMemories, memories } from '@renderer/store/memo'
+import { initMemories } from '@renderer/store/memo'
 
 import { useLoading } from '../ui/DynamicLoading'
 import { useToast } from '../ui/Toast'

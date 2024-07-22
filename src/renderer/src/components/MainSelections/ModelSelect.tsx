@@ -13,18 +13,17 @@ import OllamaIcon from '@renderer/assets/icon/models/OllamaIcon'
 import CustomIcon from '@renderer/assets/icon/models/CustomIcon'
 import DeepSeekIcon from '@renderer/assets/icon/models/DeepSeekIcon'
 
-export function getModelOptions(): {
-  label: JSXElement
-  icon: (size: number) => JSXElement
-  value: ModelsType
-}[] {
+import ScrollBox from '../ScrollBox'
+
+export function getModelOptions() {
   const options: {
     label: JSXElement
     icon: (size: number) => JSXElement
     value: ModelsType
+    maxToken: number
   }[] = [
     {
-      label: <span class="text-base text-current">{modelDict['GPT3'].label}</span>,
+      label: <span class="text-current">{modelDict['GPT3'].label}</span>,
       icon(size: number) {
         return (
           <ChatGptIcon
@@ -34,10 +33,11 @@ export function getModelOptions(): {
           />
         )
       },
-      value: 'GPT3'
+      value: 'GPT3',
+      maxToken: modelDict['GPT3'].maxToken
     },
     {
-      label: <span class="text-base text-current">{modelDict['GPT4'].label}</span>,
+      label: <span class="text-current">{modelDict['GPT4'].label}</span>,
       icon(size: number) {
         return (
           <ChatGptIcon
@@ -47,10 +47,11 @@ export function getModelOptions(): {
           />
         )
       },
-      value: 'GPT4'
+      value: 'GPT4',
+      maxToken: modelDict['GPT4'].maxToken
     },
     {
-      label: <span class="text-base leading-6 text-current">{modelDict['GPTMINI'].label}</span>,
+      label: <span class="text-current">{modelDict['GPTMINI'].label}</span>,
       icon(size: number) {
         return (
           <ChatGptIcon
@@ -60,13 +61,14 @@ export function getModelOptions(): {
           />
         )
       },
-      value: 'GPTMINI'
+      value: 'GPTMINI',
+      maxToken: modelDict['GPTMINI'].maxToken
     }
   ]
 
   if (settingStore.models.OpenAI.customModel) {
     options.push({
-      label: <span class="text-sm leading-6 text-current">{modelDict['GPTCustom'].label}</span>,
+      label: <span class="text-current">{modelDict['GPTCustom'].label}</span>,
       icon(size: number) {
         return (
           <ChatGptIcon
@@ -76,13 +78,14 @@ export function getModelOptions(): {
           />
         )
       },
-      value: 'GPTCustom'
+      value: 'GPTCustom',
+      maxToken: modelDict['GeminiCustom'].maxToken
     })
   }
 
   options.push(
     {
-      label: <span class="text-base leading-6 text-current">{modelDict['ERNIE3'].label}</span>,
+      label: <span>{modelDict['ERNIE3'].label}</span>,
       icon(size: number) {
         return (
           <WenxinIcon
@@ -92,10 +95,11 @@ export function getModelOptions(): {
           />
         )
       },
-      value: 'ERNIE3'
+      value: 'ERNIE3',
+      maxToken: modelDict['ERNIE3'].maxToken
     },
     {
-      label: <span class="text-base leading-6 text-current">{modelDict['ERNIE4'].label}</span>,
+      label: <span>{modelDict['ERNIE4'].label}</span>,
       icon(size: number) {
         return (
           <WenxinIcon
@@ -105,10 +109,11 @@ export function getModelOptions(): {
           />
         )
       },
-      value: 'ERNIE4'
+      value: 'ERNIE4',
+      maxToken: modelDict['ERNIE4'].maxToken
     },
     {
-      label: <span class="text-sm leading-6 text-current">{modelDict['ERNIE128K'].label}</span>,
+      label: <span>{modelDict['ERNIE128K'].label}</span>,
       icon(size: number) {
         return (
           <WenxinIcon
@@ -118,16 +123,15 @@ export function getModelOptions(): {
           />
         )
       },
-      value: 'ERNIE128K'
+      value: 'ERNIE128K',
+      maxToken: modelDict['ERNIE128K'].maxToken
     }
   )
 
   if (settingStore.models.DeepSeek.apiKey) {
     options.push(
       {
-        label: (
-          <span class="text-base leading-6 text-current">{modelDict['DeepSeekChat'].label}</span>
-        ),
+        label: <span>{modelDict['DeepSeekChat'].label}</span>,
         icon(size: number) {
           return (
             <DeepSeekIcon
@@ -137,12 +141,11 @@ export function getModelOptions(): {
             />
           )
         },
-        value: 'DeepSeekChat'
+        value: 'DeepSeekChat',
+        maxToken: modelDict['DeepSeekChat'].maxToken
       },
       {
-        label: (
-          <span class="text-base leading-6 text-current">{modelDict['DeepSeekCoder'].label}</span>
-        ),
+        label: <span>{modelDict['DeepSeekCoder'].label}</span>,
         icon(size: number) {
           return (
             <DeepSeekIcon
@@ -152,7 +155,8 @@ export function getModelOptions(): {
             />
           )
         },
-        value: 'DeepSeekCoder'
+        value: 'DeepSeekCoder',
+        maxToken: modelDict['DeepSeekCoder'].maxToken
       }
     )
   }
@@ -160,7 +164,7 @@ export function getModelOptions(): {
   if (settingStore.models.AliQWen.apiKey) {
     options.push(
       {
-        label: <span class="text-sm leading-6 text-current">{modelDict['QWenTurbo'].label}</span>,
+        label: <span>{modelDict['QWenTurbo'].label}</span>,
         icon(size: number) {
           return (
             <QWenIcon
@@ -170,10 +174,11 @@ export function getModelOptions(): {
             />
           )
         },
-        value: 'QWenTurbo'
+        value: 'QWenTurbo',
+        maxToken: modelDict['QWenTurbo'].maxToken
       },
       {
-        label: <span class="text-sm leading-6 text-current">{modelDict['QWenMax'].label}</span>,
+        label: <span>{modelDict['QWenMax'].label}</span>,
         icon(size: number) {
           return (
             <QWenIcon
@@ -183,10 +188,11 @@ export function getModelOptions(): {
             />
           )
         },
-        value: 'QWenMax'
+        value: 'QWenMax',
+        maxToken: modelDict['QWenMax'].maxToken
       },
       {
-        label: <span class="text-sm leading-6 text-current">{modelDict['QWenLong'].label}</span>,
+        label: <span>{modelDict['QWenLong'].label}</span>,
         icon(size: number) {
           return (
             <QWenIcon
@@ -196,14 +202,15 @@ export function getModelOptions(): {
             />
           )
         },
-        value: 'QWenLong'
+        value: 'QWenLong',
+        maxToken: modelDict['QWenLong'].maxToken
       }
     )
   }
 
   if (settingStore.models.Gemini.apiKey) {
     options.push({
-      label: <span class="text-sm leading-6 text-current">{modelDict['GeminiPro'].label}</span>,
+      label: <span>{modelDict['GeminiPro'].label}</span>,
       icon(size: number) {
         return (
           <GeminiIcon
@@ -213,13 +220,14 @@ export function getModelOptions(): {
           />
         )
       },
-      value: 'GeminiPro'
+      value: 'GeminiPro',
+      maxToken: modelDict['GeminiPro'].maxToken
     })
   }
 
   if (settingStore.models.Gemini.customModel) {
     options.push({
-      label: <span class="text-sm leading-6 text-current">{modelDict['GeminiCustom'].label}</span>,
+      label: <span>{modelDict['GeminiCustom'].label}</span>,
       icon(size: number) {
         return (
           <GeminiIcon
@@ -229,13 +237,14 @@ export function getModelOptions(): {
           />
         )
       },
-      value: 'GeminiCustom'
+      value: 'GeminiCustom',
+      maxToken: modelDict['GeminiCustom'].maxToken
     })
   }
 
   if (settingStore.models.Llama.src) {
     options.push({
-      label: <span class="text-sm leading-6 text-current">{modelDict['Llama'].label}</span>,
+      label: <span>{modelDict['Llama'].label}</span>,
       icon(size: number) {
         return (
           <LlamaIcon
@@ -245,14 +254,15 @@ export function getModelOptions(): {
           />
         )
       },
-      value: 'Llama'
+      value: 'Llama',
+      maxToken: modelDict['Llama'].maxToken
     })
   }
 
   if (settingStore.models.Moonshot.apiKey) {
     options.push(
       {
-        label: <span class="text-sm leading-6 text-current">{modelDict['Moonshot8k'].label}</span>,
+        label: <span>{modelDict['Moonshot8k'].label}</span>,
         icon(size: number) {
           return (
             <KimiIcon
@@ -262,10 +272,11 @@ export function getModelOptions(): {
             />
           )
         },
-        value: 'Moonshot8k'
+        value: 'Moonshot8k',
+        maxToken: modelDict['Moonshot8k'].maxToken
       },
       {
-        label: <span class="text-sm leading-6 text-current">{modelDict['Moonshot32k'].label}</span>,
+        label: <span>{modelDict['Moonshot32k'].label}</span>,
         icon(size: number) {
           return (
             <KimiIcon
@@ -275,12 +286,11 @@ export function getModelOptions(): {
             />
           )
         },
-        value: 'Moonshot32k'
+        value: 'Moonshot32k',
+        maxToken: modelDict['Moonshot32k'].maxToken
       },
       {
-        label: (
-          <span class="text-sm leading-6 text-current">{modelDict['Moonshot128k'].label}</span>
-        ),
+        label: <span>{modelDict['Moonshot128k'].label}</span>,
         icon(size: number) {
           return (
             <KimiIcon
@@ -290,14 +300,15 @@ export function getModelOptions(): {
             />
           )
         },
-        value: 'Moonshot128k'
+        value: 'Moonshot128k',
+        maxToken: modelDict['Moonshot128k'].maxToken
       }
     )
   }
 
   if (settingStore.models.Ollama.address && settingStore.models.Ollama.model) {
     options.push({
-      label: <span class="text-base leading-6 text-current">{modelDict['Ollama'].label}</span>,
+      label: <span>{modelDict['Ollama'].label}</span>,
       icon(size: number) {
         return (
           <OllamaIcon
@@ -307,13 +318,14 @@ export function getModelOptions(): {
           />
         )
       },
-      value: 'Ollama'
+      value: 'Ollama',
+      maxToken: modelDict['Ollama'].maxToken
     })
   }
 
   if (settingStore.models.CustomModel.customModel && settingStore.models.CustomModel.apiKey) {
     options.push({
-      label: <span class="text-sm leading-6 text-current">{modelDict['CustomModel'].label}</span>,
+      label: <span>{modelDict['CustomModel'].label}</span>,
       icon(size: number) {
         return (
           <CustomIcon
@@ -323,13 +335,18 @@ export function getModelOptions(): {
           />
         )
       },
-      value: 'CustomModel'
+      value: 'CustomModel',
+      maxToken: modelDict['CustomModel'].maxToken
     })
   }
   return options
 }
 
-export default function (props: { position: string; size?: number; translate?: string }) {
+export default function ModelSelect(props: {
+  position: string
+  size?: number
+  translate?: string
+}) {
   const options = getModelOptions()
   // 使用 createSignal 来管理下拉菜单的显示状态
   const [isOpen, setIsOpen] = createSignal(false)
@@ -368,28 +385,39 @@ export default function (props: { position: string; size?: number; translate?: s
       </div>
       <Show when={isOpen()}>
         <div
-          class={`absolute z-10 mt-3 flex flex-wrap gap-x-2 gap-y-1 rounded-md bg-dark-plus p-2 shadow-center ${
+          class={`absolute z-10 mt-3 flex-col rounded-md bg-dark-plus px-2 shadow-center ${
             props.position
-          } ${props.translate || ''} ${options.length > 4 ? 'w-[362px]' : 'w-[256px]'}`}
+          } ${props.translate || ''} ${options.length > 6 ? 'h-60' : 'h-52'} w-60`}
         >
-          <For each={options}>
-            {(option) => (
-              <div
-                class={`w-[110px] cursor-pointer break-words rounded-lg py-1 pl-2 pr-0 ${
-                  userData.selectedModel === option.value ? 'bg-active' : ''
-                } hover:bg-active
-                `}
-                onClick={() => handleSelect(option)}
-              >
+          <ScrollBox>
+            <div class="h-2" />
+            <For each={options}>
+              {(option) => (
                 <div
-                  class={`flex select-none items-center gap-1 duration-100 ${userData.selectedModel === option.value ? 'text-text-active' : 'text-text1'}`}
+                  class={`mx-2 mb-1 cursor-pointer break-words rounded-lg py-1 pl-2 ${
+                    userData.selectedModel === option.value ? 'bg-active' : ''
+                  } duration-100 hover:bg-active hover:text-text-active
+                `}
+                  onClick={() => handleSelect(option)}
                 >
-                  {option.icon(20)}
-                  {option.label}
+                  <div
+                    class={`flex items-center justify-between pr-2 ${userData.selectedModel === option.value && 'text-text-active'}`}
+                  >
+                    <div class="flex select-none gap-2">
+                      {option.icon(20)}
+                      {option.label}
+                    </div>
+
+                    <Show
+                      when={option.maxToken}
+                      fallback={'🧩 🧩'}
+                    >{`${(option.maxToken / 1000).toFixed(0)} K`}</Show>
+                  </div>
                 </div>
-              </div>
-            )}
-          </For>
+              )}
+            </For>
+            <div class="h-1" />
+          </ScrollBox>
         </div>
       </Show>
     </>

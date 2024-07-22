@@ -95,15 +95,15 @@ export const modelDict: {
   [key in ModelsType]: { maxToken: number; label: string }
 } = {
   GPT3: {
-    label: 'GPT 3.5',
+    label: 'GPT-3.5 Turbo',
     maxToken: 16385
   },
   GPTMINI: {
-    label: 'GPT Mini',
+    label: 'GPT-4 Mini',
     maxToken: 128000
   },
   GPT4: {
-    label: 'GPT 4.0',
+    label: 'GPT-4o',
     maxToken: 128000
   },
   ERNIE3: {
@@ -119,15 +119,15 @@ export const modelDict: {
     maxToken: 128000
   },
   DeepSeekChat: {
-    label: 'Chat V2',
+    label: 'DeepSeek Chat',
     maxToken: 128000
   },
   DeepSeekCoder: {
-    label: 'Coder V2',
+    label: 'DeepSeek Coder',
     maxToken: 128000
   },
   GPTCustom: {
-    label: '自定义模型',
+    label: 'ChatGPT 自定义',
     maxToken: 0
   },
   QWenTurbo: {
@@ -147,7 +147,7 @@ export const modelDict: {
     maxToken: 30720
   },
   GeminiCustom: {
-    label: '自定义模型',
+    label: 'Gemini 自定义',
     maxToken: 0
   },
   Moonshot128k: {
