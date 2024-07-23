@@ -143,13 +143,13 @@ export default function Input(props: {
   const tokenConsumeDisplay = createMemo(() => {
     if (props.type === 'ans' || props.type === 'question') {
       return tokens().maxToken === 0
-        ? ''
+        ? `${tokens().consumedTokenForAns(inputTokenNum() + artifactTokenNum())}`
         : `${tokens().consumedTokenForAns(inputTokenNum() + artifactTokenNum())} ${
             '/ ' + tokens().maxToken
           }`
     }
     return tokens().maxToken === 0
-      ? ''
+      ? `${tokens().consumedTokenForChat(inputTokenNum() + artifactTokenNum())}`
       : `${tokens().consumedTokenForChat(inputTokenNum() + artifactTokenNum())} ${
           '/ ' + tokens().maxToken
         }`
@@ -215,14 +215,14 @@ export default function Input(props: {
     }
   }
 
+  //FEAT: 用户选中文字后，自动添加进输入框
   const [query, setQuery] = useSearchParams()
-
   createEffect(() => {
     if (query.text) {
       setInputText(query.text)
       setTimeout(() => {
         textAreaDiv!.select()
-      }, 200)
+      }, 100)
       setQuery({ text: '' })
     }
   })
@@ -400,7 +400,7 @@ export default function Input(props: {
         </div>
         <div
           class={
-            '-mr-3 ml-[-2px] hidden items-center md:flex ' +
+            '-mr-3 ml-[-2px] hidden max-h-10 items-center md:flex ' +
             (inputText().trim() ? 'group/send cursor-pointer ' : ' cursor-not-allowed')
           }
           onClick={() => {

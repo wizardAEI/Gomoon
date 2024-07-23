@@ -45,6 +45,17 @@ export interface HistoryModel {
   starred?: boolean
   contents: { id?: string; role: 'human' | 'system' | 'ai' | 'ans' | 'question'; content: string }[]
 }
+export interface Collection {
+  id: string
+  name: string
+  contents: {
+    id?: string
+    type: 'chat' | 'ans'
+    assistantId: string
+    role: 'human' | 'system' | 'ai' | 'ans' | 'question'
+    content: string
+  }[]
+}
 export interface Line {
   content: string
   from: string

@@ -87,8 +87,8 @@ export default function Md(props: {
       const srcIndex = token.attrIndex('src')
       const src = token.attrs![srcIndex][1]
       const alt = token.content || ''
-      const style = `max-width: 300px; border-radius: 5px;`
-      return `<img src="${src}" alt="${alt}" style="${style}" referrerpolicy="no-referrer"/>`
+      const style = `border-radius: 5px;`
+      return `<img src="${src}" alt="${alt}" class="md:max-w-2xl max-w-full" style="${style}" referrerpolicy="no-referrer"/>`
     }
 
     // FEAT: 复制功能

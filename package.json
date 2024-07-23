@@ -24,10 +24,10 @@
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
     "@google/generative-ai": "^0.14.1",
-    "@langchain/community": "^0.0.52",
-    "@langchain/core": "^0.1.60",
-    "@langchain/google-genai": "^0.0.21",
-    "@langchain/openai": "^0.0.34",
+    "@langchain/community": "^0.2.20",
+    "@langchain/core": "^0.2.17",
+    "@langchain/google-genai": "^0.0.23",
+    "@langchain/openai": "^0.2.4",
     "@mozilla/readability": "^0.5.0",
     "@solidjs/router": "^0.13.2",
     "@types/markdown-it": "^14.0.1",
@@ -84,6 +84,7 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-solid": "^0.13.2",
     "postcss": "^8.4.38",
+    "prebuild-install": "^7.1.2",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "tailwindcss": "^3.4.3",
@@ -92,5 +93,5 @@
     "vite": "^5.2.10",
     "vite-plugin-solid": "^2.10.2"
   },
-  "packageManager": "yarn@3.2.0"
+  "packageManager": "pnpm@8.3.1"
 }

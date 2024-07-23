@@ -34,6 +34,10 @@ export interface Models {
     secretKey: string
     temperature: number
   }
+  DeepSeek: {
+    apiKey: string
+    temperature: number
+  }
   AliQWen: {
     apiKey: string
     temperature: number
@@ -71,7 +75,10 @@ export type ModelsType =
   | 'ERNIE128K'
   | 'GPT3'
   | 'GPT4'
+  | 'GPTMINI'
   | 'GPTCustom'
+  | 'DeepSeekChat'
+  | 'DeepSeekCoder'
   | 'QWenTurbo'
   | 'QWenLong'
   | 'QWenMax'
@@ -88,11 +95,15 @@ export const modelDict: {
   [key in ModelsType]: { maxToken: number; label: string }
 } = {
   GPT3: {
-    label: 'GPT 3.5',
+    label: 'GPT-3.5 Turbo',
     maxToken: 16385
   },
+  GPTMINI: {
+    label: 'GPT-4 Mini',
+    maxToken: 128000
+  },
   GPT4: {
-    label: 'GPT 4.0',
+    label: 'GPT-4o',
     maxToken: 128000
   },
   ERNIE3: {
@@ -107,20 +118,28 @@ export const modelDict: {
     label: '文心 128K',
     maxToken: 128000
   },
+  DeepSeekChat: {
+    label: 'DeepSeek Chat',
+    maxToken: 128000
+  },
+  DeepSeekCoder: {
+    label: 'DeepSeek Coder',
+    maxToken: 128000
+  },
   GPTCustom: {
-    label: '自定义模型',
+    label: 'ChatGPT 自定义',
     maxToken: 0
   },
   QWenTurbo: {
-    label: '千问Turbo',
+    label: '千问 Turbo',
     maxToken: 6000
   },
   QWenLong: {
-    label: '千问Long',
+    label: '千问 Long',
     maxToken: 10000000
   },
   QWenMax: {
-    label: '千问Max',
+    label: '千问 Max',
     maxToken: 6000
   },
   GeminiPro: {
@@ -128,7 +147,7 @@ export const modelDict: {
     maxToken: 30720
   },
   GeminiCustom: {
-    label: '自定义模型',
+    label: 'Gemini 自定义',
     maxToken: 0
   },
   Moonshot128k: {
@@ -167,6 +186,10 @@ export const defaultModels: () => Models = () => ({
   BaiduWenxin: {
     apiKey: '',
     secretKey: '',
+    temperature: 0.3
+  },
+  DeepSeek: {
+    apiKey: '',
     temperature: 0.3
   },
   AliQWen: {
@@ -229,7 +252,19 @@ export const newGPTModal = (
       baseURL: config.baseURL
     }
   })
-
+export const newDeepSeekModel = (
+  config: { apiKey: string; temperature: number },
+  modelName: string
+) =>
+  new ChatOpenAI({
+    streaming: true,
+    modelName,
+    openAIApiKey: config.apiKey || 'api-key',
+    temperature: config.temperature,
+    configuration: {
+      baseURL: 'https://api.deepseek.com/v1'
+    }
+  })
 export const newQWenModel = (
   config: { apiKey: string; temperature: number; enableSearch?: boolean },
   modelName: string
@@ -381,11 +416,14 @@ export const loadLMMap = async (
 ): Promise<{
   [key in ModelsType]: ModelInterfaceType
 }> => ({
-  ERNIE3: newERNIEModal(model.BaiduWenxin, 'ERNIE-Speed-8K'),
+  ERNIE3: newERNIEModal(model.BaiduWenxin, 'ERNIE-3.5-8K'),
   ERNIE4: newERNIEModal(model.BaiduWenxin, 'ERNIE-Bot-4'),
   ERNIE128K: newERNIEModal(model.BaiduWenxin, 'ERNIE-Speed-128K'),
   GPT3: newGPTModal(model.OpenAI, 'gpt-3.5-turbo'),
+  GPTMINI: newGPTModal(model.OpenAI, 'gpt-4-mini'),
   GPT4: newGPTModal(model.OpenAI, 'gpt-4o'),
+  DeepSeekChat: newDeepSeekModel(model.DeepSeek, 'deepseek-chat'),
+  DeepSeekCoder: newDeepSeekModel(model.DeepSeek, 'deepseek-coder'),
   GPTCustom: newGPTModal(model.OpenAI, model.OpenAI.customModel),
   QWenTurbo: newQWenModel(model.AliQWen, 'qwen-turbo'),
   QWenMax: newQWenModel(model.AliQWen, 'qwen-max'),

@@ -1,12 +1,18 @@
-import { getResourcesPath } from '../..'
+import { join } from 'path'
+import { existsSync, mkdirSync, writeFileSync } from 'fs'
+
+import { app } from 'electron'
+
+const appDataPath = app.getPath('userData')
 
 export function getEmbeddingModel() {
-  return 'Xenova/jina-embeddings-v2-base-zh'
+  return 'embedding/Xenova/jina-embeddings-v2-base-zh'
 }
 
 export async function embedding(text: string): Promise<Float32Array> {
   const { env, pipeline } = await import('@xenova/transformers')
-  env.localModelPath = getResourcesPath('models/')
+  env.allowLocalModels = true
+  env.localModelPath = appDataPath
   env.backends.onnx.wasm.numThreads = 1
   env.backends.onnx.logLevel = 'info'
   const extractor = await pipeline('feature-extraction', getEmbeddingModel(), {
@@ -17,9 +23,43 @@ export async function embedding(text: string): Promise<Float32Array> {
   return (output?.data as Float32Array) || []
 }
 
+let haveActivatedTokenizer = false
+export async function activateTokenizer() {
+  if (haveActivatedTokenizer) {
+    return
+  }
+  if (existsSync(join(appDataPath, getEmbeddingModel()))) {
+    haveActivatedTokenizer = true
+    return
+  }
+  mkdirSync(join(appDataPath, getEmbeddingModel()), {
+    recursive: true
+  })
+  const url = 'https://vip.123pan.cn/1830083732/update/embedding/Xenova/jina-embeddings-v2-base-zh/'
+  const fileList = ['config.json', 'tokenizer.json', 'tokenizer_config.json']
+  await Promise.all(
+    fileList.map(async (fileName) => {
+      const filePath = join(appDataPath, getEmbeddingModel(), fileName)
+      const response = await fetch(url + fileName)
+      if (response.status === 200) {
+        const buffer = Buffer.from(await response.arrayBuffer())
+        writeFileSync(filePath, buffer)
+      } else {
+        throw new Error('Failed to download file: ' + fileName)
+      }
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+    })
+  )
+  haveActivatedTokenizer = true
+}
+
 export async function tokenize(text: string) {
+  if (!haveActivatedTokenizer) {
+    return []
+  }
   const { AutoTokenizer, env } = await import('@xenova/transformers')
-  env.localModelPath = getResourcesPath('models/')
+  env.allowLocalModels = true
+  env.localModelPath = appDataPath
   env.backends.onnx.wasm.numThreads = 1
   env.backends.onnx.logLevel = 'info'
   const tokenizer = await AutoTokenizer.from_pretrained(getEmbeddingModel())

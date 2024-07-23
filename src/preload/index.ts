@@ -3,6 +3,7 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 import {
   AssistantModel,
+  Collection,
   CreateAssistantModel,
   HistoryModel,
   Line,
@@ -70,7 +71,6 @@ export const api = {
 
   // memory 相关
   checkEmbeddingModel: (): Promise<boolean> => ipcRenderer.invoke('check-embedding-model'),
-  downloadEmbeddingModel: () => ipcRenderer.invoke('download-embedding-model'),
   getMemories: (): Promise<MemoModel[]> => ipcRenderer.invoke('get-memories'),
   editFragment: (
     option: EditFragmentOption
@@ -89,6 +89,12 @@ export const api = {
   initMemories: () => ipcRenderer.invoke('init-memories'),
   exportMemory: (memo: MemoModel): Promise<string> => ipcRenderer.invoke('export-memory', memo),
   importMemory: (path: string): Promise<boolean> => ipcRenderer.invoke('import-memory', path),
+
+  // 集合相关
+  getCollections: (): Promise<Collection[]> => ipcRenderer.invoke('get-collections'),
+  createCollection: (collection: Collection) => ipcRenderer.invoke('create-collection', collection),
+  deleteCollection: (collectionId: string) => ipcRenderer.invoke('delete-collection', collectionId),
+  updateCollection: (collection: Collection) => ipcRenderer.invoke('update-collection', collection),
 
   // 文件相关
   parseFile: (files: FilePayload[]): Promise<FileLoaderRes> =>

@@ -53,7 +53,7 @@ export default function (props: { type: 'chat' | 'ans' }) {
             hasFirstTimeFor('modelSelect')
           }}
         >
-          <ModelSelect size={20} position="right-0" />
+          <ModelSelect size={22} position="right-0" />
         </div>
       </div>
       <div class="mt-10 flex select-none flex-wrap justify-center gap-2 px-3">

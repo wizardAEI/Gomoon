@@ -47,7 +47,9 @@ const App = (props) => {
     const removeListener2 = window.api.showWindow((_, data) => {
       nav('/?text=' + data.text)
     })
-    onCleanup(() => removeListener2())
+    onCleanup(() => {
+      removeListener2()
+    })
 
     const removeListener = window.api.multiCopy(async (_: IpcRendererEvent, msg: string) => {
       nav('/ans?q=' + msg)

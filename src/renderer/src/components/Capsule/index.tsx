@@ -35,7 +35,7 @@ export default function (props: { type: 'chat' | 'ans'; botName: string }) {
         </div>
       </Show>
       <div class="relative my-[-2px] mr-[-2px] rounded-xl rounded-l-none border-2 border-solid border-transparent px-[6px] py-[3px] hover:border-active">
-        <ModelSelect position="right-20" translate="translate-x-1/2" size={18} />
+        <ModelSelect position="right-0" translate="translate-x-1/2" size={18} />
       </div>
       <Show when={pageData.isSpeech}>
         <div class="group/playing absolute -right-8 flex cursor-pointer items-center rounded-full bg-dark-pro">

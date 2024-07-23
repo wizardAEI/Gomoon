@@ -76,13 +76,7 @@ Thumbs.db
 /dll
 /build-cache
 
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
+.pnpm-store/*
 
 /out
 src/renderer/src/lib/config.json
