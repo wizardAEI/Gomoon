@@ -61,15 +61,15 @@ export function ToastsContainer() {
               }
             >
               <div class="flex animate-popup flex-col gap-2 rounded-lg bg-dark-plus shadow-center">
-                <div class={`m-2 flex max-w-xs items-center gap-1`}>
-                  <span class="flex">{Icon[toast.type]}</span>
-                  <span>
-                    {typeof toast.text === 'string' ? (
-                      <div class={toast.type === 'confirm' ? `px-4 pt-4` : ''}>{toast.text}</div>
-                    ) : (
-                      toast.text
-                    )}
-                  </span>
+                <div class={`m-2 flex items-center gap-1`}>
+                  <Show when={Icon[toast.type]}>
+                    <div class="flex">{Icon[toast.type]}</div>
+                  </Show>
+                  {typeof toast.text === 'string' ? (
+                    <div class={toast.type === 'confirm' ? `px-4 pt-4` : ''}>{toast.text}</div>
+                  ) : (
+                    toast.text
+                  )}
                 </div>
                 <Show when={toast.type === 'confirm'}>
                   <div class="mb-4 flex w-full justify-around">

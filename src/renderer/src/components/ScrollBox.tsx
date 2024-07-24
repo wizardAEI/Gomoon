@@ -23,7 +23,7 @@ export default function ScrollBox(props: { children: JSXElement }) {
           }
         }
       }}
-      class="scrollbar-show -mx-2 h-full w-[calc(100%+16px)] flex-col items-center"
+      class="scrollbar-show -mx-2 flex h-full w-[calc(100%+16px)] flex-col items-center"
     >
       {props.children}
     </div>

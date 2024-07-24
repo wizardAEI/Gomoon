@@ -13,6 +13,7 @@ import { LoadingProvider } from './components/ui/DynamicLoading'
 import { init as OCRInit } from './lib/ai/ocr'
 import System from './pages/System'
 import { loadMemories } from './store/memo'
+import { loadCollection } from './store/collection'
 
 const App = (props) => {
   const nav = useNavigate()
@@ -39,6 +40,9 @@ const App = (props) => {
 
     // FEAT: 历史信息
     loadHistories()
+
+    // FEAT: 合集
+    loadCollection()
 
     // FEAT: 记忆信息
     loadMemories()
