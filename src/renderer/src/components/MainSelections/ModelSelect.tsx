@@ -388,11 +388,11 @@ export default function ModelSelect(props: {
           } ${props.translate || ''} ${options.length > 8 ? 'h-72' : 'h-[278px]'} w-60`}
         >
           <ScrollBox>
-            <div class="h-3" />
+            <div class="mt-2 h-1" />
             <For each={options}>
               {(option) => (
                 <div
-                  class={`mx-2 mb-1 cursor-pointer break-words rounded-lg py-1 pl-2 ${
+                  class={`mx-2 mb-1 w-[calc(100%-16px)] cursor-pointer break-words rounded-lg py-1 pl-2 ${
                     userData.selectedModel === option.value ? 'bg-active' : ''
                   } duration-100 hover:bg-active hover:text-text-active
                 `}
@@ -414,7 +414,7 @@ export default function ModelSelect(props: {
                 </div>
               )}
             </For>
-            <div class="h-1" />
+            <div class="mb-1 h-1" />
           </ScrollBox>
         </div>
       </Show>

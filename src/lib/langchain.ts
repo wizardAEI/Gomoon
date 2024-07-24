@@ -420,7 +420,7 @@ export const loadLMMap = async (
   ERNIE4: newERNIEModal(model.BaiduWenxin, 'ERNIE-Bot-4'),
   ERNIE128K: newERNIEModal(model.BaiduWenxin, 'ERNIE-Speed-128K'),
   GPT3: newGPTModal(model.OpenAI, 'gpt-3.5-turbo'),
-  GPTMINI: newGPTModal(model.OpenAI, 'gpt-4-mini'),
+  GPTMINI: newGPTModal(model.OpenAI, 'gpt-4o-mini'),
   GPT4: newGPTModal(model.OpenAI, 'gpt-4o'),
   DeepSeekChat: newDeepSeekModel(model.DeepSeek, 'deepseek-chat'),
   DeepSeekCoder: newDeepSeekModel(model.DeepSeek, 'deepseek-coder'),

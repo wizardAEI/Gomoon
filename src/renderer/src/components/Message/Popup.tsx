@@ -1,4 +1,4 @@
-import { Show, createSignal } from 'solid-js'
+import { For, Show, createSignal } from 'solid-js'
 import CopyIcon from '@renderer/assets/icon/base/CopyIcon'
 import { useClipboard } from 'solidjs-use'
 import SaveIcon from '@renderer/assets/icon/base/SaveIcon'
@@ -12,6 +12,8 @@ import { stopGenMsg } from '@renderer/store/chat'
 import SpeechIcon from '@renderer/assets/icon/SpeechIcon'
 import TrashIcon from '@renderer/assets/icon/TrashIcon'
 import CollectionIcon from '@renderer/assets/icon/CollectionIcon'
+import { collections } from '@renderer/store/collection'
+import EmptyIcon from '@renderer/assets/icon/base/EmptyIcon'
 
 import { compWithTip } from '../ui/compWithTip'
 import ToolTip from '../ui/ToolTip'
@@ -56,35 +58,59 @@ export default function MsgPopup(props: {
                     const [addNewCollection, setAddNewCollection] = createSignal(false)
                     const [collectionName, setCollectionName] = createSignal('')
                     return (
-                      <div class="flex w-64 flex-col gap-4 p-1">
-                        保存到合集
-                        <div onClick={() => setAddNewCollection(false)}>现有合集</div>
-                        <Show
-                          when={addNewCollection()}
-                          fallback={
-                            <button
-                              class="py-1 text-white hover:text-opacity-70"
-                              onClick={() => {
-                                setCollectionName('')
-                                setAddNewCollection(true)
+                      <div class="flex w-[80vw] max-w-xl flex-col gap-4 p-1">
+                        <div>
+                          <div class="text-lg">保存到合集</div>
+                          <span class="text-xs text-text1/70">
+                            保存在合适的合集中，用来记单词，记知识点，整理方案，等等!
+                          </span>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                          <div>现有合集</div>
+                          <Show
+                            when={collections.length}
+                            fallback={
+                              <div class="flex items-center justify-center rounded-md border-dashed border-gray p-4">
+                                <EmptyIcon width={40} height={40} class="text-gray" />
+                              </div>
+                            }
+                          >
+                            <For each={collections}>
+                              {(c) => {
+                                return (
+                                  <div onClick={() => setAddNewCollection(false)}>{c.name}</div>
+                                )
                               }}
-                            >
-                              添加新合集
-                            </button>
-                          }
-                        >
-                          <div class="flex items-center gap-3">
-                            <div class="">新合集名称</div>
-                            <div>
+                            </For>
+                          </Show>
+                        </div>
+                        <div>
+                          <div class="">新合集名称</div>
+                          <Show
+                            when={addNewCollection()}
+                            fallback={
+                              <button
+                                class="py-1 text-white hover:text-opacity-70"
+                                onClick={() => {
+                                  setCollectionName('')
+                                  setAddNewCollection(true)
+                                }}
+                              >
+                                添加新合集
+                              </button>
+                            }
+                          >
+                            <div class="flex items-center gap-3">
                               <input
+                                class="flex-1"
                                 onInput={(e) => {
                                   setCollectionName(e.target.value)
                                 }}
                               />
                             </div>
-                          </div>
-                        </Show>
-                        <div class="flex w-full justify-around">
+                          </Show>
+                        </div>
+                        <div class="mt-1 flex w-full justify-around">
                           <button onClick={() => option.close('')}>关闭</button>
                           <button
                             onClick={() => {
@@ -100,7 +126,8 @@ export default function MsgPopup(props: {
                     )
                   },
                   {
-                    mask: true
+                    mask: true,
+                    position: 'top-32'
                   }
                 )
                 .then((type) => {

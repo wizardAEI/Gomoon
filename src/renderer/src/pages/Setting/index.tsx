@@ -195,7 +195,7 @@ export default function Setting() {
                     <QuestionMention
                       content={
                         <a class="text-xs" href="https://platform.moonshot.cn/console/api-keys">
-                          密钥注册地址
+                          密钥注册地址（注册送15元代金券）
                         </a>
                       }
                     />
