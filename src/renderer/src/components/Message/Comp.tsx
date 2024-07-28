@@ -197,6 +197,17 @@ export default function MsgComp(props: {
               content="保存问答记录"
             />
           </Show>
+          <ToolTip
+            label={
+              <SpeechIcon
+                height={22}
+                width={22}
+                class="cursor-pointer fill-gray duration-100 hover:fill-active"
+                onClick={props.onSpeak}
+              />
+            }
+            content="朗读"
+          />
           <Show when={props.type !== 'ans'}>
             <ToolTip
               label={
@@ -212,17 +223,6 @@ export default function MsgComp(props: {
               content="重新编辑"
             />
           </Show>
-          <ToolTip
-            label={
-              <SpeechIcon
-                height={22}
-                width={22}
-                class="cursor-pointer fill-gray duration-100 hover:fill-active"
-                onClick={props.onSpeak}
-              />
-            }
-            content="朗读"
-          />
         </div>
         <div class="ml-1 flex gap-1">
           <ToolTip
