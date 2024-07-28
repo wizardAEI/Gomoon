@@ -24,7 +24,10 @@ function initTrash() {
 
 const [answerStore, setAnswerStore] = createStore(
   localStorage.getItem('answer_answer')
-    ? JSON.parse(localStorage.getItem('answer_answer')!)
+    ? (JSON.parse(localStorage.getItem('answer_answer')!) as {
+        answer: string
+        question: string
+      })
     : {
         answer: '',
         question: ''

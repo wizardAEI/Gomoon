@@ -4,7 +4,7 @@ export default function CollectionIcon(props: SvgProps) {
   return (
     <svg
       class="icon"
-      viewBox="0 -50 1024 1074"
+      viewBox="-100 -100 1174 1174"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
       p-id="29387"

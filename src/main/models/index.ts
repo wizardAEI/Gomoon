@@ -7,8 +7,9 @@ import { merge } from 'lodash'
 
 import {
   AssistantModel,
-  Collection,
+  CollectionModel,
   CreateAssistantModel,
+  CreateCollectionModel,
   CreateMemoModel,
   HistoryModel,
   MemoModel
@@ -299,22 +300,31 @@ export function deleteMemo(id: string) {
 /**
  * FEAT: 合集相关
  */
-const collectionsDB = JSONFileSyncPreset<Collection[]>(join(appDataPath, 'collections.json'), [])
+const collectionsDB = JSONFileSyncPreset<CollectionModel[]>(
+  join(appDataPath, 'collections.json'),
+  []
+)
 
 export function getCollections() {
   return collectionsDB.data || []
 }
 
-export function createCollection(c: Collection) {
-  collectionsDB.data = [...(collectionsDB.data || []), c]
+export function createCollection(c: CreateCollectionModel) {
+  const collection = {
+    ...c,
+    id: ulid()
+  }
+  collectionsDB.data = [collection, ...(collectionsDB.data || [])]
   collectionsDB.write()
 }
 
-export function updateCollection(c: Collection) {
+export function updateCollection(c: CollectionModel) {
   const index = collectionsDB.data?.findIndex((item) => item.id === c.id)
   if (index !== -1) {
-    collectionsDB.data[index] = c
+    collectionsDB.data.splice(index, 1)
+    collectionsDB.data.unshift(c)
   }
+  collectionsDB.write()
 }
 
 export function deleteCollection(id: string) {
@@ -322,4 +332,5 @@ export function deleteCollection(id: string) {
   if (index !== -1) {
     collectionsDB.data!.splice(index, 1)
   }
+  collectionsDB.write()
 }

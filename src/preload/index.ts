@@ -3,8 +3,9 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 import {
   AssistantModel,
-  Collection,
+  CollectionModel,
   CreateAssistantModel,
+  CreateCollectionModel,
   HistoryModel,
   Line,
   MemoFragment,
@@ -91,10 +92,12 @@ export const api = {
   importMemory: (path: string): Promise<boolean> => ipcRenderer.invoke('import-memory', path),
 
   // 集合相关
-  getCollections: (): Promise<Collection[]> => ipcRenderer.invoke('get-collections'),
-  createCollection: (collection: Collection) => ipcRenderer.invoke('create-collection', collection),
+  getCollections: (): Promise<CollectionModel[]> => ipcRenderer.invoke('get-collections'),
+  createCollection: (collection: CreateCollectionModel) =>
+    ipcRenderer.invoke('create-collection', collection),
   deleteCollection: (collectionId: string) => ipcRenderer.invoke('delete-collection', collectionId),
-  updateCollection: (collection: Collection) => ipcRenderer.invoke('update-collection', collection),
+  updateCollection: (collection: CollectionModel) =>
+    ipcRenderer.invoke('update-collection', collection),
 
   // 文件相关
   parseFile: (files: FilePayload[]): Promise<FileLoaderRes> =>

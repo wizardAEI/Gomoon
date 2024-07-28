@@ -21,7 +21,14 @@ type SelectProps = {
   onSelect: (value: string) => void
 }
 
-// Select 组件
+/**
+ * @returns
+ * @description defaultValue 默认值, options: {
+    value: string
+    label: JSXElement | string
+  }
+  onSelect: (value: string) => void
+ */
 const Select: Component<SelectProps> = (props) => {
   // 使用 createSignal 来管理下拉菜单的显示状态
   const [isOpen, setIsOpen] = createSignal(false)
