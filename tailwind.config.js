@@ -72,6 +72,7 @@ module.exports = {
             'dark-plus': '#1f3d48', // 暗色稍微深一点
             'dark-pro': '#152431', // 暗色↑
             light: '#e2e1e4', // 亮色 芡食白
+            'light-gray': '#c4cbcf', // 大理石灰
             text1: '#d8e3e7', // 云峰白
             text2: '#d0dfe6', // 远天蓝
             text3: '#d0dfe680', // 远天蓝70%
@@ -89,7 +90,9 @@ module.exports = {
           },
           boxShadow: {
             green: '20px 20px 60px #93b58a, -20px -20px 60px #c7f5ba',
-            center: '0px 2px 12px #51939320'
+            center: '0px 2px 12px #00000070',
+            's-dark': '0 4px 6px -1px #00000060',
+            's-light': '0 4px 6px -1px #385b6070'
           }
         }
       },
@@ -118,6 +121,7 @@ module.exports = {
               'dark-plus': '#F1F5F7',
               'dark-pro': '#F2F8FA',
               light: '#e6f1f5',
+              'light-gray': '#dee9e7',
               text1: '#181a07',
               text2: '#25270b',
               text3: '#70887d70',
@@ -135,7 +139,9 @@ module.exports = {
             },
             boxShadow: {
               green: '20px 20px 60px #93b58a, -20px -20px 60px #c7f5ba',
-              center: '0px 2px 12px #385b6070'
+              center: '0px 2px 12px #385b6070',
+              's-dark': '0 4px 6px -1px #00000020',
+              's-light': '0 4px 6px -1px #00000020'
             }
           }
         }

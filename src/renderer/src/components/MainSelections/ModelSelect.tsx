@@ -383,38 +383,40 @@ export default function ModelSelect(props: {
       </div>
       <Show when={isOpen()}>
         <div
-          class={`absolute z-10 mt-3 flex-col rounded-md bg-dark-plus px-2 shadow-center ${
+          class={`absolute z-10 mt-3 flex-col rounded-md bg-dark-plus px-1 shadow-center ${
             props.position
-          } ${props.translate || ''} ${options.length > 8 ? 'h-72' : 'h-[278px]'} w-60`}
+          } ${props.translate || ''} h-[278px] w-60`}
         >
           <ScrollBox>
-            <div class="mt-2 h-1" />
-            <For each={options}>
-              {(option) => (
-                <div
-                  class={`mx-2 mb-1 w-[calc(100%-16px)] cursor-pointer break-words rounded-lg py-1 pl-2 ${
-                    userData.selectedModel === option.value ? 'bg-active' : ''
-                  } duration-100 hover:bg-active hover:text-text-active
-                `}
-                  onClick={() => handleSelect(option)}
-                >
+            <div class="w-full px-1">
+              <div class="mt-2 h-1" />
+              <For each={options}>
+                {(option) => (
                   <div
-                    class={`flex items-center justify-between pr-2 ${userData.selectedModel === option.value && 'text-text-active'}`}
+                    class={`mb-1 w-full cursor-pointer break-words rounded-lg py-1 pl-2 ${
+                      userData.selectedModel === option.value ? 'bg-active' : ''
+                    } duration-100 hover:bg-active hover:text-text-active
+                `}
+                    onClick={() => handleSelect(option)}
                   >
-                    <div class="flex select-none gap-2">
-                      {option.icon(20)}
-                      {option.label}
-                    </div>
+                    <div
+                      class={`flex items-center justify-between pr-2 ${userData.selectedModel === option.value && 'text-text-active'}`}
+                    >
+                      <div class="flex select-none gap-2">
+                        {option.icon(20)}
+                        {option.label}
+                      </div>
 
-                    <Show
-                      when={option.maxToken}
-                      fallback={'🧩 🧩'}
-                    >{`${(option.maxToken / 1000).toFixed(0)} K`}</Show>
+                      <Show
+                        when={option.maxToken}
+                        fallback={'🧩 🧩'}
+                      >{`${(option.maxToken / 1000).toFixed(0)} K`}</Show>
+                    </div>
                   </div>
-                </div>
-              )}
-            </For>
-            <div class="mb-1 h-1" />
+                )}
+              </For>
+              <div class="mb-1 h-1" />
+            </div>
           </ScrollBox>
         </div>
       </Show>

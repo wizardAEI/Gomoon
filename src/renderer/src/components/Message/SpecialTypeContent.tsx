@@ -7,7 +7,7 @@ import CapsuleIcon from '@renderer/assets/icon/CapsuleIcon'
 
 import Md from './Md'
 
-export default function (meta: ContentDisplay, mdStyle: string) {
+export default function SpecialTypeContent(meta: ContentDisplay, mdStyle: string) {
   if (meta.type === 'file') {
     return (
       <div

@@ -30,15 +30,16 @@ import WarningIcon from '@renderer/assets/icon/base/Toast/WarningIcon'
 import CopyFillIcon from '@renderer/assets/icon/base/CopyFillIcon'
 import QuestionMention from '@renderer/components/ui/QuestionMention'
 import ScrollBox from '@renderer/components/ScrollBox'
+import Md from '@renderer/components/Message/Md'
 
 import SpecialTypeContent from './SpecialTypeContent'
 import { decorateContent } from './utils'
 import Collection from './Collection'
 const map = {
-  human: '我:',
-  ai: '助手:',
-  question: '问题:',
-  ans: '答案:'
+  human: '我：',
+  ai: '助手：',
+  question: '问题：',
+  ans: '答案：'
 }
 
 export default function () {
@@ -197,11 +198,11 @@ export default function () {
           when={selectType() !== 'collection'}
           fallback={<Collection searchText={searchText()} />}
         >
-          <div class="ml-[0.45rem] mr-[calc(100%-100vw+24px+0.45rem)] w-[calc(100vw-24px-0.9rem)] px-1 lg:max-w-4xl">
+          <div class="w-full px-1 lg:max-w-4xl">
             <Show
               when={histories.length}
               fallback={
-                <div class="relative m-auto flex h-40 w-full select-none flex-col items-center justify-center gap-3 rounded-2xl bg-dark p-5 duration-150">
+                <div class="relative m-auto flex h-40 w-full select-none flex-col items-center justify-center gap-3 rounded-lg bg-dark p-5 duration-150">
                   <EmptyIcon height={50} class="text-gray" />
                   <span class="text-sm text-gray">暂无历史</span>
                 </div>
@@ -210,8 +211,8 @@ export default function () {
               <For each={filteredHistory()}>
                 {(h) => (
                   <>
-                    <div class="flex w-full items-center justify-between rounded-t-2xl bg-dark-plus px-4 pt-2">
-                      <div class="flex items-center gap-3 text-text2">
+                    <div class="flex w-full items-center justify-between rounded-t-lg border-0 border-b border-solid border-b-gray bg-dark-plus px-2 py-1">
+                      <div class="flex items-center gap-3">
                         {h.contents[0].role === 'question' ? '问答记录' : '对话记录'}
                       </div>
                       <div class="flex gap-2">
@@ -240,16 +241,18 @@ export default function () {
                             removeHistory(h.id)
                           }}
                         >
-                          <CrossMark
-                            height={22}
-                            width={22}
-                            class="cursor-pointer text-gray duration-100 hover:text-active"
-                          />
+                          <div class="flex">
+                            <CrossMark
+                              height={22}
+                              width={22}
+                              class="cursor-pointer text-gray duration-100 hover:text-active"
+                            />
+                          </div>
                         </DoubleConfirm>
                       </div>
                     </div>
                     <div
-                      class="group/history-box relative mb-3 flex w-full cursor-pointer flex-col gap-2 rounded-b-2xl border-2 border-solid border-transparent bg-dark p-4 pt-2 duration-150 hover:border-active lg:max-w-4xl"
+                      class="group/history-box relative mb-3 flex w-full cursor-pointer flex-col gap-2 rounded-b-lg border-2 border-solid border-transparent bg-dark p-4 pt-2 duration-150 hover:border-active lg:max-w-4xl"
                       onClick={() => {
                         if (h.type === 'ans') {
                           setAnswerStore('question', h.contents[0].content)
@@ -264,23 +267,24 @@ export default function () {
                         }
                       }}
                     >
-                      <div class="absolute -left-[2px] top-0 w-[calc(100%+4px)] border-b-0 border-t border-solid border-gray group-hover/history-box:border-transparent" />
                       <For each={sliceArr(h.contents)}>
-                        {(c, index) => {
+                        {(c) => {
                           const meta = parseDisplayArr(c.content)
                           return (
                             <div class="flex flex-col gap-1 break-words text-sm">
-                              <div class={index() === 0 ? 'pr-3' : ''}>
+                              <div>
                                 <For each={meta}>
                                   {(m, index) => {
                                     return m.type === 'text' ? (
-                                      <>
-                                        {index() === 0 && `${map[c.role]}`}{' '}
-                                        {decorateContent(m.content)}
-                                      </>
+                                      (index() === 0 ? map[c.role] || '我：' : '') +
+                                        decorateContent(m.content)
                                     ) : (
-                                      // eslint-disable-next-line solid/reactivity
-                                      SpecialTypeContent(m, map[c.role], index())
+                                      <>
+                                        {index() === 0 && (
+                                          <span class="mr-1">{map[c.role] || '我：'}</span>
+                                        )}
+                                        {SpecialTypeContent(m)}
+                                      </>
                                     )
                                   }}
                                 </For>

@@ -45,11 +45,11 @@ export default function (props: {
       <Show when={show()}>
         <div
           class={
-            `absolute flex ${animation()} flex-col gap-2 overflow-visible rounded-md bg-dark-plus px-2 py-1 shadow-center z-10 ` +
+            `absolute flex ${animation()} z-10 flex-col gap-2 overflow-visible rounded-md bg-dark-plus px-2 py-1 shadow-center ` +
             props.position
           }
         >
-          <div class="text-center text-sm">{props.label}</div>
+          <div class="mt-1 text-center text-sm">{props.label}</div>
           <div class="flex justify-around">
             <button
               class="mr-1 w-9 rounded-sm bg-dark px-1 py-[1px] text-[12px] leading-4 duration-300 hover:bg-active"

@@ -32,8 +32,9 @@ import {
 } from './models/index'
 import {
   AssistantModel,
-  Collection,
+  CollectionModel,
   CreateAssistantModel,
+  CreateCollectionModel,
   HistoryModel,
   MemoFragment,
   MemoModel,
@@ -179,9 +180,13 @@ export function initAppEventsHandler() {
    * FEAT: 合集相关
    */
   ipcMain.handle('get-collections', () => getCollections())
-  ipcMain.handle('create-collection', (_, collection: Collection) => createCollection(collection))
+  ipcMain.handle('create-collection', (_, collection: CreateCollectionModel) =>
+    createCollection(collection)
+  )
   ipcMain.handle('delete-collection', (_, id: string) => deleteCollection(id))
-  ipcMain.handle('update-collection', (_, collection: Collection) => updateCollection(collection))
+  ipcMain.handle('update-collection', (_, collection: CollectionModel) =>
+    updateCollection(collection)
+  )
 
   // 文件相关
   ipcMain.handle('parse-file', (_, files: FilePayload[]) => parseFile(files))

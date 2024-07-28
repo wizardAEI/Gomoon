@@ -10,7 +10,8 @@ import { settingStore } from '@renderer/store/setting'
 
 import SpecialTypeContent from './SpecialTypeContent'
 import Md, { mdToText } from './Md'
-import MsgPopup, { MsgPopupForSpecialContent, MsgPopupForUser, Pause, WithDrawal } from './Popup'
+import { MsgPopupForSpecialContent, MsgPopupForUser, Pause, WithDrawal } from './Popup'
+import MsgPopup from './Comp'
 export type MsgTypes = Roles | 'ans' | 'question'
 export const style: Record<MsgTypes, string> = {
   ai: 'bg-dark',
@@ -140,14 +141,6 @@ export default function Message(props: {
           </Show>
         }
       >
-        <Show when={showComps()}>
-          <MsgPopup
-            type={props.type}
-            id={props.id || ''}
-            content={props.content}
-            onSpeak={speakMd}
-          />
-        </Show>
         <Show
           when={showCompsByUser()}
           fallback={
@@ -162,7 +155,7 @@ export default function Message(props: {
           />
         </Show>
       </Show>
-      <div class={style[props.type] + ' relative m-4 rounded-2xl p-3'}>
+      <div class={style[props.type] + ' relative mx-3 my-2 rounded-xl px-3 py-2'}>
         <For each={meta()}>
           {(m) =>
             m.type === 'text' ? (
@@ -172,6 +165,14 @@ export default function Message(props: {
             )
           }
         </For>
+        <Show when={showComps() && !props.editing}>
+          <MsgPopup
+            type={props.type}
+            id={props.id || ''}
+            content={props.content}
+            onSpeak={speakMd}
+          />
+        </Show>
       </div>
     </div>
   )

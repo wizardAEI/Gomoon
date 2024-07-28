@@ -74,7 +74,7 @@ export function ToastsContainer() {
                 <Show when={toast.type === 'confirm'}>
                   <div class="mb-4 flex w-full justify-around">
                     <button
-                      class="py-1 text-white hover:text-opacity-70"
+                      class="py-1"
                       onClick={() => {
                         toast.callback!(false)
                       }}
@@ -82,7 +82,7 @@ export function ToastsContainer() {
                       取消
                     </button>
                     <button
-                      class="py-1 text-white hover:text-opacity-70"
+                      class="py-1"
                       onClick={() => {
                         toast.callback!(true)
                       }}

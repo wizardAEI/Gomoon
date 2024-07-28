@@ -28,6 +28,10 @@
 @tailwind components;
 @tailwind utilities;
 
+button:hover {
+  @apply text-text1/80;
+}
+
 /* 选择 */
 ::selection {
   @apply bg-selection;

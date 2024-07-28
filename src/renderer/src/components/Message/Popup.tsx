@@ -1,205 +1,29 @@
-import { For, Show, createSignal } from 'solid-js'
+import { JSXElement, Show, createSignal } from 'solid-js'
 import CopyIcon from '@renderer/assets/icon/base/CopyIcon'
 import { useClipboard } from 'solidjs-use'
-import SaveIcon from '@renderer/assets/icon/base/SaveIcon'
-import RetryIcon from '@renderer/assets/icon/base/RetryIcon'
-import { reGenAns, saveAns, stopGenAns } from '@renderer/store/answer'
 import EditIcon from '@renderer/assets/icon/base/EditIcon'
 import { event } from '@renderer/lib/util'
 import WithdrawalIcon from '@renderer/assets/icon/base/WithdrawalICon'
 import PauseIcon from '@renderer/assets/icon/base/PauseIcon'
 import { stopGenMsg } from '@renderer/store/chat'
-import SpeechIcon from '@renderer/assets/icon/SpeechIcon'
 import TrashIcon from '@renderer/assets/icon/TrashIcon'
-import CollectionIcon from '@renderer/assets/icon/CollectionIcon'
-import { collections } from '@renderer/store/collection'
-import EmptyIcon from '@renderer/assets/icon/base/EmptyIcon'
+import { stopGenAns } from '@renderer/store/answer'
 
 import { compWithTip } from '../ui/compWithTip'
 import ToolTip from '../ui/ToolTip'
-import { useToast } from '../ui/Toast'
 
 import { MsgTypes } from '.'
 
-export default function MsgPopup(props: {
-  id: string
-  content: string
-  type: MsgTypes
-  onSpeak: () => void
-}) {
-  const [source] = createSignal('')
-  const { copy } = useClipboard({ source })
-  const toast = useToast()
+export function PopupContainer(props: { children: JSXElement; pos?: 'left' | 'right' }) {
   return (
-    <div class="absolute -top-4 left-5 z-10 hidden items-center gap-1 rounded-xl bg-dark px-2 group-hover:flex group-hover:h-7">
-      <ToolTip
-        label={compWithTip((tip) => (
-          <CopyIcon
-            height={22}
-            width={22}
-            class="cursor-pointer text-gray duration-100 hover:fill-active"
-            onClick={() => {
-              copy(props.content).then(() => tip('success', '复制成功'))
-            }}
-          />
-        ))}
-        content="复制到剪贴板"
-      />
-      <ToolTip
-        label={
-          <CollectionIcon
-            height={19}
-            width={19}
-            class="cursor-pointer text-gray duration-100 hover:text-active"
-            onClick={() => {
-              toast
-                .modal(
-                  (option) => {
-                    const [addNewCollection, setAddNewCollection] = createSignal(false)
-                    const [collectionName, setCollectionName] = createSignal('')
-                    return (
-                      <div class="flex w-[80vw] max-w-xl flex-col gap-4 p-1">
-                        <div>
-                          <div class="text-lg">保存到合集</div>
-                          <span class="text-xs text-text1/70">
-                            保存在合适的合集中，用来记单词，记知识点，整理方案，等等!
-                          </span>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                          <div>现有合集</div>
-                          <Show
-                            when={collections.length}
-                            fallback={
-                              <div class="flex items-center justify-center rounded-md border-dashed border-gray p-4">
-                                <EmptyIcon width={40} height={40} class="text-gray" />
-                              </div>
-                            }
-                          >
-                            <For each={collections}>
-                              {(c) => {
-                                return (
-                                  <div onClick={() => setAddNewCollection(false)}>{c.name}</div>
-                                )
-                              }}
-                            </For>
-                          </Show>
-                        </div>
-                        <div>
-                          <div class="">新合集名称</div>
-                          <Show
-                            when={addNewCollection()}
-                            fallback={
-                              <button
-                                class="py-1 text-white hover:text-opacity-70"
-                                onClick={() => {
-                                  setCollectionName('')
-                                  setAddNewCollection(true)
-                                }}
-                              >
-                                添加新合集
-                              </button>
-                            }
-                          >
-                            <div class="flex items-center gap-3">
-                              <input
-                                class="flex-1"
-                                onInput={(e) => {
-                                  setCollectionName(e.target.value)
-                                }}
-                              />
-                            </div>
-                          </Show>
-                        </div>
-                        <div class="mt-1 flex w-full justify-around">
-                          <button onClick={() => option.close('')}>关闭</button>
-                          <button
-                            onClick={() => {
-                              if (!collectionName()) {
-                                toast.warning('合集名称不能为空')
-                              }
-                            }}
-                          >
-                            保存
-                          </button>
-                        </div>
-                      </div>
-                    )
-                  },
-                  {
-                    mask: true,
-                    position: 'top-32'
-                  }
-                )
-                .then((type) => {
-                  console.log(type)
-                })
-            }}
-          />
-        }
-        content="加入合集"
-      />
-      <Show when={props.type === 'ans'}>
-        <ToolTip
-          label={compWithTip((tip) => (
-            <SaveIcon
-              height={22}
-              width={22}
-              class="cursor-pointer text-gray duration-100 hover:text-active"
-              // eslint-disable-next-line solid/reactivity
-              onClick={async () => {
-                await saveAns()
-                tip('success', '保存成功')
-              }}
-            />
-          ))}
-          content="保存问答记录"
-        />
-      </Show>
-      <ToolTip
-        label={
-          <SpeechIcon
-            height={22}
-            width={22}
-            class="cursor-pointer fill-gray duration-100 hover:fill-active"
-            onClick={props.onSpeak}
-          />
-        }
-        content="朗读"
-      />
-      <Show when={props.type !== 'ans'}>
-        <ToolTip
-          label={
-            <EditIcon
-              height={22}
-              width={22}
-              class="cursor-pointer text-gray duration-100 hover:text-active"
-              onClick={() => {
-                event.emit('editUserMsg', props.content, props.id)
-              }}
-            />
-          }
-          content="重新编辑"
-        />
-      </Show>
-      <ToolTip
-        label={
-          <RetryIcon
-            height={22}
-            width={22}
-            class="cursor-pointer text-gray duration-100 hover:text-active"
-            onClick={() => {
-              // 重新生成 ans 版
-              if (props.type === 'ans') {
-                reGenAns()
-                return
-              }
-              // 重新生成 chat 版
-              event.emit('reGenMsg', props.id)
-            }}
-          />
-        }
-        content="重新生成"
-      />
+    <div
+      class={
+        props.pos === 'right'
+          ? 'shadow-s-light border-light-gray absolute -top-2 right-4 z-10 flex h-[26px] items-center gap-1 rounded-[10px] border border-solid bg-light px-1 opacity-0 duration-200 group-hover:opacity-100'
+          : 'shadow-s-dark absolute -top-2 left-4 z-10 flex h-[26px] items-center gap-1 rounded-[10px] border border-solid border-dark-con bg-dark px-1 opacity-0 duration-200 group-hover:opacity-100'
+      }
+    >
+      {props.children}
     </div>
   )
 }
@@ -213,7 +37,7 @@ export function MsgPopupForUser(props: {
   const [source] = createSignal('')
   const { copy } = useClipboard({ source })
   return (
-    <div class="absolute -top-4 right-5 z-10 hidden items-center gap-1 rounded-xl bg-light px-2 group-hover:flex group-hover:h-7">
+    <PopupContainer pos="right">
       <ToolTip
         label={
           <EditIcon
@@ -231,7 +55,7 @@ export function MsgPopupForUser(props: {
         label={
           <TrashIcon
             height={19}
-            width={19}
+            width={22}
             class="cursor-pointer text-gray duration-100 hover:text-active"
             onClick={props.onRemove}
           />
@@ -254,39 +78,35 @@ export function MsgPopupForUser(props: {
         )}
         content="复制到剪贴板"
       />
-    </div>
+    </PopupContainer>
   )
 }
 
 export function MsgPopupForSpecialContent(props: { type: MsgTypes; onRemove: () => void }) {
   return (
     <Show when={props.type === 'human'}>
-      <div class="absolute -top-4 right-5 z-10 hidden items-center gap-1 rounded-xl bg-light px-2 group-hover:flex group-hover:h-7">
-        <ToolTip
-          label={
-            <TrashIcon
-              height={19}
-              width={19}
-              class="cursor-pointer text-gray duration-100 hover:text-active"
-              onClick={props.onRemove}
-            />
-          }
-          content="删除此轮对话"
-        />
-      </div>
+      <PopupContainer pos="right">
+        <div class="flex">
+          <ToolTip
+            label={
+              <TrashIcon
+                height={18}
+                width={22}
+                class="cursor-pointer text-gray duration-100 hover:text-active"
+                onClick={props.onRemove}
+              />
+            }
+            content="删除此轮对话"
+          />
+        </div>
+      </PopupContainer>
     </Show>
   )
 }
 
 export function WithDrawal(props: { type: MsgTypes }) {
   return (
-    <div
-      class={
-        props.type === 'human'
-          ? 'absolute right-5 top-[-10px] z-10 hidden items-center gap-1 rounded-[10px] bg-light px-2 group-hover:flex group-hover:h-6'
-          : 'absolute left-5 top-[-10px] z-10 hidden items-center gap-1 rounded-[10px] bg-dark px-2 group-hover:flex group-hover:h-6'
-      }
-    >
+    <PopupContainer pos={props.type === 'human' ? 'right' : 'left'}>
       <ToolTip
         label={
           <WithdrawalIcon
@@ -303,13 +123,13 @@ export function WithDrawal(props: { type: MsgTypes }) {
           placement: 'left'
         }}
       />
-    </div>
+    </PopupContainer>
   )
 }
 
 export function Pause(props: { id?: string; type: MsgTypes }) {
   return (
-    <div class="absolute -top-4 left-5 z-10 hidden items-center gap-1 rounded-[10px] bg-dark px-2 group-hover:flex group-hover:h-7">
+    <PopupContainer pos={props.type === 'human' ? 'right' : 'left'}>
       <ToolTip
         label={
           <PauseIcon
@@ -330,6 +150,6 @@ export function Pause(props: { id?: string; type: MsgTypes }) {
           placement: 'left'
         }}
       />
-    </div>
+    </PopupContainer>
   )
 }

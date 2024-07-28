@@ -45,7 +45,7 @@ export interface HistoryModel {
   starred?: boolean
   contents: { id?: string; role: 'human' | 'system' | 'ai' | 'ans' | 'question'; content: string }[]
 }
-export interface Collection {
+export interface CollectionModel {
   id: string
   name: string
   contents: {
@@ -54,8 +54,10 @@ export interface Collection {
     assistantId: string
     role: 'human' | 'system' | 'ai' | 'ans' | 'question'
     content: string
-  }[]
+  }[][]
 }
+export type CreateCollectionModel = Omit<CollectionModel, 'id'>
+
 export interface Line {
   content: string
   from: string
