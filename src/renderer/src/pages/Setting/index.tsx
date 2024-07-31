@@ -179,7 +179,7 @@ export default function Setting() {
                   <span class="font-bold">创造性/随机性</span>
                   <div class="w-60">
                     <Slider
-                      value={settingStore.models.Moonshot.temperature}
+                      value={settingStore.models.DeepSeek.temperature}
                       percentage
                       onChange={(v) => {
                         setModels(v, 'DeepSeek', 'temperature')
