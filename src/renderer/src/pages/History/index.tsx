@@ -22,7 +22,6 @@ import SearchIcon from '@renderer/assets/icon/base/SearchIcon'
 import More2Icon from '@renderer/assets/icon/base/More2Icon'
 import { SegmentedControl } from '@renderer/components/ui/SegmentedControl'
 import ClearIcon from '@renderer/assets/icon/base/ClearIcon'
-import CrossMarkRound from '@renderer/assets/icon/base/CrossMarkRound'
 import ToolTip from '@renderer/components/ui/ToolTip'
 import StarIcon from '@renderer/assets/icon/StarIcon'
 import { useToast } from '@renderer/components/ui/Toast'
@@ -30,7 +29,7 @@ import WarningIcon from '@renderer/assets/icon/base/Toast/WarningIcon'
 import CopyFillIcon from '@renderer/assets/icon/base/CopyFillIcon'
 import QuestionMention from '@renderer/components/ui/QuestionMention'
 import ScrollBox from '@renderer/components/ScrollBox'
-import Md from '@renderer/components/Message/Md'
+import ReturnIcon from '@renderer/assets/icon/base/ReturnIcon'
 
 import SpecialTypeContent from './SpecialTypeContent'
 import { decorateContent } from './utils'
@@ -70,12 +69,12 @@ export default function () {
   })
 
   return (
-    <div class="relative flex h-full select-none flex-col px-5 pt-2">
+    <div class="relative flex h-full select-none flex-col px-3 pt-2">
       <div class="z-10 mb-3 flex select-none items-center gap-1 text-lg text-text1 lg:justify-center">
         <HistoryIcon width={20} height={20} /> <span class="text-base font-medium">历史数据</span>{' '}
         <QuestionMention content="开启新连续对话后将自动保存，当前对话将不会展示在历史中" />
       </div>
-      <div class="mx-auto mb-[10px] flex min-h-8 w-full items-center justify-between gap-2 pl-1 pr-2 lg:max-w-4xl">
+      <div class="mx-auto mb-[10px] flex min-h-8 w-full items-center justify-between gap-2 px-1 lg:max-w-4xl">
         <Show
           when={!showSearchInput()}
           fallback={
@@ -176,10 +175,9 @@ export default function () {
                     />
                   </div>
                 </Show>
-
                 <ToolTip
                   label={
-                    <CrossMarkRound
+                    <ReturnIcon
                       onClick={() => setShowMoreBtn(false)}
                       width={24}
                       height={24}

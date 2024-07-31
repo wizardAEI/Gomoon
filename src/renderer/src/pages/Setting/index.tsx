@@ -43,7 +43,7 @@ export default function Setting() {
     })
   })
   return (
-    <div class="flex h-full select-none flex-col gap-3 px-5 pt-2">
+    <div class="flex h-full select-none flex-col gap-3 px-3 pt-2">
       <div class="flex select-none items-center gap-1 text-lg text-text1 lg:justify-center">
         <SettingIcon width={20} height={20} /> <span class="text-base font-medium">应用设置</span>{' '}
       </div>

@@ -331,7 +331,7 @@ export default function Input(props: {
                   }
                 })
               }}
-              class={`group/refresh ml-1 h-8 w-8 translate-y-[1px] rounded-full ${props.type === 'ans' || props.type === 'question' ? 'p-[6px]' : 'p-[3px]'} hover:bg-dark-plus`}
+              class={`group/refresh ml-1 h-8 w-8 translate-y-[1px] rounded-full duration-200 ${props.type === 'ans' || props.type === 'question' ? 'p-[6px]' : 'p-[3px]'} hover:bg-dark-plus`}
             >
               <Show
                 when={props.type === 'ans' || props.type === 'question'}
@@ -347,7 +347,7 @@ export default function Input(props: {
                   width={20}
                   height={20}
                   class={
-                    'rotate-45 cursor-pointer text-gray group-hover/refresh:text-active' +
+                    'rotate-45 cursor-pointer text-gray duration-200 group-hover/refresh:text-active' +
                     (refreshing() ? ' animate-rotate-180' : '')
                   }
                 />

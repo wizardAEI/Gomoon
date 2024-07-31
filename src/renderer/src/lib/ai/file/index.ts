@@ -59,6 +59,7 @@ export async function parseFile(file: File): Promise<
         fileLoader.content +
         '</gomoon-image>'
     }
+    console.log(fileLoader.content)
     return {
       suc: true,
       content,
