@@ -47,7 +47,7 @@ export default function () {
     <div class="mx-auto w-full overflow-hidden lg:max-w-4xl">
       <div class="mb-5 animate-scale-down-entrance select-none p-2">
         <div
-          class="group/create relative m-4 flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-dark p-4"
+          class="group/create relative m-4 mx-2 flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-dark p-4"
           onClick={() => {
             createAssistant()
           }}
@@ -74,7 +74,7 @@ export default function () {
               }
             >
               <div
-                class="relative m-4 flex flex-col gap-3 rounded-2xl border-2 border-solid border-transparent bg-dark p-3 duration-150 hover:border-active"
+                class="relative mx-2 my-4 flex flex-col gap-3 rounded-2xl border-2 border-solid border-transparent bg-dark p-3 duration-150 hover:border-active"
                 onClick={async () => {
                   switch (type) {
                     case 'ans':

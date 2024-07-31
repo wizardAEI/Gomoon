@@ -44,7 +44,7 @@ export default function (props: {
     value: m.value
   }))
   return (
-    <div class="relative m-4 rounded-2xl bg-dark p-4 duration-150">
+    <div class="relative mx-2 my-4 rounded-2xl bg-dark p-4 duration-150">
       <Field title="助手名称">
         <input
           type="text"

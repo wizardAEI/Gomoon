@@ -43,7 +43,7 @@ export default function () {
   return (
     <div class="mx-auto w-full overflow-hidden lg:max-w-4xl">
       <div class="mb-5 animate-scale-down-entrance select-none p-2">
-        <div class="m-4 flex gap-2">
+        <div class="mx-2 my-4 flex gap-2">
           <div
             class="group/create relative flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-dark p-4"
             onClick={createNewMemo}
@@ -126,7 +126,7 @@ export default function () {
               }
             >
               <div
-                class="relative m-4 flex flex-col gap-2 rounded-2xl border-2 border-solid border-transparent bg-dark p-4 duration-150 hover:border-active"
+                class="relative mx-2 my-4 flex flex-col gap-2 rounded-2xl border-2 border-solid border-transparent bg-dark p-4 duration-150 hover:border-active"
                 onClick={async () => {
                   setSelectedMemo(m.id)
                   nav(-1)

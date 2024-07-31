@@ -28,7 +28,7 @@ export default function (props: {
     })
   }
   return (
-    <div class="relative m-4 flex flex-col gap-2 rounded-2xl  bg-dark p-4 duration-150">
+    <div class="relative mx-2 my-4 flex flex-col gap-2 rounded-2xl  bg-dark p-4 duration-150">
       <span>记忆名称</span>
       <input
         type="text"
@@ -47,26 +47,26 @@ export default function (props: {
       <div class="my-1 mb-3">
         <div class="mb-2 flex items-center justify-between">
           <span class="flex items-center gap-1">
-            记忆片段
+            记忆片段（支持Md
             <QuestionMention
               content={
                 <span class="text-xs">
-                  文件类型支持.md,<span> </span>
                   <a
                     class="text-xs"
                     href="https://gomoon.top/guide/%E5%BF%AB%E9%80%9F%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BF%86%E8%83%B6%E5%9B%8A"
                   >
-                    快速使用记忆胶囊
+                    将其他格式文件转为markdown文件
                   </a>
                 </span>
               }
             />
+            ）
           </span>
           <div>
             <Switch
               size="sm"
               label={
-                <span>
+                <span class="text-xs">
                   大模型优化
                   <span class="text-xs text-gray"> (当前模型: {userData.selectedModel})</span>
                 </span>

@@ -61,7 +61,7 @@ export function ToastsContainer() {
               }
             >
               <div class="flex animate-popup flex-col gap-2 rounded-lg bg-dark-plus shadow-center">
-                <div class={`m-2 flex items-center gap-1`}>
+                <div class={`m-2 ${toast.text === 'string' ? 'flex items-center gap-1' : ''}`}>
                   <Show when={Icon[toast.type]}>
                     <div class="flex">{Icon[toast.type]}</div>
                   </Show>

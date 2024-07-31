@@ -27,7 +27,7 @@ function ToolWrap(props: { children: JSXElement; onClick?: () => void; active?: 
     <div
       onClick={props.onClick}
       class={
-        'flex cursor-pointer select-none rounded-lg border border-solid  border-dark-con px-1 py-[1px] text-[12px] hover:text-active ' +
+        'flex cursor-pointer select-none rounded-lg border border-solid border-dark-con  px-1 py-[1px] text-[12px] duration-200 hover:text-active ' +
         (props.active ? 'bg-active-con  text-text1' : 'bg-dark-plus hover:border-active')
       }
     >
@@ -177,14 +177,14 @@ export default function Tools(props: {
                     let confirm = true
                     if (res.type !== 'image' && res.content.length > 2000) {
                       confirm = await toast.confirm(
-                        <>
+                        <div>
                           <div class="whitespace-nowrap py-1 text-base">
                             文件已超过2000字，确认发送吗？
                           </div>
                           <div>{`文件过大可能会导致资源浪费和回答出错。(当前字数：${
                             res.length ?? 0
                           })`}</div>
-                        </>
+                        </div>
                       )
                     }
                     confirm &&
@@ -351,13 +351,13 @@ export default function Tools(props: {
               toast
                 .modal(
                   (option) => (
-                    <>
+                    <div>
                       <div class="flex justify-center p-2"> 选择下载类型 </div>
                       <div class="flex gap-2 p-2">
                         <button onClick={() => option.close('md')}> md文档 </button>
                         <button onClick={() => option.close('png')}> png图片 </button>
                       </div>
-                    </>
+                    </div>
                   ),
                   {
                     mask: true

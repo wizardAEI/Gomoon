@@ -4,7 +4,7 @@ export default function (props: SvgProps) {
   return (
     <svg
       class="icon"
-      viewBox="0 0 1024 1024"
+      viewBox="50 50 924 924"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
       p-id="2628"

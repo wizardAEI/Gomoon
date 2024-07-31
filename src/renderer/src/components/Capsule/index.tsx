@@ -13,7 +13,7 @@ import ModelSelect from '../MainSelections/ModelSelect'
 export default function (props: { type: 'chat' | 'ans'; botName: string }) {
   const nav = useNavigate()
   return (
-    <div class="group/capsule fixed left-1/2 top-10 z-20 flex -translate-x-1/2 select-none items-center rounded-xl border-2 border-solid border-dark-con bg-dark-pro">
+    <div class="group/capsule fixed left-1/2 top-10 z-20 flex -translate-x-1/2 select-none items-center rounded-xl border-2 border-solid border-dark-con bg-dark-pro duration-200">
       <div
         onClick={() => {
           nav('/assistants?type=' + props.type)

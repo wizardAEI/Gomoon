@@ -124,7 +124,7 @@ export default function MsgComp(props: {
                                 <div class="flex items-center gap-3">
                                   <input
                                     onInput={(e) => {
-                                      setCollectionName(e.target.value)
+                                      setCollectionName(e.target.value.trim())
                                     }}
                                   />
                                 </div>
