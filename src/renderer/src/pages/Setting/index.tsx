@@ -140,6 +140,40 @@ export default function Setting() {
                 </div>
               </div>
             </Collapse>
+            <Collapse
+              title={
+                <div class="flex items-center gap-2">
+                  <DeepSeekIcon class="rounded-md" height={20} width={20} /> DeepSeek 系列
+                  <QuestionMention
+                    content={
+                      <a class="text-xs" href="https://platform.deepseek.com">
+                        密钥注册地址（注册即送500万token）
+                      </a>
+                    }
+                  />
+                </div>
+              }
+            >
+              <EditInput
+                label="apiKey"
+                value={settingStore.models.DeepSeek.apiKey}
+                onSave={(v) => {
+                  setModels(v.trim(), 'DeepSeek', 'apiKey')
+                }}
+              />
+              <div class="mb-1 flex h-7 items-center gap-4">
+                <span class="font-bold">创造性/随机性</span>
+                <div class="w-60">
+                  <Slider
+                    value={settingStore.models.DeepSeek.temperature}
+                    percentage
+                    onChange={(v) => {
+                      setModels(v, 'DeepSeek', 'temperature')
+                    }}
+                  />
+                </div>
+              </div>
+            </Collapse>
             <Expand
               title={
                 <div class="flex items-center justify-center gap-2 fill-text1">
@@ -154,40 +188,6 @@ export default function Setting() {
                 </div>
               }
             >
-              <Collapse
-                title={
-                  <div class="flex items-center gap-2">
-                    <DeepSeekIcon class="rounded-md" height={20} width={20} /> DeepSeek 系列
-                    <QuestionMention
-                      content={
-                        <a class="text-xs" href="https://platform.deepseek.com">
-                          密钥注册地址（注册即送500万token）
-                        </a>
-                      }
-                    />
-                  </div>
-                }
-              >
-                <EditInput
-                  label="apiKey"
-                  value={settingStore.models.DeepSeek.apiKey}
-                  onSave={(v) => {
-                    setModels(v.trim(), 'DeepSeek', 'apiKey')
-                  }}
-                />
-                <div class="mb-1 flex h-7 items-center gap-4">
-                  <span class="font-bold">创造性/随机性</span>
-                  <div class="w-60">
-                    <Slider
-                      value={settingStore.models.DeepSeek.temperature}
-                      percentage
-                      onChange={(v) => {
-                        setModels(v, 'DeepSeek', 'temperature')
-                      }}
-                    />
-                  </div>
-                </div>
-              </Collapse>
               <Collapse
                 title={
                   <div class="flex items-center gap-2">

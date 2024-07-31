@@ -57,7 +57,8 @@ export default function EditInput(
           <Show when={props.type !== 'number'}>
             <SaveIcon
               height={20}
-              class="absolute right-0 top-1 cursor-pointer text-gray hover:text-active"
+              width={20}
+              class="absolute right-1 top-1 cursor-pointer text-gray hover:text-active"
               onClick={onSave}
             />
           </Show>

@@ -7,6 +7,7 @@ import { full as emoji } from 'markdown-it-emoji'
 import SpeechIcon from '@renderer/assets/icon/SpeechIcon'
 import FindIcon from '@renderer/assets/icon/FindIcon'
 import { load } from 'cheerio'
+import { escape, escapeRegExp } from 'lodash'
 
 export default function Md(props: {
   class: string
@@ -139,9 +140,12 @@ export default function Md(props: {
           if (elem.type === 'text') {
             // 如果是文本节点，则替换文本
             const text = $(elem).text()
+            // 检查是否有匹配
+            const regExp = new RegExp(escapeRegExp(findContent()), 'gi')
+            if (!regExp.test(text)) return
             const newText = text.replace(
-              new RegExp(findContent(), 'gi'),
-              `<span class="bg-active rounded-sm">${findContent()}</span>`
+              regExp,
+              (match) => `<span class="bg-active rounded-sm">${escape(match)}</span>`
             )
             $(elem).replaceWith(newText)
           } else if (
