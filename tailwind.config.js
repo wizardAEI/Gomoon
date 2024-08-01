@@ -57,25 +57,25 @@ module.exports = {
             'cyber-pro': 'linear-gradient(to right, #2d6170, #006089, #005aa0, #364cac, #792ba4)', // 赛博蓝渐变色↑
             'active-gradient': 'linear-gradient(to bottom right, #ae79f1, #9366cb)', // 淡紫色渐变色
             'green-gradient': 'linear-gradient(to bottom right, #007a93, #078170)', // 绿色渐变色
-            home: 'linear-gradient(to top, #040c17, #0d1821, #10212b, #132b35, #16353e)' // 深蓝灰转深蓝绿
+            home: 'linear-gradient(to top, #040c17, #0d141c, #0f171e, #12222b, #132b35);' // 深蓝灰转深蓝绿
           },
           colors: {
             active: '#a57bea', // 激活色 亮紫色
             'active-con': '#7c56ba', // 激活色 深紫
-            gray: '#869d9d', // 非激活色 淡紫灰色
+            gray: '#688083', // 非激活色 淡紫灰色
+            'gray-pro': '#597276', // 非激活色↑ 浅紫灰色
             'inline-code': '#869d9d', // 非激活色 浅紫灰色
             code: '#132c33', // 非激活色 浅紫灰色
-            'gray-pro': '#93a5a6', // 非激活色↑ 浅紫灰色
-            'dark-con': '#436565', // 暗色稍微亮一点
-            'home-top': '#16353e', // 首页顶部渐变色
-            dark: '#22444e', // 暗色 深蓝绿
-            'dark-plus': '#1f3d48', // 暗色稍微深一点
-            'dark-pro': '#152431', // 暗色↑
+            'dark-con': '#1E3B46', // 暗色稍微亮一点
+            'home-top': '#132b35', // 首页顶部渐变色
+            dark: '#1E3843', // 暗色 深蓝绿
+            'dark-plus': '#1B313C', // 暗色稍微深一点
+            'dark-pro': '#1A2C37', // 暗色↑
             light: '#e2e1e4', // 亮色 芡食白
             'light-gray': '#c4cbcf', // 大理石灰
-            text1: '#d8e3e7', // 云峰白
-            text2: '#d0dfe6', // 远天蓝
-            text3: '#d0dfe680', // 远天蓝70%
+            text1: '#D0DFE6', // 云峰白
+            text2: '#C7D7DE', // 远天蓝
+            text3: '#C7D7DE80', // 远天蓝70%
             'text-code': '#abb2bf', // 云峰白
             'text-active': '#d8e3e7', // 激活的背景上的文字
             'text-dark': '#151b26', // 深色

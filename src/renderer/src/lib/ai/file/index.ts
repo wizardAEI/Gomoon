@@ -53,7 +53,7 @@ export async function parseFile(file: File): Promise<
         `<gomoon-file src="${fileLoader.src}" filename="${fileLoader.filename}">这是一个${type}文件的文本内容：\n` +
         fileLoader.content +
         '</gomoon-file>'
-    } else {
+    } else if (fileLoader.type === 'image') {
       content =
         `<gomoon-image src="${fileLoader.src}" filename="${fileLoader.filename}">` +
         fileLoader.content +
