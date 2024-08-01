@@ -163,7 +163,7 @@ export default async function (
         }
       })
     })
-    return { suc: true, result: '已复制到剪切板' }
+    return { suc: true, result: '已复制到剪贴板' }
   }
   const a = document.createElement('a')
   a.href = data

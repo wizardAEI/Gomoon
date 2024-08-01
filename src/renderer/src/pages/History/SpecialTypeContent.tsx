@@ -11,17 +11,14 @@ import { decorateContent } from './utils'
 export default function SpecialTypeContent(meta: ContentDisplay, displayFull?: boolean) {
   if (meta.type === 'file') {
     return (
-      <div
-        onClick={() => {
-          if (displayFull) {
-            window.api.openPath(meta.src)
-          }
-        }}
-        class="inline-flex cursor-pointer items-center overflow-hidden"
-      >
-        <BaseFileIcon class="shrink-0 grow-0 text-text2" width={18} height={18} />
-        <span class="truncate text-text2">{decorateContent(meta.filename)}</span>
-      </div>
+      <span class="inline-flex items-start break-words pr-1">
+        <BaseFileIcon
+          class="shrink-0 grow-0 translate-y-[2px] pr-[2px] text-text2"
+          width={17}
+          height={17}
+        />
+        <span class="text-text2">{decorateContent(meta.filename)}</span>
+      </span>
     )
   }
   if (meta.type === 'url') {

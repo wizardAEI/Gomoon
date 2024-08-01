@@ -10,8 +10,7 @@ import { settingStore } from '@renderer/store/setting'
 
 import SpecialTypeContent from './SpecialTypeContent'
 import Md, { mdToText } from './Md'
-import { MsgPopupForSpecialContent, MsgPopupForUser, Pause, WithDrawal } from './Popup'
-import MsgPopup from './Comp'
+import MsgPopup, { MsgPopupForSpecialContent, MsgPopupForUser, Pause, WithDrawal } from './Actions'
 export type MsgTypes = Roles | 'ans' | 'question'
 export const style: Record<MsgTypes, string> = {
   ai: 'bg-dark',
@@ -125,37 +124,48 @@ export default function Message(props: {
   })
   return (
     <div class="group relative max-w-full">
-      <Show
-        when={
-          (props.id && msgStatus.generatingList.includes(props.id)) ||
-          (props.type === 'ans' && ansStatus.isGenerating)
-        }
-      >
-        <Pause id={props.id} type={props.type} />
-      </Show>
-      <Show
-        when={!props.editing}
-        fallback={
-          <Show when={props.id && !msgStatus.generatingList.includes(props.id)}>
-            <WithDrawal type={props.type} />
-          </Show>
-        }
-      >
+      <div class={style[props.type] + ' relative mx-3 my-4 rounded-xl px-3 py-[10px]'}>
         <Show
-          when={showCompsByUser()}
-          fallback={
-            <MsgPopupForSpecialContent type={props.type} onRemove={props.onRemove || (() => {})} />
+          when={
+            (props.id && msgStatus.generatingList.includes(props.id)) ||
+            (props.type === 'ans' && ansStatus.isGenerating)
           }
         >
-          <MsgPopupForUser
+          <Pause id={props.id} type={props.type} />
+        </Show>
+        <Show when={showComps() && !props.editing}>
+          <MsgPopup
             type={props.type}
             id={props.id || ''}
             content={props.content}
-            onRemove={props.onRemove || (() => {})}
+            onSpeak={speakMd}
           />
         </Show>
-      </Show>
-      <div class={style[props.type] + ' relative mx-3 my-2 rounded-xl px-3 py-2'}>
+        <Show
+          when={!props.editing}
+          fallback={
+            <Show when={props.id && !msgStatus.generatingList.includes(props.id)}>
+              <WithDrawal type={props.type} />
+            </Show>
+          }
+        >
+          <Show
+            when={showCompsByUser()}
+            fallback={
+              <MsgPopupForSpecialContent
+                type={props.type}
+                onRemove={props.onRemove || (() => {})}
+              />
+            }
+          >
+            <MsgPopupForUser
+              type={props.type}
+              id={props.id || ''}
+              content={props.content}
+              onRemove={props.onRemove || (() => {})}
+            />
+          </Show>
+        </Show>
         <For each={meta()}>
           {(m) =>
             m.type === 'text' ? (
@@ -165,14 +175,6 @@ export default function Message(props: {
             )
           }
         </For>
-        <Show when={showComps() && !props.editing}>
-          <MsgPopup
-            type={props.type}
-            id={props.id || ''}
-            content={props.content}
-            onSpeak={speakMd}
-          />
-        </Show>
       </div>
     </div>
   )
