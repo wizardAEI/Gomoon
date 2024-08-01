@@ -62,7 +62,7 @@ export function ToastsContainer() {
                 'fixed left-1/2 z-50 -translate-x-1/2 select-none text-text1 ' + toast.position
               }
             >
-              <div class="flex animate-popup flex-col gap-2 rounded-lg bg-dark-plus p-5 shadow-center">
+              <div class="flex animate-popup flex-col gap-2 rounded-lg bg-dark-con p-5 shadow-center">
                 <div class={`flex items-center gap-1`}>
                   <Show when={Icon[toast.type]}>
                     <div class="flex">{Icon[toast.type]}</div>

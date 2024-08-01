@@ -1,5 +1,5 @@
 import { join } from 'path'
-import { existsSync, mkdirSync, writeFileSync } from 'fs'
+import { existsSync, mkdirSync, rmdirSync, writeFileSync } from 'fs'
 
 import { app } from 'electron'
 
@@ -37,19 +37,25 @@ export async function activateTokenizer() {
   })
   const url = 'https://vip.123pan.cn/1830083732/update/embedding/Xenova/jina-embeddings-v2-base-zh/'
   const fileList = ['config.json', 'tokenizer.json', 'tokenizer_config.json']
-  await Promise.all(
-    fileList.map(async (fileName) => {
-      const filePath = join(appDataPath, getEmbeddingModel(), fileName)
-      const response = await fetch(url + fileName)
-      if (response.status === 200) {
-        const buffer = Buffer.from(await response.arrayBuffer())
-        writeFileSync(filePath, buffer)
-      } else {
-        throw new Error('Failed to download file: ' + fileName)
-      }
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+  try {
+    await Promise.all(
+      fileList.map(async (fileName) => {
+        const filePath = join(appDataPath, getEmbeddingModel(), fileName)
+        const response = await fetch(url + fileName)
+        if (response.status === 200) {
+          const buffer = Buffer.from(await response.arrayBuffer())
+          writeFileSync(filePath, buffer)
+        } else {
+          throw new Error('Failed to download file: ' + fileName)
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+      })
+    )
+  } catch (e) {
+    rmdirSync(join(appDataPath, getEmbeddingModel()), {
+      recursive: true
     })
-  )
+  }
   haveActivatedTokenizer = true
 }
 
@@ -62,8 +68,13 @@ export async function tokenize(text: string) {
   env.localModelPath = appDataPath
   env.backends.onnx.wasm.numThreads = 1
   env.backends.onnx.logLevel = 'info'
-  const tokenizer = await AutoTokenizer.from_pretrained(getEmbeddingModel())
-  // Run tokenization
-  const text_inputs = tokenizer.encode(text)
-  return text_inputs
+  try {
+    const tokenizer = await AutoTokenizer.from_pretrained(getEmbeddingModel())
+    // Run tokenization
+    const text_inputs = tokenizer.encode(text)
+    return text_inputs
+  } catch (e) {
+    console.error(e)
+    return []
+  }
 }

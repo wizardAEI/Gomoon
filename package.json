@@ -93,5 +93,5 @@
     "vite": "^5.2.10",
     "vite-plugin-solid": "^2.10.2"
   },
-  "packageManager": "pnpm@9.6.0"
+  "packageManager": "yarn@1.22.22"
 }
