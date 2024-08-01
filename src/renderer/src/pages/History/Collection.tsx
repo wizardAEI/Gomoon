@@ -57,7 +57,7 @@ export default function Collection(props: { searchText: string }) {
                       onClick={() => {
                         toast
                           .confirm(
-                            <div class="flex items-center gap-1 pt-4">
+                            <div class="flex items-center gap-1">
                               <WarningIcon width={24} height={24} class="text-warning" />
                               确定删除合集所有内容吗？
                             </div>,

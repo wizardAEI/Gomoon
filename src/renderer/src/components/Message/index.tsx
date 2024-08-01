@@ -133,15 +133,6 @@ export default function Message(props: {
         >
           <Pause id={props.id} type={props.type} />
         </Show>
-        <For each={meta()}>
-          {(m) =>
-            m.type === 'text' ? (
-              <Md class={mdStyle[props.type]} content={m.content} onSpeak={speakText} />
-            ) : (
-              SpecialTypeContent(m, mdStyle[props.type])
-            )
-          }
-        </For>
         <Show when={showComps() && !props.editing}>
           <MsgPopup
             type={props.type}
@@ -175,6 +166,15 @@ export default function Message(props: {
             />
           </Show>
         </Show>
+        <For each={meta()}>
+          {(m) =>
+            m.type === 'text' ? (
+              <Md class={mdStyle[props.type]} content={m.content} onSpeak={speakText} />
+            ) : (
+              SpecialTypeContent(m, mdStyle[props.type])
+            )
+          }
+        </For>
       </div>
     </div>
   )

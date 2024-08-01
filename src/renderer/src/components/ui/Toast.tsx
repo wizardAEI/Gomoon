@@ -14,6 +14,8 @@ import {
 } from 'solid-js'
 import { Portal } from 'solid-js/web'
 
+import Button from './Button'
+
 export interface ToastType {
   id: number
   text: string | JSXElement
@@ -60,8 +62,8 @@ export function ToastsContainer() {
                 'fixed left-1/2 z-50 -translate-x-1/2 select-none text-text1 ' + toast.position
               }
             >
-              <div class="flex animate-popup flex-col gap-2 rounded-lg bg-dark-plus shadow-center">
-                <div class={`m-2 flex items-center gap-1`}>
+              <div class="flex animate-popup flex-col gap-2 rounded-lg bg-dark-plus p-5 shadow-center">
+                <div class={`flex items-center gap-1`}>
                   <Show when={Icon[toast.type]}>
                     <div class="flex">{Icon[toast.type]}</div>
                   </Show>
@@ -72,23 +74,21 @@ export function ToastsContainer() {
                   )}
                 </div>
                 <Show when={toast.type === 'confirm'}>
-                  <div class="mb-4 flex w-full justify-around">
-                    <button
-                      class="py-1"
+                  <div class="mt-2 flex w-full justify-around">
+                    <Button
                       onClick={() => {
                         toast.callback!(false)
                       }}
                     >
                       取消
-                    </button>
-                    <button
-                      class="py-1"
+                    </Button>
+                    <Button
                       onClick={() => {
                         toast.callback!(true)
                       }}
                     >
                       确定
-                    </button>
+                    </Button>
                   </div>
                 </Show>
               </div>
