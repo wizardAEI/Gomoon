@@ -12,6 +12,7 @@ import LlamaIcon from '@renderer/assets/icon/models/LlamaIcon'
 import OllamaIcon from '@renderer/assets/icon/models/OllamaIcon'
 import CustomIcon from '@renderer/assets/icon/models/CustomIcon'
 import DeepSeekIcon from '@renderer/assets/icon/models/DeepSeekIcon'
+import ClaudeIcon from '@renderer/assets/icon/models/ClaudeIcon'
 
 import ScrollBox from '../ScrollBox'
 
@@ -319,6 +320,53 @@ export function getModelOptions() {
       value: 'Ollama',
       maxToken: modelDict['Ollama'].maxToken
     })
+  }
+
+  if (settingStore.models.Claude.apiKey) {
+    options.push(
+      {
+        label: <span>{modelDict['ClaudeHaiku'].label}</span>,
+        icon(size: number) {
+          return (
+            <ClaudeIcon
+              width={size}
+              height={size}
+              class="cursor-pointer overflow-hidden rounded-md"
+            />
+          )
+        },
+        value: 'ClaudeHaiku',
+        maxToken: modelDict['ClaudeHaiku'].maxToken
+      },
+      {
+        label: <span>{modelDict['ClaudeOpus'].label}</span>,
+        icon(size: number) {
+          return (
+            <ClaudeIcon
+              width={size}
+              height={size}
+              class="cursor-pointer overflow-hidden rounded-md"
+            />
+          )
+        },
+        value: 'ClaudeOpus',
+        maxToken: modelDict['ClaudeOpus'].maxToken
+      },
+      {
+        label: <span>{modelDict['ClaudeSonnet'].label}</span>,
+        icon(size: number) {
+          return (
+            <ClaudeIcon
+              width={size}
+              height={size}
+              class="cursor-pointer overflow-hidden rounded-md"
+            />
+          )
+        },
+        value: 'ClaudeSonnet',
+        maxToken: modelDict['ClaudeSonnet'].maxToken
+      }
+    )
   }
 
   if (settingStore.models.CustomModel.customModel && settingStore.models.CustomModel.apiKey) {

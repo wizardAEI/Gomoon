@@ -20,6 +20,20 @@
     "@jridgewell/gen-mapping" "^0.3.5"
     "@jridgewell/trace-mapping" "^0.3.24"
 
+"@anthropic-ai/sdk@^0.22.0":
+  version "0.22.0"
+  resolved "https://registry.npmmirror.com/@anthropic-ai/sdk/-/sdk-0.22.0.tgz#548e4218d9810fd494e595d4e57cb2d46d301a1a"
+  integrity sha512-dv4BCC6FZJw3w66WNLsHlUFjhu19fS1L/5jMPApwhZLa/Oy1j0A2i3RypmDtHEPp4Wwg3aZkSHksp7VzYWjzmw==
+  dependencies:
+    "@types/node" "^18.11.18"
+    "@types/node-fetch" "^2.6.4"
+    abort-controller "^3.0.0"
+    agentkeepalive "^4.2.1"
+    form-data-encoder "1.7.2"
+    formdata-node "^4.3.2"
+    node-fetch "^2.6.7"
+    web-streams-polyfill "^3.2.1"
+
 "@anthropic-ai/sdk@^0.9.1":
   version "0.9.1"
   resolved "https://registry.npmmirror.com/@anthropic-ai/sdk/-/sdk-0.9.1.tgz#b2d2b7bf05c90dce502c9a2e869066870f69ba88"
@@ -591,6 +605,17 @@
   version "0.4.20"
   resolved "https://registry.npmmirror.com/@lancedb/vectordb-win32-x64-msvc/-/vectordb-win32-x64-msvc-0.4.20.tgz#0a82042bc397b449bd35eb414582c31486734b43"
   integrity sha512-5J5SsYSJ7jRCmU/sgwVHdrGz43B/7R2T9OEoFTKyVAtqTZdu75rkytXyn9SyEayXVhlUOaw76N0ASm0hAoDS/A==
+
+"@langchain/anthropic@^0.2.12":
+  version "0.2.12"
+  resolved "https://registry.npmmirror.com/@langchain/anthropic/-/anthropic-0.2.12.tgz#78b6e79030f6911eb89b3647a239a1c7fb34948d"
+  integrity sha512-F74kgQiHHLMSc1CYB3wAPh6ou+ql8ExOqeOMe/NPwK8MuMqC6By/44lAtuV/hOSE/pUmQCNfJmnYwuwteXCXRA==
+  dependencies:
+    "@anthropic-ai/sdk" "^0.22.0"
+    "@langchain/core" ">=0.2.16 <0.3.0"
+    fast-xml-parser "^4.3.5"
+    zod "^3.22.4"
+    zod-to-json-schema "^3.22.4"
 
 "@langchain/community@^0.2.20":
   version "0.2.22"
@@ -3636,6 +3661,13 @@ fast-levenshtein@^2.0.6:
   version "2.0.6"
   resolved "https://registry.npmmirror.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
   integrity sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==
+
+fast-xml-parser@^4.3.5:
+  version "4.4.1"
+  resolved "https://registry.npmmirror.com/fast-xml-parser/-/fast-xml-parser-4.4.1.tgz#86dbf3f18edf8739326447bcaac31b4ae7f6514f"
+  integrity sha512-xkjOecfnKGkSsOwtZ5Pz7Us/T6mrbPQrq0nh+aCO5V9nk5NLWmasAHumTKjiPJPWANe+kAZ84Jc8ooJkzZ88Sw==
+  dependencies:
+    strnum "^1.0.5"
 
 fastq@^1.6.0:
   version "1.17.1"
@@ -6822,6 +6854,11 @@ strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.npmmirror.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
   integrity sha512-4gB8na07fecVVkOI6Rs4e7T6NOTki5EmL7TUduTs6bu3EdnSycntVJ4re8kgZA+wx9IueI2Y11bfbgwtzuE0KQ==
+
+strnum@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.npmmirror.com/strnum/-/strnum-1.0.5.tgz#5c4e829fe15ad4ff0d20c3db5ac97b73c9b072db"
+  integrity sha512-J8bbNyKKXl5qYcR36TIO8W3mVGVHrmmxsd5PAItGkmyzwJvybiw2IVq5nqd0i4LSNSkB/sx9VHllbfFdr9k1JA==
 
 strtok3@^6.2.4:
   version "6.3.0"

@@ -149,7 +149,9 @@ const cors: {
     'https://aip.baidubce.com/*',
     'https://api.openai.com/*',
     'https://api.moonshot.cn/*',
-    'https://generativelanguage.googleapis.com/*'
+    'https://generativelanguage.googleapis.com/*',
+    'https://galaxyapi.onrender.com/*',
+    'https://api.anthropic.com/*'
   ],
   handler: (details, callback) => {
     const { origin, host } = new URL(details.url)

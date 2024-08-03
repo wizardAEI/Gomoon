@@ -23,6 +23,7 @@ import { useToast } from '@renderer/components/ui/Toast'
 import CustomIcon from '@renderer/assets/icon/models/CustomIcon'
 import DeepSeekIcon from '@renderer/assets/icon/models/DeepSeekIcon'
 import { SettingFontFamily } from 'src/main/models/model'
+import ClaudeIcon from '@renderer/assets/icon/models/ClaudeIcon'
 
 import {
   settingStore,
@@ -377,6 +378,41 @@ export default function Setting() {
                       percentage
                       onChange={(v) => {
                         setModels(v, 'Ollama', 'temperature')
+                      }}
+                    />
+                  </div>
+                </div>
+              </Collapse>
+              <Collapse
+                title={
+                  <div class="flex items-center gap-2">
+                    <ClaudeIcon class="rounded-md" height={20} width={20} /> Claude 系列
+                  </div>
+                }
+              >
+                <EditInput
+                  label="apiKey"
+                  value={settingStore.models.Claude.apiKey}
+                  onSave={(v) => {
+                    setModels(v.trim(), 'Claude', 'apiKey')
+                  }}
+                />
+                <EditInput
+                  label="baseURL"
+                  optional
+                  value={settingStore.models.Claude.baseURL}
+                  onSave={(v) => {
+                    setModels(v.trim(), 'Claude', 'baseURL')
+                  }}
+                />
+                <div class="mb-1 flex h-7 items-center gap-4">
+                  <span class="font-bold">创造性/随机性</span>
+                  <div class="w-60">
+                    <Slider
+                      value={settingStore.models.Claude.temperature}
+                      percentage
+                      onChange={(v) => {
+                        setModels(v, 'Claude', 'temperature')
                       }}
                     />
                   </div>

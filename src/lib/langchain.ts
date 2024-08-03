@@ -2,6 +2,7 @@ import { ChatAlibabaTongyi } from '@langchain/community/chat_models/alibaba_tong
 import type { ChatLlamaCpp } from '@langchain/community/chat_models/llama_cpp'
 import { ChatBaiduWenxin } from '@langchain/community/chat_models/baiduwenxin'
 import { ChatOllama } from '@langchain/community/chat_models/ollama'
+import { ChatAnthropic } from '@langchain/anthropic'
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
 import { HumanMessage, SystemMessage, AIMessage } from '@langchain/core/messages'
 import type { BaseMessage, MessageContent } from 'langchain/schema'
@@ -18,6 +19,7 @@ export type ModelInterfaceType =
   | ChatGoogleGenerativeAI
   | ChatLlamaCpp
   | ChatOllama
+  | ChatAnthropic
   | {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       invoke: any
@@ -62,6 +64,11 @@ export interface Models {
     baseURL: string
     temperature: number
   }
+  Claude: {
+    apiKey: string
+    baseURL: string
+    temperature: number
+  }
   CustomModel: {
     apiKey: string
     baseURL: string
@@ -89,6 +96,9 @@ export type ModelsType =
   | 'Moonshot32k'
   | 'Moonshot128k'
   | 'Ollama'
+  | 'ClaudeSonnet'
+  | 'ClaudeOpus'
+  | 'ClaudeHaiku'
   | 'CustomModel'
 
 export const modelDict: {
@@ -170,6 +180,18 @@ export const modelDict: {
     label: 'Ollama',
     maxToken: 0
   },
+  ClaudeSonnet: {
+    label: 'Claude Sonnet',
+    maxToken: 200000
+  },
+  ClaudeOpus: {
+    label: 'Claude Opus',
+    maxToken: 200000
+  },
+  ClaudeHaiku: {
+    label: 'Claude Haiku',
+    maxToken: 200000
+  },
   CustomModel: {
     label: '自定义模型',
     maxToken: 0
@@ -211,6 +233,11 @@ export const defaultModels: () => Models = () => ({
     temperature: 0.3
   },
   Moonshot: {
+    baseURL: '',
+    apiKey: '',
+    temperature: 0.3
+  },
+  Claude: {
     baseURL: '',
     apiKey: '',
     temperature: 0.3
@@ -400,6 +427,16 @@ export const newOllamaModel = (config: { address: string; model: string; tempera
   return chatOllama
 }
 
+export const newClaudeModel = (config: Models['Claude'], modelName: string) =>
+  new ChatAnthropic({
+    maxTokens: 10000, // TODO: 后续优化，找到合适的token数量
+    streaming: true,
+    anthropicApiKey: config.apiKey || 'api-key',
+    model: modelName,
+    temperature: config.temperature,
+    anthropicApiUrl: config.baseURL
+  })
+
 export const newCustomModel = (model: Models['CustomModel']) =>
   new ChatOpenAI({
     streaming: true,
@@ -435,6 +472,9 @@ export const loadLMMap = async (
   Moonshot128k: newMoonshotModel(model.Moonshot, 'moonshot-v1-128k'),
   Llama: newChatLlama(model.Llama),
   Ollama: newOllamaModel(model.Ollama),
+  ClaudeHaiku: newClaudeModel(model.Claude, 'claude-3-haiku-20240307'),
+  ClaudeSonnet: newClaudeModel(model.Claude, 'claude-3-5-sonnet-20240620'),
+  ClaudeOpus: newClaudeModel(model.Claude, 'claude-3-opus-20240229'),
   CustomModel: newCustomModel(model.CustomModel)
 })
 
