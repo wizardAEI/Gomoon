@@ -4,18 +4,17 @@ import { ulid } from 'ulid'
 import { ErrorDict } from '@renderer/lib/constant'
 import { extractMeta } from '@renderer/lib/ai/parseString'
 import { createEffect } from 'solid-js'
-
-import { addHistory } from './history'
-import { getCurrentAssistantForAnswer } from './assistants'
 import { consumedToken, setConsumedTokenForAns } from './input'
 
 let trash = {
+  id: '',
   answer: '',
   question: '',
   consumedToken: 0
 }
 function initTrash() {
   trash = {
+    id: '',
     answer: '',
     question: '',
     consumedToken: 0
@@ -23,19 +22,21 @@ function initTrash() {
 }
 
 const [answerStore, setAnswerStore] = createStore(
-  localStorage.getItem('answer_answer')
-    ? (JSON.parse(localStorage.getItem('answer_answer')!) as {
+  localStorage.getItem('answer_msgs')
+    ? (JSON.parse(localStorage.getItem('answer_msgs')!) as {
+        id: string
         answer: string
         question: string
       })
     : {
+        id: '',
         answer: '',
         question: ''
       }
 )
 
 createEffect(() => {
-  localStorage.setItem('answer_answer', JSON.stringify(answerStore))
+  localStorage.setItem('answer_msgs', JSON.stringify(answerStore))
 })
 
 const [ansStatus, setAnsStatus] = createStore({
@@ -55,6 +56,7 @@ export function setGeneratingStatus(status: boolean) {
 export async function genAns(q: string) {
   controller = new AbortController()
   const initialContent = '......'
+  setAnswerStore('id', ulid())
   setAnswerStore('answer', initialContent)
   setAnswerStore('question', q)
   setGeneratingStatus(true)
@@ -108,32 +110,16 @@ export function reGenAns() {
   genAns(answerStore.question)
 }
 
-export async function saveAns() {
-  return addHistory({
-    id: ulid(),
-    type: 'ans',
-    assistantId: getCurrentAssistantForAnswer()?.id,
-    contents: [
-      {
-        role: 'question',
-        content: answerStore.question
-      },
-      {
-        role: 'ans',
-        content: answerStore.answer
-      }
-    ]
-  })
-}
-
 export function clearAns() {
   stopGenAns()
   trash = {
+    id: answerStore.id,
     answer: answerStore.answer,
     question: answerStore.question,
     consumedToken: consumedToken().ans
   }
   setConsumedTokenForAns(0)
+  setAnswerStore('id', ulid())
   setAnswerStore('answer', '')
   setAnswerStore('question', '')
 }

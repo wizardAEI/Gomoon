@@ -22,6 +22,7 @@ export interface ToastType {
   type: string
   position: string
   mask: boolean
+  size: 'small' | 'normal'
   callback?: (res: boolean | PromiseLike<boolean>) => unknown
 }
 
@@ -29,6 +30,7 @@ interface ToastOption {
   duration?: number
   position?: string
   mask?: boolean
+  size?: 'small' | 'normal'
 }
 
 const UIContext = createContext<{
@@ -62,7 +64,9 @@ export function ToastsContainer() {
                 'fixed left-1/2 z-50 -translate-x-1/2 select-none text-text1 ' + toast.position
               }
             >
-              <div class="flex animate-popup flex-col gap-2 rounded-lg bg-dark-con p-5 shadow-center">
+              <div
+                class={`flex animate-popup flex-col gap-2 rounded-lg bg-dark-con shadow-center ${{ small: 'p-2', normal: 'p-5' }[toast.size || 'normal']}`}
+              >
                 <div class={`flex items-center gap-1`}>
                   <Show when={Icon[toast.type]}>
                     <div class="flex">{Icon[toast.type]}</div>
@@ -118,9 +122,16 @@ export function ToastProvider(props: { children: JSX.Element }) {
 
 export function useToast() {
   const { setToasts: setShowToast } = useContext(UIContext)!
-  function show(text: string, type: string, duration: number, position: string, mask = false) {
+  function show(
+    text: string,
+    type: string,
+    duration: number,
+    position: string,
+    mask = false,
+    size: ToastOption['size'] = 'small'
+  ) {
     const id = Date.now()
-    setShowToast((t) => [...t, { id, text, type, position, mask }])
+    setShowToast((t) => [...t, { id, text, type, position, mask, size }])
     setTimeout(() => {
       setShowToast((ts) => ts.filter((t) => t.id !== id))
     }, duration)
@@ -143,7 +154,8 @@ export function useToast() {
             setShowToast((ts) => ts.filter((t) => t.id !== id))
             resolve(res)
           },
-          mask
+          mask,
+          size: 'normal'
         }
       ])
     })
@@ -164,20 +176,49 @@ export function useToast() {
           }),
           type: 'modal',
           position,
-          mask
+          mask,
+          size: 'normal'
         }
       ])
     })
   }
   return {
     success: (text: string, option: ToastOption = {}) =>
-      show(text, 'success', option.duration || 1500, option.position || 'top-1/3', option.mask),
+      show(
+        text,
+        'success',
+        option.duration || 1500,
+        option.position || 'top-1/3',
+        option.mask,
+        option.size
+      ),
     warning: (text: string, option: ToastOption = {}) =>
-      show(text, 'warning', option.duration || 1500, option.position || 'top-1/3', option.mask),
+      show(
+        text,
+        'warning',
+        option.duration || 1500,
+        option.position || 'top-1/3',
+        option.mask,
+        option.size
+      ),
     error: (text: string, option: ToastOption = {}) =>
-      show(text, 'error', option.duration || 1500, option.position || 'top-1/3', option.mask),
+      show(
+        text,
+        'error',
+        option.duration || 1500,
+        option.position || 'top-1/3',
+        option.mask,
+        option.size
+      ),
     info: (text: string, option: ToastOption = {}) =>
-      show(text, 'info', option.duration || 1500, option.position || 'top-1/3', option.mask),
+      show(
+        text,
+        'info',
+        option.duration || 1500,
+        option.position || 'top-1/3',
+        option.mask,
+        option.size
+      ),
     clear: () => setShowToast([]),
     confirm: (text: string | JSXElement, option: ToastOption = {}) =>
       showConfirm(text, option.position || 'top-1/3', option.mask),

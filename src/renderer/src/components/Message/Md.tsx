@@ -5,9 +5,32 @@ import mdHighlight from 'markdown-it-highlightjs'
 import katex from '@vscode/markdown-it-katex'
 import { full as emoji } from 'markdown-it-emoji'
 import SpeechIcon from '@renderer/assets/icon/SpeechIcon'
-import FindIcon from '@renderer/assets/icon/FindIcon'
 import { load } from 'cheerio'
 import { escape, escapeRegExp } from 'lodash'
+import SearchIcon from '@renderer/assets/icon/base/SearchIcon'
+
+function customPostProcessor(md: MarkdownIt) {
+  // latex_optimize 需要在 inline rule 之前，否则修改不会生效
+  md.core.ruler.before('inline', 'latex_optimize', (state) => {
+    const tokens = state.tokens
+    for (let i = 0; i < tokens.length; i++) {
+      if (tokens[i].type === 'inline') {
+        const contents = tokens[i].content.split('`')
+        tokens[i].content = contents
+          .map((v, i) => {
+            if (i % 2 === 0 || i === contents.length - 1) {
+              return v
+                .replace(/\\\[([\s\S]*?)\\\]/g, '$$$$$1$$$$')
+                .replace(/\\\(([\s\S]*?)\\\)/g, '$$$1$$')
+            }
+            return v
+          })
+          .join('`')
+        contents
+      }
+    }
+  })
+}
 
 export default function Md(props: {
   class: string
@@ -78,8 +101,11 @@ export default function Md(props: {
       linkify: true,
       breaks: true
     })
+      .use(customPostProcessor)
       .use(mdHighlight)
-      .use(katex)
+      .use(katex, {
+        throwOnError: false
+      })
       .use(emoji)
 
     // FEAT: 限制图片宽度
@@ -169,7 +195,7 @@ export default function Md(props: {
         innerHTML={htmlString()}
       />
       <Show when={showSelectBtn()}>
-        <div ref={btn} class="fixed flex gap-1 rounded-[10px] bg-dark-plus px-1 py-[2px]">
+        <div ref={btn} class="fixed flex gap-1 rounded-lg bg-dark-con px-1 py-[2px]">
           <SpeechIcon
             onClick={() => {
               props.onSpeak?.(selectContent)
@@ -179,7 +205,7 @@ export default function Md(props: {
             width={22}
             class="cursor-pointer text-gray duration-100 hover:text-active"
           />
-          <FindIcon
+          <SearchIcon
             onClick={findText}
             height={20}
             width={20}

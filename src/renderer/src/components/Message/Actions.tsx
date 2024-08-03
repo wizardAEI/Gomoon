@@ -7,19 +7,22 @@ import WithdrawalIcon from '@renderer/assets/icon/base/WithdrawalICon'
 import PauseIcon from '@renderer/assets/icon/base/PauseIcon'
 import { stopGenMsg } from '@renderer/store/chat'
 import TrashIcon from '@renderer/assets/icon/TrashIcon'
-import { stopGenAns } from '@renderer/store/answer'
-import { reGenAns, saveAns } from '@renderer/store/answer'
+import { answerStore, stopGenAns } from '@renderer/store/answer'
+import { reGenAns } from '@renderer/store/answer'
 import RetryIcon from '@renderer/assets/icon/base/RetryIcon'
 import SpeechIcon from '@renderer/assets/icon/SpeechIcon'
 import SaveIcon from '@renderer/assets/icon/base/SaveIcon'
 import CollectionIcon from '@renderer/assets/icon/CollectionIcon'
 import { addCollection, collections, createCollection } from '@renderer/store/collection'
 import EmptyIcon from '@renderer/assets/icon/base/EmptyIcon'
+import { historyManager } from '@renderer/store/history'
+import { getCurrentAssistantForAnswer } from '@renderer/store/assistants'
 
 import { useToast } from '../ui/Toast'
 import ScrollBox from '../ScrollBox'
 import { compWithTip } from '../ui/compWithTip'
 import ToolTip from '../ui/ToolTip'
+import Button from '../ui/Button'
 
 import { MsgTypes } from '.'
 
@@ -130,15 +133,14 @@ export function MsgPopupContents(props: {
                         <Show
                           when={addNewCollection()}
                           fallback={
-                            <button
-                              class="py-1"
+                            <Button
                               onClick={() => {
                                 setCollectionName('')
                                 setAddNewCollection(true)
                               }}
                             >
                               添加新合集
-                            </button>
+                            </Button>
                           }
                         >
                           <div class="flex items-center gap-3">
@@ -151,8 +153,8 @@ export function MsgPopupContents(props: {
                         </Show>
                       </div>
                       <div class="mt-1 flex w-full justify-around">
-                        <button onClick={() => option.close('')}>关闭</button>
-                        <button
+                        <Button onClick={() => option.close('')}>关闭</Button>
+                        <Button
                           onClick={() => {
                             if (!collectionName()) {
                               toast.warning('合集名称不能为空')
@@ -178,7 +180,7 @@ export function MsgPopupContents(props: {
                           }}
                         >
                           保存
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   )
@@ -202,7 +204,7 @@ export function MsgPopupContents(props: {
               class="cursor-pointer text-gray-pro duration-100 hover:text-active"
               // eslint-disable-next-line solid/reactivity
               onClick={async () => {
-                await saveAns()
+                await historyManager.newHistory('ans')
                 tip('success', '保存成功')
               }}
             />

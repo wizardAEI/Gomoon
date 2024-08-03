@@ -36,7 +36,7 @@ export default function Collection(props: { searchText: string }) {
       >
         <For each={filteredCollections()}>
           {(c) => {
-            const [expandAll, setCanExpandAll] = createSignal(true)
+            const [expandAll, setCanExpandAll] = createSignal(collections.length < 5)
             return (
               <div class="my-3">
                 <div
@@ -44,7 +44,7 @@ export default function Collection(props: { searchText: string }) {
                 >
                   <span class="text-base">{c.name}</span>
                   <div
-                    class="cursor-pointer pl-2 text-gray hover:text-active"
+                    class="cursor-pointer pl-2 text-text2 hover:text-active"
                     onClick={() => setCanExpandAll(!expandAll())}
                   >
                     {expandAll() ? '⏫ 收起所有' : '⏬ 展开所有'}

@@ -83,6 +83,8 @@ export interface MemoModel {
   fragment: MemoFragment[]
 }
 export type CreateMemoModel = Omit<MemoModel, 'version'> & { version?: number }
+
+export type SettingFontFamily = 'default' | 'MiSans' | 'AlimamaFangyuan'
 export interface SettingModel {
   isOnTop: boolean
   canMultiCopy: boolean
@@ -91,6 +93,7 @@ export interface SettingModel {
   models: Models
   theme: string
   chatFontSize: number
+  fontFamily: SettingFontFamily
 }
 export interface MemoResult {
   content: string

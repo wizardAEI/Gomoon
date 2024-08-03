@@ -1,4 +1,4 @@
-import Search2Icon from '@renderer/assets/icon/base/Search2Icon'
+import SearchIcon from '@renderer/assets/icon/base/SearchIcon'
 import { createSignal } from 'solid-js'
 
 export function Search(props: { placeholder: string; onChange: (value: string) => void }) {
@@ -6,7 +6,7 @@ export function Search(props: { placeholder: string; onChange: (value: string) =
   return (
     <div class="relative">
       <div class="absolute left-2 top-[5px]">
-        <Search2Icon height={20} width={20} class="text-text3" />
+        <SearchIcon height={20} width={20} class="text-text3" />
       </div>
       <input
         ref={(el) => {

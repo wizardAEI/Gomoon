@@ -103,6 +103,14 @@ export function setChatFontSize(chatFontSize: SettingModel['chatFontSize']) {
   configDB.write()
 }
 
+export function setFontFamily(fontFamily: SettingModel['fontFamily']) {
+  configDB.data = {
+    ...configDB.data,
+    fontFamily
+  }
+  configDB.write()
+}
+
 /**
  * FEAT: 用户数据相关
  */

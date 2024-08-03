@@ -1,4 +1,3 @@
-import CrossMark from '@renderer/assets/icon/base/CrossMark'
 import EditIcon from '@renderer/assets/icon/base/EditIcon'
 import Plus from '@renderer/assets/icon/base/Plus'
 import CapitalIcon from '@renderer/components/ui/CapitalIcon'
@@ -18,6 +17,7 @@ import { useNavigate, useSearchParams } from '@solidjs/router'
 import { For, Show, onCleanup, onMount } from 'solid-js'
 import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
 import { useToast } from '@renderer/components/ui/Toast'
+import TrashIcon from '@renderer/assets/icon/TrashIcon'
 
 import EditBox from './EditBox'
 
@@ -147,7 +147,7 @@ export default function () {
                         return canDel
                       }}
                     >
-                      <CrossMark
+                      <TrashIcon
                         height={24}
                         width={24}
                         class="cursor-pointer text-gray duration-100 hover:text-active"

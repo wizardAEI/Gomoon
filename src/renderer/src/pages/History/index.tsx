@@ -1,11 +1,10 @@
-import CrossMark from '@renderer/assets/icon/base/CrossMark'
 import EmptyIcon from '@renderer/assets/icon/base/EmptyIcon'
 import HistoryIcon from '@renderer/assets/icon/base/HistoryIcon'
 import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
 import { parseDisplayArr } from '@renderer/lib/ai/parseString'
 import { setAnswerStore } from '@renderer/store/answer'
 import {
-  chatHistoryTransfer,
+  historyManager,
   clearHistory,
   copyHistory,
   histories,
@@ -19,17 +18,18 @@ import { For, Show, createMemo, createSignal, onCleanup } from 'solid-js'
 import { HistoryModel } from 'src/main/models/model'
 import { Search } from '@renderer/components/ui/Search'
 import SearchIcon from '@renderer/assets/icon/base/SearchIcon'
-import More2Icon from '@renderer/assets/icon/base/More2Icon'
+import MoreHIcon from '@renderer/assets/icon/base/MoreHIcon'
 import { SegmentedControl } from '@renderer/components/ui/SegmentedControl'
 import ClearIcon from '@renderer/assets/icon/base/ClearIcon'
 import ToolTip from '@renderer/components/ui/ToolTip'
 import StarIcon from '@renderer/assets/icon/StarIcon'
 import { useToast } from '@renderer/components/ui/Toast'
 import WarningIcon from '@renderer/assets/icon/base/Toast/WarningIcon'
-import CopyFillIcon from '@renderer/assets/icon/base/CopyFillIcon'
 import QuestionMention from '@renderer/components/ui/QuestionMention'
 import ScrollBox from '@renderer/components/ScrollBox'
 import ReturnIcon from '@renderer/assets/icon/base/ReturnIcon'
+import TrashIcon from '@renderer/assets/icon/TrashIcon'
+import CopyIcon from '@renderer/assets/icon/base/Duplicate'
 
 import SpecialTypeContent from './SpecialTypeContent'
 import { decorateContent } from './utils'
@@ -128,16 +128,16 @@ export default function () {
               fallback={
                 <>
                   <SearchIcon
-                    height={24}
-                    width={24}
+                    height={22}
+                    width={22}
                     class={iconClass}
                     onClick={() => setShowSearchInput(true)}
                   />
                   <ToolTip
                     label={
-                      <More2Icon
-                        height={24}
-                        width={24}
+                      <MoreHIcon
+                        height={22}
+                        width={22}
                         class={iconClass}
                         onClick={() => setShowMoreBtn(true)}
                       />
@@ -170,7 +170,7 @@ export default function () {
                     }}
                   >
                     <ToolTip
-                      label={<ClearIcon width={24} height={24} class={iconClass} />}
+                      label={<ClearIcon width={22} height={22} class={iconClass} />}
                       content="清除历史记录（非收藏）"
                     />
                   </div>
@@ -179,8 +179,8 @@ export default function () {
                   label={
                     <ReturnIcon
                       onClick={() => setShowMoreBtn(false)}
-                      width={24}
-                      height={24}
+                      width={22}
+                      height={22}
                       class={iconClass}
                     />
                   }
@@ -207,94 +207,116 @@ export default function () {
               }
             >
               <For each={filteredHistory()}>
-                {(h) => (
-                  <>
-                    <div class="flex w-full items-center justify-between rounded-t-lg border-0 border-b border-solid border-b-gray bg-dark-plus px-2 py-1">
-                      <div class="flex items-center gap-3">
-                        {h.contents[0].role === 'question' ? '问答记录' : '对话记录'}
-                      </div>
-                      <div class="flex gap-2">
-                        <StarIcon
-                          width={22}
-                          height={22}
-                          class={`cursor-pointer ${h.starred ? 'text-active' : 'text-gray hover:text-active/80'}`}
-                          onClick={() => {
-                            h.starred ? starHistory(h.id, false) : starHistory(h.id, true)
-                          }}
-                        />
-                        <CopyFillIcon
-                          width={21}
-                          height={21}
-                          class="cursor-pointer pl-[1px] pt-[1px] text-gray duration-100 hover:text-active"
-                          onClick={() => {
-                            copyHistory(h.id).then(() => {
-                              toast.success('拷贝成功')
-                            })
-                          }}
-                        />
-                        <DoubleConfirm
-                          label="确认删除"
-                          position="-right-2 top-3"
-                          onConfirm={() => {
-                            removeHistory(h.id)
-                          }}
-                        >
-                          <div class="flex">
-                            <CrossMark
-                              height={22}
+                {(h) => {
+                  const [showMore, setShowMore] = createSignal(false)
+                  return (
+                    <>
+                      <div class="flex w-full items-center justify-between rounded-t-lg border-0 border-b border-solid border-b-gray bg-dark-plus px-2 py-1">
+                        <div class="flex items-center gap-3">
+                          {h.starred && '⭐️ '}
+                          {h.contents[0].role === 'question' ? '问答记录' : '对话记录'}
+                        </div>
+                        <Show
+                          fallback={
+                            <MoreHIcon
                               width={22}
+                              height={22}
                               class="cursor-pointer text-gray duration-100 hover:text-active"
+                              onClick={() => setShowMore(true)}
                             />
-                          </div>
-                        </DoubleConfirm>
-                      </div>
-                    </div>
-                    <div
-                      class="group/history-box relative mb-3 flex w-full cursor-pointer flex-col gap-2 rounded-b-lg border-2 border-solid border-transparent bg-dark p-4 pt-2 duration-150 hover:border-active lg:max-w-4xl"
-                      onClick={() => {
-                        if (h.type === 'ans') {
-                          setAnswerStore('question', h.contents[0].content)
-                          setAnswerStore('answer', h.contents[1].content)
-                          h.assistantId && setSelectedAssistantForAns(h.assistantId)
-                          nav('/ans')
-                        } else if (h.type === 'chat') {
-                          chatHistoryTransfer.drawHistory(h.id)
-                          setMsgs(h.contents as Msg[])
-                          h.assistantId && setSelectedAssistantForChat(h.assistantId)
-                          nav('/chat')
-                        }
-                      }}
-                    >
-                      <For each={sliceArr(h.contents)}>
-                        {(c) => {
-                          const meta = parseDisplayArr(c.content)
-                          return (
-                            <div class="flex flex-col gap-1 break-words text-sm">
-                              <div>
-                                <For each={meta}>
-                                  {(m, index) => {
-                                    return m.type === 'text' ? (
-                                      (index() === 0 ? map[c.role] || '我：' : '') +
-                                        decorateContent(m.content)
-                                    ) : (
-                                      <>
-                                        {index() === 0 && (
-                                          <span class="mr-1">{map[c.role] || '我：'}</span>
-                                        )}
-                                        {SpecialTypeContent(m)}
-                                      </>
-                                    )
-                                  }}
-                                </For>
+                          }
+                          when={showMore()}
+                        >
+                          <div
+                            class="flex gap-2"
+                            ref={(el) => {
+                              const fn = (e) => {
+                                if (e.target && el.contains(e.target)) {
+                                  e.stopPropagation()
+                                  return
+                                }
+                                setShowMore(false)
+                              }
+                              document.addEventListener('click', fn)
+                              onCleanup(() => {
+                                document.removeEventListener('click', fn)
+                              })
+                            }}
+                          >
+                            <StarIcon
+                              width={22}
+                              height={22}
+                              class={`cursor-pointer ${h.starred ? 'text-active' : 'text-gray hover:text-active/80'}`}
+                              onClick={() => {
+                                h.starred ? starHistory(h.id, false) : starHistory(h.id, true)
+                              }}
+                            />
+                            <CopyIcon
+                              width={21}
+                              height={21}
+                              class="cursor-pointer pl-[1px] pt-[1px] text-gray duration-100 hover:text-active"
+                              onClick={() => {
+                                copyHistory(h.id).then(() => {
+                                  toast.success('拷贝成功')
+                                })
+                              }}
+                            />
+                            <DoubleConfirm
+                              label="确认删除"
+                              position="-right-2 top-3"
+                              onConfirm={() => {
+                                removeHistory(h.id)
+                              }}
+                            >
+                              <div class="flex">
+                                <TrashIcon
+                                  height={22}
+                                  width={22}
+                                  class="cursor-pointer text-gray duration-100 hover:text-active"
+                                />
                               </div>
-                              <div class="border-b-0 border-t border-dashed border-gray" />
-                            </div>
-                          )
+                            </DoubleConfirm>
+                          </div>
+                        </Show>
+                      </div>
+                      <div
+                        class="group/history-box relative mb-3 flex w-full cursor-pointer flex-col gap-2 rounded-b-lg border-2 border-solid border-transparent bg-dark p-4 pt-2 duration-150 hover:border-active lg:max-w-4xl"
+                        onClick={() => {
+                          historyManager.drawHistory(h)
+                          h.type === 'ans' ? nav('/ans') : nav('/chat')
                         }}
-                      </For>
-                    </div>
-                  </>
-                )}
+                      >
+                        <For each={sliceArr(h.contents)}>
+                          {(c) => {
+                            const meta = parseDisplayArr(c.content)
+                            return (
+                              <div class="flex flex-col gap-1 break-words text-sm">
+                                <div>
+                                  <For each={meta}>
+                                    {(m, index) => {
+                                      return m.type === 'text' ? (
+                                        (index() === 0 ? map[c.role] || '我：' : '') +
+                                          decorateContent(m.content)
+                                      ) : (
+                                        <>
+                                          {index() === 0 && (
+                                            <span class="mr-1">{map[c.role] || '我：'}</span>
+                                          )}
+                                          {SpecialTypeContent(m)}
+                                        </>
+                                      )
+                                    }}
+                                  </For>
+                                </div>
+                                <div class="border-b-0 border-t border-dashed border-gray" />
+                              </div>
+                            )
+                          }}
+                        </For>
+                      </div>
+                    </>
+                  )
+                }}
               </For>
             </Show>
           </div>

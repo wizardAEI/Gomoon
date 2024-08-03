@@ -21,7 +21,8 @@ export function getDefaultConfig(): SettingModel {
     quicklyWakeUpKeys: 'CmdOrCtrl+G',
     sendWithCmdOrCtrl: true,
     theme: 'gomoon-theme',
-    chatFontSize: 14
+    chatFontSize: 14,
+    fontFamily: 'default'
   }
 }
 

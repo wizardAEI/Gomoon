@@ -1,6 +1,6 @@
 ---
 name: 💡 新功能请求
-about: 提出你的 idea，以帮助我们改进 Gomoon ~
+about: 提出你的 idea，以帮助我们改进 Gomoon
 ---
 
 ### 功能描述

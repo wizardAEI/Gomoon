@@ -18,10 +18,11 @@ import KimiIcon from '@renderer/assets/icon/models/KimiIcon'
 import FilePicker from '@renderer/components/ui/FilePicker'
 import OllamaIcon from '@renderer/assets/icon/models/OllamaIcon'
 import Select from '@renderer/components/ui/Select'
-import { setChatFontSize, setTheme } from '@renderer/store/setting'
+import { setChatFontSize, setFontFamily, setTheme } from '@renderer/store/setting'
 import { useToast } from '@renderer/components/ui/Toast'
 import CustomIcon from '@renderer/assets/icon/models/CustomIcon'
 import DeepSeekIcon from '@renderer/assets/icon/models/DeepSeekIcon'
+import { SettingFontFamily } from 'src/main/models/model'
 
 import {
   settingStore,
@@ -34,7 +35,7 @@ import {
 } from '../../store/setting'
 
 import VersionDesc from './VersionDesc'
-import { themeOptions } from './theme'
+import { fontFamilyOption, themeOptions } from './theme'
 export default function Setting() {
   const toast = useToast()
   onMount(() => {
@@ -183,7 +184,7 @@ export default function Setting() {
               }
               foldTitle={
                 <div class="flex items-center justify-center gap-2 fill-text1">
-                  <UpwardArrow height={16} width={16} />
+                  <UpwardArrow height={18} width={18} />
                   <span>收起模型引擎</span>
                 </div>
               }
@@ -525,6 +526,18 @@ export default function Setting() {
                   max={18}
                   onChange={(v) => {
                     setChatFontSize(Number(v))
+                  }}
+                />
+              </div>
+            </div>
+            <div class="item-center relative flex justify-between gap-3">
+              <span class="h-6">文字主题</span>
+              <div class="absolute right-0">
+                <Select
+                  defaultValue={settingStore.fontFamily}
+                  options={fontFamilyOption}
+                  onSelect={(v) => {
+                    setFontFamily(v as SettingFontFamily)
                   }}
                 />
               </div>

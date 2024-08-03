@@ -28,7 +28,8 @@ import {
   getCollections,
   createCollection,
   deleteCollection,
-  updateCollection
+  updateCollection,
+  setFontFamily
 } from './models/index'
 import {
   AssistantModel,
@@ -38,6 +39,7 @@ import {
   HistoryModel,
   MemoFragment,
   MemoModel,
+  SettingFontFamily,
   SettingModel,
   UserDataModel
 } from './models/model'
@@ -131,6 +133,7 @@ export function initAppEventsHandler() {
   ipcMain.handle('set-send-with-cmd-or-ctrl', (_, b: boolean) => setSendWithCmdOrCtrl(b))
   ipcMain.handle('set-theme', (_, theme: string) => setTheme(theme))
   ipcMain.handle('set-chat-fontsize', (_, v: number) => setChatFontSize(v))
+  ipcMain.handle('set-font-family', (_, v: SettingFontFamily) => setFontFamily(v))
 
   /**
    * FEAT: 用户相关

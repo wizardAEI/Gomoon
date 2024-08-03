@@ -52,7 +52,7 @@ export default function (props: {
           <div class="mt-1 text-center text-sm">{props.label}</div>
           <div class="flex justify-around">
             <button
-              class="mr-1 w-9 rounded-sm bg-dark px-1 py-[1px] text-[12px] leading-4 duration-300 hover:bg-active"
+              class="mr-1 w-9 rounded-sm bg-transparent px-1 py-[1px] text-[12px] leading-4 duration-300 hover:bg-active"
               onClick={(e) => {
                 e.stopPropagation()
                 setShow(false)
@@ -62,7 +62,7 @@ export default function (props: {
               取消
             </button>
             <button
-              class="w-9 rounded-sm bg-dark px-1 py-[1px] text-[12px] leading-4 duration-300 hover:bg-active"
+              class="w-9 rounded-sm bg-transparent px-1 py-[1px] text-[12px] leading-4 duration-300 hover:bg-active"
               onClick={(e) => {
                 e.stopPropagation()
                 setShow(false)

@@ -1,6 +1,27 @@
+@font-face {
+  font-family: 'MiSans';
+  src: url('./fonts/MiSans-Normal.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'AlimamaFangyuan';
+  src: url('./fonts/AlimamaFangYuanTiVF-Thin.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --gomoon-md-fontsize: 14px; /* 默认值 */
+  --font-family: -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif;
+  --font-family-default: -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif;
+}
+
 @layer base {
   * :not(svg, path, g) {
     @apply m-0 box-border p-0 font-System text-sm;
+    font-family: var(--font-family);
   }
   body {
     @apply bg-home;
@@ -94,16 +115,13 @@ button:hover {
   background-color: transparent;
 }
 
-:root {
-  --gomoon-md-fontsize: 14px; /* 默认值 */
-}
-
 .gomoon-input {
   font-size: var(--gomoon-md-fontsize);
 }
 
 .gomoon-md {
   font-size: var(--gomoon-md-fontsize);
+  @apply tracking-wide;
 }
 
 .gomoon-md *:not(svg, path, g) {

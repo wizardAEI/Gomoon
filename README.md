@@ -4,18 +4,6 @@
 <div><b>Gomoon</b> 是一款桌面端的大模型效率工具。</div>
 </div>
 
-<h1 align="center"> </h1>
-
-## 招募招募！
-
-<img order-radius="100px" align="left" height="160px" src="https://github.com/wizardAEI/Gomoon/assets/61337085/df3aab98-d40e-4e97-827f-7436ff6f823b" alt=""/>
-
-Gomoon 是一个开源项目，目前处于初始阶段，还有很多功能有待完善。如果你想一起把 Gomoon 做得更好，欢迎加入我们！
-
-未来，Gomoon 还将实现炫酷的主题功能，更加自定义的 Prompt 模板功能，在线获取好用的助手和知识库功能，以及第三方接入和万能的插件...
-
-如果你也想要参与进来，欢迎加入 Gomoon 开发群：758015092。
-
 ## 介绍
 
 <img order-radius="100px" align="right"  height="450px" src="https://github.com/wizardAEI/blog-images/blob/main/gomoon-jietu3.jpg" alt=""/>
@@ -82,14 +70,12 @@ Gomoon 的名字来源于 _赛博朋克：边缘行者_ 的中 Lucy 的愿望：
 | [![e9ab98e991ab](https://github.com/e9ab98e991ab.png?size=50)](https://github.com/e9ab98e991ab) | 协助完成 mac 端 x86_64 架构的适配 |
 | [![zhengxs2018](https://github.com/zhengxs2018.png?size=50)](https://github.com/zhengxs2018)    | 支持通义千问模型                  |
 
-## 开发/贡献指南
-
-项目本身还有很多新功能需要开发，非常欢迎大家加入项目组，一起来贡献代码。
+## 自部署指南
 
 node 版本要求：v20.11.1 及以上 （开启Corepack，终端执行：`corepack enable` ）
-pnpm 版本要求：v8.3.1 （终端执行： `pnpm install` ）
+yarn 版本要求：v1.2.22 （终端执行： `yarn` ）
 
-安装过程中会出现 `prebuild-install` 时间过长的情况，原因是其过程会去 github 拉取文件，解决方：暂时设置终端代理：
+安装过程中会出现 `prebuild-install` 时间过长的情况，原因是安装会去 github 拉取文件，解决：暂时设置终端代理：
 `export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890`（其中端口 7890 根据实际情况更换）
 
 由于仓库大小限制，默认的资源没有上传到 Github，开发者可以在本地安装的 Gomoon 中找到 `resources`文件夹（mac用户可以通过 Finder，右键点击应用，选择“显示包内容”来浏览到 `Contents`目录，`resource`文件夹存储于 `Contents/Resource/app.asar.unpacked/resources`; windows系统中，这个路径通常是在用户数据资源内，例如 `C:\Users\Lenovo\AppData\Local\Programs\gomoon\resources\app.asar.unpacked\resources`），将里面的资源文件复制到项目根目录的 `resources`文件夹中。

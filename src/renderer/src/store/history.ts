@@ -3,6 +3,11 @@ import { createStore } from 'solid-js/store'
 import { HistoryModel } from 'src/main/models/model'
 import { ulid } from 'ulid'
 
+import { answerStore, setAnswerStore } from './answer'
+import { Msg, msgMeta, msgs, setMsgMeta, setMsgs } from './chat'
+import { setSelectedAssistantForAns, setSelectedAssistantForChat } from './user'
+import { getCurrentAssistantForAnswer, getCurrentAssistantForChat } from './assistants'
+
 const [histories, setHistories] = createStore<HistoryModel[]>([])
 
 export async function loadHistories() {
@@ -42,50 +47,65 @@ export async function removeHistory(historyID: string) {
   loadHistories()
 }
 
-export const chatHistoryTransfer: {
-  now: HistoryModel
-  init: () => void
-  drawHistory(id: string): HistoryModel
-  newHistory(history: {
-    contents: HistoryModel['contents']
-    assistantId?: HistoryModel['assistantId']
-  }): string
+export const historyManager: {
+  formatHistory(type: 'chat' | 'ans'): HistoryModel
+  drawHistory(history: HistoryModel)
+  newHistory(type: 'chat' | 'ans'): Promise<void>
 } = {
-  now: {
-    id: '',
-    type: 'chat',
-    assistantId: '',
-    starred: false,
-    contents: []
-  },
-  init() {
-    this.now = {
-      id: '',
-      type: 'chat',
-      assistantId: '',
-      starred: false,
-      contents: []
+  formatHistory(type: 'chat' | 'ans') {
+    if (type === 'ans') {
+      return {
+        id: answerStore.id,
+        type: 'ans',
+        assistantId: getCurrentAssistantForAnswer()?.id,
+        contents: [
+          {
+            role: 'question',
+            content: answerStore.question
+          },
+          {
+            role: 'ans',
+            content: answerStore.answer
+          }
+        ]
+      }
+    } else {
+      return {
+        id: msgMeta.id,
+        type: 'chat',
+        assistantId: getCurrentAssistantForChat()?.id,
+        contents: cloneDeep(msgs)
+      }
     }
   },
-  // 将历史提取出出来
-  drawHistory(id) {
-    if (this.now.id) {
-      addHistory(cloneDeep(this.now))
+  async drawHistory(h: HistoryModel) {
+    if (h.type === 'ans') {
+      if (answerStore.answer && answerStore.question) {
+        await this.newHistory('ans')
+      }
+      setAnswerStore('id', h.id)
+      setAnswerStore('question', h.contents[0].content)
+      setAnswerStore('answer', h.contents[1].content)
+      h.assistantId && setSelectedAssistantForAns(h.assistantId)
+    } else if (h.type === 'chat') {
+      msgs.length && (await this.newHistory('chat'))
+      setMsgMeta('id', h.id)
+      setMsgs(h.contents as Msg[])
+      h.assistantId && setSelectedAssistantForChat(h.assistantId)
     }
-    this.now = cloneDeep(histories.find((history) => history.id === id)!)
-    removeHistory(id)
-    return this.now
   },
-  newHistory(history) {
-    const id = ulid()
+  async newHistory(type: 'chat' | 'ans') {
+    const history = this.formatHistory(type)
+    let starred = false
+    const oldH = histories.find((h) => h.id === history.id)
+    if (oldH) {
+      starred = !!oldH.starred
+      await removeHistory(history.id)
+    }
     addHistory({
-      ...history,
-      id,
-      type: 'chat',
-      starred: this.now.starred
+      starred,
+      ...history
     })
-    this.init()
-    return id
   }
 }
 

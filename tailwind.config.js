@@ -66,11 +66,11 @@ module.exports = {
             'gray-pro': '#597276', // 非激活色↑ 浅紫灰色
             'inline-code': '#869d9d', // 非激活色 浅紫灰色
             code: '#132c33', // 非激活色 浅紫灰色
-            'dark-con': '#1E3B46', // 暗色稍微亮一点
+            'dark-con': '#334f56', // 暗色亮一点
             'home-top': '#132b35', // 首页顶部渐变色
-            dark: '#1E3843', // 暗色 深蓝绿
-            'dark-plus': '#1B313C', // 暗色稍微深一点
-            'dark-pro': '#1A2C37', // 暗色↑
+            dark: '#25444d', // 暗色 深蓝绿
+            'dark-plus': '#213d47', // 暗色稍微深一点
+            'dark-pro': '#1B313C', // 暗色↑
             light: '#e2e1e4', // 亮色 芡食白
             'light-gray': '#c4cbcf', // 大理石灰
             text1: '#D0DFE6', // 云峰白

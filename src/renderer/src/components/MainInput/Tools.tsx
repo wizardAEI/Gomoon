@@ -20,6 +20,7 @@ import { initMemories } from '@renderer/store/memo'
 
 import { useLoading } from '../ui/DynamicLoading'
 import { useToast } from '../ui/Toast'
+import Button from '../ui/Button'
 export type Artifacts = ContentDisplay & { val: string }
 
 function ToolWrap(props: { children: JSXElement; onClick?: () => void; active?: boolean }) {
@@ -354,8 +355,8 @@ export default function Tools(props: {
                     <div>
                       <div class="flex justify-center p-2"> 选择下载类型 </div>
                       <div class="flex gap-2 p-2">
-                        <button onClick={() => option.close('md')}> md文档 </button>
-                        <button onClick={() => option.close('png')}> png图片 </button>
+                        <Button onClick={() => option.close('md')}> md文档 </Button>
+                        <Button onClick={() => option.close('png')}> png图片 </Button>
                       </div>
                     </div>
                   ),

@@ -4,7 +4,7 @@ import { event, getSystem } from '@renderer/lib/util'
 import { defaultModels } from '@lib/langchain'
 import { Models } from 'src/lib/langchain'
 import { createMemo } from 'solid-js'
-import { SettingModel } from 'src/main/models/model'
+import { SettingFontFamily, SettingModel } from 'src/main/models/model'
 const [settingStore, setSettingStore] = createStore<
   {
     isLoaded: boolean
@@ -19,7 +19,8 @@ const [settingStore, setSettingStore] = createStore<
   quicklyWakeUpKeys: '',
   sendWithCmdOrCtrl: false,
   theme: 'gomoon-theme',
-  chatFontSize: 14
+  chatFontSize: 14,
+  fontFamily: 'default'
 })
 
 export function setIsOnTop(v: boolean) {
@@ -47,6 +48,11 @@ export async function setTheme(theme: string) {
   return window.api.setTheme(theme)
 }
 
+export async function setFontFamily(fontFamily: SettingFontFamily) {
+  setSettingStore('fontFamily', fontFamily)
+  return window.api.setChatFontFamily(fontFamily)
+}
+
 export async function loadConfig() {
   const config = await window.api.loadConfig()
   // 从 data 中读取配置
@@ -59,6 +65,7 @@ export async function loadConfig() {
   setSettingStore('isLoaded', true)
   setSettingStore('theme', config.theme)
   setSettingStore('chatFontSize', config.chatFontSize)
+  setSettingStore('fontFamily', config.fontFamily)
   event.emit('updateModels', config.models)
 }
 

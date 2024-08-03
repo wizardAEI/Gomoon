@@ -8,7 +8,7 @@ import { userData } from '@renderer/store/user'
 import { processMemo } from '@renderer/lib/ai/memo'
 import { clearAns, restoreAns } from '@renderer/store/answer'
 import { parseFile } from '@renderer/lib/ai/file'
-import { chatHistoryTransfer } from '@renderer/store/history'
+import { historyManager } from '@renderer/store/history'
 import NewChatIcon from '@renderer/assets/icon/NewChatIcon'
 import { ModelsType } from '@lib/langchain'
 import { useSearchParams } from '@solidjs/router'
@@ -16,7 +16,7 @@ import SendIcon from '@renderer/assets/icon/SendIcon'
 
 import { useLoading } from '../ui/DynamicLoading'
 import { useToast } from '../ui/Toast'
-import { clearMsgs, msgs, restoreMsgs } from '../../store/chat'
+import { clearMsgs, msgMeta, msgs, restoreMsgs } from '../../store/chat'
 
 import Tools, { Artifacts } from './Tools'
 
@@ -318,15 +318,11 @@ export default function Input(props: {
                   duration: 1000,
                   position: 'top-3/4'
                 })
-                const historyID = chatHistoryTransfer.newHistory({
-                  contents: msgs,
-                  assistantId: userData.selectedAssistantForChat
-                })
+                historyManager.newHistory('chat')
                 clearMsgs()
                 cleanupForRestoreMsgs = useEventListener(document, 'keydown', (e) => {
                   if ((e.key === 'z' && e.ctrlKey) || (e.key === 'z' && e.metaKey)) {
                     restoreMsgs()
-                    chatHistoryTransfer.drawHistory(historyID)
                     cleanupForRestoreMsgs?.()
                   }
                 })

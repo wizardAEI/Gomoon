@@ -15,6 +15,18 @@ export interface Msg {
   content: string
 }
 
+export interface MsgMeta {
+  id: string
+}
+
+export const [msgMeta, setMsgMeta] = createStore<MsgMeta>(
+  localStorage.getItem('chat_meta')
+    ? JSON.parse(localStorage.getItem('chat_meta')!)
+    : {
+        id: ulid()
+      }
+)
+
 const [msgs, setMsgs] = createStore<Array<Msg>>(
   localStorage.getItem('chat_msgs') ? JSON.parse(localStorage.getItem('chat_msgs')!) : []
 )
@@ -53,6 +65,7 @@ export function clearMsgs() {
     consumedToken: consumedToken().chat
   }
   setMsgs([])
+  setMsgMeta('id', ulid())
   setConsumedTokenForChat(0)
 }
 

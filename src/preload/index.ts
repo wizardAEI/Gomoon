@@ -11,6 +11,7 @@ import {
   MemoFragment,
   MemoModel,
   MemoResult,
+  SettingFontFamily,
   SettingModel,
   UserDataModel
 } from '../main/models/model'
@@ -49,6 +50,8 @@ export const api = {
   setSendWithCmdOrCtrl: (b: boolean) => ipcRenderer.invoke('set-send-with-cmd-or-ctrl', b),
   setTheme: (theme: string) => ipcRenderer.invoke('set-theme', theme),
   setChatFontSize: (size: number) => ipcRenderer.invoke('set-chat-fontsize', size),
+  setChatFontFamily: (fontFamily: SettingFontFamily) =>
+    ipcRenderer.invoke('set-font-family', fontFamily),
 
   // 用户信息相关
   getUserData: (): Promise<UserDataModel> => ipcRenderer.invoke('get-user-data'),

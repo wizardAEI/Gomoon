@@ -57,7 +57,7 @@ const Select: Component<SelectProps> = (props) => {
   }
 
   return (
-    <div class="relative z-10 w-full">
+    <div class={`relative w-full ${isOpen() ? 'z-20' : 'z-10'}`}>
       <div
         class="mb-1 cursor-pointer rounded-lg border-solid border-dark px-4 py-[2px] text-center hover:border-active"
         ref={(el) => {
@@ -78,7 +78,7 @@ const Select: Component<SelectProps> = (props) => {
         {label()}
       </div>
       <Show when={isOpen()}>
-        <div class="w-full rounded-lg bg-dark-plus p-1 shadow-center">
+        <div class="z-20 w-full rounded-lg bg-dark-plus p-1 shadow-center">
           <div class="scrollbar-show max-h-40">
             <For each={props.options}>
               {(option) => (

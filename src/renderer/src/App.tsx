@@ -63,6 +63,7 @@ const App = (props) => {
     // FEAT: OCR
     OCRInit()
 
+    // 主题
     createEffect(() => {
       // 插入 .win
       if (navigator.userAgent.includes('Windows')) {
@@ -74,6 +75,13 @@ const App = (props) => {
         }
       })
       document.body.classList.add(settingStore.theme)
+    })
+    createEffect(() => {
+      const f = settingStore.fontFamily
+      document.documentElement.style.setProperty(
+        '--font-family',
+        f === 'default' ? 'var(--font-family-default)' : f
+      )
     })
 
     // FEAT: receive msg
