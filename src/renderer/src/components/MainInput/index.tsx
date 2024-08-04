@@ -16,7 +16,7 @@ import SendIcon from '@renderer/assets/icon/SendIcon'
 
 import { useLoading } from '../ui/DynamicLoading'
 import { useToast } from '../ui/Toast'
-import { clearMsgs, msgMeta, msgs, restoreMsgs } from '../../store/chat'
+import { clearMsgs, msgs, restoreMsgs } from '../../store/chat'
 
 import Tools, { Artifacts } from './Tools'
 
@@ -270,12 +270,19 @@ export default function Input(props: {
     }
   })
 
-  async function onInput(e) {
+  const [haveTask, setHaveTask] = createSignal(false)
+  function onInput(e) {
     props.onInput?.(e)
     e.preventDefault()
     cleanupForRestoreMsgs?.()
     setInputText(e.target.value)
-    setInputTokenNum(await window.api.getTokenNum(e.target.value))
+    if (!haveTask()) {
+      setHaveTask(true)
+      window.api.getTokenNum(e.target.value).then((v) => {
+        setInputTokenNum(v)
+        setHaveTask(false)
+      })
+    }
   }
 
   return (

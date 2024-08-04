@@ -7,7 +7,7 @@ import WithdrawalIcon from '@renderer/assets/icon/base/WithdrawalICon'
 import PauseIcon from '@renderer/assets/icon/base/PauseIcon'
 import { stopGenMsg } from '@renderer/store/chat'
 import TrashIcon from '@renderer/assets/icon/TrashIcon'
-import { answerStore, stopGenAns } from '@renderer/store/answer'
+import { stopGenAns } from '@renderer/store/answer'
 import { reGenAns } from '@renderer/store/answer'
 import RetryIcon from '@renderer/assets/icon/base/RetryIcon'
 import SpeechIcon from '@renderer/assets/icon/SpeechIcon'
@@ -16,7 +16,6 @@ import CollectionIcon from '@renderer/assets/icon/CollectionIcon'
 import { addCollection, collections, createCollection } from '@renderer/store/collection'
 import EmptyIcon from '@renderer/assets/icon/base/EmptyIcon'
 import { historyManager } from '@renderer/store/history'
-import { getCurrentAssistantForAnswer } from '@renderer/store/assistants'
 
 import { useToast } from '../ui/Toast'
 import ScrollBox from '../ScrollBox'
@@ -44,6 +43,11 @@ export function PopupContainer(props: {
   )
 }
 
+const btnClass = [
+  'group/btn flex cursor-pointer rounded-md p-[2px] duration-100 hover:bg-gray/20',
+  'text-gray-pro duration-100 group-hover/btn:text-active'
+]
+
 export function MsgPopupContents(props: {
   id: string
   content: string
@@ -55,26 +59,22 @@ export function MsgPopupContents(props: {
   const toast = useToast()
   return (
     <>
-      {' '}
       <ToolTip
         label={compWithTip((tip) => (
-          <CopyIcon
-            height={20}
-            width={20}
-            class="cursor-pointer text-gray-pro duration-100 hover:text-active"
+          <div
             onClick={() => {
               copy(props.content).then(() => tip('success', '复制成功'))
             }}
-          />
+            class={btnClass[0]}
+          >
+            <CopyIcon height={20} width={20} class={btnClass[1]} />
+          </div>
         ))}
         content="复制到剪贴板"
       />
       <ToolTip
         label={
-          <CollectionIcon
-            height={20}
-            width={20}
-            class="cursor-pointer text-gray-pro duration-100 hover:text-active"
+          <div
             onClick={() => {
               toast.modal(
                 (option) => {
@@ -191,59 +191,56 @@ export function MsgPopupContents(props: {
                 }
               )
             }}
-          />
+            class={btnClass[0]}
+          >
+            <CollectionIcon height={20} width={20} class={btnClass[1]} />
+          </div>
         }
         content="加入合集"
       />
       <Show when={props.type === 'ans'}>
         <ToolTip
           label={compWithTip((tip) => (
-            <SaveIcon
-              height={20}
-              width={20}
-              class="cursor-pointer text-gray-pro duration-100 hover:text-active"
-              // eslint-disable-next-line solid/reactivity
+            <div
+              class={btnClass[0]} // eslint-disable-next-line solid/reactivity
               onClick={async () => {
                 await historyManager.newHistory('ans')
                 tip('success', '保存成功')
               }}
-            />
+            >
+              <SaveIcon height={20} width={20} class={btnClass[1]} />
+            </div>
           ))}
           content="保存问答记录"
         />
       </Show>
       <ToolTip
         label={
-          <SpeechIcon
-            height={20}
-            width={20}
-            class="cursor-pointer text-gray-pro duration-100 hover:text-active"
-            onClick={props.onSpeak}
-          />
+          <div class={btnClass[0]} onClick={props.onSpeak}>
+            <SpeechIcon height={20} width={20} class={btnClass[1]} />
+          </div>
         }
         content="朗读"
       />
       <Show when={props.type !== 'ans'}>
         <ToolTip
           label={
-            <EditIcon
-              height={20}
-              width={20}
-              class="cursor-pointer text-gray-pro duration-100 hover:text-active"
+            <div
+              class={btnClass[0]}
               onClick={() => {
                 event.emit('editUserMsg', props.content, props.id)
               }}
-            />
+            >
+              <EditIcon height={20} width={20} class={btnClass[1]} />
+            </div>
           }
           content="重新编辑"
         />
       </Show>
       <ToolTip
         label={
-          <RetryIcon
-            height={20}
-            width={20}
-            class="cursor-pointer text-gray-pro duration-100 hover:text-active"
+          <div
+            class={btnClass[0]}
             onClick={() => {
               // 重新生成 ans 版
               if (props.type === 'ans') {
@@ -253,7 +250,9 @@ export function MsgPopupContents(props: {
               // 重新生成 chat 版
               event.emit('reGenMsg', props.id)
             }}
-          />
+          >
+            <RetryIcon height={20} width={20} class={btnClass[1]} />
+          </div>
         }
         content="重新生成"
       />
@@ -305,14 +304,14 @@ export function MsgPopupForUser(props: {
       <ToolTip
         label={compWithTip(
           (tip) => (
-            <CopyIcon
-              height={20}
-              width={20}
-              class="cursor-pointer text-gray-pro duration-100 hover:text-active"
+            <div
+              class={btnClass[0]}
               onClick={() => {
                 copy(props.content).then(() => tip('success', '复制成功！'))
               }}
-            />
+            >
+              <CopyIcon height={20} width={20} class={btnClass[1]} />
+            </div>
           ),
           'right'
         )}
@@ -320,25 +319,22 @@ export function MsgPopupForUser(props: {
       />
       <ToolTip
         label={
-          <TrashIcon
-            height={20}
-            width={20}
-            class="cursor-pointer text-gray-pro duration-100 hover:text-active"
-            onClick={props.onRemove}
-          />
+          <div class={btnClass[0]} onClick={props.onRemove}>
+            <TrashIcon height={20} width={20} class={btnClass[1]} />
+          </div>
         }
         content="删除此轮对话"
       />
       <ToolTip
         label={
-          <EditIcon
-            height={20}
-            width={20}
-            class="cursor-pointer text-gray-pro duration-100 hover:text-active"
+          <div
+            class={btnClass[0]}
             onClick={() => {
               event.emit('editUserMsg', props.content, props.id)
             }}
-          />
+          >
+            <EditIcon height={20} width={20} class={btnClass[1]} />
+          </div>
         }
         content="重新编辑"
       />
@@ -353,12 +349,9 @@ export function MsgPopupForSpecialContent(props: { type: MsgTypes; onRemove: () 
         <div class="flex">
           <ToolTip
             label={
-              <TrashIcon
-                height={18}
-                width={20}
-                class="cursor-pointer text-gray-pro duration-100 hover:text-active"
-                onClick={props.onRemove}
-              />
+              <div class={btnClass[0]} onClick={props.onRemove}>
+                <TrashIcon height={18} width={20} class={btnClass[1]} />
+              </div>
             }
             content="删除此轮对话"
           />
@@ -373,14 +366,14 @@ export function WithDrawal(props: { type: MsgTypes }) {
     <PopupContainer pos={props.type === 'human' ? 'right' : 'left'}>
       <ToolTip
         label={
-          <WithdrawalIcon
-            height={20}
-            width={20}
-            class="cursor-pointer text-gray-pro duration-100 hover:text-active"
+          <div
+            class={btnClass[0]}
             onClick={() => {
               event.emit('editUserMsg', '', '')
             }}
-          />
+          >
+            <WithdrawalIcon height={20} width={20} class={btnClass[1]} />
+          </div>
         }
         content="撤回"
       />
@@ -399,7 +392,7 @@ export function Pause(props: { id?: string; type: MsgTypes }) {
             stopGenAns()
           }
         }}
-        class="group/pause flex min-w-12 cursor-pointer items-center rounded py-[1px] hover:bg-gray/40"
+        class="group/pause flex min-w-12 cursor-pointer items-center rounded py-[1px] hover:bg-gray/20"
       >
         <PauseIcon
           height={20}
