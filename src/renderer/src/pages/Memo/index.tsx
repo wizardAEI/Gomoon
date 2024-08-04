@@ -15,7 +15,6 @@ import CapitalIcon from '@renderer/components/ui/CapitalIcon'
 import EditIcon from '@renderer/assets/icon/base/EditIcon'
 import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
 import { useToast } from '@renderer/components/ui/Toast'
-import CrossMark from '@renderer/assets/icon/base/CrossMark'
 import { MemoModel } from 'src/main/models/model'
 import { setSelectedMemo } from '@renderer/store/user'
 import { useNavigate } from '@solidjs/router'
@@ -24,6 +23,7 @@ import ToolTip from '@renderer/components/ui/ToolTip'
 import { cloneDeep } from 'lodash'
 import DownloadIcon from '@renderer/assets/icon/base/DownloadIcon'
 import { useLoading } from '@renderer/components/ui/DynamicLoading'
+import TrashIcon from '@renderer/assets/icon/TrashIcon'
 
 import EditBox from './EditBox'
 
@@ -180,7 +180,7 @@ export default function () {
                         return canDel
                       }}
                     >
-                      <CrossMark
+                      <TrashIcon
                         height={20}
                         width={20}
                         class="cursor-pointer text-gray duration-100 hover:text-active"

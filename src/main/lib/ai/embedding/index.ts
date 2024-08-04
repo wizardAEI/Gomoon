@@ -88,6 +88,9 @@ export async function editFragment(option: EditFragmentOption): Promise<{
         fragmentsMap[option.id]?.push(option.fragment)
       } catch (e: Error | any) {
         console.log(e)
+        fragmentsMap[option.id] = fragmentsMap[option.id]?.filter(
+          (fragment) => fragment.name !== option.fragment.name
+        )
         if (e.message === 'llm error') {
           return { suc: false, reason: '大模型调用异常' }
         }

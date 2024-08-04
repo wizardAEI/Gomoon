@@ -123,50 +123,52 @@ export default function (props: {
             type="file"
             class="hidden"
             accept=".md"
-            multiple={false}
+            multiple={true}
             onChange={async (e) => {
-              const file = e.target.files![0]
-              e.target.value = ''
-              if (file) {
+              const files = e.target.files
+              if (files?.length) {
                 load.show('解析文件中')
+                let i = 0
                 const remove = window.api.receiveMsg(async (_, msg: string) => {
                   if (msg.includes('progress')) {
                     const progress = msg.replace(/^progress /, '')
-                    if (progress === 'suc') {
-                      remove()
-                      return
-                    }
-                    load.show(progress)
+                    load.show(`第${i + 1}个文件: ` + progress)
                   }
                 })
                 try {
-                  const res = await window.api.editFragment({
-                    id: m().id,
-                    fragment: {
-                      name: file.name,
-                      from: file.path,
-                      type: file.name.split('.').pop() as 'md' | 'xlsx'
-                    },
-                    type: 'add',
-                    useLLM: useLLM()
-                  })
-                  if (!res.suc) {
-                    toast.error(res.reason || '解析失败')
-                  } else {
-                    setField('fragment', [
-                      ...m().fragment,
-                      {
-                        type: file.name.split('.').pop() as 'md' | 'xlsx',
-                        name: file.name
-                      }
-                    ])
+                  for (i = 0; i < files.length; i++) {
+                    const file = files[i]
+                    console.log(file)
+                    const res = await window.api.editFragment({
+                      id: m().id,
+                      fragment: {
+                        name: file.name,
+                        from: file.path,
+                        type: file.name.split('.').pop() as 'md' | 'xlsx'
+                      },
+                      type: 'add',
+                      useLLM: useLLM()
+                    })
+                    if (!res.suc) {
+                      toast.error(res.reason || '解析失败')
+                    } else {
+                      setField('fragment', [
+                        ...m().fragment,
+                        {
+                          type: file.name.split('.').pop() as 'md' | 'xlsx',
+                          name: file.name
+                        }
+                      ])
+                    }
                   }
                 } catch (error: unknown) {
-                  remove()
                   toast.error((error as Error | undefined)?.message || '解析失败')
+                } finally {
+                  remove()
                 }
                 load.hide()
               }
+              e.target.value = ''
             }}
           />
         </label>
