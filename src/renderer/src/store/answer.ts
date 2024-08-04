@@ -4,6 +4,7 @@ import { ulid } from 'ulid'
 import { ErrorDict } from '@renderer/lib/constant'
 import { extractMeta } from '@renderer/lib/ai/parseString'
 import { createEffect } from 'solid-js'
+
 import { consumedToken, setConsumedTokenForAns } from './input'
 
 let trash = {
@@ -21,19 +22,16 @@ function initTrash() {
   }
 }
 
-const [answerStore, setAnswerStore] = createStore(
-  localStorage.getItem('answer_msgs')
-    ? (JSON.parse(localStorage.getItem('answer_msgs')!) as {
-        id: string
-        answer: string
-        question: string
-      })
-    : {
-        id: '',
-        answer: '',
-        question: ''
-      }
-)
+const [answerStore, setAnswerStore] = createStore<{
+  id: string
+  answer: string
+  question: string
+}>({
+  id: '',
+  answer: '',
+  question: '',
+  ...JSON.parse(localStorage.getItem('answer_msgs') || '{}')
+})
 
 createEffect(() => {
   localStorage.setItem('answer_msgs', JSON.stringify(answerStore))

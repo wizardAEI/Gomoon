@@ -19,19 +19,17 @@ export interface MsgMeta {
   id: string
 }
 
-export const [msgMeta, setMsgMeta] = createStore<MsgMeta>(
-  localStorage.getItem('chat_meta')
-    ? JSON.parse(localStorage.getItem('chat_meta')!)
-    : {
-        id: ulid()
-      }
-)
+export const [msgMeta, setMsgMeta] = createStore<MsgMeta>({
+  id: ulid(),
+  ...JSON.parse(localStorage.getItem('chat_meta') || '{}')
+})
 
 const [msgs, setMsgs] = createStore<Array<Msg>>(
   localStorage.getItem('chat_msgs') ? JSON.parse(localStorage.getItem('chat_msgs')!) : []
 )
 
 createEffect(() => {
+  localStorage.setItem('chat_meta', JSON.stringify(msgMeta))
   localStorage.setItem('chat_msgs', JSON.stringify(msgs))
 })
 
