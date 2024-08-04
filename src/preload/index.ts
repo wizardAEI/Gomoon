@@ -52,6 +52,7 @@ export const api = {
   setChatFontSize: (size: number) => ipcRenderer.invoke('set-chat-fontsize', size),
   setChatFontFamily: (fontFamily: SettingFontFamily) =>
     ipcRenderer.invoke('set-font-family', fontFamily),
+  setOpenAtLogin: (b: boolean) => ipcRenderer.invoke('set-open-at-login', b),
 
   // 用户信息相关
   getUserData: (): Promise<UserDataModel> => ipcRenderer.invoke('get-user-data'),

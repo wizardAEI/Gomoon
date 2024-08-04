@@ -94,6 +94,7 @@ export interface SettingModel {
   theme: string
   chatFontSize: number
   fontFamily: SettingFontFamily
+  openAtLogin: boolean
 }
 export interface MemoResult {
   content: string

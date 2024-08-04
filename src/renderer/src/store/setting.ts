@@ -20,7 +20,8 @@ const [settingStore, setSettingStore] = createStore<
   sendWithCmdOrCtrl: false,
   theme: 'gomoon-theme',
   chatFontSize: 14,
-  fontFamily: 'default'
+  fontFamily: 'default',
+  openAtLogin: false
 })
 
 export function setIsOnTop(v: boolean) {
@@ -53,6 +54,11 @@ export async function setFontFamily(fontFamily: SettingFontFamily) {
   return window.api.setChatFontFamily(fontFamily)
 }
 
+export async function setOpenAtLogin(v: boolean) {
+  setSettingStore('openAtLogin', v)
+  return window.api.setOpenAtLogin(v)
+}
+
 export async function loadConfig() {
   const config = await window.api.loadConfig()
   // 从 data 中读取配置
@@ -66,6 +72,7 @@ export async function loadConfig() {
   setSettingStore('theme', config.theme)
   setSettingStore('chatFontSize', config.chatFontSize)
   setSettingStore('fontFamily', config.fontFamily)
+  setSettingStore('openAtLogin', config.openAtLogin)
   event.emit('updateModels', config.models)
 }
 

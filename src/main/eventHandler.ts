@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { autoUpdater } from 'electron-updater'
 
 import {
@@ -29,7 +29,8 @@ import {
   createCollection,
   deleteCollection,
   updateCollection,
-  setFontFamily
+  setFontFamily,
+  setOpenAtLogin
 } from './models/index'
 import {
   AssistantModel,
@@ -134,6 +135,13 @@ export function initAppEventsHandler() {
   ipcMain.handle('set-theme', (_, theme: string) => setTheme(theme))
   ipcMain.handle('set-chat-fontsize', (_, v: number) => setChatFontSize(v))
   ipcMain.handle('set-font-family', (_, v: SettingFontFamily) => setFontFamily(v))
+  ipcMain.handle('set-open-at-login', (_, v: boolean) => {
+    app.setLoginItemSettings({
+      openAtLogin: v, //是否开机启动
+      openAsHidden: v //是否隐藏主窗体，保留托盘位置
+    })
+    setOpenAtLogin(v)
+  })
 
   /**
    * FEAT: 用户相关

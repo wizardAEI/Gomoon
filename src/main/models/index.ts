@@ -111,6 +111,14 @@ export function setFontFamily(fontFamily: SettingModel['fontFamily']) {
   configDB.write()
 }
 
+export function setOpenAtLogin(openAtLogin: SettingModel['openAtLogin']) {
+  configDB.data = {
+    ...configDB.data,
+    openAtLogin
+  }
+  configDB.write()
+}
+
 /**
  * FEAT: 用户数据相关
  */

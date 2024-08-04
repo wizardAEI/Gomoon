@@ -18,7 +18,7 @@ import KimiIcon from '@renderer/assets/icon/models/KimiIcon'
 import FilePicker from '@renderer/components/ui/FilePicker'
 import OllamaIcon from '@renderer/assets/icon/models/OllamaIcon'
 import Select from '@renderer/components/ui/Select'
-import { setChatFontSize, setFontFamily, setTheme } from '@renderer/store/setting'
+import { setChatFontSize, setFontFamily, setOpenAtLogin, setTheme } from '@renderer/store/setting'
 import { useToast } from '@renderer/components/ui/Toast'
 import CustomIcon from '@renderer/assets/icon/models/CustomIcon'
 import DeepSeekIcon from '@renderer/assets/icon/models/DeepSeekIcon'
@@ -465,6 +465,13 @@ export default function Setting() {
         </Card>
         <Card title="应用设置">
           <div class="flex flex-col gap-2">
+            <Switch
+              label="开机启动"
+              checked={settingStore.openAtLogin}
+              onCheckedChange={(v) => {
+                setOpenAtLogin(v)
+              }}
+            />
             <Switch
               label="是否将应用置顶"
               hint="置顶后也可以通过唤起快捷键隐藏和唤起"

@@ -146,7 +146,7 @@ export default function Chat() {
         <Show when={msgStatus.generatingList.length === 0}>
           <Capsule type="chat" botName={getCurrentAssistantForChat().name} />
         </Show>
-        <div>
+        <div class="mx-auto w-full lg:max-w-7xl">
           <For each={msgs}>
             {(msg, index) => (
               // 这里使用三元表达式来显示消息时会有渲染不及时的问题

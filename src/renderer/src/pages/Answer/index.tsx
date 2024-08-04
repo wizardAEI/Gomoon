@@ -67,34 +67,37 @@ export default function Answer() {
           }}
         />
       </Show>
-      <Show
-        when={answerStore.question}
-        fallback={
-          <>
-            {
-              <div class="flex w-full select-none flex-col items-center justify-center gap-2 px-10 pt-8">
-                <span class="text-sm text-gray">问答助手</span>
-                <span class="whitespace-nowrap text-[12px] text-gray">&lt;{introduce()}&gt;</span>
-              </div>
-            }
-            <SystemHeader type="ans" />
-          </>
-        }
-      >
-        <div class="mt-6">
-          <Message content={answerStore.question} id="question" type="question" />
-        </div>
-      </Show>
-      <Show when={answerStore.answer}>
-        <Show when={!ansStatus.isGenerating}>
-          <Capsule type="ans" botName={getCurrentAssistantForAnswer().name} />
+      <div class="mx-auto flex w-full flex-col gap-4 lg:max-w-4xl">
+        <Show
+          when={answerStore.question}
+          fallback={
+            <>
+              {
+                <div class="flex w-full select-none flex-col items-center justify-center gap-2 px-10 pt-8">
+                  <span class="text-sm text-gray">问答助手</span>
+                  <span class="whitespace-nowrap text-[12px] text-gray">&lt;{introduce()}&gt;</span>
+                </div>
+              }
+              <SystemHeader type="ans" />
+            </>
+          }
+        >
+          <div class="mt-6">
+            <Message content={answerStore.question} id="question" type="question" />
+          </div>
         </Show>
-        <Message
-          content={answerStore.answer}
-          type="ans"
-          botName={getCurrentAssistantForAnswer().name}
-        />
-      </Show>
+        <Show when={answerStore.answer}>
+          <Show when={!ansStatus.isGenerating}>
+            <Capsule type="ans" botName={getCurrentAssistantForAnswer().name} />
+          </Show>
+          <Message
+            content={answerStore.answer}
+            type="ans"
+            botName={getCurrentAssistantForAnswer().name}
+          />
+        </Show>
+      </div>
+
       <div class="fixed bottom-0 left-0 right-0 h-[118px] bg-transparent backdrop-blur-xl" />
       <div class="fixed bottom-10 z-20 w-full px-4">
         <Input
