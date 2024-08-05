@@ -27,6 +27,11 @@ import TrashIcon from '@renderer/assets/icon/TrashIcon'
 
 import EditBox from './EditBox'
 
+const iconClass = [
+  'group/btn flex cursor-pointer rounded-md p-[2px] duration-100 hover:bg-gray/20',
+  'text-gray group-hover/btn:text-active'
+]
+
 export default function () {
   const toast = useToast()
   const loading = useLoading()
@@ -45,7 +50,7 @@ export default function () {
       <div class="mb-5 animate-scale-down-entrance select-none p-2">
         <div class="mx-2 my-4 flex gap-2">
           <div
-            class="group/create relative flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-dark p-4"
+            class="group/create relative flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-dark py-4"
             onClick={createNewMemo}
           >
             <Plus
@@ -55,7 +60,6 @@ export default function () {
             />
             <span>添加记忆胶囊 💊</span>
           </div>
-
           <label for="import-assistants" class="flex-1">
             <div class="group/create relative flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-dark p-4">
               <DownloadIcon
@@ -126,7 +130,7 @@ export default function () {
               }
             >
               <div
-                class="relative mx-2 my-4 flex flex-col gap-2 rounded-2xl border-2 border-solid border-transparent bg-dark p-4 duration-150 hover:border-active"
+                class="relative mx-2 my-4 flex flex-col gap-2 rounded-2xl border-2 border-solid border-transparent bg-dark p-3 duration-150 hover:border-active"
                 onClick={async () => {
                   setSelectedMemo(m.id)
                   nav(-1)
@@ -143,31 +147,29 @@ export default function () {
                     <div class="font-medium">{m.name}</div>
                   </div>
                   <div class="flex h-6 gap-1">
-                    <ToolTip
-                      content="导出记忆"
-                      label={
-                        <UploadIcon
-                          height={20}
-                          width={20}
-                          // eslint-disable-next-line solid/reactivity
-                          onClick={async (e) => {
-                            e.stopPropagation()
-                            const data = await window.api.exportMemory(cloneDeep(m))
-                            await window.api.saveFile(`${m.name}.gomoon`, data)
-                          }}
-                          class="cursor-pointer text-gray duration-100 hover:text-active"
-                        />
-                      }
-                    />
-                    <EditIcon
-                      height={20}
-                      width={20}
-                      class="cursor-pointer text-gray duration-100 hover:text-active"
+                    <div
+                      class={iconClass[0]}
+                      onClick={async (e) => {
+                        e.stopPropagation()
+                        const data = await window.api.exportMemory(cloneDeep(m))
+                        await window.api.saveFile(`${m.name}.gomoon`, data)
+                      }}
+                    >
+                      <ToolTip
+                        content="导出记忆"
+                        label={<UploadIcon height={20} width={20} class={iconClass[1]} />}
+                      />
+                    </div>
+                    <div
+                      class={iconClass[0]}
                       onClick={(e) => {
                         e.stopPropagation()
                         onEditMemo(m.id)
                       }}
-                    />
+                    >
+                      <EditIcon height={20} width={20} class={iconClass[1]} />
+                    </div>
+
                     <DoubleConfirm
                       label="确认删除"
                       position="-right-2 top-3"
@@ -180,11 +182,9 @@ export default function () {
                         return canDel
                       }}
                     >
-                      <TrashIcon
-                        height={20}
-                        width={20}
-                        class="cursor-pointer text-gray duration-100 hover:text-active"
-                      />
+                      <div class={iconClass[0]}>
+                        <TrashIcon height={20} width={20} class={iconClass[1]} />
+                      </div>
                     </DoubleConfirm>
                   </div>
                 </div>

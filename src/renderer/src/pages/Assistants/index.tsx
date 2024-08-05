@@ -26,6 +26,11 @@ const map = {
   chat: '聊天'
 }
 
+const iconClass = [
+  'group/btn flex cursor-pointer rounded-md p-[2px] duration-100 hover:bg-gray/20',
+  'text-gray group-hover/btn:text-active'
+]
+
 export default function () {
   const [{ type }, _] = useSearchParams()
   const toast = useToast()
@@ -106,33 +111,15 @@ export default function () {
                     <div class="font-medium">{a.name}</div>
                   </div>
                   <div class="flex h-6 gap-1">
-                    <EditIcon
-                      height={24}
-                      width={24}
-                      class="cursor-pointer text-gray duration-100 hover:text-active"
+                    <div
+                      class={iconClass[0]}
                       onClick={(e) => {
                         onEditAssistant(a.id)
                         e.stopPropagation()
                       }}
-                    />
-                    {/* // TODO: 完善功能 */}
-                    {/* <ToolTip
-                    label={compWithTip((tip) => (
-                      <CodeIcon
-                        height={20}
-                        width={20}
-                        class="cursor-pointer text-gray duration-100 hover:text-active"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          tip('fail', '还没做捏💦')
-                        }}
-                      />
-                    ))}
-                    content="创建服务"
-                    position={{
-                      placement: 'top'
-                    }}
-                  /> */}
+                    >
+                      <EditIcon height={20} width={20} class={iconClass[1]} />
+                    </div>
                     <DoubleConfirm
                       label="确认删除"
                       position="-right-2 top-3"
@@ -147,11 +134,9 @@ export default function () {
                         return canDel
                       }}
                     >
-                      <TrashIcon
-                        height={24}
-                        width={24}
-                        class="cursor-pointer text-gray duration-100 hover:text-active"
-                      />
+                      <div class={iconClass[0]}>
+                        <TrashIcon height={20} width={20} class={iconClass[1]} />
+                      </div>
                     </DoubleConfirm>
                   </div>
                 </div>

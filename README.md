@@ -37,6 +37,7 @@
 | Kimi       | Kimi 8k，Kimi 32k，Kimi 128k                                                |
 | Llama      | [node-llama-cpp](https://withcatai.github.io/node-llama-cpp) 支持的所有模型 |
 | Ollama     | [ollama](https://ollama.com/) 支持的所有模型                                |
+| Claude     | Claude 最新的 Haiku，Opus，Sonnet 模型                                      |
 | 自定义模型 | 任何支持 OpenAI 接口的模型，如DeepSeek，豆包，Kimi，讯飞星火等              |
 
 由于 ChatGPT 国内访问不易，这里推荐一下 [ChatAnywhere](https://peiqishop.me/)，价格十分实惠的国内 ChatGPT 提供商。

@@ -1,6 +1,6 @@
 import { SvgProps } from './type'
 
-export default function (props: SvgProps) {
+export default function BrowserIcon(props: SvgProps) {
   return (
     <svg
       class="icon"

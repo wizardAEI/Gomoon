@@ -2,7 +2,6 @@ import EmptyIcon from '@renderer/assets/icon/base/EmptyIcon'
 import HistoryIcon from '@renderer/assets/icon/base/HistoryIcon'
 import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
 import { parseDisplayArr } from '@renderer/lib/ai/parseString'
-import { setAnswerStore } from '@renderer/store/answer'
 import {
   historyManager,
   clearHistory,
@@ -11,8 +10,6 @@ import {
   removeHistory,
   starHistory
 } from '@renderer/store/history'
-import { Msg, setMsgs } from '@renderer/store/chat'
-import { setSelectedAssistantForAns, setSelectedAssistantForChat } from '@renderer/store/user'
 import { useNavigate } from '@solidjs/router'
 import { For, Show, createMemo, createSignal, onCleanup } from 'solid-js'
 import { HistoryModel } from 'src/main/models/model'
@@ -48,7 +45,10 @@ export default function () {
   const [searchText, setSearchText] = createSignal('')
   const [selectType, setSelectType] = createSignal('all')
   const [showMoreBtn, setShowMoreBtn] = createSignal(false)
-  const iconClass = 'cursor-pointer text-gray hover:text-active'
+  const iconClass = [
+    'group/btn flex cursor-pointer rounded-md p-[2px] duration-100 hover:bg-gray/20',
+    'text-gray group-hover/btn:text-active'
+  ]
   function sliceArr(arr: HistoryModel['contents']) {
     if (arr.length === 2) return arr
     return arr
@@ -127,20 +127,14 @@ export default function () {
               when={showMoreBtn()}
               fallback={
                 <>
-                  <SearchIcon
-                    height={22}
-                    width={22}
-                    class={iconClass}
-                    onClick={() => setShowSearchInput(true)}
-                  />
+                  <div class={iconClass[0]} onClick={() => setShowSearchInput(true)}>
+                    <SearchIcon height={22} width={22} class={iconClass[1]} />
+                  </div>
                   <ToolTip
                     label={
-                      <MoreHIcon
-                        height={22}
-                        width={22}
-                        class={iconClass}
-                        onClick={() => setShowMoreBtn(true)}
-                      />
+                      <div class={iconClass[0]} onClick={() => setShowMoreBtn(true)}>
+                        <MoreHIcon height={22} width={22} class={iconClass[1]} />
+                      </div>
                     }
                     content="更多"
                   />
@@ -170,19 +164,20 @@ export default function () {
                     }}
                   >
                     <ToolTip
-                      label={<ClearIcon width={22} height={22} class={iconClass} />}
+                      label={
+                        <div class={iconClass[0]}>
+                          <ClearIcon width={22} height={22} class={iconClass[1]} />
+                        </div>
+                      }
                       content="清除历史记录（非收藏）"
                     />
                   </div>
                 </Show>
                 <ToolTip
                   label={
-                    <ReturnIcon
-                      onClick={() => setShowMoreBtn(false)}
-                      width={22}
-                      height={22}
-                      class={iconClass}
-                    />
+                    <div class={iconClass[0]} onClick={() => setShowMoreBtn(false)}>
+                      <ReturnIcon width={22} height={22} class={iconClass[1]} />
+                    </div>
                   }
                   content="返回"
                 />
@@ -218,12 +213,9 @@ export default function () {
                         </div>
                         <Show
                           fallback={
-                            <MoreHIcon
-                              width={22}
-                              height={22}
-                              class="cursor-pointer text-gray duration-100 hover:text-active"
-                              onClick={() => setShowMore(true)}
-                            />
+                            <div class={iconClass[0]} onClick={() => setShowMore(true)}>
+                              <MoreHIcon width={20} height={20} class={iconClass[1]} />
+                            </div>
                           }
                           when={showMore()}
                         >
@@ -243,24 +235,28 @@ export default function () {
                               })
                             }}
                           >
-                            <StarIcon
-                              width={22}
-                              height={22}
-                              class={`cursor-pointer ${h.starred ? 'text-active' : 'text-gray hover:text-active/80'}`}
+                            <div
+                              class={iconClass[0]}
                               onClick={() => {
                                 h.starred ? starHistory(h.id, false) : starHistory(h.id, true)
                               }}
-                            />
-                            <CopyIcon
-                              width={21}
-                              height={21}
-                              class="cursor-pointer pl-[1px] pt-[1px] text-gray duration-100 hover:text-active"
+                            >
+                              <StarIcon
+                                width={20}
+                                height={20}
+                                class={`cursor-pointer ${h.starred ? 'text-active' : 'text-gray group-hover/btn:text-active/80'}`}
+                              />
+                            </div>
+                            <div
                               onClick={() => {
                                 copyHistory(h.id).then(() => {
                                   toast.success('拷贝成功')
                                 })
                               }}
-                            />
+                              class={iconClass[0]}
+                            >
+                              <CopyIcon width={19} height={19} class={iconClass[1]} />
+                            </div>
                             <DoubleConfirm
                               label="确认删除"
                               position="-right-2 top-3"
@@ -268,10 +264,10 @@ export default function () {
                                 removeHistory(h.id)
                               }}
                             >
-                              <div class="flex">
+                              <div class={iconClass[0]}>
                                 <TrashIcon
-                                  height={22}
-                                  width={22}
+                                  height={20}
+                                  width={20}
                                   class="cursor-pointer text-gray duration-100 hover:text-active"
                                 />
                               </div>

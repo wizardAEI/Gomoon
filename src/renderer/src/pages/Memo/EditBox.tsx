@@ -1,6 +1,7 @@
 import CrossMark from '@renderer/assets/icon/base/CrossMark'
 import Plus from '@renderer/assets/icon/base/Plus'
 import BaseFileIcon from '@renderer/assets/icon/file/baseFileIcon'
+import Button from '@renderer/components/ui/Button'
 import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
 import { useLoading } from '@renderer/components/ui/DynamicLoading'
 import QuestionMention from '@renderer/components/ui/QuestionMention'
@@ -174,22 +175,20 @@ export default function (props: {
         </label>
       </div>
       <div class="flex justify-around">
-        <button
-          class="duration-300 hover:bg-active"
+        <Button
           onClick={() => {
             props.onCancel()
           }}
         >
           取消
-        </button>
-        <button
-          class="duration-300 hover:bg-active"
+        </Button>
+        <Button
           onClick={() => {
             props.onSave(m())
           }}
         >
           保存
-        </button>
+        </Button>
       </div>
     </div>
   )

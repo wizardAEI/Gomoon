@@ -120,7 +120,7 @@ export default function Collection(props: { searchText: string }) {
                                     <For each={meta}>
                                       {(m, index) => {
                                         return (
-                                          <>
+                                          <div class="select-text">
                                             {index() === 0 && (
                                               <div class="mb-1 font-bold">{map[con.role]}</div>
                                             )}
@@ -130,7 +130,7 @@ export default function Collection(props: { searchText: string }) {
                                               // eslint-disable-next-line solid/reactivity
                                               SpecialTypeContent(m, true)
                                             )}
-                                          </>
+                                          </div>
                                         )
                                       }}
                                     </For>

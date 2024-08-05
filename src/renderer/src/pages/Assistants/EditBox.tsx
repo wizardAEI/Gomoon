@@ -1,5 +1,6 @@
 import { modelDict } from '@lib/langchain'
 import { getModelOptions } from '@renderer/components/MainSelections/ModelSelect'
+import Button from '@renderer/components/ui/Button'
 import QuestionMention from '@renderer/components/ui/QuestionMention'
 import Select from '@renderer/components/ui/Select'
 import { useToast } from '@renderer/components/ui/Toast'
@@ -94,16 +95,14 @@ export default function (props: {
         />
       </Field>
       <div class="mt-3 flex justify-around">
-        <button
-          class="duration-300 hover:bg-active"
+        <Button
           onClick={() => {
             props.onCancel()
           }}
         >
           取消
-        </button>
-        <button
-          class="duration-300 hover:bg-active"
+        </Button>
+        <Button
           onClick={() => {
             if (!a().name) {
               toast.warning('助手名称不能为空')
@@ -117,7 +116,7 @@ export default function (props: {
           }}
         >
           保存
-        </button>
+        </Button>
       </div>
     </div>
   )
