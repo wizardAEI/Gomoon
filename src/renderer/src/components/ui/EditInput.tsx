@@ -1,5 +1,5 @@
 import SaveIcon from '@renderer/assets/icon/base/SaveIcon'
-import { Show, createEffect, createSignal } from 'solid-js'
+import { Show, createSignal } from 'solid-js'
 
 export default function EditInput(
   props: {
@@ -46,7 +46,7 @@ export default function EditInput(
       >
         <div class="relative max-w-lg flex-1">
           <input
-            class="pr-3"
+            class={props.type === 'number' ? 'pr-3' : 'pr-6'}
             spellcheck={props.spellcheck || false}
             ref={inputRef}
             type={props.type}

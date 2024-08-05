@@ -137,8 +137,7 @@ export function initAppEventsHandler() {
   ipcMain.handle('set-font-family', (_, v: SettingFontFamily) => setFontFamily(v))
   ipcMain.handle('set-open-at-login', (_, v: boolean) => {
     app.setLoginItemSettings({
-      openAtLogin: v, //是否开机启动
-      openAsHidden: v //是否隐藏主窗体，保留托盘位置
+      openAtLogin: v //是否开机启动
     })
     setOpenAtLogin(v)
   })

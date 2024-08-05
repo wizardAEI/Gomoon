@@ -6,7 +6,7 @@ export default function ChatIcon(props: SvgProps) {
       //@ts-ignore
       t="1700569212312"
       class="icon"
-      viewBox="-20 -20 984 984"
+      viewBox="30 30 964 964"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
       p-id="9125"

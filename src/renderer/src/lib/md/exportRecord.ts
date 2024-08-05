@@ -98,6 +98,8 @@ export default async function (
     const ctx = canvasF.getContext('2d')!
     canvasF.width = canvas.width + 128
     canvasF.height = canvas.height + 208
+    ctx.fillStyle = 'white'
+    ctx.fillRect(0, 0, canvasF.width, canvasF.height)
     ctx.font = 'italic lighter 30px serif '
     ctx.fillStyle = '#869d9d'
     const svgBlob = new Blob(
@@ -131,7 +133,6 @@ export default async function (
     img.src = url
     await new Promise((res) => {
       img.onload = () => {
-        console.log('图片加载完成')
         // 在 canvas 上绘制图像
         ctx.drawImage(img, canvas.width - 460, canvas.height + 120)
         // 释放 Blob URL
@@ -139,7 +140,6 @@ export default async function (
         res(null)
       }
     })
-    // ctx.fillText('From Gomoon --- gomoon.top', canvas.width - 280, canvas.height + 140)
     ctx.shadowOffsetX = 10
     ctx.shadowOffsetY = 35
     ctx.shadowBlur = 50
