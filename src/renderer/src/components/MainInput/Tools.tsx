@@ -17,6 +17,7 @@ import { userData } from '@renderer/store/user'
 import { ContentDisplay, parseString } from '@renderer/lib/ai/parseString'
 import CrossMarkRound from '@renderer/assets/icon/base/CrossMarkRound'
 import { initMemories } from '@renderer/store/memo'
+import { isValidUrl } from '@renderer/lib/util'
 
 import { useLoading } from '../ui/DynamicLoading'
 import { useToast } from '../ui/Toast'
@@ -220,12 +221,18 @@ export default function Tools(props: {
               if (confirm) {
                 load.show('正在解析网页中的链接')
                 try {
-                  const content = await parsePageForUrl(url())
-                  addArtifact({
-                    type: 'url',
-                    val: content,
-                    src: url()
-                  })
+                  // 判断是否合法url
+                  if (isValidUrl(url())) {
+                    const content = await parsePageForUrl(url())
+                    console.log('>>>', content)
+                    addArtifact({
+                      type: 'url',
+                      val: content,
+                      src: url()
+                    })
+                  } else {
+                    toast.warning('请输入合法URL')
+                  }
                 } catch (err: any) {
                   if (err.message.includes('timeout of')) {
                     toast.error('链接连接超时')

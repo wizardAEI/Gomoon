@@ -1,9 +1,6 @@
 // TODO: 优化内容获取截取逻辑（或者分片）
 export async function parsePageToString(url: string): Promise<string> {
-  // const content = await window.api.parsePageToString(url)
-  // if (content.length > 2500) {
-  //   return content.slice(0, 2500) + '...'
-  // }
+  // 如果 url违法 返回 url 违法
   try {
     return await window.api.parsePageToString(url)
   } catch (e) {
