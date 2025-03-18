@@ -5,6 +5,10 @@ import { For, Show, createSignal } from 'solid-js'
 
 const versions = [
   {
+    version: '1.3.1',
+    contents: ['修复了文件解析上传的体验问题']
+  },
+  {
     version: '1.3.0',
     contents: ['修复一些潜在BUG']
   },
