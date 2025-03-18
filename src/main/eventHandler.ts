@@ -1,3 +1,6 @@
+import { unlinkSync } from 'fs'
+import { join } from 'path'
+
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { autoUpdater } from 'electron-updater'
 
@@ -204,6 +207,9 @@ export function initAppEventsHandler() {
 
   // 文件相关
   ipcMain.handle('parse-file', (_, files: FilePayload[]) => parseFile(files))
+  ipcMain.handle('remove-file', (_, path: string, filename: string) => {
+    unlinkSync(join(path, filename))
+  })
   ipcMain.handle('open-path', (_, path: string) => {
     shell.openPath(path)
   })

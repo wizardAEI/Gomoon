@@ -113,7 +113,12 @@ export default function Tools(props: {
           {(artifact, index) => {
             if (artifact.type === 'file') {
               return (
-                <ArtifactWrap onDel={() => removeArtifact(index())}>
+                <ArtifactWrap
+                  onDel={() => {
+                    window.api.removeFile(artifact.src, artifact.filename)
+                    removeArtifact(index())
+                  }}
+                >
                   {artifact.filename}
                 </ArtifactWrap>
               )
@@ -129,7 +134,13 @@ export default function Tools(props: {
             }
             if (artifact.type === 'image') {
               return (
-                <ArtifactWrap onDel={() => removeArtifact(index())} noPadding>
+                <ArtifactWrap
+                  onDel={() => {
+                    window.api.removeFile(artifact.src, artifact.filename)
+                    removeArtifact(index())
+                  }}
+                  noPadding
+                >
                   <img src={parseString(artifact.val, true)[0]['value']} class="w-20 rounded-md" />
                 </ArtifactWrap>
               )

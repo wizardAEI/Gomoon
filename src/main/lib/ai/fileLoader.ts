@@ -1,6 +1,6 @@
 import { readFile } from 'fs/promises'
 import { basename, join } from 'path'
-import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
+import { copyFileSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'fs'
 
 import { TextLoader } from 'langchain/document_loaders/fs/text'
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf'
@@ -98,15 +98,13 @@ export default async function parseFile(files: FilePayload[]): Promise<FileLoade
   let type = 'file' as 'file' | 'image'
   const today = moment().format('YYYY-MM-DD')
   const targetPath = join(filesPath, `/${today}`)
-  const filePath = moment().format('HH-mm-ss-') + files[0].path
-  const targetFile = files[0].data
-    ? join(targetPath, filePath)
-    : join(targetPath, basename(files[0].path))
+  const filename = moment().format('HH-mm-ss-') + basename(files[0].path)
+  const targetFile = join(targetPath, filename)
   mkdirSync(targetPath, { recursive: true })
   if (files[0].data) {
     const base64Image = files[0].data.split(';base64,').pop()
     const imageBuffer = Buffer.from(base64Image!, 'base64')
-    writeFileSync(targetFile, imageBuffer)
+    writeFileSync(targetFile, imageBuffer as any)
   } else if (files[0].path) {
     copyFileSync(files[0].path, targetFile)
   }
@@ -147,6 +145,6 @@ export default async function parseFile(files: FilePayload[]): Promise<FileLoade
     type,
     content,
     src: targetPath,
-    filename: basename(files[0].path)
+    filename
   }
 }

@@ -108,6 +108,7 @@ export const api = {
   // 文件相关
   parseFile: (files: FilePayload[]): Promise<FileLoaderRes> =>
     ipcRenderer.invoke('parse-file', files),
+  removeFile: (path: string, filename: string) => ipcRenderer.invoke('remove-file', path, filename),
   openPath: (path: string) => ipcRenderer.invoke('open-path', path),
   saveFile: (fileName: string, content: string) =>
     ipcRenderer.invoke('save-file', fileName, content),
