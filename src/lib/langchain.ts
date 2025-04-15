@@ -87,6 +87,9 @@ export type ModelsType =
   | 'ERNIE128K'
   | 'GPT4'
   | 'GPTMINI'
+  | 'GPT41'
+  | 'GPT41MINI'
+  | 'GPT41NANO'
   | 'GPTCustom'
   | 'DeepSeekChat'
   | 'DeepSeekReasoner'
@@ -117,6 +120,18 @@ export const modelDict: {
   GPT4: {
     label: 'GPT-4o',
     maxToken: 128000
+  },
+  GPT41: {
+    label: 'GPT-4.1',
+    maxToken: 1032000
+  },
+  GPT41MINI: {
+    label: 'GPT-4.1 Mini',
+    maxToken: 1032000
+  },
+  GPT41NANO: {
+    label: 'GPT-4.1 Nano',
+    maxToken: 1032000
   },
   ERNIE3: {
     maxToken: 11200,
@@ -523,6 +538,9 @@ export const loadLMMap = async (
   ERNIE128K: newERNIEModal(model.BaiduWenxin, 'ERNIE-Speed-128K'),
   GPTMINI: newGPTModal(model.OpenAI, 'gpt-4o-mini'),
   GPT4: newGPTModal(model.OpenAI, 'gpt-4o'),
+  GPT41: newGPTModal(model.OpenAI, 'gpt-4.1'),
+  GPT41MINI: newGPTModal(model.OpenAI, 'gpt-4.1-mini'),
+  GPT41NANO: newGPTModal(model.OpenAI, 'gpt-4.1-nano'),
   DeepSeekChat: newDeepSeekModel(model.DeepSeek, 'deepseek-chat'),
   DeepSeekReasoner: newDeepSeekModel(model.DeepSeek, 'deepseek-reasoner'),
   GPTCustom: newGPTModal(model.OpenAI, model.OpenAI.customModel),

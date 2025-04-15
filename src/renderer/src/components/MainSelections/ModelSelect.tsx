@@ -46,6 +46,38 @@ export function getModelOptions() {
     })
   }
 
+  // 添加 DeepSeek 模型
+  options.push(
+    {
+      label: <span>{modelDict['DeepSeekChat'].label}</span>,
+      icon(size: number) {
+        return (
+          <DeepSeekIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'DeepSeekChat',
+      maxToken: modelDict['DeepSeekChat'].maxToken
+    },
+    {
+      label: <span>{modelDict['DeepSeekReasoner'].label}</span>,
+      icon(size: number) {
+        return (
+          <DeepSeekIcon
+            width={size}
+            height={size}
+            class="cursor-pointer overflow-hidden rounded-md"
+          />
+        )
+      },
+      value: 'DeepSeekReasoner',
+      maxToken: modelDict['DeepSeekReasoner'].maxToken
+    }
+  )
+
   if (settingStore.models.BaiduWenxin.apiKey) {
     options.push(
       {
@@ -89,39 +121,6 @@ export function getModelOptions() {
         },
         value: 'ERNIE128K',
         maxToken: modelDict['ERNIE128K'].maxToken
-      }
-    )
-  }
-
-  if (settingStore.models.DeepSeek.apiKey) {
-    options.push(
-      {
-        label: <span>{modelDict['DeepSeekChat'].label}</span>,
-        icon(size: number) {
-          return (
-            <DeepSeekIcon
-              width={size}
-              height={size}
-              class="cursor-pointer overflow-hidden rounded-md"
-            />
-          )
-        },
-        value: 'DeepSeekChat',
-        maxToken: modelDict['DeepSeekChat'].maxToken
-      },
-      {
-        label: <span>{modelDict['DeepSeekReasoner'].label}</span>,
-        icon(size: number) {
-          return (
-            <DeepSeekIcon
-              width={size}
-              height={size}
-              class="cursor-pointer overflow-hidden rounded-md"
-            />
-          )
-        },
-        value: 'DeepSeekReasoner',
-        maxToken: modelDict['DeepSeekReasoner'].maxToken
       }
     )
   }
@@ -398,6 +397,48 @@ export function getModelOptions() {
         },
         value: 'GPTMINI',
         maxToken: modelDict['GPTMINI'].maxToken
+      },
+      {
+        label: <span class="text-current">{modelDict['GPT41'].label}</span>,
+        icon(size: number) {
+          return (
+            <ChatGptIcon
+              width={size}
+              height={size}
+              class="cursor-pointer overflow-hidden rounded-md"
+            />
+          )
+        },
+        value: 'GPT41',
+        maxToken: modelDict['GPT41'].maxToken
+      },
+      {
+        label: <span class="text-current">{modelDict['GPT41MINI'].label}</span>,
+        icon(size: number) {
+          return (
+            <ChatGptIcon
+              width={size}
+              height={size}
+              class="cursor-pointer overflow-hidden rounded-md"
+            />
+          )
+        },
+        value: 'GPT41MINI',
+        maxToken: modelDict['GPT41MINI'].maxToken
+      },
+      {
+        label: <span class="text-current">{modelDict['GPT41NANO'].label}</span>,
+        icon(size: number) {
+          return (
+            <ChatGptIcon
+              width={size}
+              height={size}
+              class="cursor-pointer overflow-hidden rounded-md"
+            />
+          )
+        },
+        value: 'GPT41NANO',
+        maxToken: modelDict['GPT41NANO'].maxToken
       }
     )
   }

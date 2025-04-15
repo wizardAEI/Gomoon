@@ -5,6 +5,10 @@ import { For, Show, createSignal } from 'solid-js'
 
 const versions = [
   {
+    version: '1.3.2',
+    contents: ['新增了GPT-4.1系列模型', '新增了GPT-4.1 Mini和GPT-4.1 Nano模型']
+  },
+  {
     version: '1.3.1',
     contents: ['修复了文件解析上传的体验问题']
   },
