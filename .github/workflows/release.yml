@@ -55,8 +55,10 @@ jobs:
         if: matrix.platform == 'mac'
         run: sips -z 512 512 resources/icon.png
 
-      # 只构建、不发布，避免 electron-builder 在 Windows 上拿不到 GH_TOKEN
+      # --publish never 只构建不上传，但 electron-builder 在 CI 里仍会初始化 publisher（cleanup），必须提供 GH_TOKEN
       - name: Build app (no publish)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [ "${{ matrix.platform }}" = "win" ]; then
             npx electron-builder --win --publish never
