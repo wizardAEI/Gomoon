@@ -7,10 +7,8 @@ on:
       - 'v*'
 
 jobs:
-  release:
+  build:
     runs-on: ${{ matrix.os }}
-    permissions:
-      contents: write   # 创建 Release 并上传构建产物
     strategy:
       fail-fast: false
       matrix:
@@ -57,15 +55,39 @@ jobs:
         if: matrix.platform == 'mac'
         run: sips -z 512 512 resources/icon.png
 
-      - name: Build and publish
-        shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # 只构建、不发布，避免 electron-builder 在 Windows 上拿不到 GH_TOKEN
+      - name: Build app (no publish)
         run: |
-          export GH_TOKEN="$GH_TOKEN"
           if [ "${{ matrix.platform }}" = "win" ]; then
-            npx electron-builder --win --publish always
+            npx electron-builder --win --publish never
           else
-            npx electron-builder --mac --publish always
+            npx electron-builder --mac --publish never
           fi
+
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.platform }}
+          path: release/
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Create Release and upload
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          draft: false
+          files: artifacts/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
