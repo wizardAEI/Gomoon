@@ -55,7 +55,13 @@ jobs:
       - name: Build
         run: yarn build
 
+      # macOS 需要至少 512x512 的 icon.png，用系统 sips 放大 stub
+      - name: Resize icon for macOS
+        if: matrix.platform == 'mac'
+        run: sips -z 512 512 resources/icon.png
+
       - name: Build installer (${{ matrix.platform }})
+        shell: bash
         run: |
           if [ "${{ matrix.platform }}" = "win" ]; then
             npx electron-builder --win

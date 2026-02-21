@@ -53,7 +53,12 @@ jobs:
       - name: Build
         run: yarn build
 
+      - name: Resize icon for macOS
+        if: matrix.platform == 'mac'
+        run: sips -z 512 512 resources/icon.png
+
       - name: Build and publish
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

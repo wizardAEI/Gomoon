@@ -107,7 +107,8 @@
     "appId": "com.gomoon.app",
     "productName": "Gomoon",
     "directories": {
-      "output": "release"
+      "output": "release",
+      "buildResources": "resources"
     },
     "files": ["out", "resources"],
     "win": {
