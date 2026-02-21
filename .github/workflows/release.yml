@@ -57,6 +57,10 @@ jobs:
         if: matrix.platform == 'mac'
         run: sips -z 512 512 resources/icon.png
 
+      # 方案一：用 GITHUB_ENV 显式注入，确保 npx 子进程能拿到 GH_TOKEN（解决 Windows/PowerShell 继承问题）
+      - name: Set GH_TOKEN for electron-builder
+        run: echo "GH_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+
       - name: Build app (Windows)
         if: matrix.platform == 'win'
         run: npx electron-builder --win --publish never
