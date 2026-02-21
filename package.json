@@ -110,13 +110,15 @@
       "output": "release",
       "buildResources": "resources"
     },
-    "files": ["out", "resources"],
+    "files": ["out", "resources", "icons"],
     "win": {
-      "target": ["nsis"]
+      "target": ["nsis"],
+      "icon": "icons/icon.ico"
     },
     "mac": {
       "target": ["dmg"],
-      "category": "public.app-category.productivity"
+      "category": "public.app-category.productivity",
+      "icon": "icons/icon.icns"
     },
     "linux": {
       "target": ["AppImage"]
