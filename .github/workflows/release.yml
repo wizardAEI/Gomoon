@@ -9,8 +9,6 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     strategy:
       fail-fast: false
       matrix:
@@ -57,17 +55,14 @@ jobs:
         if: matrix.platform == 'mac'
         run: sips -z 512 512 resources/icon.png
 
-      # 方案一：用 GITHUB_ENV 显式注入，确保 npx 子进程能拿到 GH_TOKEN（解决 Windows/PowerShell 继承问题）
-      - name: Set GH_TOKEN for electron-builder
-        run: echo "GH_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
-
+      # 方案二：CI 专用配置禁用 publish，不创建 GitHubPublisher，无需 GH_TOKEN
       - name: Build app (Windows)
         if: matrix.platform == 'win'
-        run: npx electron-builder --win --publish never
+        run: npx electron-builder --win --publish never --config electron-builder-ci.json
 
       - name: Build app (macOS)
         if: matrix.platform == 'mac'
-        run: npx electron-builder --mac --publish never
+        run: npx electron-builder --mac --publish never --config electron-builder-ci.json
 
       - name: Upload release artifacts
         uses: actions/upload-artifact@v4
