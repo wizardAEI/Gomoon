@@ -1,8 +1,10 @@
-import { Models, ModelsType } from '../../lib/langchain'
+import type { ModelsConfig } from '../../lib/models-config'
+
+export type { Provider, EnabledModel, ModelsConfig } from '../../lib/models-config'
 
 export interface UserDataModel {
   firstTime: boolean
-  selectedModel: ModelsType
+  selectedModel: string
   selectedAssistantForChat: string
   selectedAssistantForAns: string
   selectedMemo: string
@@ -33,7 +35,7 @@ export type AssistantModel = (
   name: string
   introduce?: string
   prompt: string
-  matchModel?: ModelsType | 'current'
+  matchModel?: string | 'current'
   // 保留字段
   deleted?: boolean
   tools?: ToolEnum[]
@@ -91,7 +93,7 @@ export interface SettingModel {
   quicklyAnsKey: string
   quicklyWakeUpKeys: string
   sendWithCmdOrCtrl: boolean
-  models: Models
+  models: ModelsConfig
   theme: string
   chatFontSize: number
   fontFamily: SettingFontFamily

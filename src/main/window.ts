@@ -1,7 +1,7 @@
 import { join } from 'path'
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process'
 
-import robot from 'robotjs'
+import { keyboard, Key } from '@nut-tree/nut-js'
 import {
   app,
   shell,
@@ -73,38 +73,32 @@ export function setQuicklyWakeUp(keys: string) {
    */
   globalShortcut.register(keys, () => {
     function showWindow() {
-      const getSelected: () => Promise<ShowWindowParams> = () => {
-        return new Promise((resolve) => {
-          // 缓存之前的文案
-          const lastText = clipboard.readText('clipboard')
+      const getSelected = async (): Promise<ShowWindowParams> => {
+        // 缓存之前的文案
+        const lastText = clipboard.readText('clipboard')
+        const lastFile = clipboard.read('NSFilenamesPboardType')
+        const lastImage = clipboard.readImage('clipboard')
+        const platform = process.platform
 
-          const lastFile = clipboard.read('NSFilenamesPboardType')
-
-          const lastImage = clipboard.readImage('clipboard')
-
-          const platform = process.platform
-
-          // 执行复制动作
-          if (platform === 'darwin') {
-            robot.keyTap('c', 'command')
-          } else {
-            robot.keyTap('c', 'control')
-          }
-          setTimeout(() => {
-            const text =
-              lastText === (clipboard.readText('clipboard') || '')
-                ? ''
-                : clipboard.readText('clipboard')
-            clipboard.writeText(lastText)
-            clipboard.writeImage(lastImage)
-            if (lastFile) {
-              clipboard.writeBuffer('NSFilenamesPboardType', Buffer.from(lastFile))
-            }
-            resolve({
-              text
-            })
-          }, 200)
-        })
+        // 执行复制动作（模拟 Cmd+C / Ctrl+C）
+        if (platform === 'darwin') {
+          await keyboard.pressKey(Key.LeftSuper, Key.C)
+          await keyboard.releaseKey(Key.LeftSuper, Key.C)
+        } else {
+          await keyboard.pressKey(Key.LeftControl, Key.C)
+          await keyboard.releaseKey(Key.LeftControl, Key.C)
+        }
+        await new Promise((r) => setTimeout(r, 200))
+        const text =
+          lastText === (clipboard.readText('clipboard') || '')
+            ? ''
+            : clipboard.readText('clipboard')
+        clipboard.writeText(lastText)
+        clipboard.writeImage(lastImage)
+        if (lastFile) {
+          clipboard.writeBuffer('NSFilenamesPboardType', Buffer.from(lastFile))
+        }
+        return { text }
       }
       if (eventTracker) {
         eventTracker.stdin.write('isDragged\n')

@@ -1,15 +1,12 @@
 import { readFile } from 'fs/promises'
 import { basename, join } from 'path'
-import { copyFileSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'fs'
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 
-import { TextLoader } from 'langchain/document_loaders/fs/text'
-import { PDFLoader } from 'langchain/document_loaders/fs/pdf'
-import { DocxLoader } from 'langchain/document_loaders/fs/docx'
-import { PPTXLoader } from 'langchain/document_loaders/fs/pptx'
-import { CSVLoader } from 'langchain/document_loaders/fs/csv'
+import pdf from 'pdf-parse'
+import mammoth from 'mammoth'
+import officeparser from 'officeparser'
+import { csvParse } from 'd3-dsv'
 import xlsx from 'xlsx'
-import { Document } from 'langchain/document'
-// import { OpenAIWhisperAudio } from 'langchain/document_loaders/fs/openai_whisper_audio'
 import { app } from 'electron'
 import moment from 'moment'
 
@@ -38,35 +35,26 @@ function processText(text: string) {
   return text
 }
 
-function processDocs(docs: Document<Record<string, any>>[]) {
-  return processText(docs.reduce((acc, doc) => acc + doc.pageContent, '\n'))
+async function parseTextFile(b: Buffer) {
+  return processText(b.toString('utf8'))
 }
 
-async function parseTextFile(b: Blob) {
-  const loader = new TextLoader(b)
-  const docs = await loader.load()
-  return processDocs(docs)
-}
-async function parsePDFFile(b: Blob) {
-  const loader = new PDFLoader(b)
-  const docs = await loader.load()
-  return processDocs(docs)
+async function parsePDFFile(b: Buffer) {
+  const data = await pdf(b)
+  return processText(data.text || '')
 }
 
-async function parseDocxFile(b: Blob) {
-  const loader = new DocxLoader(b)
-  const docs = await loader.load()
-  return processDocs(docs)
+async function parseDocxFile(b: Buffer) {
+  const result = await mammoth.extractRawText({ buffer: b })
+  return processText(result.value || '')
 }
 
-async function parsePPTXFile(b: Blob) {
-  const loader = new PPTXLoader(b)
-  const docs = await loader.load()
-  return processDocs(docs)
+async function parsePPTXFile(b: Buffer) {
+  const text = await officeparser.parseOfficeAsync(b)
+  return processText(text || '')
 }
 
 async function parseXLSXFile(b: Buffer) {
-  // 转化成arrayBuffer
   const arrayBuffer = new Uint8Array(b).buffer
   const workbook = xlsx.read(arrayBuffer, { type: 'array' })
   let content = ''
@@ -78,14 +66,16 @@ async function parseXLSXFile(b: Buffer) {
 }
 
 async function parseJSONFile(b: Buffer) {
-  const json = b.toString()
-  return processText(json)
+  return processText(b.toString())
 }
 
-async function parseCSVFile(b: Blob) {
-  const loader = new CSVLoader(b)
-  const docs = await loader.load()
-  return processDocs(docs)
+async function parseCSVFile(b: Buffer) {
+  const text = b.toString('utf8')
+  const rows = csvParse(text)
+  const content = rows
+    .map((row) => Object.values(row).join(','))
+    .join('\n')
+  return processText(content)
 }
 
 export interface FilePayload {
@@ -104,39 +94,35 @@ export default async function parseFile(files: FilePayload[]): Promise<FileLoade
   if (files[0].data) {
     const base64Image = files[0].data.split(';base64,').pop()
     const imageBuffer = Buffer.from(base64Image!, 'base64')
-    writeFileSync(targetFile, imageBuffer as any)
+    writeFileSync(targetFile, imageBuffer)
   } else if (files[0].path) {
     copyFileSync(files[0].path, targetFile)
   }
   const file = await readFile(targetFile)
 
-  const b = new Blob([file], { type: files[0].type })
+  const mimeType = files[0].type
   let content = ''
 
-  if (b.type === 'text/plain' || b.type === 'application/msword') {
-    content = await parseTextFile(b)
-  } else if (b.type === 'application/pdf') {
-    content = await parsePDFFile(b)
-  } else if (b.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-    content = await parseDocxFile(b)
-  } else if (
-    b.type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
-  ) {
-    content = await parsePPTXFile(b)
-  } else if (b.type === 'application/json') {
+  if (mimeType === 'text/plain' || mimeType === 'application/msword') {
+    content = await parseTextFile(file)
+  } else if (mimeType === 'application/pdf') {
+    content = await parsePDFFile(file)
+  } else if (mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+    content = await parseDocxFile(file)
+  } else if (mimeType === 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
+    content = await parsePPTXFile(file)
+  } else if (mimeType === 'application/json') {
     content = await parseJSONFile(file)
-  } else if (b.type === 'text/csv') {
-    content = await parseCSVFile(b)
+  } else if (mimeType === 'text/csv') {
+    content = await parseCSVFile(file)
   } else if (
-    b.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-    b.type === 'application/vnd.ms-excel'
+    mimeType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+    mimeType === 'application/vnd.ms-excel'
   ) {
     content = await parseXLSXFile(file)
-  }
-  // .jpg,.jpeg,.png,.bmp,.webp
-  else if (b.type.startsWith('image/')) {
+  } else if (mimeType.startsWith('image/')) {
     type = 'image'
-    content = `data:${b.type};base64,${file.toString('base64')}`
+    content = `data:${mimeType};base64,${file.toString('base64')}`
   } else {
     content = readFileSync(targetFile, 'utf8')
   }

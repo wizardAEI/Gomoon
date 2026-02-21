@@ -1,14 +1,16 @@
 import { createStore, produce, unwrap } from 'solid-js/store'
-import { isEqual, merge, cloneDeep } from 'lodash'
+import { isEqual, cloneDeep } from 'lodash'
 import { event, getSystem } from '@renderer/lib/util'
 import { defaultModels } from '@lib/langchain'
-import { Models } from 'src/lib/langchain'
+import type { ModelsConfig, Provider, EnabledModel } from '@lib/models-config'
 import { createMemo } from 'solid-js'
 import { SettingFontFamily, SettingModel } from 'src/main/models/model'
+import { ulid } from 'ulid'
+
 const [settingStore, setSettingStore] = createStore<
   {
     isLoaded: boolean
-    oldModels: Models
+    oldModels: ModelsConfig
   } & SettingModel
 >({
   isOnTop: false,
@@ -61,9 +63,10 @@ export async function setOpenAtLogin(v: boolean) {
 
 export async function loadConfig() {
   const config = await window.api.loadConfig()
-  // 从 data 中读取配置
   setSettingStore('isOnTop', config.isOnTop)
-  setSettingStore('models', merge(unwrap(settingStore.models), config.models))
+  // 直接用服务端配置覆盖，避免 merge 对数组按索引合并导致已保存的 providers/enabledModels 丢失
+  const models = cloneDeep(config.models)
+  setSettingStore('models', models)
   setSettingStore('oldModels', cloneDeep(config.models))
   setSettingStore('quicklyAnsKey', config.quicklyAnsKey)
   setSettingStore('quicklyWakeUpKeys', config.quicklyWakeUpKeys)
@@ -76,33 +79,51 @@ export async function loadConfig() {
   event.emit('updateModels', config.models)
 }
 
-export async function setModels<T extends keyof Models>(
-  v: Models[T][keyof Models[T]],
-  modelName: T,
-  field: keyof Models[T]
-) {
+export function addProvider(provider: Omit<Provider, 'id'>) {
+  const p: Provider = { ...provider, id: ulid() }
+  setSettingStore('models', 'providers', (prev) => [...prev, p])
+  updateModelsToFile()
+}
+
+export function updateProvider(id: string, updates: Partial<Omit<Provider, 'id'>>) {
   setSettingStore(
     'models',
-    modelName,
-    produce((b) => {
-      b[field] = v
+    'providers',
+    produce((providers) => {
+      const idx = providers.findIndex((p) => p.id === id)
+      if (idx >= 0) Object.assign(providers[idx], updates)
     })
   )
+  updateModelsToFile()
 }
 
-export async function setCustomModelSelected(selectModel: string) {
-  setSettingStore('models', 'CustomModel', 'selectModel', selectModel)
-  const config = unwrap(settingStore)
-  if (isEqual(config.models, config.oldModels)) return
-  await window.api.setModels(config.models)
-  loadConfig()
-}
-export function getCustomModelSelected() {
-  return settingStore.models.CustomModel.selectModel
+export function removeProvider(id: string) {
+  setSettingStore('models', 'providers', (prev) => prev.filter((p) => p.id !== id))
+  setSettingStore('models', 'enabledModels', (prev) => prev.filter((em) => em.providerId !== id))
+  updateModelsToFile()
 }
 
-export function setCustomModels(models: Models['CustomModel']['models']) {
-  setSettingStore('models', 'CustomModel', 'models', models)
+export function addEnabledModel(em: Omit<EnabledModel, 'id'>) {
+  const m: EnabledModel = { ...em, id: ulid() }
+  setSettingStore('models', 'enabledModels', (prev) => [...prev, m])
+  updateModelsToFile()
+}
+
+export function updateEnabledModel(id: string, updates: Partial<Omit<EnabledModel, 'id'>>) {
+  setSettingStore(
+    'models',
+    'enabledModels',
+    produce((ems) => {
+      const idx = ems.findIndex((e) => e.id === id)
+      if (idx >= 0) Object.assign(ems[idx], updates)
+    })
+  )
+  updateModelsToFile()
+}
+
+export function removeEnabledModel(id: string) {
+  setSettingStore('models', 'enabledModels', (prev) => prev.filter((e) => e.id !== id))
+  updateModelsToFile()
 }
 
 export async function updateModelsToFile() {
@@ -148,7 +169,7 @@ export function setUpdaterStatus(status: Partial<UpdaterStore['updateStatus']>) 
 }
 
 export const updateStatusLabel = createMemo(() => {
-  const dict = {
+  const dict: Record<string, string> = {
     canUpdate: '有新版本,点击下载！',
     updateProgress:
       '下载中: ' + updaterStore.updateStatus.updateProgress + '%（请不要中途退出应用）',
@@ -156,7 +177,7 @@ export const updateStatusLabel = createMemo(() => {
   }
   let label = '检查更新'
   for (const key in dict) {
-    if (updaterStore.updateStatus[key]) {
+    if (updaterStore.updateStatus[key as keyof typeof updaterStore.updateStatus]) {
       label = dict[key]
     }
   }

@@ -1,0 +1,71 @@
+name: Build
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            platform: win
+          - os: ubuntu-latest
+            platform: linux
+          - os: macos-latest
+            platform: mac
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+
+      - name: Setup Yarn
+        run: corepack enable && corepack prepare yarn@1.22.22 --activate
+
+      # 若 resources 未提交到仓库，创建最小 stub 供 CI 打包使用
+      - name: Prepare resources (if missing)
+        if: hashFiles('resources/**') == ''
+        run: node -e "
+          const fs = require('fs');
+          fs.mkdirSync('resources', { recursive: true });
+          fs.writeFileSync('resources/assistants.json', JSON.stringify({ assistants: [], selectedAssistantForAns: '', selectedAssistantForChat: '' }));
+          fs.writeFileSync('resources/lines.json', JSON.stringify({ lines: [] }));
+          fs.writeFileSync('resources/memories.json', JSON.stringify({ memories: [], selectedMemo: '' }));
+          const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
+          fs.writeFileSync('resources/icon.png', png);
+          fs.writeFileSync('resources/icon@20.png', png);
+        "
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+      - name: Build installer (${{ matrix.platform }})
+        run: |
+          if [ "${{ matrix.platform }}" = "win" ]; then
+            npx electron-builder --win
+          elif [ "${{ matrix.platform }}" = "mac" ]; then
+            npx electron-builder --mac
+          else
+            npx electron-builder --linux
+          fi
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gomoon-${{ matrix.platform }}-${{ github.sha }}
+          path: release/

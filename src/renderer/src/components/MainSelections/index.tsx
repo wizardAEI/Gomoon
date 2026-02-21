@@ -54,7 +54,9 @@ export default function (props: { type: 'chat' | 'ans' }) {
         <div
           class="absolute bottom-2 right-2"
           onClick={() => {
-            hasFirstTimeFor('modelSelect')
+            if (userData.firstTimeFor.modelSelect) {
+              hasFirstTimeFor('modelSelect')
+            }
           }}
         >
           <ModelSelect size={20} position="right-0" />

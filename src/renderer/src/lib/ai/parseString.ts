@@ -1,4 +1,4 @@
-import type { MessageContent } from 'langchain/schema'
+import type { MessageContent } from '@lib/ai-sdk'
 // 由于是全局匹配，为防止index忘记重置，禁止导出
 const regDict = {
   // e.g. <gomoon-file src="https://xxx" filename="xxx"> 文件信息 </gomoon-file>

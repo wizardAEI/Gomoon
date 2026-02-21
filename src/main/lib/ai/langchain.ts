@@ -1,9 +1,6 @@
 import EventEmitter from 'events'
 
-import { ChatLlamaCpp } from '@langchain/community/chat_models/llama_cpp'
-
-import { msgDict } from '../../../lib/langchain'
-import { loadLMMapForNode } from '../../../lib/utils'
+import { loadLMMapForNode } from './llm'
 import { getUserData, loadAppConfig } from '../../models'
 import { postMsgToMainWindow } from '../../window'
 
@@ -27,31 +24,22 @@ export interface CallLLmOption {
 }
 
 export async function callLLM(options: CallLLmOption) {
-  if (options.llm === 'Llama') {
-    const controller = new AbortController()
-    emit.once('abort', () => {
-      console.log('abort')
-      controller.abort()
-    })
-    const llm = (await loadLMMapForNode(getLMConfig().models))['Llama'] as ChatLlamaCpp
-    await llm.invoke(
-      options.msgs.map((msg) => msgDict[msg.role](msg.content)),
-      {
-        callbacks: [
-          {
-            handleLLMNewToken(output) {
-              postMsgToMainWindow(`new content: ${output}`)
-            },
-
-            handleLLMError(error) {
-              throw error
-            }
-          }
-        ],
-        signal: controller.signal
-      }
-    )
-  }
+  const modelId = options.llm || getLMConfig().current
+  const llmMap = await loadLMMapForNode(getLMConfig().models)
+  const llm = llmMap[modelId]
+  if (!llm) throw new Error(`模型 ${modelId} 未找到`)
+  const controller = new AbortController()
+  emit.once('abort', () => controller.abort())
+  await llm.streamInvoke(
+    options.msgs.map((msg) => ({ role: msg.role as 'human' | 'system' | 'ai', content: msg.content })),
+    {
+      onToken: (output) => postMsgToMainWindow(`new content: ${output}`),
+      onError: (error) => {
+        throw error
+      },
+      signal: controller.signal
+    }
+  )
 }
 
 export async function stopLLM() {
@@ -59,15 +47,18 @@ export async function stopLLM() {
 }
 
 export async function lmInvoke(option: { system?: string; content: string }): Promise<string> {
-  const lm = (await loadLMMapForNode(getLMConfig().models))[getLMConfig().current]
+  const llmMap = await loadLMMapForNode(getLMConfig().models)
+  const lm = llmMap[getLMConfig().current]
   if (!lm) {
     throw new Error('llm not found')
   }
-  const msgs = [msgDict['human'](option.content)]
-  if (option.system) msgs.unshift(msgDict['system'](option.system))
+  const msgs: Array<{ role: 'human' | 'system' | 'ai'; content: string }> = [
+    { role: 'human', content: option.content }
+  ]
+  if (option.system) msgs.unshift({ role: 'system', content: option.system })
   try {
     const res = await lm.invoke(msgs)
-    return res.content as string
+    return res.content
   } catch (e: unknown) {
     throw new Error('llm error', e as Error)
   }

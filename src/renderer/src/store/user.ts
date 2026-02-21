@@ -1,11 +1,9 @@
 import { createStore } from 'solid-js/store'
 import { AssistantModel, Line, UserDataModel } from 'src/main/models/model'
-import { ModelsType } from '@lib/langchain'
 import { createMemo } from 'solid-js'
 
 import { assistants, useAssistant } from './assistants'
 import { memories, useMemo } from './memo'
-import { setCustomModelSelected } from './setting'
 
 /**
  * @abstract 所有不在设置页面的数据
@@ -28,7 +26,7 @@ export const currentLines = createMemo(() => {
 
 const [userData, setUserData] = createStore<UserDataModel>({
   firstTime: true,
-  selectedModel: 'GPT4',
+  selectedModel: '',
   selectedAssistantForAns: '',
   selectedAssistantForChat: '',
   selectedMemo: '',
@@ -59,23 +57,18 @@ export function userHasUse() {
 
 export function changeMatchModel(model: AssistantModel['matchModel'], id: string) {
   if (model && model !== 'current') {
-    if (model.startsWith('CustomModel')) {
-      const target = model.slice(12)
-      model = 'CustomModel'
-      setCustomModelSelected(target)
-    }
     window.api
       .setUserData({
         selectedModel: model
       })
       .then(() => {
-        setUserData('selectedModel', model as ModelsType)
+        setUserData('selectedModel', model)
       })
   }
   setUserState('preSelectedAssistant', id)
 }
 
-export function setSelectedModel(model: ModelsType) {
+export function setSelectedModel(model: string) {
   window.api
     .setUserData({
       selectedModel: model

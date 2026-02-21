@@ -10,7 +10,6 @@ import { clearAns, restoreAns } from '@renderer/store/answer'
 import { parseFile } from '@renderer/lib/ai/file'
 import { historyManager } from '@renderer/store/history'
 import NewChatIcon from '@renderer/assets/icon/NewChatIcon'
-import { ModelsType } from '@lib/langchain'
 import { useLocation, useNavigate, useSearchParams } from '@solidjs/router'
 import SendIcon from '@renderer/assets/icon/SendIcon'
 
@@ -30,24 +29,8 @@ const typeDict: {
   question: 'ans'
 }
 
-// FEAT: 多模态模型
-const multiModals = [
-  'GPT4',
-  'GPTCustom',
-  'GPTMINI',
-  'Ollama',
-  'Ollama1',
-  'Ollama2',
-  'Moonshot8k',
-  'Moonshot32k',
-  'Moonshot128k',
-  'GeminiPro',
-  'GeminiCustom',
-  'ClaudeSonnet',
-  'ClaudeHaiku',
-  'ClaudeOpus',
-  'CustomModel'
-] as ModelsType[]
+// FEAT: 多模态模型 - 统一 OpenAI 格式的模型均支持 vision
+const supportsVision = () => true
 
 /**
  * FEAT: Input 组件，用于接收用户输入的文本，onMountHandler可以在外部操作 input 元素
@@ -101,7 +84,7 @@ export default function Input(props: {
     if (artifactContent().length) {
       if (
         /<gomoon-image (.*?)>/.test(artifactContent()) &&
-        !multiModals.includes(userData.selectedModel)
+        !supportsVision()
       ) {
         toast.error('当前模型不支持图片解析')
         return

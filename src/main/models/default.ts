@@ -4,6 +4,7 @@ import os from 'os'
 import { getResourcesPath } from '../lib'
 import { defaultModels } from '../../lib/langchain'
 
+
 import { AssistantModel, Line, MemoModel, UserDataModel } from './model'
 import { SettingModel } from './model'
 import { ImportMemoDataModel } from './memo'
@@ -42,7 +43,7 @@ export function getDefaultUserData(): UserDataModel {
   const { selectedMemo } = JSON.parse(memo)
   return {
     firstTime: true,
-    selectedModel: 'GPT4',
+    selectedModel: '',
     selectedAssistantForAns,
     selectedAssistantForChat,
     selectedMemo,

@@ -90,8 +90,8 @@ export function initAppEventsHandler() {
   ipcMain.handle('load-config', () => {
     const config = loadAppConfig()
     const urls: string[] = []
-    if (isValidUrl(config.models.OpenAI.baseURL)) {
-      urls.push(config.models.OpenAI.baseURL)
+    for (const p of config.models.providers) {
+      if (isValidUrl(p.baseURL)) urls.push(p.baseURL)
     }
     if (urls.toString() !== preBaseUrls.toString()) {
       updateSendHeaders(urls)
@@ -112,11 +112,8 @@ export function initAppEventsHandler() {
   })
   ipcMain.handle('set-models', (_, models: SettingModel['models']) => {
     const urls: string[] = []
-    if (isValidUrl(models.OpenAI.baseURL)) {
-      urls.push(models.OpenAI.baseURL)
-    }
-    if (isValidUrl(models.Ollama.address)) {
-      urls.push(models.Ollama.address)
+    for (const p of models.providers) {
+      if (isValidUrl(p.baseURL)) urls.push(p.baseURL)
     }
     if (urls.toString() !== preBaseUrls.toString()) {
       updateSendHeaders(urls)
@@ -252,12 +249,30 @@ export function initAppEventsHandler() {
     if (process.platform === 'win32') {
       return await autoUpdater.downloadUpdate()
     }
-    updateForMac()
+    return updateForMac()
   })
 
   // 大模型调用
   ipcMain.handle('call-llm', (_, options: CallLLmOption) => callLLM(options))
   ipcMain.handle('stop-llm', () => stopLLM())
+
+  // 获取 Provider 可用模型列表 (OpenAI /v1/models)
+  ipcMain.handle(
+    'fetch-provider-models',
+    async (
+      _,
+      params: { apiKey: string; baseURL: string }
+    ): Promise<{ data: { id: string; object?: string; created?: number; owned_by?: string }[] }> => {
+      const url = `${params.baseURL.replace(/\/$/, '')}/models`
+      const res = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${params.apiKey || 'ollama'}`
+        }
+      })
+      if (!res.ok) throw new Error(`fetch models failed: ${res.status} ${res.statusText}`)
+      return res.json()
+    }
+  )
 
   // 其他
   ipcMain.handle('hide-window', () => hideWindow())

@@ -23,6 +23,7 @@ import {
   getDefaultMemories
 } from './default'
 import { importDataAndIndexes } from './memo'
+import { migrateModels } from './migrate-models'
 
 const appDataPath = app.getPath('userData')
 const configDB = JSONFileSyncPreset(join(appDataPath, 'config.json'), getDefaultConfig())
@@ -32,8 +33,16 @@ const configDB = JSONFileSyncPreset(join(appDataPath, 'config.json'), getDefault
  * 因为后续配置页的设置可能会在用户有感的情况下加载一些其他第三方或者更加底层的配置，所以这里单独抽出来，且每一个配置项都单独写一个函数
  * 后续较轻的配置项，可以合并一个函数
  */
-export function loadAppConfig() {
-  return merge(getDefaultConfig(), configDB.data)
+export function loadAppConfig(): SettingModel {
+  const merged = merge(getDefaultConfig(), configDB.data)
+  merged.models = migrateModels(merged.models)
+  if (
+    JSON.stringify(configDB.data.models) !== JSON.stringify(merged.models)
+  ) {
+    configDB.data = { ...configDB.data, models: merged.models }
+    configDB.write()
+  }
+  return merged
 }
 
 export function setAppConfig(config: Partial<SettingModel>) {
@@ -124,7 +133,15 @@ export function setOpenAtLogin(openAtLogin: SettingModel['openAtLogin']) {
  */
 const userDataDB = JSONFileSyncPreset(join(appDataPath, 'user-data.json'), getDefaultUserData())
 export function getUserData() {
-  return merge(getDefaultUserData(), userDataDB.data)
+  const config = loadAppConfig()
+  const data = merge(getDefaultUserData(), userDataDB.data)
+  const validIds = new Set(config.models.enabledModels.map((e) => e.id))
+  if (data.selectedModel && !validIds.has(data.selectedModel)) {
+    data.selectedModel = config.models.enabledModels[0]?.id ?? ''
+    userDataDB.data = { ...userDataDB.data, selectedModel: data.selectedModel }
+    userDataDB.write()
+  }
+  return data
 }
 export function updateUserData(data: Partial<typeof userDataDB.data>) {
   userDataDB.data = merge(userDataDB.data, data)

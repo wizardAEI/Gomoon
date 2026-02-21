@@ -1,5 +1,6 @@
-import { modelDict } from '@lib/langchain'
+import { getModelInfo } from '@lib/langchain'
 import { getModelOptions } from '@renderer/components/MainSelections/ModelSelect'
+import { settingStore } from '@renderer/store/setting'
 import BotIcon from '@renderer/components/ui/BotIcon'
 import Button from '@renderer/components/ui/Button'
 import QuestionMention from '@renderer/components/ui/QuestionMention'
@@ -34,15 +35,9 @@ export default function EditBox(props: {
     })
   }
   const options = getModelOptions().map((m) => {
-    console.log(m)
-    if (m.value === 'CustomModel') {
-      return {
-        label: m.selected,
-        value: `CustomModel-${m.selected}`
-      }
-    }
+    const info = getModelInfo(m.value, settingStore.models.enabledModels)
     return {
-      label: modelDict[m.value].label,
+      label: info.label,
       value: m.value
     }
   })

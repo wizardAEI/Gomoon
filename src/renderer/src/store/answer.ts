@@ -75,9 +75,10 @@ export async function genAns(q: string) {
           })
       },
       endCallback(res) {
-        let consumedToken = res.llmOutput?.estimatedTokenUsage?.totalTokens ?? 0
-        !consumedToken && (consumedToken = res.llmOutput?.tokenUsage?.totalTokens)
-        !consumedToken && (consumedToken = 0)
+        const consumedToken =
+          res.llmOutput?.estimatedTokenUsage?.totalTokens ??
+          res.llmOutput?.tokenUsage?.totalTokens ??
+          0
         ID === ansID && setGeneratingStatus(false)
         setConsumedTokenForAns(consumedToken)
       },

@@ -1,6 +1,6 @@
 import { app, BrowserWindow, Menu } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
-import robot from 'robotjs'
+import { mouse } from '@nut-tree/nut-js'
 
 import icon from '../../resources/icon.png?asset'
 
@@ -63,11 +63,14 @@ app.on('window-all-closed', () => {
   }
 })
 
-// 激活robot
-// 初始化tokenizer
-// 分出一个线程，防止阻塞主进程
-setTimeout(() => {
-  const pos = robot.getMousePos()
-  robot.moveMouse(pos.x, pos.y)
+// 激活 @nut-tree/nut-js（触发权限/初始化）
+// 初始化 tokenizer，分出一个线程防止阻塞主进程
+setTimeout(async () => {
+  try {
+    const pos = await mouse.getPosition()
+    await mouse.setPosition(pos)
+  } catch {
+    // 无权限或不可用时忽略
+  }
   activateTokenizer()
 })

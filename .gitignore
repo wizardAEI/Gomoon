@@ -86,10 +86,10 @@ Thumbs.db
 !.yarn/versions
 
 /out
+/release
 src/renderer/src/lib/config.json
 
 other
-resources
 extents
 
 electron-builder.yml

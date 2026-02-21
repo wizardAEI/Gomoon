@@ -1,7 +1,7 @@
 import { createMemo } from 'solid-js'
 import { createStore } from 'solid-js/store'
-import { modelDict } from '@lib/langchain'
-
+import { getModelInfo } from '@lib/langchain'
+import { settingStore } from './setting'
 import { userData } from './user'
 
 interface InputStore {
@@ -58,8 +58,9 @@ export const tokens = createMemo(() => {
     }
     return `${Math.floor(num / 1000)}k`
   }
+  const info = getModelInfo(userData.selectedModel, settingStore.models.enabledModels)
   return {
-    maxToken: parseNum(modelDict[userData.selectedModel].maxToken),
+    maxToken: parseNum(info.maxToken),
     consumedTokenForChat: (plusNum: number) => parseNum(inputStore.consumedToken.chat + plusNum),
     consumedTokenForAns: (plusNum: number) => parseNum(inputStore.consumedToken.ans + plusNum)
   }

@@ -45,6 +45,8 @@ export const api = {
   loadConfig: () => ipcRenderer.invoke('load-config'),
   setConfig: () => ipcRenderer.invoke('set-config'),
   setModels: (models: SettingModel['models']) => ipcRenderer.invoke('set-models', models),
+  fetchProviderModels: (apiKey: string, baseURL: string) =>
+    ipcRenderer.invoke('fetch-provider-models', { apiKey, baseURL }),
   setQuicklyAnsKey: (key: string) => ipcRenderer.invoke('set-quickly-ans-key', key),
   setQuicklyWakeUpKeys: (keys: string) => ipcRenderer.invoke('set-quickly-wake-up-keys', keys),
   setSendWithCmdOrCtrl: (b: boolean) => ipcRenderer.invoke('set-send-with-cmd-or-ctrl', b),

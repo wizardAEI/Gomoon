@@ -5,6 +5,16 @@ import { For, Show, createSignal } from 'solid-js'
 
 const versions = [
   {
+    version: '1.4.0',
+    contents: [
+      '模型引擎配置升级：统一 Provider 模式，支持添加任意 OpenAI 兼容 API',
+      '使用 /chat/completions 接口进行流式生成',
+      '模型配置持久化优化，刷新后已添加模型不会丢失',
+      '模型选择器优化，使用模型名称展示',
+      '替换 robotjs 为 @nut-tree/nut-js'
+    ]
+  },
+  {
     version: '1.3.2',
     contents: ['新增了GPT-4.1系列模型', '新增了GPT-4.1 Mini和GPT-4.1 Nano模型']
   },
