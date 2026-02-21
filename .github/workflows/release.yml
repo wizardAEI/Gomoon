@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     strategy:
       fail-fast: false
       matrix:
@@ -55,16 +57,13 @@ jobs:
         if: matrix.platform == 'mac'
         run: sips -z 512 512 resources/icon.png
 
-      # --publish never 只构建不上传，但 electron-builder 在 CI 里仍会初始化 publisher（cleanup），必须提供 GH_TOKEN
-      - name: Build app (no publish)
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if [ "${{ matrix.platform }}" = "win" ]; then
-            npx electron-builder --win --publish never
-          else
-            npx electron-builder --mac --publish never
-          fi
+      - name: Build app (Windows)
+        if: matrix.platform == 'win'
+        run: npx electron-builder --win --publish never
+
+      - name: Build app (macOS)
+        if: matrix.platform == 'mac'
+        run: npx electron-builder --mac --publish never
 
       - name: Upload release artifacts
         uses: actions/upload-artifact@v4
