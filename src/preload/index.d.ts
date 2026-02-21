@@ -1,8 +1,74 @@
-import { ElectronAPI } from '@electron-toolkit/preload'
-import { api as Api } from './index'
-declare global {
-  interface Window {
-    electron: ElectronAPI
-    api: typeof Api
-  }
-}
+import { IpcRendererEvent } from 'electron';
+import { AssistantModel, CollectionModel, CreateAssistantModel, CreateCollectionModel, HistoryModel, Line, MemoFragment, MemoModel, MemoResult, SettingFontFamily, SettingModel, UserDataModel } from '../main/models/model';
+import { FileLoaderRes, FilePayload } from '../main/lib/ai/fileLoader';
+import { EditFragmentOption, GetMemoParams, SaveMemoParams } from '../main/lib/ai/embedding/index';
+import { CallLLmOption } from '../main/lib/ai/langchain';
+import { ShowWindowParams } from '../main/window';
+export declare const api: {
+    readonly multiCopy: (callback: (event: IpcRendererEvent, msg: string) => void) => () => void;
+    readonly showWindow: (callback: (event: IpcRendererEvent, data: ShowWindowParams) => void) => () => void;
+    readonly hideWindow: () => Promise<any>;
+    readonly minimizeWindow: () => Promise<any>;
+    readonly maximizeWindow: () => Promise<any>;
+    readonly unmaximizeWindow: () => Promise<any>;
+    readonly isMaximized: () => Promise<any>;
+    readonly setIsOnTop: (isOnTop: boolean) => Promise<any>;
+    readonly loadConfig: () => Promise<any>;
+    readonly setConfig: () => Promise<any>;
+    readonly setModels: (models: SettingModel["models"]) => Promise<any>;
+    readonly fetchProviderModels: (apiKey: string, baseURL: string) => Promise<any>;
+    readonly setQuicklyAnsKey: (key: string) => Promise<any>;
+    readonly setQuicklyWakeUpKeys: (keys: string) => Promise<any>;
+    readonly setSendWithCmdOrCtrl: (b: boolean) => Promise<any>;
+    readonly setTheme: (theme: string) => Promise<any>;
+    readonly setChatFontSize: (size: number) => Promise<any>;
+    readonly setChatFontFamily: (fontFamily: SettingFontFamily) => Promise<any>;
+    readonly setOpenAtLogin: (b: boolean) => Promise<any>;
+    readonly getUserData: () => Promise<UserDataModel>;
+    readonly setUserData: (userData: Partial<UserDataModel>) => Promise<any>;
+    readonly getAssistants: () => Promise<AssistantModel[]>;
+    readonly updateAssistant: (assistant: AssistantModel) => Promise<any>;
+    readonly deleteAssistant: (assistantId: string) => Promise<any>;
+    readonly createAssistant: (assistant: CreateAssistantModel) => Promise<AssistantModel>;
+    readonly useAssistant: (assistantId: string) => Promise<any>;
+    readonly getHistories: () => Promise<HistoryModel[]>;
+    readonly addHistory: (history: HistoryModel) => Promise<any>;
+    readonly deleteHistory: (historyId: string) => Promise<any>;
+    readonly setHistoryStar: (historyId: string, starred: boolean) => Promise<any>;
+    readonly clearHistory: () => Promise<any>;
+    readonly checkEmbeddingModel: () => Promise<boolean>;
+    readonly getMemories: () => Promise<MemoModel[]>;
+    readonly editFragment: (option: EditFragmentOption) => Promise<{
+        suc: boolean;
+        reason?: string;
+    }>;
+    readonly saveMemory: (memo: SaveMemoParams) => Promise<MemoModel>;
+    readonly cancelSaveMemory: (id: string) => Promise<any>;
+    readonly useMemory: (memoId: string) => Promise<any>;
+    readonly getMemoryData: (data: GetMemoParams) => Promise<Array<MemoResult>>;
+    readonly deleteMemory: (memoId: string) => Promise<any>;
+    readonly editMemory: (memoId: string, fragments: MemoFragment[]) => Promise<any>;
+    readonly initMemories: () => Promise<any>;
+    readonly exportMemory: (memo: MemoModel) => Promise<string>;
+    readonly importMemory: (path: string) => Promise<boolean>;
+    readonly getCollections: () => Promise<CollectionModel[]>;
+    readonly createCollection: (collection: CreateCollectionModel) => Promise<any>;
+    readonly deleteCollection: (collectionId: string) => Promise<any>;
+    readonly stickTopCollection: (collectionId: string) => Promise<any>;
+    readonly updateCollection: (collection: CollectionModel) => Promise<any>;
+    readonly parseFile: (files: FilePayload[]) => Promise<FileLoaderRes>;
+    readonly removeFile: (path: string, filename: string) => Promise<any>;
+    readonly openPath: (path: string) => Promise<any>;
+    readonly saveFile: (fileName: string, content: string) => Promise<any>;
+    readonly getTokenNum: (text: string) => Promise<number>;
+    readonly checkUpdate: () => Promise<boolean>;
+    readonly quitForUpdate: () => Promise<any>;
+    readonly downloadUpdate: () => Promise<string[]>;
+    readonly callLLM: (option: CallLLmOption) => Promise<string>;
+    readonly stopLLM: () => Promise<any>;
+    readonly getLines: () => Promise<Partial<Line>[]>;
+    readonly parsePageToString: (url: string) => Promise<string>;
+    readonly speak: (content: string) => Promise<Buffer>;
+    readonly receiveMsg: (callback: (event: IpcRendererEvent, msg: string) => Promise<void>) => () => void;
+    readonly receiveBuf: (callback: (event: IpcRendererEvent, buf: Buffer) => Promise<void>) => () => void;
+};

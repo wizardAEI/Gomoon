@@ -1,6 +1,5 @@
 import EmptyIcon from '@renderer/assets/icon/base/EmptyIcon'
 import HistoryIcon from '@renderer/assets/icon/base/HistoryIcon'
-import DoubleConfirm from '@renderer/components/ui/DoubleConfirm'
 import { parseDisplayArr } from '@renderer/lib/ai/parseString'
 import {
   historyManager,

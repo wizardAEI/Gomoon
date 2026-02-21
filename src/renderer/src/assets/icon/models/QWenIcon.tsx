@@ -15,7 +15,8 @@ export default function QWenIcon(props: SvgProps) {
         height="52px"
         viewBox="-4 -4 60 60"
         enable-background="new 0 0 52 52"
-        xml:space="preserve"
+        // @ts-expect-error xmlSpace is valid SVG but not in Solid's SvgSVGAttributes
+        xmlSpace="preserve"
         {...props}
       >
         <image

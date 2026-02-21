@@ -19,6 +19,7 @@ import { is } from '@electron-toolkit/utils'
 import { autoUpdater } from 'electron-updater'
 import { debounce } from 'lodash'
 
+// @ts-ignore *.png?asset 在 node 由 electron-vite 声明；web typecheck 间接拉入本文件时无此声明
 import icon from '../../resources/icon.png?asset'
 
 import { getUserData, loadAppConfig, setWindowSize } from './models'

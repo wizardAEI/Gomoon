@@ -14,7 +14,8 @@ export default function WenxinIcon(props: SvgProps) {
       height="52px"
       viewBox="0 0 52 52"
       enable-background="new 0 0 52 52"
-      xml:space="preserve"
+      // @ts-expect-error xmlSpace is valid SVG but not in Solid's SvgSVGAttributes
+      xmlSpace="preserve"
       {...props}
     >
       <image

@@ -5,7 +5,7 @@ import { cloneDeep } from 'lodash'
 
 import { answerStore, setAnswerStore } from './answer'
 import { userData } from './user'
-import { msgs, setMsgMeta, setMsgs } from './chat'
+import { msgs, setMsgs } from './chat'
 
 export const [collections, setCollections] = createStore<CollectionModel[]>([])
 

@@ -2,13 +2,6 @@ import * as radio from '@zag-js/radio-group'
 import { normalizeProps, useMachine } from '@zag-js/solid'
 import { Index, JSXElement, createMemo, createUniqueId } from 'solid-js'
 
-const items = [
-  { label: 'React', value: 'react' },
-  { label: 'Angular', value: 'ng' },
-  { label: 'Vue', value: 'vue' },
-  { label: 'Svelte', value: 'svelte' }
-]
-
 export function SegmentedControl(props: {
   options: {
     label: string | JSXElement

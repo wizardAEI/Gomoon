@@ -1,0 +1,10 @@
+import { MsgTypes } from '@renderer/components/Message';
+import { CollectionModel } from 'src/main/models/model';
+export declare const collections: CollectionModel[], setCollections: import("solid-js/store").SetStoreFunction<CollectionModel[]>;
+export declare function loadCollection(): Promise<CollectionModel[]>;
+export declare function createCollection(name: string, id: string, type: MsgTypes): Promise<void>;
+export declare function addCollection(name: string, id: string, type: MsgTypes): Promise<void>;
+export declare function updateCollection(id: string, index: number): Promise<void>;
+export declare function removeCollection(id: string): Promise<void>;
+export declare function StickTop(id: string): Promise<void>;
+export declare function witchToChat(c: CollectionModel['contents'][number]): Promise<void>;

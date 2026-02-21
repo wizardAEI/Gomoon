@@ -20,7 +20,6 @@ import TrashIcon from '@renderer/assets/icon/TrashIcon'
 import BotIcon from '@renderer/components/ui/BotIcon'
 import InuseIcon from '@renderer/assets/icon/InuseIcon'
 import Md from '@renderer/components/Message/Md'
-import SearchIcon from '@renderer/assets/icon/base/SearchIcon'
 import BrowserIcon from '@renderer/assets/icon/BrowserIcon'
 
 import EditBox from './EditBox'
