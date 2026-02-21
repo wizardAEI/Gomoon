@@ -16,8 +16,6 @@ jobs:
         include:
           - os: windows-latest
             platform: win
-          - os: ubuntu-latest
-            platform: linux
           - os: macos-latest
             platform: mac
 
@@ -65,10 +63,8 @@ jobs:
         run: |
           if [ "${{ matrix.platform }}" = "win" ]; then
             npx electron-builder --win
-          elif [ "${{ matrix.platform }}" = "mac" ]; then
-            npx electron-builder --mac
           else
-            npx electron-builder --linux
+            npx electron-builder --mac
           fi
 
       - name: Upload artifacts

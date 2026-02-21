@@ -9,14 +9,14 @@ on:
 jobs:
   release:
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write   # 创建 Release 并上传构建产物
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: windows-latest
             platform: win
-          - os: ubuntu-latest
-            platform: linux
           - os: macos-latest
             platform: mac
 
@@ -64,8 +64,6 @@ jobs:
         run: |
           if [ "${{ matrix.platform }}" = "win" ]; then
             npx electron-builder --win --publish always
-          elif [ "${{ matrix.platform }}" = "mac" ]; then
-            npx electron-builder --mac --publish always
           else
-            npx electron-builder --linux --publish always
+            npx electron-builder --mac --publish always
           fi

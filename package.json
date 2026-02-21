@@ -17,8 +17,7 @@
     "build": "npm run typecheck && electron-vite build",
     "postinstall": "electron-builder install-app-deps",
     "build:win": "electron-vite build && electron-builder --win --config",
-    "build:mac": "electron-vite build && electron-builder --mac --config",
-    "build:linux": "electron-vite build && electron-builder --linux --config"
+    "build:mac": "electron-vite build && electron-builder --mac --config"
   },
   "dependencies": {
     "@ai-sdk/alibaba": "^1.0.4",
@@ -119,9 +118,6 @@
       "target": ["dmg"],
       "category": "public.app-category.productivity",
       "icon": "icons/icon.icns"
-    },
-    "linux": {
-      "target": ["AppImage"]
     },
     "nsis": {
       "oneClick": false,
