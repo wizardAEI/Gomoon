@@ -61,7 +61,9 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          export GH_TOKEN="$GH_TOKEN"
           if [ "${{ matrix.platform }}" = "win" ]; then
             npx electron-builder --win --publish always
           else
