@@ -58,14 +58,16 @@ jobs:
         if: matrix.platform == 'mac'
         run: sips -z 512 512 resources/icon.png
 
-      - name: Build installer (${{ matrix.platform }})
-        shell: bash
-        run: |
-          if [ "${{ matrix.platform }}" = "win" ]; then
-            npx electron-builder --win
-          else
-            npx electron-builder --mac
-          fi
+      - name: Disable publish in package.json for CI
+        run: node -e "const p=require('./package.json'); if(p.build) p.build.publish=[]; require('fs').writeFileSync('package.json', JSON.stringify(p,null,2));"
+
+      - name: Build installer (Windows)
+        if: matrix.platform == 'win'
+        run: npx electron-builder --win --publish never
+
+      - name: Build installer (macOS)
+        if: matrix.platform == 'mac'
+        run: npx electron-builder --mac --publish never
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4

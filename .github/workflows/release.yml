@@ -55,14 +55,17 @@ jobs:
         if: matrix.platform == 'mac'
         run: sips -z 512 512 resources/icon.png
 
-      # 方案二：CI 专用配置禁用 publish，不创建 GitHubPublisher，无需 GH_TOKEN
+      # 临时关闭 build.publish，避免 electron-builder 创建 GitHubPublisher（无需 GH_TOKEN）
+      - name: Disable publish in package.json for CI
+        run: node -e "const p=require('./package.json'); if(p.build) p.build.publish=[]; require('fs').writeFileSync('package.json', JSON.stringify(p,null,2));"
+
       - name: Build app (Windows)
         if: matrix.platform == 'win'
-        run: npx electron-builder --win --publish never --config electron-builder-ci.json
+        run: npx electron-builder --win --publish never
 
       - name: Build app (macOS)
         if: matrix.platform == 'mac'
-        run: npx electron-builder --mac --publish never --config electron-builder-ci.json
+        run: npx electron-builder --mac --publish never
 
       - name: Upload release artifacts
         uses: actions/upload-artifact@v4
