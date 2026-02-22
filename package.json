@@ -1,7 +1,7 @@
 {
   "name": "gomoon",
   "productName": "Gomoon",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "An ai tools for everyone on Mac, Windows and Linux.",
   "main": "./out/main/index.js",
   "author": "aei",
@@ -110,6 +110,7 @@
       "buildResources": "resources"
     },
     "files": ["out", "resources", "icons"],
+    "asarUnpack": ["resources/**"],
     "win": {
       "target": ["nsis"],
       "icon": "icons/icon.ico"

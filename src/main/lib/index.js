@@ -4,7 +4,7 @@ import { app, dialog, globalShortcut } from 'electron';
 import { beforeQuitWindowHandler } from '../window';
 export function getResourcesPath(filename) {
     return app.isPackaged
-        ? join(process.resourcesPath, '/app.asar.unpacked/resources/' + filename)
+        ? join(process.resourcesPath, 'app.asar.unpacked', 'resources', filename)
         : join(__dirname, '../../resources/', filename);
 }
 export const quitApp = {
