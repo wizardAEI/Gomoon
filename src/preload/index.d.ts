@@ -12,6 +12,9 @@ export declare const api: {
     readonly maximizeWindow: () => Promise<any>;
     readonly unmaximizeWindow: () => Promise<any>;
     readonly isMaximized: () => Promise<any>;
+    /** Windows 从最小化恢复时触发，用于渲染进程强制重绘 */
+    readonly onWindowRestored: (callback: () => void) => () => void;
+    readonly openAccessibilityPane: () => Promise<any>;
     readonly setIsOnTop: (isOnTop: boolean) => Promise<any>;
     readonly loadConfig: () => Promise<any>;
     readonly setConfig: () => Promise<any>;

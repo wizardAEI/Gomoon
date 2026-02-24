@@ -9,6 +9,11 @@ import { createWindow, showWindow } from './window'
 import { quitApp } from './lib'
 import { activateTokenizer } from './lib/ai/embedding/embedding'
 
+// FEAT: Windows 最小化时减少对 renderer 的后台节流，缓解恢复后白屏/卡死
+if (process.platform === 'win32') {
+  app.commandLine.appendSwitch('disable-renderer-backgrounding')
+}
+
 // dock
 app.dock?.setIcon(icon)
 app.dock?.setMenu(Menu.buildFromTemplate([]))

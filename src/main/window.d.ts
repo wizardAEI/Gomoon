@@ -1,6 +1,7 @@
 export interface ShowWindowParams {
     text: string;
 }
+export declare function openAccessibilityPane(): void;
 export declare function setQuicklyAns(key: string): void;
 export declare function setQuicklyWakeUp(keys: string): void;
 export declare function hideWindow(): void;

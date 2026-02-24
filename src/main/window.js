@@ -1,7 +1,8 @@
+import { chmodSync, existsSync } from 'fs';
 import { join } from 'path';
 import { spawn } from 'child_process';
 import { keyboard, Key } from '@nut-tree/nut-js';
-import { app, shell, BrowserWindow, Tray, Menu, clipboard, globalShortcut, session, nativeImage } from 'electron';
+import { app, shell, BrowserWindow, Tray, Menu, clipboard, globalShortcut, session, nativeImage, systemPreferences } from 'electron';
 import { is } from '@electron-toolkit/utils';
 import { autoUpdater } from 'electron-updater';
 import { debounce } from 'lodash';
@@ -12,8 +13,33 @@ let mainWindow = null;
 let tray = null;
 let preKeys = '';
 let eventTracker = null;
+/** 打开 macOS 系统设置 - 隐私与安全性 - 辅助功能 */
+export function openAccessibilityPane() {
+    if (process.platform !== 'darwin')
+        return;
+    shell.openExternal('x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility');
+}
+/** macOS 是否从「应用转移」临时路径运行（如从 DMG 直接打开），权限无法持久 */
+function isRunningTranslocated() {
+    if (process.platform !== 'darwin' || !app.isPackaged)
+        return false;
+    const path = process.execPath || (app.getAppPath && app.getAppPath()) || '';
+    return path.includes('AppTranslocation');
+}
 export function setQuicklyAns(key) {
     !eventTracker?.killed && eventTracker?.kill();
+    if (process.platform === 'darwin') {
+        if (isRunningTranslocated()) {
+            mainWindow?.webContents.send('post-message', 'event-tracker-translocated');
+            return;
+        }
+        const trusted = systemPreferences.isTrustedAccessibilityClient(false);
+        if (!trusted) {
+            openAccessibilityPane();
+            mainWindow?.webContents.send('post-message', 'event-tracker-need-permission');
+            return;
+        }
+    }
     let filename = 'eventTracker';
     if (process.platform === 'win32') {
         filename += '.exe';
@@ -21,13 +47,40 @@ export function setQuicklyAns(key) {
     else if (process.arch === 'x64') {
         filename = 'eventTracker_x64';
     }
-    eventTracker = spawn(getResourcesPath(filename), ['--key', key]);
+    const exePath = getResourcesPath(filename);
+    if (app.isPackaged && process.platform !== 'win32' && existsSync(exePath)) {
+        try {
+            chmodSync(exePath, 0o755);
+        }
+        catch (_) { }
+    }
+    eventTracker = spawn(exePath, ['--key', key]);
+    eventTracker.on('error', (err) => {
+        console.error('eventTracker spawn error:', err);
+        mainWindow?.webContents.send('post-message', 'event-tracker-spawn-error');
+    });
     eventTracker.stderr.on('data', (data) => {
         if (`${data}`.includes('Failed to enable access')) {
             console.log('Failed to enable access');
-            mainWindow?.once('show', () => {
-                mainWindow?.webContents.send('post-message', 'event-tracker-access-denied');
-            });
+            if (process.platform === 'darwin') {
+                if (isRunningTranslocated()) {
+                    mainWindow?.once('show', () => {
+                        mainWindow?.webContents.send('post-message', 'event-tracker-translocated');
+                    });
+                }
+                else {
+                    systemPreferences.isTrustedAccessibilityClient(true);
+                    openAccessibilityPane();
+                    mainWindow?.once('show', () => {
+                        mainWindow?.webContents.send('post-message', 'event-tracker-access-denied');
+                    });
+                }
+            }
+            else {
+                mainWindow?.once('show', () => {
+                    mainWindow?.webContents.send('post-message', 'event-tracker-access-denied');
+                });
+            }
         }
     });
     eventTracker.stdout.on('data', (data) => {

@@ -39,6 +39,12 @@ export const api = {
   maximizeWindow: () => ipcRenderer.invoke('maximize-window'),
   unmaximizeWindow: () => ipcRenderer.invoke('unmaximize-window'),
   isMaximized: () => ipcRenderer.invoke('is-maximized'),
+  /** Windows 从最小化恢复时触发，用于渲染进程强制重绘 */
+  onWindowRestored: (callback: () => void) => {
+    ipcRenderer.on('window-restored', callback)
+    return () => ipcRenderer.removeListener('window-restored', callback)
+  },
+  openAccessibilityPane: () => ipcRenderer.invoke('open-accessibility-pane'),
   setIsOnTop: (isOnTop: boolean) => ipcRenderer.invoke('set-is-on-top', isOnTop),
 
   // 配置相关

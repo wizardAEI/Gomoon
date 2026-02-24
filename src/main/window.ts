@@ -1,3 +1,4 @@
+import { chmodSync, existsSync } from 'fs'
 import { join } from 'path'
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process'
 
@@ -13,7 +14,8 @@ import {
   OnBeforeSendHeadersListenerDetails,
   BeforeSendResponse,
   session,
-  nativeImage
+  nativeImage,
+  systemPreferences
 } from 'electron'
 import { is } from '@electron-toolkit/utils'
 import { autoUpdater } from 'electron-updater'
@@ -34,21 +36,72 @@ export interface ShowWindowParams {
   text: string
 }
 
+/** 打开 macOS 系统设置 - 隐私与安全性 - 辅助功能 */
+export function openAccessibilityPane() {
+  if (process.platform !== 'darwin') return
+  shell.openExternal(
+    'x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility'
+  )
+}
+
+/** macOS 是否从「应用转移」临时路径运行（如从 DMG 直接打开），权限无法持久 */
+function isRunningTranslocated(): boolean {
+  if (process.platform !== 'darwin' || !app.isPackaged) return false
+  const path = process.execPath || app.getAppPath?.() || ''
+  return path.includes('AppTranslocation')
+}
+
 export function setQuicklyAns(key: string) {
   !eventTracker?.killed && eventTracker?.kill()
+  if (process.platform === 'darwin') {
+    if (isRunningTranslocated()) {
+      mainWindow?.webContents.send('post-message', 'event-tracker-translocated')
+      return
+    }
+    const trusted = systemPreferences.isTrustedAccessibilityClient(false)
+    if (!trusted) {
+      openAccessibilityPane()
+      mainWindow?.webContents.send('post-message', 'event-tracker-need-permission')
+      return
+    }
+  }
   let filename = 'eventTracker'
   if (process.platform === 'win32') {
     filename += '.exe'
   } else if (process.arch === 'x64') {
     filename = 'eventTracker_x64'
   }
-  eventTracker = spawn(getResourcesPath(filename), ['--key', key])
+  const exePath = getResourcesPath(filename)
+  if (app.isPackaged && process.platform !== 'win32' && existsSync(exePath)) {
+    try {
+      chmodSync(exePath, 0o755)
+    } catch (_) {}
+  }
+  eventTracker = spawn(exePath, ['--key', key])
+  eventTracker.on('error', (err) => {
+    console.error('eventTracker spawn error:', err)
+    mainWindow?.webContents.send('post-message', 'event-tracker-spawn-error')
+  })
   eventTracker.stderr.on('data', (data) => {
     if (`${data}`.includes('Failed to enable access')) {
       console.log('Failed to enable access')
-      mainWindow?.once('show', () => {
-        mainWindow?.webContents.send('post-message', 'event-tracker-access-denied')
-      })
+      if (process.platform === 'darwin') {
+        if (isRunningTranslocated()) {
+          mainWindow?.once('show', () => {
+            mainWindow?.webContents.send('post-message', 'event-tracker-translocated')
+          })
+        } else {
+          systemPreferences.isTrustedAccessibilityClient(true)
+          openAccessibilityPane()
+          mainWindow?.once('show', () => {
+            mainWindow?.webContents.send('post-message', 'event-tracker-access-denied')
+          })
+        }
+      } else {
+        mainWindow?.once('show', () => {
+          mainWindow?.webContents.send('post-message', 'event-tracker-access-denied')
+        })
+      }
     }
   })
   eventTracker.stdout.on('data', (data) => {
@@ -280,16 +333,21 @@ export function createWindow(): void {
   const userData = getUserData()
 
   // Create the browser window.
+  const isWin = process.platform === 'win32'
   mainWindow = new BrowserWindow({
     title: 'Gomoon',
     width: userData.windowSize.width,
     height: userData.windowSize.height,
     show: false,
     autoHideMenuBar: true,
+    // FEAT: Windows 最小化后恢复时减少白屏：使用与主题接近的深色，避免未绘制时闪白
+    ...(isWin ? { backgroundColor: '#1c1c1e' } : {}),
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      // FEAT: Windows 在最小化时保持 renderer 不节流，避免恢复时状态不同步导致卡死/白屏
+      ...(isWin ? { backgroundThrottling: false } : {})
     },
     titleBarStyle: 'hidden'
   })
@@ -331,6 +389,13 @@ export function createWindow(): void {
     // Open the DevTools.
     !app.isPackaged && mainWindow!.webContents.openDevTools()
   })
+
+  // FEAT: Windows 从最小化恢复时通知渲染进程强制重绘，缓解白屏/卡死
+  if (isWin) {
+    mainWindow.on('show', () => {
+      mainWindow?.webContents.send('window-restored')
+    })
+  }
 
   //FEAT: 快捷键
   setQuicklyAns(userConfig.quicklyAnsKey)

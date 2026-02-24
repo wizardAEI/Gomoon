@@ -54,6 +54,7 @@ import {
   isMaximized,
   maximize,
   minimize,
+  openAccessibilityPane,
   setQuicklyAns,
   setQuicklyWakeUp,
   unmaximize,
@@ -280,6 +281,7 @@ export function initAppEventsHandler() {
   ipcMain.handle('maximize-window', () => maximize())
   ipcMain.handle('unmaximize-window', () => unmaximize())
   ipcMain.handle('is-maximized', () => isMaximized())
+  ipcMain.handle('open-accessibility-pane', () => openAccessibilityPane())
   ipcMain.handle('get-lines', () => getLines())
   ipcMain.handle('parse-page-to-string', (_, url: string) => parseURL2Str(url))
   ipcMain.handle('speak', (_, text: string) => speak(text))

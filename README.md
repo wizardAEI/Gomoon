@@ -48,6 +48,9 @@
 
 **Tips:**mac 用户由于没有上架 mac 应用市场，需要在『**访达**→应用』中找到 Gomoon 右键打开并二次确认才可以使用。『Command + C +C 双击复制』和『发送文件』功能需要用户允许 Gomoon 的权限请求，并且**重启**应用。
 
+**Mac 快速问答快捷键权限每次重启都弹窗？**  
+快速问答依赖系统「辅助功能」权限。请将 Gomoon **拖到「应用程序」文件夹后再使用**（不要从 DMG 里直接运行）。系统按应用安装路径记录权限，从 DMG 直接运行时路径会变，导致权限无法持久。安装到 `/Applications` 后，在「系统设置 → 隐私与安全性 → 辅助功能」中勾选 Gomoon，重启应用即可生效。
+
 ## 灵感来源
 
 <img align="right" height="180px" src="https://github.com/wizardAEI/Gomoon/assets/61337085/8c4a7dd2-0956-4c60-ab11-378d7df47937" alt="lucy"/>

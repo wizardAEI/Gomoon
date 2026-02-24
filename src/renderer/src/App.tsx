@@ -62,6 +62,17 @@ const App = (props) => {
     })
     onCleanup(() => removeListener())
 
+    // FEAT: Windows 从最小化恢复时强制重绘，缓解白屏/卡死
+    if (navigator.userAgent.includes('Windows')) {
+      const removeRestored = window.api.onWindowRestored(() => {
+        requestAnimationFrame(() => {
+          document.body.offsetHeight
+          requestAnimationFrame(() => {})
+        })
+      })
+      onCleanup(() => removeRestored())
+    }
+
     // FEAT: OCR
     OCRInit()
 
@@ -86,7 +97,8 @@ const App = (props) => {
       )
     })
 
-    // FEAT: receive msg
+    // FEAT: receive msg（权限提示每会话只弹一次）
+    let accessDeniedShownThisSession = false
     window.api.receiveMsg(async (_, msg: string) => {
       if (msg === 'update-available' && !systemStore.updateStatus.canUpdate) {
         setUpdaterStatus({
@@ -104,8 +116,24 @@ const App = (props) => {
           updateProgress: progress
         })
       }
-      if (msg.includes('event-tracker-access-denied')) {
-        alert('请允许程序权限后重启，以使用快捷方式功能')
+      if (msg.includes('event-tracker-translocated')) {
+        alert(
+          '快速问答（双击复制）需要将 Gomoon 安装在「应用程序」文件夹才能使用。\n\n当前检测到从临时位置运行（如从 DMG 直接打开），系统无法持久保存辅助功能权限，每次打开都会重新索要。\n\n请将 Gomoon 拖入「应用程序」文件夹后重新打开，再在系统设置中勾选 Gomoon 的辅助功能权限即可。'
+        )
+      }
+      if (msg.includes('event-tracker-need-permission')) {
+        alert(
+          '快速问答（双击复制）需要「辅助功能」权限。\n\n已为您打开系统设置，请勾选 Gomoon 并重启应用。\n建议将 Gomoon 安装在「应用程序」文件夹内，否则权限可能无法持久保存。'
+        )
+      }
+      if (msg.includes('event-tracker-access-denied') && !accessDeniedShownThisSession) {
+        accessDeniedShownThisSession = true
+        alert(
+          '快速问答需要辅助功能权限。\n\n请将 Gomoon 拖入「应用程序」文件夹，在系统设置中勾选 Gomoon 后重启应用，权限才会持久生效。'
+        )
+      }
+      if (msg.includes('event-tracker-spawn-error')) {
+        alert('快速问答（双击复制）未能启动，请尝试重新安装 Gomoon。')
       }
     })
 
