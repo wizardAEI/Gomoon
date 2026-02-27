@@ -18,15 +18,22 @@ export function createAIAdapter(model, settings) {
                     temperature: settings?.temperature
                 });
                 let fullText = '';
+                let needsReasoningLinePrefix = true;
                 for await (const chunk of result.fullStream) {
                     if (chunk.type === 'text-delta' && chunk.text) {
                         fullText += chunk.text;
                         options.onToken?.(chunk.text);
                     }
                     if (chunk.type === 'reasoning-delta' && chunk.text) {
-                        // DeepSeek-style: prefix reasoning with "> "
-                        options.onToken?.('> ');
-                        options.onToken?.(chunk.text.includes('\n') ? chunk.text.replaceAll('\n', '\n> ') : chunk.text);
+                        const text = chunk.text;
+                        let output = text;
+                        if (needsReasoningLinePrefix) {
+                            output = '> ' + output;
+                            needsReasoningLinePrefix = false;
+                        }
+                        output = output.replaceAll('\n', '\n> ');
+                        needsReasoningLinePrefix = text.endsWith('\n');
+                        options.onToken?.(output);
                     }
                 }
                 const usage = await result.usage;

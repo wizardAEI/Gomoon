@@ -3,6 +3,7 @@
  */
 import { streamText, generateText } from 'ai'
 import type { LanguageModelV3 } from '@ai-sdk/provider'
+
 import type { LLMAdapter, ChatMessage, GenerateResult } from './types'
 import { toAISDKMessages } from './messages'
 
@@ -35,6 +36,7 @@ export function createAIAdapter(model: LanguageModelV3, settings?: AIAdapterSett
         })
 
         let fullText = ''
+        let needsReasoningLinePrefix = true
 
         for await (const chunk of result.fullStream) {
           if (chunk.type === 'text-delta' && chunk.text) {
@@ -42,9 +44,16 @@ export function createAIAdapter(model: LanguageModelV3, settings?: AIAdapterSett
             options.onToken?.(chunk.text)
           }
           if (chunk.type === 'reasoning-delta' && chunk.text) {
-            // DeepSeek-style: prefix reasoning with "> "
-            options.onToken?.('> ')
-            options.onToken?.(chunk.text.includes('\n') ? chunk.text.replaceAll('\n', '\n> ') : chunk.text)
+            // DeepSeek-style: prefix reasoning with "> " 仅在每行行首添加（非每个 chunk）
+            const text = chunk.text
+            let output = text
+            if (needsReasoningLinePrefix) {
+              output = '> ' + output
+              needsReasoningLinePrefix = false
+            }
+            output = output.replaceAll('\n', '\n> ')
+            needsReasoningLinePrefix = text.endsWith('\n')
+            options.onToken?.(output)
           }
         }
 

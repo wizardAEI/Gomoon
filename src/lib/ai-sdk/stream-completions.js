@@ -48,6 +48,7 @@ export async function streamChatCompletions(messages, options) {
         const decoder = new TextDecoder();
         let fullText = '';
         let buffer = '';
+        let needsReasoningLinePrefix = true;
         while (true) {
             const { done, value } = await reader.read();
             if (done)
@@ -66,11 +67,17 @@ export async function streamChatCompletions(messages, options) {
                     const choice = json.choices?.[0]?.delta;
                     if (!choice)
                         continue;
-                    // reasoning_content（如 DeepSeek R1）— 仅透传 onToken，不计入 fullText
+                    // reasoning_content（如 DeepSeek R1）— 仅透传 onToken，不计入 fullText；"> " 仅在每行行首添加
                     if (choice.reasoning_content) {
                         const t = choice.reasoning_content;
-                        onToken?.('> ');
-                        onToken?.(t.includes('\n') ? t.replaceAll('\n', '\n> ') : t);
+                        let output = t;
+                        if (needsReasoningLinePrefix) {
+                            output = '> ' + output;
+                            needsReasoningLinePrefix = false;
+                        }
+                        output = output.includes('\n') ? output.replaceAll('\n', '\n> ') : output;
+                        needsReasoningLinePrefix = t.endsWith('\n');
+                        onToken?.(output);
                     }
                     if (choice.content) {
                         onToken?.(choice.content);
